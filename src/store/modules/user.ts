@@ -1,13 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
+import type { UserInfo } from '@/utils/types'
 
 const userStore = createSlice({
   name: 'user',
   initialState: {
-    count: 1,
+    userInfo: {
+      id: '1',
+      username: 'picals',
+      avatar: 'https://dummyimage.com/400X400',
+      email: '1209220829@qq.com',
+      fanNum: 100,
+      followNum: 100,
+    } as UserInfo,
   },
   reducers: {
     setUserInfo(state, action) {
-      state.count = action.payload
+      state.userInfo = action.payload
     },
   },
 })
