@@ -1,6 +1,11 @@
-const Home = () => {
+import { FC } from 'react'
+
+const Home: FC = () => {
   return (
-    <div className='home-wrapper'>
+    <div
+      className='
+        h-screen
+    '>
       <div>这是Home页</div>
     </div>
   )

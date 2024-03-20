@@ -1,14 +1,42 @@
+// 下拉菜单的动画效果
 .dropdown-enter {
   opacity: 0;
 }
 .dropdown-enter-active {
   opacity: 1;
-  transition: opacity 300ms;
+  transition:
+    opacity 300ms,
+    transform 300ms; /* 添加transform的过渡效果 */
 }
 .dropdown-exit {
   opacity: 1;
 }
 .dropdown-exit-active {
   opacity: 0;
+  transition:
+    opacity 300ms,
+    transform 300ms; /* 添加transform的过渡效果 */
+}
+
+// 下拉菜单配套蒙版的动画效果
+.dropdown-mask-enter {
+  opacity: 0;
+}
+.dropdown-mask-enter-active {
+  opacity: 1;
   transition: opacity 300ms;
+}
+.dropdown-mask-exit {
+  opacity: 1;
+}
+.dropdown-mask-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+// 不显示滚动条
+.not-show-scrollbar {
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }

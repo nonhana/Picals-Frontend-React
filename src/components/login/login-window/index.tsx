@@ -90,7 +90,7 @@ const LoginWindow: FC = () => {
           className='
             font-normal 
             font-size-14px
-            color-#6D757A
+            color-#6d757a
         '>
           兴趣使然的插画收藏小站
         </span>
