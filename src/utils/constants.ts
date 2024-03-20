@@ -1,11 +1,11 @@
 // src/utils/constants.ts
 // 用以存放项目中的常量
-
-// 下拉框中的选项列表
 type DropdownItem = {
   route: string
   name: string
 }
+
+// 下拉框中的选项列表
 export const HEADER_DROPDOWN_LIST: DropdownItem[] = [
   {
     route: '/1',
@@ -30,5 +30,27 @@ export const HEADER_DROPDOWN_LIST: DropdownItem[] = [
   {
     route: '/6',
     name: '个人资料设置',
+  },
+]
+
+// Header的菜单路由跳转
+type HeaderMenuItem = {
+  icon: string
+} & DropdownItem
+export const HEADER_MENU_LIST: HeaderMenuItem[] = [
+  {
+    icon: 'ant-design:picture-filled',
+    route: '/illustration',
+    name: '插画',
+  },
+  {
+    icon: 'ant-design:user-outlined',
+    route: '/followed-new-works',
+    name: '已关注用户新作',
+  },
+  {
+    icon: 'ant-design:compass-outlined',
+    route: '/explore',
+    name: '探索页',
   },
 ]
