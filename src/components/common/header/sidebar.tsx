@@ -21,13 +21,14 @@ const Sidebar: FC<{
       </CSSTransition>
 
       <CSSTransition in={visible} timeout={300} classNames='dropdown-mask' unmountOnExit>
-        <div className={`absolute w-56 h-screen bg-white z-99 ${className}`}>
+        <div className={`select-none absolute w-56 h-screen bg-white z-99 ${className}`}>
           <div className='px-10 h-16 flex items-center gap-2.5'>
             <Icon
               className='cursor-pointer'
               width={24}
               color='#858585'
               icon='ant-design:menu-outlined'
+              onClick={() => setVisible(false)}
             />
             <img className='h-10 cursor-pointer' src={logo} alt='picals-logo' />
           </div>

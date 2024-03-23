@@ -19,7 +19,7 @@ const Header: FC = () => {
 
   return (
     <div
-      className='relative flex justify-between items-center w-full h-16 bg-white px-10
+      className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10
     '>
       <div className='flex items-center gap-2.5'>
         <Icon
