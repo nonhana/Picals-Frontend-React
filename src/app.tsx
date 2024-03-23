@@ -6,10 +6,10 @@ const App: FC = () => {
   const location = useLocation()
 
   return (
-    <>
+    <div className='h-screen'>
       {location.pathname !== '/login' && <Header />}
       <Outlet />
-    </>
+    </div>
   )
 }
 
