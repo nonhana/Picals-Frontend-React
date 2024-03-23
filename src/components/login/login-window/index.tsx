@@ -1,6 +1,7 @@
 import logo from '@/assets/svgs/logo.svg'
 import { Button, Form, Input, Row, type FormProps } from 'antd'
 import { FC, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import GreyButton from '@/components/common/grey-button'
 
@@ -18,6 +19,7 @@ type RegisterForm = {
 }
 
 const LoginWindow: FC = () => {
+  const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(false)
   const [isRegister, setIsRegister] = useState(false)
   // const [sentCode, setSentCode] = useState(false)
@@ -29,6 +31,7 @@ const LoginWindow: FC = () => {
   // 登录提交
   const handleLogin: FormProps<LoginForm>['onFinish'] = (values) => {
     console.log('Success:', values)
+    navigate('/home')
   }
   // 登录失败
   const handleLoginFailed: FormProps<LoginForm>['onFinishFailed'] = (errorInfo) => {

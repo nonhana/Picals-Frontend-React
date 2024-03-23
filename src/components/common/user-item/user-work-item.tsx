@@ -4,7 +4,7 @@ import type { WorkNormalItemInfo } from '@/utils/types'
 
 type UserWorkItemProps = {
   itemInfo: WorkNormalItemInfo
-  like: (id: string) => void
+  like: (userId: string, workId: string) => void
 }
 
 const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
@@ -24,7 +24,7 @@ const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
           width='24px'
           color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
           icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
-          onClick={() => like(itemInfo.id)}
+          onClick={() => like(itemInfo.authorId, itemInfo.id)}
         />
       </div>
 
