@@ -4,6 +4,7 @@ export interface UserInfo {
   username: string
   email: string
   avatar: string
+  intro: string
   fanNum: number
   followNum: number
 }
@@ -21,4 +22,27 @@ export interface HistorySearchInfo {
   id: string
   name: string
   time: string
+}
+
+// 普通作品item信息
+export interface WorkNormalItemInfo {
+  id: string
+  imgList: string[]
+  name: string
+  authorId: string
+  authorName: string
+  authorAvatar: string
+  isLiked: boolean
+}
+
+// 排行榜作品item信息
+export interface WorkRankItemInfo {
+  id: string
+  range: number
+  imgList: string[]
+  name: string
+  authorId: string
+  authorName: string
+  authorAvatar: string
+  isLiked: boolean
 }

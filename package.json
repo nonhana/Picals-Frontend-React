@@ -12,6 +12,7 @@
   "dependencies": {
     "@iconify/react": "^4.1.1",
     "@reduxjs/toolkit": "^2.2.1",
+    "@types/node": "^20.11.30",
     "@types/react-transition-group": "^4.4.10",
     "@unocss/reset": "^0.58.5",
     "antd": "^5.15.3",

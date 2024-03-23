@@ -58,33 +58,8 @@ const LoginWindow: FC = () => {
   }
 
   return (
-    <div
-      className='
-        absolute
-        top-1/2
-        left-1/2
-        -translate-x-50%
-        -translate-y-50%
-        w-130
-        rounded-6
-        p-15
-        flex
-        flex-col
-        items-center
-        justify-between
-        gap-10
-        hover:shadow-lg
-        bg-white
-        transition-duration-300
-        border-color-#E5E5E5
-    '>
-      <div
-        className='
-          flex
-          flex-col
-          items-center
-          justify-center
-        '>
+    <div className='absolute top-1/2 left-1/2 -translate-x-50% -translate-y-50% w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10  hover:shadow-lg  bg-white transition-duration-300  border-color-#E5E5E5'>
+      <div className='flex flex-col items-center justify-center'>
         <img className='w-50' src={logo} alt='picals-logo' />
         <span
           className='

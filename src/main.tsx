@@ -1,5 +1,4 @@
 import ReactDOM from 'react-dom/client'
-import Header from './components/common/header'
 /* ----------UnoCss相关配置引入---------- */
 import '@unocss/reset/normalize.css'
 import 'uno.css'
@@ -12,7 +11,6 @@ import { RouterProvider } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <Header />
     <RouterProvider fallbackElement={<p>初始化加载...</p>} router={router} />
   </Provider>,
 )
