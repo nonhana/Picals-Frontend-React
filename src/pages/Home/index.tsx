@@ -40,7 +40,7 @@ const littleSource: WorkNormalItemInfo[] = [
     isLiked: true,
   },
 ]
-const userList = Array(10)
+const userList = Array(1)
   .fill(0)
   .map((_, index) => ({
     id: String(index),
