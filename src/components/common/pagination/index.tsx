@@ -10,6 +10,17 @@ type PaginationProps = {
 }
 
 const Pagination: FC<PaginationProps> = ({ total, current, onChange }) => {
+  // 递增/递减页数
+  const stepPage = (type: 'prev' | 'next') => {
+    if (type === 'prev') {
+      if (current === 0) return
+      onChange(current - 1)
+    } else {
+      if (current === total - 1) return
+      onChange(current + 1)
+    }
+  }
+
   const maxButtonCount = 7 // 最多显示的按钮数（包括省略号）
   const sideButtonCount = 2 // current两侧的按钮数
 
@@ -96,14 +107,18 @@ const Pagination: FC<PaginationProps> = ({ total, current, onChange }) => {
   return (
     <div className='relative flex px-20px py-10px gap-20px select-none'>
       {/* 左侧按钮 */}
-      <div className='w-10 h-10 cursor-pointer flex items-center justify-center'>
+      <div
+        className='w-10 h-10 rd-full cursor-pointer flex items-center justify-center hover-bg-#f2f2f2'
+        onClick={() => stepPage('prev')}>
         <img className='w-6 h-6' src={paginationLeft} alt='left-button' />
       </div>
 
       {renderButtons()}
 
       {/* 右侧按钮 */}
-      <div className='w-10 h-10 cursor-pointer flex items-center justify-center'>
+      <div
+        className='w-10 h-10 rd-full cursor-pointer flex items-center justify-center hover-bg-#f2f2f2'
+        onClick={() => stepPage('next')}>
         <img className='w-6 h-6' src={paginationRight} alt='right-button' />
       </div>
     </div>
