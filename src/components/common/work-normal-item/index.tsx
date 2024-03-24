@@ -9,7 +9,7 @@ type WorkNormalItemProps = {
 
 const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like }) => {
   return (
-    <div className='relative w-184px rd-1 bg-white overflow-hidden'>
+    <div className='shrink-0 relative w-184px rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
         <div className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-184px h-184px' />
         <div className='absolute top-10px right-10px'>

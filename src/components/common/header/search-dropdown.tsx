@@ -2,165 +2,11 @@ import { FC, useRef } from 'react'
 import { Icon } from '@iconify/react'
 import LabelItem from '../label-item'
 import LabelImgItem from '../label-img-item'
-import type { HistorySearchInfo, LabelInfo } from '@/utils/types'
 import { CSSTransition } from 'react-transition-group'
 import GreyButton from '../grey-button'
 import { Modal, message } from 'antd'
-
-// 用户喜欢的标签列表
-const likeLabelList: LabelInfo[] = [
-  {
-    id: '1',
-    name: '标签1',
-    color: 'red',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'purple',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-]
-
-// 最近流行的标签列表
-const popularLabelList: LabelInfo[] = [
-  {
-    id: '1',
-    name: '标签1',
-    color: 'red',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'purple',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '1',
-    name: '标签1',
-    color: 'red',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'purple',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '1',
-    name: '标签1',
-    color: 'red',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'blue',
-    img: 'https://dummyimage.com/400X400',
-  },
-  {
-    id: '2',
-    name: '标签2',
-    color: 'purple',
-    img: 'https://dummyimage.com/400X400',
-  },
-]
-
-// 历史记录列表
-const historyList: HistorySearchInfo[] = [
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-  {
-    id: '1',
-    name: '历史记录1',
-    time: '2024-03-20 15:00',
-  },
-]
+// 测试用数据
+import { labelList, historyList } from '@/test/data'
 
 const SearchDropdown: FC<{
   visible: boolean
@@ -203,14 +49,14 @@ const SearchDropdown: FC<{
       {contextHolder}
 
       {/* 全屏蒙版，实现点击后关闭窗口 */}
-      <CSSTransition in={visible} timeout={300} classNames='dropdown-mask' unmountOnExit>
+      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-16 z-99'
           onClick={() => setVisible(false)}
         />
       </CSSTransition>
 
-      <CSSTransition in={visible} timeout={300} classNames='dropdown' unmountOnExit>
+      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
           className={`not-show-scrollbar absolute bg-#fff w-545px rd-6px overflow-hidden z-100 ${className} select-none`}>
           <div className='m-b-5'>
@@ -262,7 +108,7 @@ const SearchDropdown: FC<{
             <div
               ref={likeLabelsRef}
               className='relative w-full flex flex-nowrap p-10px gap-10px overflow-x-auto overflow-y-hidden transition-duration-300'>
-              {likeLabelList.map((item) => (
+              {labelList.map((item) => (
                 <LabelItem key={item.id} {...item} />
               ))}
             </div>
@@ -285,7 +131,7 @@ const SearchDropdown: FC<{
             <div
               ref={popularLabelsRef}
               className='relative w-full flex flex-nowrap p-10px gap-10px overflow-x-auto overflow-y-hidden'>
-              {popularLabelList.map((item) => (
+              {labelList.map((item) => (
                 <LabelImgItem key={item.id} {...item} />
               ))}
             </div>

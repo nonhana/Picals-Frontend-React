@@ -1,4 +1,6 @@
 // uno.config.ts
+// 用于配置 Uno 的配置文件，可以在这里配置 Uno 的预设、插件、转换器等
+
 import {
   defineConfig,
   presetUno,
@@ -8,9 +10,13 @@ import {
   presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
+  Rule,
 } from 'unocss'
 import presetRemToPx from '@unocss/preset-rem-to-px'
 import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
+
+// 自定义规则
+const customRules: Rule[] = []
 
 export default defineConfig({
   presets: [
@@ -30,4 +36,5 @@ export default defineConfig({
     presetWebFonts(),
   ],
   transformers: [transformerAttributifyJsx(), transformerDirectives(), transformerVariantGroup()],
+  rules: customRules,
 })

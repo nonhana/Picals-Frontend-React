@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button } from 'antd'
@@ -8,12 +8,20 @@ import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
 
+type HomeProps = {
+  changeSideBarStatus: (status: boolean) => void
+}
+
 const { Search } = Input
 
-const Header: FC = () => {
+const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
   const [showSidebar, setShowSidebar] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+
+  useEffect(() => {
+    changeSideBarStatus(showSidebar)
+  }, [showSidebar])
 
   const userInfo = useSelector((state: { user: { userInfo: UserInfo } }) => state.user.userInfo)
 

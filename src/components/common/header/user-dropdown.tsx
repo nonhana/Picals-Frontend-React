@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import type { UserInfo } from '@/utils/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
 import { CSSTransition } from 'react-transition-group'
-import './index.scss'
 
 const UserDropdown: FC<{
   visible: boolean
@@ -19,7 +18,7 @@ const UserDropdown: FC<{
   return (
     <>
       {/* 全屏蒙版，实现点击后关闭窗口 */}
-      <CSSTransition in={visible} timeout={300} classNames='dropdown-mask' unmountOnExit>
+      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-16 z-9998'
           onClick={() => setVisible(false)}
@@ -27,7 +26,7 @@ const UserDropdown: FC<{
       </CSSTransition>
 
       {/* 窗口本体 */}
-      <CSSTransition in={visible} timeout={300} classNames='dropdown' unmountOnExit>
+      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
           className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-9999 ${className}`}>
           <div className='absolute top-0 left-0 w-full h-12.5 bg-#f5f5f5' />

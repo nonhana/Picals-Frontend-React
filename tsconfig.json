@@ -23,6 +23,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "src/components/home/label-list/index1/.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
