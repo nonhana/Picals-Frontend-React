@@ -2,8 +2,8 @@ import { FC, useEffect, useState } from 'react'
 import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button } from 'antd'
-import type { UserInfo } from '@/utils/types'
 import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
@@ -11,8 +11,6 @@ import Sidebar from './sidebar'
 type HomeProps = {
   changeSideBarStatus: (status: boolean) => void
 }
-
-const { Search } = Input
 
 const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
   const [showSidebar, setShowSidebar] = useState(false)
@@ -23,12 +21,10 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
     changeSideBarStatus(showSidebar)
   }, [showSidebar])
 
-  const userInfo = useSelector((state: { user: { userInfo: UserInfo } }) => state.user.userInfo)
+  const userInfo = useSelector((state: AppState) => state.user.userInfo)
 
   return (
-    <div
-      className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10
-    '>
+    <div className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10'>
       <div className='flex items-center gap-2.5'>
         <Icon
           className='cursor-pointer'
@@ -41,7 +37,7 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
       </div>
 
       <div className='absolute w-30% top-1/2 left-1/2 -translate-x-50% -translate-y-50%'>
-        <Search
+        <Input.Search
           size='large'
           placeholder='请输入你想搜索的内容呀~'
           allowClear

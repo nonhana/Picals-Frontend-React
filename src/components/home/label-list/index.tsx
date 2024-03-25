@@ -9,7 +9,7 @@ type LabelListProps = {
 
 const LabelList: FC<LabelListProps> = ({ labelList }) => {
   return (
-    <LayoutList scrollAmount={1000}>
+    <LayoutList scrollType='label'>
       {labelList.map((item) => (
         <LabelItem key={item.id} {...item} />
       ))}

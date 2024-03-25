@@ -1,3 +1,4 @@
+/* Initial CSS for the project */
 *,
 ::before,
 ::after {
@@ -40,12 +41,20 @@ a {
   transition: color 0.2s ease;
 }
 
+/* Specific global classes for the project */
 .not-show-scrollbar {
   ::-webkit-scrollbar {
     display: none;
   }
 }
 
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #6d757a;
+}
+
+/* Specific global animations for the project */
 .opacity-gradient-enter {
   opacity: 0;
 }

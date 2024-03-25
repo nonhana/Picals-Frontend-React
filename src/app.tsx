@@ -14,7 +14,7 @@ const App: FC = () => {
         style={{
           width: showSideBar ? 'calc(100% - 224px)' : '100%',
         }}
-        className='absolute right-0 flex h-full transition-all duration-300 overflow-hidden'>
+        className='absolute h-100% right-0 flex transition-all duration-300'>
         <Outlet />
       </div>
     </div>

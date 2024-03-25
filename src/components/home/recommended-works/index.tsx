@@ -1,14 +1,13 @@
 import { FC } from 'react'
-import LayoutList from '@/components/common/layout-list'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap } from '@/hooks/useMap'
 import type { WorkNormalItemInfo } from '@/utils/types'
 
-type FollowedWorksProps = {
+type RecommendedWorksProps = {
   workList: WorkNormalItemInfo[]
 }
 
-const FollowedWorks: FC<FollowedWorksProps> = ({ workList: sourceData }) => {
+const RecommendedWorks: FC<RecommendedWorksProps> = ({ workList: sourceData }) => {
   const [workList, setWorkList] = useMap<WorkNormalItemInfo>(sourceData)
 
   const handleLike = (id: string) => {
@@ -18,16 +17,16 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ workList: sourceData }) => {
   return (
     <div className='relative p-5'>
       <div className='title m-b-10px'>
-        <span>已关注用户新作</span>
+        <span>推荐作品</span>
       </div>
 
-      <LayoutList scrollType='work-normal' gap={20}>
+      <div className='relative w-full flex flex-wrap gap-20px'>
         {Array.from(workList.values()).map((item) => (
           <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
         ))}
-      </LayoutList>
+      </div>
     </div>
   )
 }
 
-export default FollowedWorks
+export default RecommendedWorks

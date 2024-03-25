@@ -26,7 +26,7 @@ export const historyList: HistorySearchInfo[] = Array(50)
   })
 
 // 普通作品列表
-export const normalWorkList: WorkNormalItemInfo[] = Array(100)
+export const normalWorkList: WorkNormalItemInfo[] = Array(24)
   .fill(0)
   .map((_, index) => {
     return {

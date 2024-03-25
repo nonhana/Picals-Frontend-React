@@ -5,11 +5,18 @@ import { CSSTransition } from 'react-transition-group'
 
 type LayoutListProps = {
   className?: string
-  scrollAmount: number
+  gap?: number
+  scrollType: 'label' | 'label-img' | 'work-normal'
   children: React.ReactNode
 }
 
-const LayoutList: FC<LayoutListProps> = ({ className, scrollAmount, children }) => {
+const scrollMap: Map<'label' | 'label-img' | 'work-normal', number> = new Map([
+  ['label', 400],
+  ['label-img', 512],
+  ['work-normal', 1020],
+])
+
+const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap = 10 }) => {
   const [showButtons, setShowButtons] = useState(false)
   const layoutRef = useRef<HTMLDivElement>(null)
 
@@ -17,7 +24,7 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollAmount, children }) 
     if (layoutRef.current) {
       layoutRef.current.scrollBy({
         top: 0,
-        left: direction === 'left' ? scrollAmount : -scrollAmount,
+        left: direction === 'left' ? scrollMap.get(scrollType)! : -scrollMap.get(scrollType)!,
         behavior: 'smooth',
       })
     }
@@ -30,19 +37,22 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollAmount, children }) 
       onMouseLeave={() => setShowButtons(false)}>
       <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <GreyButton
-          className='z-999 absolute top-1/2 -translate-y-1/2 left-10px'
+          className='z-999 absolute top-1/2 -translate-y-1/2 left-0'
           onClick={() => scrollX('right')}>
           <Icon color='#fff' icon='ant-design:caret-left-filled' />
         </GreyButton>
       </CSSTransition>
       <div
         ref={layoutRef}
-        className='relative w-full flex flex-nowrap p-10px gap-10px overflow-x-auto overflow-y-hidden transition-duration-300'>
+        style={{
+          gap: `${gap}px`,
+        }}
+        className='relative w-full flex flex-nowrap overflow-x-auto overflow-y-hidden transition-duration-300'>
         {children}
       </div>
       <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <GreyButton
-          className='z-999 absolute top-1/2 -translate-y-1/2 right-10px'
+          className='z-999 absolute top-1/2 -translate-y-1/2 right-0'
           onClick={() => scrollX('left')}>
           <Icon color='#fff' icon='ant-design:caret-right-filled' />
         </GreyButton>
