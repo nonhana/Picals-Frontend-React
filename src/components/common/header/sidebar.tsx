@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useLocation } from 'react-router-dom'
 import { HEADER_MENU_LIST } from '@/utils/constants'
 import { Icon } from '@iconify/react'
 import logo from '@/assets/svgs/logo.svg'
@@ -9,9 +10,12 @@ const Sidebar: FC<{
   visible: boolean
   setVisible: (visible: boolean) => void
 }> = ({ className, visible, setVisible }) => {
+  const location = useLocation()
+
   return (
     <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-      <div className={`select-none absolute w-56 h-screen bg-white z-99 ${className}`}>
+      <div
+        className={`border-#858585 border-1px border-r-solid select-none fixed top-0 bottom-0 w-60 bg-white z-10 ${className}`}>
         <div className='px-10 h-16 flex items-center gap-2.5'>
           <Icon
             className='cursor-pointer'
@@ -26,7 +30,7 @@ const Sidebar: FC<{
         <ul className='list-none m-0 p-0'>
           {HEADER_MENU_LIST.map((item) => (
             <li
-              className='px-5 h-10 flex items-center gap-2.5 cursor-pointer hover:bg-#f5f5f5 transition-duration-300'
+              className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-#f5f5f5 transition-duration-300 ${location.pathname === item.route ? 'bg-#f5f5f5' : ''}`}
               key={item.route}>
               <Icon color='#858585' width={20} icon={item.icon} />
               {/* <Link to={item.route}>{item.name}</Link> */}

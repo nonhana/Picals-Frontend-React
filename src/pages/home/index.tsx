@@ -2,7 +2,8 @@ import { FC, useEffect, useRef, useState } from 'react'
 import LabelList from '@/components/home/label-list/index'
 import FollowedWorks from '@/components/home/followed-works'
 import RecommendedWorks from '@/components/home/recommended-works'
-import { labelList, normalWorkList } from '@/test/data'
+import RankingList from '@/components/home/ranking-list'
+import { labelList, normalWorkList, rankWorkList } from '@/test/data'
 import { debounce } from 'lodash'
 
 const Home: FC = () => {
@@ -31,6 +32,7 @@ const Home: FC = () => {
         <LabelList labelList={labelList} />
         <FollowedWorks workList={normalWorkList} />
         <RecommendedWorks workList={normalWorkList} />
+        <RankingList workList={rankWorkList} />
       </div>
     </div>
   )

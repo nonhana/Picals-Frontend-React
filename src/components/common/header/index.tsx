@@ -13,7 +13,7 @@ type HomeProps = {
 }
 
 const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
-  const [showSidebar, setShowSidebar] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(true)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
 
@@ -25,16 +25,14 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
 
   return (
     <div className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10'>
-      <div className='flex items-center gap-2.5'>
-        <Icon
-          className='cursor-pointer'
-          width={24}
-          color='#858585'
-          icon='ant-design:menu-outlined'
-          onClick={() => setShowSidebar(true)}
-        />
-        <img className='h-10 cursor-pointer' src={logo} alt='picals-logo' />
-      </div>
+      <Icon
+        className='fixed cursor-pointer z-9'
+        width={24}
+        color='#858585'
+        icon='ant-design:menu-outlined'
+        onClick={() => setShowSidebar(true)}
+      />
+      <img className='ml-34px h-10 cursor-pointer' src={logo} alt='picals-logo' />
 
       <div className='absolute w-30% top-1/2 left-1/2 -translate-x-50% -translate-y-50%'>
         <Input.Search

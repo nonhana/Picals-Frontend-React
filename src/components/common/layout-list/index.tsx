@@ -6,14 +6,15 @@ import { CSSTransition } from 'react-transition-group'
 type LayoutListProps = {
   className?: string
   gap?: number
-  scrollType: 'label' | 'label-img' | 'work-normal'
+  scrollType: 'label' | 'label-img' | 'work-normal' | 'work-rank'
   children: React.ReactNode
 }
 
-const scrollMap: Map<'label' | 'label-img' | 'work-normal', number> = new Map([
+const scrollMap: Map<'label' | 'label-img' | 'work-normal' | 'work-rank', number> = new Map([
   ['label', 400],
   ['label-img', 512],
   ['work-normal', 1020],
+  ['work-rank', 924],
 ])
 
 const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap = 10 }) => {
