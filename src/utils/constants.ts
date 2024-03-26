@@ -40,7 +40,7 @@ type HeaderMenuItem = {
 export const HEADER_MENU_LIST: HeaderMenuItem[] = [
   {
     icon: 'ant-design:picture-filled',
-    route: '/illustration',
+    route: '/home',
     name: '插画',
   },
   {

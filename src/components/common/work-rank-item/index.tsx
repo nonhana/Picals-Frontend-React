@@ -9,19 +9,21 @@ type WorkRankItemProps = {
 
 const WorkRankItem: FC<WorkRankItemProps> = ({ itemInfo, like }) => {
   return (
-    <div className='relative w-288px rd-1 bg-white overflow-hidden'>
+    <div className='shrink-0 relative w-288px rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-288px h-288px z-99'>
         <div className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-288px h-288px' />
         <div className='absolute top-10px left-10px w-10 h-10 rd-full bg-black opacity-32 flex items-center justify-center font-size-24px font-bold color-white'>
           <span>{itemInfo.range}</span>
         </div>
-        <div className='absolute top-10px right-10px'>
-          <div className='rd-full absolute w-full h-full bg-black opacity-8 z--1' />
-          <div className='px-2 py-1 flex items-center gap-1'>
-            <Icon width='12px' color='#ffffff' icon='ant-design:file-filled' />
-            <span className='font-size-10px color-white'>{itemInfo.imgList.length}</span>
+        {itemInfo.imgList.length > 1 && (
+          <div className='absolute top-10px right-10px'>
+            <div className='rd-full absolute w-full h-full bg-black opacity-8 z--1' />
+            <div className='px-2 py-1 flex items-center gap-1'>
+              <Icon width='12px' color='#ffffff' icon='ant-design:file-filled' />
+              <span className='font-size-10px color-white'>{itemInfo.imgList.length}</span>
+            </div>
           </div>
-        </div>
+        )}
         <Icon
           className='absolute bottom-10px right-10px cursor-pointer'
           width='24px'

@@ -1,10 +1,9 @@
+import { lazy } from 'react'
+import { lazyLoad } from './utils/lazyLoad'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from '@/app'
-import Login from '@/pages/login'
-import Home from '@/pages/home'
-import ComponentsDisplay from '@/pages/components-display'
 
-const router = createBrowserRouter([
+const routeList = [
   {
     path: '/',
     element: <App />,
@@ -15,18 +14,20 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <Login />,
+        element: lazyLoad(lazy(() => import('@/pages/login'))),
       },
       {
         path: 'home',
-        element: <Home />,
+        element: lazyLoad(lazy(() => import('@/pages/home'))),
       },
       {
         path: 'components',
-        element: <ComponentsDisplay />,
+        element: lazyLoad(lazy(() => import('@/pages/components-display'))),
       },
     ],
   },
-])
+]
+
+const router = createBrowserRouter(routeList)
 
 export default router

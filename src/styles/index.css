@@ -1,0 +1,78 @@
+/* Initial CSS for the project */
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+
+:root {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-width: 800px;
+  padding: 0;
+  margin: 0 auto;
+  overflow: auto;
+  background: #fff;
+}
+
+a {
+  text-decoration: none;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(0 0 0 / 10%);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  appearance: none;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background: rgb(0 0 0 / 30%);
+  border-radius: 5px;
+  transition: color 0.2s ease;
+}
+
+/* Specific global classes for the project */
+.not-show-scrollbar {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #6d757a;
+}
+
+/* Specific global animations for the project */
+.opacity-gradient-enter {
+  opacity: 0;
+}
+
+.opacity-gradient-enter-active {
+  opacity: 1;
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
+
+.opacity-gradient-exit {
+  opacity: 1;
+}
+
+.opacity-gradient-exit-active {
+  opacity: 0;
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}

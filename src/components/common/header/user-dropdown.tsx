@@ -1,9 +1,8 @@
 import { FC } from 'react'
 import { useSelector } from 'react-redux'
-import type { UserInfo } from '@/utils/types'
+import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
 import { CSSTransition } from 'react-transition-group'
-import './index.scss'
 
 const UserDropdown: FC<{
   visible: boolean
@@ -14,22 +13,20 @@ const UserDropdown: FC<{
     console.log(route)
   }
 
-  const userInfo = useSelector((state: { user: { userInfo: UserInfo } }) => state.user.userInfo)
+  const userInfo = useSelector((state: AppState) => state.user.userInfo)
 
   return (
     <>
-      {/* 全屏蒙版，实现点击后关闭窗口 */}
-      <CSSTransition in={visible} timeout={300} classNames='dropdown-mask' unmountOnExit>
+      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-16 z-9998'
+          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-16 z-999'
           onClick={() => setVisible(false)}
         />
       </CSSTransition>
 
-      {/* 窗口本体 */}
-      <CSSTransition in={visible} timeout={300} classNames='dropdown' unmountOnExit>
+      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-9999 ${className}`}>
+          className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-1000 ${className}`}>
           <div className='absolute top-0 left-0 w-full h-12.5 bg-#f5f5f5' />
           <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
             <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
