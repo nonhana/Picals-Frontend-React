@@ -9,7 +9,7 @@ type MainListProps = {
 }
 
 const MainList: FC<MainListProps> = ({ currentPage }) => {
-  const [workList, setWorkList] = useMap<WorkNormalItemInfo>(normalWorkList)
+  const [workList, _, setWorkList] = useMap<WorkNormalItemInfo>(normalWorkList)
 
   const handleLike = (id: string) => {
     setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })

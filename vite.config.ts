@@ -35,7 +35,6 @@ export default defineConfig({
     react(),
   ],
   build: {
-    // 编译时独立输出css
     cssCodeSplit: true,
   },
   server: {

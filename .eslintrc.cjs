@@ -36,5 +36,6 @@ module.exports = {
     'space-before-blocks': 2, // 要求语句块之前有空格
     '@typescript-eslint/explicit-function-return-type': 0, // 禁止函数必须要定义返回类型
     '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-unused-vars': [2, { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
   },
 }
