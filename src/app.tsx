@@ -8,13 +8,13 @@ const App: FC = () => {
   const location = useLocation()
 
   return (
-    <div className='h-screen'>
+    <div className=''>
       {location.pathname !== '/login' && <Header changeSideBarStatus={setShowSideBar} />}
       <div
         style={{
           width: showSideBar && location.pathname !== '/login' ? 'calc(100% - 240px)' : '100%',
         }}
-        className='absolute h-100% right-0 flex transition-all duration-300'>
+        className='absolute right-0 flex transition-all duration-300'>
         <Outlet />
       </div>
     </div>

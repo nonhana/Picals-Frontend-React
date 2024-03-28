@@ -46,3 +46,9 @@ export interface WorkRankItemInfo {
   authorAvatar: string
   isLiked: boolean
 }
+
+// 用户item信息
+export interface UserItemInfo extends UserInfo {
+  works: WorkNormalItemInfo[]
+  isFollowed: boolean
+}

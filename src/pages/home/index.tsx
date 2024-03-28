@@ -20,7 +20,7 @@ const Home: FC = () => {
   }, [currentWidth])
 
   return (
-    <div ref={homeRef} className='relative w-100% mt-30px'>
+    <div ref={homeRef} className='relative w-100% my-30px'>
       <div style={{ width: `${width}px` }} className='flex flex-col mx-auto'>
         <LabelList labelList={labelList} />
         <FollowedWorks workList={normalWorkList} />

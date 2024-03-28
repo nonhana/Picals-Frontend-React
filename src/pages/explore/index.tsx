@@ -1,17 +1,21 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import WorkList from '@/components/explore/work-list'
+import UserList from '@/components/explore/user-list'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
+import { PictureOutlined, UserOutlined } from '@ant-design/icons'
 import { useWinChange } from '@/hooks'
 
 const items: MenuProps['items'] = [
   {
     label: '推荐作品',
     key: 'works',
+    icon: <PictureOutlined />,
   },
   {
     label: '推荐用户',
     key: 'users',
+    icon: <UserOutlined />,
   },
 ]
 
@@ -35,7 +39,7 @@ const Explore: FC = () => {
   }
 
   return (
-    <div ref={exploreRef} className='relative w-100% mt-30px'>
+    <div ref={exploreRef} className='relative w-100% my-30px'>
       <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
         <Menu
           className='w-100%'
@@ -44,7 +48,7 @@ const Explore: FC = () => {
           mode='horizontal'
           items={items}
         />
-        {current === 'works' ? <WorkList /> : null}
+        {current === 'works' ? <WorkList /> : <UserList width={width} />}
       </div>
     </div>
   )

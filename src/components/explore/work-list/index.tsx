@@ -2,8 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { normalWorkList } from '@/test/data'
 import WorkNormalItem from '@/components/common/work-normal-item'
-import { useMap } from '@/hooks/useMap'
-import { useAtBottom } from '@/hooks'
+import { useMap, useAtBottom } from '@/hooks'
 
 const WorkList: FC = () => {
   const [workList, setWorkList, updateItem] = useMap<WorkNormalItemInfo>([])
@@ -26,18 +25,7 @@ const WorkList: FC = () => {
 
   useEffect(() => {
     if (currentPage === 1) return
-    setWorkList([
-      ...normalWorkList,
-      {
-        id: '100',
-        imgList: ['https://dummyimage.com/400X400'],
-        name: '作品名称1',
-        authorId: '1',
-        authorName: '作者1',
-        authorAvatar: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-        isLiked: true,
-      },
-    ])
+    setWorkList([...normalWorkList])
   }, [currentPage])
 
   return (

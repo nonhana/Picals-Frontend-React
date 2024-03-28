@@ -3,6 +3,7 @@
 import type {
   HistorySearchInfo,
   LabelInfo,
+  UserItemInfo,
   WorkNormalItemInfo,
   WorkRankItemInfo,
 } from '@/utils/types'
@@ -59,5 +60,35 @@ export const rankWorkList: WorkRankItemInfo[] = Array(40)
       authorAvatar: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
       isLiked: true,
       likeCount: 100,
+    }
+  })
+
+// 用户列表
+export const userList: UserItemInfo[] = Array(20)
+  .fill(0)
+  .map((_, userId) => {
+    return {
+      id: String(userId),
+      username: '用户1',
+      email: '1209220829@qq.com',
+      avatar: 'https://dummyimage.com/400X400',
+      intro:
+        '用户个人简介用户个人简介用户个人简介用户个人简介用户个人简介用户个人简介用户个人简介用户个人简介用户个人简介用户个人简介',
+      fanNum: 100,
+      followNum: 200,
+      works: Array(4)
+        .fill(0)
+        .map((_, workId) => {
+          return {
+            id: String(userId + workId),
+            imgList: ['https://dummyimage.com/400X400'],
+            name: '作品名称1',
+            authorId: String(userId),
+            authorName: '作者1',
+            authorAvatar: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+            isLiked: false,
+          }
+        }),
+      isFollowed: false,
     }
   })

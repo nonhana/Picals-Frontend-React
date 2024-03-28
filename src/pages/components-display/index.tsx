@@ -145,6 +145,7 @@ const ComponentsDisplay: FC = () => {
       <div className='flex flex-col gap-10'>
         {userList.map((item) => (
           <UserItem
+            width={1245}
             key={item.id}
             {...item}
             follow={handleFollowUser}

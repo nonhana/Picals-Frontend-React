@@ -10,11 +10,9 @@ const useAtBottom = (): boolean => {
       if (scrollTop + clientHeight >= scrollHeight - 100) {
         if (isBottom) return
         setIsBottom(true)
-        console.log('到底了')
       } else {
         if (!isBottom) return
         setIsBottom(false)
-        console.log('离开底部')
       }
     }
 
