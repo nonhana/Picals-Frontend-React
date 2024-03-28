@@ -8,7 +8,7 @@ type RecommendedWorksProps = {
 }
 
 const RecommendedWorks: FC<RecommendedWorksProps> = ({ workList: sourceData }) => {
-  const [workList, setWorkList] = useMap<WorkNormalItemInfo>(sourceData)
+  const [workList, _, setWorkList] = useMap<WorkNormalItemInfo>(sourceData)
 
   const handleLike = (id: string) => {
     setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })

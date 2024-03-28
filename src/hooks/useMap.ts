@@ -3,9 +3,9 @@ import { message } from 'antd'
 
 type MapType<T> = Map<string, T>
 
-export function useMap<T extends object>(
+function useMap<T extends object>(
   initialItems: T[],
-): [MapType<T>, (id: string, newItem: T) => void, (id: string) => void] {
+): [MapType<T>, (items: T[]) => void, (id: string, newItem: T) => void, (id: string) => void] {
   const convertArrayToMap = (items: T[]): MapType<T> => {
     const map = new Map<string, T>()
     items.forEach((item) => {
@@ -19,6 +19,10 @@ export function useMap<T extends object>(
   }
 
   const [map, setMap] = useState<MapType<T>>(convertArrayToMap(initialItems))
+
+  const setSource = (items: T[]) => {
+    setMap(convertArrayToMap(items))
+  }
 
   const updateItem = (id: string, newItem: T) => {
     setMap((prev) => {
@@ -36,5 +40,7 @@ export function useMap<T extends object>(
     })
   }
 
-  return [map, updateItem, deleteItem]
+  return [map, setSource, updateItem, deleteItem]
 }
+
+export { useMap }

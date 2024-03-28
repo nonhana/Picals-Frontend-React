@@ -1,11 +1,10 @@
 import { FC } from 'react'
-import type { UserInfo, WorkNormalItemInfo } from '@/utils/types'
+import type { UserItemInfo } from '@/utils/types'
 import UserWorkItem from './user-work-item'
 import { Button } from 'antd'
 
-type UserItemProps = UserInfo & {
-  works: WorkNormalItemInfo[]
-  isFollowed: boolean
+type UserItemProps = UserItemInfo & {
+  width: number
   follow: (id: string) => void
   likeWork: (userId: string, workId: string) => void
 }
@@ -19,15 +18,14 @@ const UserItem: FC<UserItemProps> = ({
   follow,
   likeWork,
   isFollowed,
+  width,
 }) => {
   return (
-    <div className='relative p-5 flex gap-5 rd-1 bg-white w-1236px'>
-      {/* 用户头像 */}
+    <div className='relative p-5 flex gap-5 rd-1 bg-white'>
       <div className='shrink-0 w-20 h-20 rd-full overflow-hidden cursor-pointer'>
         <img className='w-full h-full object-cover' src={avatar} alt={username} />
       </div>
 
-      {/* 用户信息 */}
       <div className='flex flex-col gap-5'>
         <div className='font-size-14px font-bold color-#3d3d3d'>
           <span>{username}</span>
@@ -58,9 +56,8 @@ const UserItem: FC<UserItemProps> = ({
         )}
       </div>
 
-      {/* 用户插画列表 */}
       <div className='flex gap-5'>
-        {works.map((work) => (
+        {works.slice(0, width === 1245 ? 4 : 3).map((work) => (
           <UserWorkItem key={work.id} itemInfo={work} like={likeWork} />
         ))}
       </div>

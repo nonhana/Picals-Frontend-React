@@ -17,7 +17,7 @@ const getYesterday = () => {
 const yesterday = getYesterday()
 
 const RankingList: FC<RankingListProps> = ({ workList: sourceData }) => {
-  const [workList, setWorkList] = useMap<WorkRankItemInfo>(sourceData)
+  const [workList, _, setWorkList] = useMap<WorkRankItemInfo>(sourceData)
 
   const handleLike = (id: string) => {
     setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })

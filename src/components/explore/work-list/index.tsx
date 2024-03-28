@@ -1,22 +1,31 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { normalWorkList } from '@/test/data'
 import WorkNormalItem from '@/components/common/work-normal-item'
-import { useMap } from '@/hooks/useMap'
+import { useMap, useAtBottom } from '@/hooks'
 
-type MainListProps = {
-  currentPage: number
-}
-
-const MainList: FC<MainListProps> = ({ currentPage }) => {
-  const [workList, _, setWorkList] = useMap<WorkNormalItemInfo>(normalWorkList)
+const WorkList: FC = () => {
+  const [workList, setWorkList, updateItem] = useMap<WorkNormalItemInfo>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const isBottom = useAtBottom()
 
   const handleLike = (id: string) => {
-    setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
+    updateItem(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
   useEffect(() => {
-    console.log('currentPage:', currentPage)
+    setWorkList(normalWorkList)
+  }, [])
+
+  useEffect(() => {
+    if (isBottom) {
+      setCurrentPage((prev) => prev + 1)
+    }
+  }, [isBottom])
+
+  useEffect(() => {
+    if (currentPage === 1) return
+    setWorkList([...normalWorkList])
   }, [currentPage])
 
   return (
@@ -34,4 +43,4 @@ const MainList: FC<MainListProps> = ({ currentPage }) => {
   )
 }
 
-export default MainList
+export default WorkList

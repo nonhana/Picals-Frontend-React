@@ -25,6 +25,10 @@ const routeList = [
         element: lazyLoad(lazy(() => import('@/pages/followed-new'))),
       },
       {
+        path: 'explore',
+        element: lazyLoad(lazy(() => import('@/pages/explore'))),
+      },
+      {
         path: 'components',
         element: lazyLoad(lazy(() => import('@/pages/components-display'))),
       },
