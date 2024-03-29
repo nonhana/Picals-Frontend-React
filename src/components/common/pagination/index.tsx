@@ -5,18 +5,22 @@ import paginationMore from '@/assets/svgs/pagination-more.svg'
 
 type PaginationProps = {
   total: number
+  pageSize: number
   current: number
   onChange: (page: number) => void
 }
 
-const Pagination: FC<PaginationProps> = ({ total, current, onChange }) => {
+const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange }) => {
+  // 计算得出总共的页数
+  const totalPages = Math.ceil(total / pageSize)
+
   // 递增/递减页数
   const stepPage = (type: 'prev' | 'next') => {
     if (type === 'prev') {
-      if (current === 0) return
+      if (current === 1) return
       onChange(current - 1)
     } else {
-      if (current === total - 1) return
+      if (current === totalPages) return
       onChange(current + 1)
     }
   }
@@ -27,33 +31,33 @@ const Pagination: FC<PaginationProps> = ({ total, current, onChange }) => {
   const renderButtons = () => {
     const buttons = []
     let start = 1
-    let end = total
+    let end = totalPages
 
-    if (total > maxButtonCount) {
-      // 总按钮数超过最大按钮数时，计算start和end
+    if (totalPages > maxButtonCount) {
       start = Math.max(current + 1 - sideButtonCount, 2)
-      end = Math.min(current + 1 + sideButtonCount, total - 1)
+      end = Math.min(current + 1 + sideButtonCount, totalPages - 1)
 
       if (current + 1 < maxButtonCount - 1) {
         end = maxButtonCount - 1
       }
 
-      if (current + 1 > total - maxButtonCount + 2) {
-        start = total - maxButtonCount + 2
+      if (current + 1 > totalPages - maxButtonCount + 2) {
+        start = totalPages - maxButtonCount + 2
       }
     }
 
-    // 添加第一个按钮
-    buttons.push(
-      <div
-        key={1}
-        className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === 1 ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
-        onClick={() => onChange(1)}>
-        <span className={`${current === 1 ? 'color-white' : 'color-#858585'}`}>1</span>
-      </div>,
-    )
+    if (start !== 1) {
+      buttons.push(
+        <div
+          key={1}
+          className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === 1 ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
+          onClick={() => onChange(1)}>
+          <span className={`${current === 1 ? 'color-white' : 'color-#858585'}`}>1</span>
+        </div>,
+      )
+    }
 
-    // 需要添加省略号
+    // 添加省略号
     if (start > 2) {
       buttons.push(
         <div
@@ -77,7 +81,7 @@ const Pagination: FC<PaginationProps> = ({ total, current, onChange }) => {
     }
 
     // 添加末尾的省略号
-    if (end < total - 1) {
+    if (end < totalPages - 1) {
       buttons.push(
         <div
           key='right-ellipsis'
@@ -87,14 +91,15 @@ const Pagination: FC<PaginationProps> = ({ total, current, onChange }) => {
       )
     }
 
-    // 添加最后一个按钮
-    if (total > 1) {
+    if (end !== totalPages && totalPages > 1) {
       buttons.push(
         <div
-          key={total}
-          className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === total ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
-          onClick={() => onChange(total)}>
-          <span className={`${current === total ? 'color-white' : 'color-#858585'}`}>{total}</span>
+          key={totalPages}
+          className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === totalPages ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
+          onClick={() => onChange(totalPages)}>
+          <span className={`${current === totalPages ? 'color-white' : 'color-#858585'}`}>
+            {totalPages}
+          </span>
         </div>,
       )
     }

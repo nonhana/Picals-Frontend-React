@@ -9,10 +9,11 @@ export const lazyLoad = (Component: LazyExoticComponent<ComponentType>): ReactNo
         <Spin
           size='large'
           style={{
+            width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100%',
+            height: '100vh',
           }}
         />
       }>

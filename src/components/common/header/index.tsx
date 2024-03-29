@@ -3,6 +3,7 @@ import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button } from 'antd'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import type { AppState } from '@/store/types'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
@@ -13,6 +14,7 @@ type HomeProps = {
 }
 
 const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
+  const navigate = useNavigate()
   const [showSidebar, setShowSidebar] = useState(true)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
@@ -22,6 +24,14 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
   }, [showSidebar])
 
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
+
+  const handleSearch = (value: string) => {
+    navigate({
+      pathname: '/search-result',
+      search: `?label=${value}&type=work&sortType=new`,
+    })
+    setShowSearchDropdown(false)
+  }
 
   return (
     <div className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10'>
@@ -34,12 +44,17 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
       />
       <img className='ml-34px h-10 cursor-pointer' src={logo} alt='picals-logo' />
 
-      <div className='absolute w-30% top-1/2 left-1/2 -translate-x-50% -translate-y-50%'>
+      <div
+        style={{
+          zIndex: showSearchDropdown ? 1000 : 0,
+        }}
+        className='absolute w-30% top-1/2 left-1/2 -translate-x-50% -translate-y-50%'>
         <Input.Search
           size='large'
           placeholder='请输入你想搜索的内容呀~'
           allowClear
           onFocus={() => setShowSearchDropdown(true)}
+          onSearch={(value) => handleSearch(value)}
         />
       </div>
 
