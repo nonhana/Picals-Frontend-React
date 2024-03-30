@@ -55,9 +55,9 @@ export interface UserItemInfo extends UserInfo {
 
 // 搜索条件
 export interface SearchFilter {
-  type: 'work' | 'user'
+  type: string
   label: string
-  sortType: 'new' | 'old' | 'like' | 'collect'
+  sortType: string
 }
 
 // 标签详细信息
