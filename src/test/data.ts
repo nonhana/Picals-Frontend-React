@@ -6,6 +6,7 @@ import type {
   UserItemInfo,
   WorkNormalItemInfo,
   WorkRankItemInfo,
+  LabelDetailInfo,
 } from '@/utils/types'
 
 // 标签列表
@@ -92,3 +93,13 @@ export const userList: UserItemInfo[] = Array(20)
       isFollowed: false,
     }
   })
+
+// 标签详细信息
+export const labelDetailInfo: LabelDetailInfo = {
+  id: '1',
+  name: '标签1',
+  img: 'https://img.yzcdn.cn/vant/cat.jpeg',
+  color: '#3d3d3d',
+  isMyLike: false,
+  workCount: 100,
+}

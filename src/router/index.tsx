@@ -29,8 +29,8 @@ const routeList = [
         element: lazyLoad(lazy(() => import('@/pages/explore'))),
       },
       {
-        path: 'components',
-        element: lazyLoad(lazy(() => import('@/pages/components-display'))),
+        path: 'search-result',
+        element: lazyLoad(lazy(() => import('@/pages/search-result'))),
       },
     ],
   },

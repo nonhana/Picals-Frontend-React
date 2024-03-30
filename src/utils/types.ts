@@ -52,3 +52,16 @@ export interface UserItemInfo extends UserInfo {
   works: WorkNormalItemInfo[]
   isFollowed: boolean
 }
+
+// 搜索条件
+export interface SearchFilter {
+  type: string
+  label: string
+  sortType: string
+}
+
+// 标签详细信息
+export interface LabelDetailInfo extends LabelInfo {
+  isMyLike: boolean
+  workCount: number
+}

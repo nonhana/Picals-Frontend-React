@@ -10,6 +10,7 @@ const FollowedNew: FC = () => {
   const currentWidth = useWinChange(newRef)
 
   const total = 20
+  const pageSize = 30
 
   const onChange = (page: number) => {
     setCurrentPage(page)
@@ -27,7 +28,7 @@ const FollowedNew: FC = () => {
     <div ref={newRef} className='relative w-100% my-30px'>
       <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
         <MainList currentPage={currentPage} />
-        <Pagination current={currentPage} total={total} onChange={onChange} />
+        <Pagination pageSize={pageSize} current={currentPage} total={total} onChange={onChange} />
       </div>
     </div>
   )
