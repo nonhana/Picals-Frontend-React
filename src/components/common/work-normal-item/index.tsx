@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 
@@ -8,10 +9,15 @@ type WorkNormalItemProps = {
 }
 
 const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like }) => {
+  const navigate = useNavigate()
+
   return (
     <div className='shrink-0 relative w-184px rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
-        <div className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-184px h-184px' />
+        <div
+          onClick={() => navigate(`/work-detail/${itemInfo.id}`)}
+          className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-184px h-184px'
+        />
         {itemInfo.imgList.length > 1 && (
           <div className='absolute top-10px right-10px'>
             <div className='rd-full absolute w-full h-full bg-black opacity-8 z--1' />

@@ -32,6 +32,10 @@ const routeList = [
         path: 'search-result',
         element: lazyLoad(lazy(() => import('@/pages/search-result'))),
       },
+      {
+        path: 'work-detail/:workId',
+        element: lazyLoad(lazy(() => import('@/pages/work-detail'))),
+      },
     ],
   },
 ]

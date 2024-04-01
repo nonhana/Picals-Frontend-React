@@ -1,7 +1,12 @@
 import { FC } from 'react'
+import WorkInfo from '@/components/work-detail/work-info'
 
-const login: FC = () => {
-  return <div>login</div>
+const WorkDetail: FC = () => {
+  return (
+    <div>
+      <WorkInfo />
+    </div>
+  )
 }
 
-export default login
+export default WorkDetail
