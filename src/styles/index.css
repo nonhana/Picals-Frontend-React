@@ -77,3 +77,21 @@ a {
     opacity 300ms,
     transform 300ms;
 }
+
+.down-to-up-enter {
+  transform: translateY(100%);
+}
+
+.down-to-up-enter-active {
+  transition: transform 300ms;
+  transform: translateY(0);
+}
+
+.down-to-up-exit {
+  transform: translateY(0);
+}
+
+.down-to-up-exit-active {
+  transition: transform 300ms;
+  transform: translateY(calc(100% + 20px));
+}

@@ -99,3 +99,21 @@ export interface LabelDetailInfo extends LabelInfo {
   isMyLike: boolean
   workCount: number
 }
+
+// 作品评论信息
+export interface CommentItem {
+  id: string
+  content: string
+  createdAt: string
+  authorInfo: {
+    id: string
+    username: string
+    avatar: string
+  }
+  level: number // 0-一级评论 1-二级评论
+  replyTo?: {
+    id: string
+    username: string
+  }
+  childComments?: CommentItem[]
+}

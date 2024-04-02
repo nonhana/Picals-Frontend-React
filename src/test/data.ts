@@ -8,6 +8,7 @@ import type {
   WorkRankItemInfo,
   LabelDetailInfo,
   WorkDetailInfo,
+  CommentItem,
 } from '@/utils/types'
 
 // 标签列表
@@ -149,3 +150,42 @@ export const workDetailInfo: WorkDetailInfo = {
     homepage: 'https://www.pixiv.net/users/12818930',
   },
 }
+
+// 作品评论列表
+export const workCommentList: CommentItem[] = Array(5)
+  .fill(0)
+  .map((_, index) => ({
+    id: index.toString(),
+    content:
+      '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容',
+    createdAt: '2024-03-20 15:00',
+    authorInfo: {
+      id: '1',
+      username: 'non_hana',
+      avatar: 'https://dummyimage.com/400X400',
+      isFollowed: false,
+    },
+    level: 0,
+    childComments: Array(4)
+      .fill(0)
+      .map((_, childIndex) => ({
+        id: childIndex.toString(),
+        content:
+          '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容',
+        createdAt: '2024-03-20 15:00',
+        authorInfo: {
+          id: '1',
+          username: 'non_hana',
+          avatar: 'https://dummyimage.com/400X400',
+          isFollowed: false,
+        },
+        replyTo: {
+          id: '1',
+          username: 'non_hana',
+        },
+        level: 1,
+      })),
+  }))
+
+// 作品详情页面用户信息
+export const workDetailUserInfo: UserItemInfo = userList[0]
