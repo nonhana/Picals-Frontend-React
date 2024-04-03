@@ -3,7 +3,7 @@ import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button } from 'antd'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import type { AppState } from '@/store/types'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
@@ -59,9 +59,11 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
       </div>
 
       <div className='flex items-center gap-5'>
-        <Button shape='round' type='default' size='large'>
-          <span className='color-#6d757a'>投稿作品</span>
-        </Button>
+        <Link to='/upload'>
+          <Button shape='round' type='default' size='large'>
+            <span className='color-#6d757a'>投稿作品</span>
+          </Button>
+        </Link>
         <Icon width={24} color='#858585' icon='ant-design:bell-filled' />
         <div
           className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'

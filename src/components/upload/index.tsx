@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-const login: FC = () => {
+const Upload: FC = () => {
   return <div>login</div>
 }
 
-export default login
+export default Upload
