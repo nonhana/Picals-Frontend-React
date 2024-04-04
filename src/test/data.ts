@@ -189,3 +189,15 @@ export const workCommentList: CommentItem[] = Array(5)
 
 // 作品详情页面用户信息
 export const workDetailUserInfo: UserItemInfo = userList[0]
+
+// 作品上传界面标签列表
+type Option = {
+  value: string
+  label: string
+}
+export const workUploadLabelList: Option[] = Array(50)
+  .fill(0)
+  .map((_, index) => ({
+    value: index.toString(),
+    label: `标签${index}`,
+  }))

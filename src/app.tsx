@@ -1,6 +1,7 @@
 import { FC, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './components/common/header'
+import { HEADER_WHITE_LIST } from './utils/constants'
 
 const App: FC = () => {
   const [showSideBar, setShowSideBar] = useState(false)
@@ -9,10 +10,15 @@ const App: FC = () => {
 
   return (
     <div className=''>
-      {location.pathname !== '/login' && <Header changeSideBarStatus={setShowSideBar} />}
+      {!HEADER_WHITE_LIST.includes(location.pathname) && (
+        <Header changeSideBarStatus={setShowSideBar} />
+      )}
       <div
         style={{
-          width: showSideBar && location.pathname !== '/login' ? 'calc(100% - 240px)' : '100%',
+          width:
+            showSideBar && !HEADER_WHITE_LIST.includes(location.pathname)
+              ? 'calc(100% - 240px)'
+              : '100%',
         }}
         className='absolute right-0 flex transition-all duration-300'>
         <Outlet />

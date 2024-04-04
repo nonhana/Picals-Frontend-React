@@ -117,3 +117,25 @@ export interface CommentItem {
   }
   childComments?: CommentItem[]
 }
+
+// 上传作品表单信息
+export interface UploadWorkFormInfo {
+  basicInfo: {
+    name: string
+    intro: string
+    isReprinted: boolean
+    openComment: boolean
+    isAIGenerated: boolean
+  }
+  labels: string[] // 标签id列表
+  originInfo?: {
+    url: string
+    authorName: string
+    authorHomepage: string
+  }
+}
+
+// 上传作品信息
+export interface UploadWorkInfo extends UploadWorkFormInfo {
+  imgList: string[]
+}

@@ -36,6 +36,10 @@ const routeList = [
         path: 'work-detail/:workId',
         element: lazyLoad(lazy(() => import('@/pages/work-detail'))),
       },
+      {
+        path: 'upload',
+        element: lazyLoad(lazy(() => import('@/pages/upload'))),
+      },
     ],
   },
 ]
