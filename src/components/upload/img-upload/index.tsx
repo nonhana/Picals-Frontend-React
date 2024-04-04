@@ -39,7 +39,7 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
           <InboxOutlined />
         </p>
         <p className='ant-upload-text'>点击上传或者把图片们拖进来~！</p>
-        <p className='ant-upload-hint'>支持JPG、PNG格式的图片，大小≤10mb！再大就不行了哦！</p>
+        <p className='ant-upload-hint'>支持JPG、PNG格式的图片，大小≤10MB！再大就不行了哦！</p>
       </Dragger>
       <div className='w-212 flex flex-wrap gap-5'>
         {imgList.map((file, index) => (

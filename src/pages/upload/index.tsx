@@ -1,11 +1,14 @@
 import { FC, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ImgUpload from '@/components/upload/img-upload'
 import UploadForm from '@/components/upload/form'
+import UploadSuccess from '@/components/upload/success'
 import type { UploadFile } from 'antd'
 import { Button } from 'antd'
 import type { UploadWorkFormInfo, UploadWorkInfo } from '@/utils/types'
 
 const Upload: FC = () => {
+  const navigate = useNavigate()
   const [imgList, setImgList] = useState<UploadFile[]>([])
   const [formInfo, setFormInfo] = useState<UploadWorkFormInfo>({
     basicInfo: {
@@ -45,23 +48,39 @@ const Upload: FC = () => {
     if (!formInfoCheck) return
     console.log('表单验证成功')
   }, [formInfoCheck])
-
   return (
-    <div className='relative w-100% bg-#f5f5f5 flex flex-col items-center gap-5'>
-      <ImgUpload imgList={imgList} setImgList={setImgList} />
-      <UploadForm
-        formInfo={formInfo}
-        setFormInfo={setFormInfo}
-        submitTrigger={submitTrigger}
-        setFormInfoCheck={setFormInfoCheck}
-      />
-      <Button
-        shape='round'
-        size='large'
-        type='primary'
-        onClick={() => setSubmitTrigger(!submitTrigger)}>
-        投稿作品
-      </Button>
+    <div className='relative w-100% min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
+      {formInfoCheck ? (
+        <UploadSuccess workName={workInfo.basicInfo.name} />
+      ) : (
+        <>
+          <ImgUpload imgList={imgList} setImgList={setImgList} />
+          <UploadForm
+            formInfo={formInfo}
+            setFormInfo={setFormInfo}
+            submitTrigger={submitTrigger}
+            setFormInfoCheck={setFormInfoCheck}
+          />
+          <div className='flex gap-5'>
+            <Button
+              className='w-50'
+              shape='round'
+              size='large'
+              type='default'
+              onClick={() => navigate('/home')}>
+              取消投稿
+            </Button>
+            <Button
+              className='w-50'
+              shape='round'
+              size='large'
+              type='primary'
+              onClick={() => setSubmitTrigger(!submitTrigger)}>
+              投稿作品
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { workUploadLabelList } from '@/test/data'
 import type { UploadWorkFormInfo } from '@/utils/types'
 import { Form, FormProps, Input, Radio, Select, message } from 'antd'
@@ -30,6 +30,7 @@ const UploadForm: FC<UploadFormProps> = ({
   submitTrigger,
   setFormInfoCheck,
 }) => {
+  const [isMounted, setIsMounted] = useState(false)
   const [messageApi, contextHolder] = message.useMessage()
   const [workForm] = Form.useForm()
 
@@ -40,6 +41,7 @@ const UploadForm: FC<UploadFormProps> = ({
 
   const handleFailed: FormProps<UploadWorkFormInfo>['onFinishFailed'] = () => {
     messageApi.error('检查一下表单是否填写完整！')
+    setFormInfoCheck(false)
   }
 
   const handleChange = (value: string) => {
@@ -72,8 +74,10 @@ const UploadForm: FC<UploadFormProps> = ({
   }
 
   useEffect(() => {
-    if (submitTrigger) {
+    if (isMounted) {
       workForm.submit()
+    } else {
+      setIsMounted(true)
     }
   }, [submitTrigger])
 
@@ -135,7 +139,8 @@ const UploadForm: FC<UploadFormProps> = ({
 
           <Form.Item<UploadWorkFormInfo>
             label={<Label text='是否转载' />}
-            name={['basicInfo', 'isReprinted']}>
+            name={['basicInfo', 'isReprinted']}
+            rules={[{ required: true, message: '请选择是否转载作品！' }]}>
             <Radio.Group
               value={formInfo.basicInfo.isReprinted}
               onChange={(event) => changeReprinted(event.target.value)}>
@@ -228,7 +233,8 @@ const UploadForm: FC<UploadFormProps> = ({
           </div>
           <Form.Item<UploadWorkFormInfo>
             label={<Label text='开启评论' />}
-            name={['basicInfo', 'openComment']}>
+            name={['basicInfo', 'openComment']}
+            rules={[{ required: true, message: '请选择是否开启评论！' }]}>
             <Radio.Group
               value={formInfo.basicInfo.openComment}
               onChange={(e) =>
@@ -243,7 +249,8 @@ const UploadForm: FC<UploadFormProps> = ({
           </Form.Item>
           <Form.Item<UploadWorkFormInfo>
             label={<Label text='AI生成作品' />}
-            name={['basicInfo', 'isAIGenerated']}>
+            name={['basicInfo', 'isAIGenerated']}
+            rules={[{ required: true, message: '请选择是否为AI生成作品！' }]}>
             <Radio.Group
               value={formInfo.basicInfo.isAIGenerated}
               onChange={(e) =>
