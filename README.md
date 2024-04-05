@@ -1,6 +1,8 @@
 ![115499204](https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/115499204.jpg)
 
-![logo](https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/logo.png)
+<div align="center">
+   <img src="https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/logo.png" alt="picals-logo" />
+</div>
 
 # Picals-Frontend-React
 
