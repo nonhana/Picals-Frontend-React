@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import LabelList from '@/components/personal-center/my-works/label-list'
-import WorkList from '@/components/personal-center/my-works/work-list'
+import LabelList from '@/components/personal-center/label-list'
+import WorkList from '@/components/personal-center/work-list'
 
 const MyWorks: FC = () => {
   const { userId } = useParams<{ userId: string }>()
