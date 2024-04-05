@@ -43,6 +43,10 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'personal-center/:userId',
+        element: <Navigate to='works' replace />,
+      },
+      {
+        path: 'personal-center/:userId',
         element: lazyLoad(lazy(() => import('@/pages/personal-center'))),
         children: [
           {

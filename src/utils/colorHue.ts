@@ -7,7 +7,7 @@ function hexToRgb(hex: string): number[] {
   return [r, g, b]
 }
 
-export function isWarnHue(color: string): boolean {
+export function isWarmHue(color: string): boolean {
   let rgbArray: number[]
   if (color.startsWith('rgb')) {
     const rgbValue = color.replace('rgb(', '').replace(')', '')
