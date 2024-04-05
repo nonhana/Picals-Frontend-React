@@ -55,5 +55,5 @@ export const HEADER_MENU_LIST: HeaderMenuItem[] = [
   },
 ]
 
-// 哪些页面要隐藏Header
-export const HEADER_WHITE_LIST: string[] = ['/login', '/upload']
+// 哪些路由前缀要隐藏Header
+export const HEADER_WHITE_LIST: RegExp = /^\/(login|upload)/

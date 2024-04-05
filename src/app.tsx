@@ -10,13 +10,14 @@ const App: FC = () => {
 
   return (
     <div className=''>
-      {!HEADER_WHITE_LIST.includes(location.pathname) && (
+      {!HEADER_WHITE_LIST.test(location.pathname) && (
         <Header changeSideBarStatus={setShowSideBar} />
       )}
+
       <div
         style={{
           width:
-            showSideBar && !HEADER_WHITE_LIST.includes(location.pathname)
+            showSideBar && !HEADER_WHITE_LIST.test(location.pathname)
               ? 'calc(100% - 240px)'
               : '100%',
         }}

@@ -9,6 +9,7 @@ import type {
   LabelDetailInfo,
   WorkDetailInfo,
   CommentItem,
+  UserDetailInfo,
 } from '@/utils/types'
 
 // 标签列表
@@ -201,3 +202,17 @@ export const workUploadLabelList: Option[] = Array(50)
     value: index.toString(),
     label: `标签${index}`,
   }))
+
+// 用户详细信息
+export const userDetailInfo: UserDetailInfo = {
+  id: '1',
+  username: 'non_hana',
+  email: '1209220829@qq.com',
+  avatar: 'https://dummyimage.com/400X400',
+  intro: '用户个人简介',
+  fanNum: 100,
+  followNum: 100,
+  background_img: 'https://dummyimage.com/400X400',
+  gender: true,
+  isFollowed: false,
+}

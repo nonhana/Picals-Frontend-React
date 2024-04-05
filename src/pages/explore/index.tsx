@@ -20,10 +20,10 @@ const items: MenuProps['items'] = [
 ]
 
 const Explore: FC = () => {
-  const [current, setCurrent] = useState('works')
   const [width, setWidth] = useState<number>(1245)
   const exploreRef = useRef<HTMLDivElement>(null)
   const currentWidth = useWinChange(exploreRef)
+  const [current, setCurrent] = useState('works')
 
   useEffect(() => {
     if (currentWidth < 1305) {

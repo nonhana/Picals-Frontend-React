@@ -11,6 +11,13 @@ export interface UserInfo {
   followNum: number
 }
 
+// 用户详细信息
+export interface UserDetailInfo extends UserInfo {
+  background_img: string
+  gender: boolean
+  isFollowed: boolean
+}
+
 // 标签信息
 export interface LabelInfo {
   id: string
