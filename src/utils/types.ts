@@ -146,3 +146,9 @@ export interface UploadWorkFormInfo {
 export interface UploadWorkInfo extends UploadWorkFormInfo {
   imgList: string[]
 }
+
+// 收藏夹item信息
+export interface FavoriteItemInfo {
+  id: string
+  name: string
+}

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.5",
+    "@ctrl/tinycolor": "^4.0.3",
     "@iconify/react": "^4.1.1",
     "@reduxjs/toolkit": "^2.2.1",
     "@types/node": "^20.11.30",

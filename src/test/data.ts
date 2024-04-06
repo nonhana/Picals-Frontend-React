@@ -10,6 +10,7 @@ import type {
   WorkDetailInfo,
   CommentItem,
   UserDetailInfo,
+  FavoriteItemInfo,
 } from '@/utils/types'
 
 // 标签列表
@@ -216,3 +217,11 @@ export const userDetailInfo: UserDetailInfo = {
   gender: true,
   isFollowed: false,
 }
+
+// 收藏夹列表
+export const favoriteList: FavoriteItemInfo[] = Array(10)
+  .fill(0)
+  .map((_, index) => ({
+    id: index.toString(),
+    name: `收藏夹${index}`,
+  }))
