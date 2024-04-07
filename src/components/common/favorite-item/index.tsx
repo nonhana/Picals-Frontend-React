@@ -2,6 +2,8 @@ import { FC, useState } from 'react'
 import { Icon } from '@iconify/react'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 const dropdownList: MenuProps['items'] = [
   {
@@ -33,6 +35,18 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
 }) => {
   const [hovering, setHovering] = useState(false)
 
+  const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
+    id,
+    transition: {
+      duration: 500,
+      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+    },
+  })
+  const styles = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
   const onChooseItem: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
       case 'edit':
@@ -48,12 +62,16 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
 
   return (
     <div
+      ref={setNodeRef}
+      {...attributes}
+      style={styles}
       className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
       onClick={() => onChooseFolder(id)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>
       <div className='flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
         <div
+          {...listeners}
           style={{ visibility: hovering ? 'visible' : 'hidden' }}
           className='bg-#c0c0c0 w-3 h-15 flex justify-center items-center cursor-all-scroll'>
           <Icon width='8px' color='#fff' icon='heroicons-outline:bars-3' />
