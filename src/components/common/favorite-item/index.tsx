@@ -86,7 +86,7 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
         <span>{name}</span>
       </div>
       <Dropdown menu={{ items: dropdownList, onClick: onChooseItem }} placement='bottom' arrow>
-        <Icon width='24px' color='#858585' icon='ant-design:more-outlined' />
+        <Icon className='mr-5' width='24px' color='#858585' icon='ant-design:more-outlined' />
       </Dropdown>
     </div>
   )

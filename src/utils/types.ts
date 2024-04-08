@@ -151,4 +151,15 @@ export interface UploadWorkInfo extends UploadWorkFormInfo {
 export interface FavoriteItemInfo {
   id: string
   name: string
+  order: number
+}
+
+// 收藏夹详细信息
+export interface FavoriteDetailInfo extends FavoriteItemInfo {
+  creatorId: string
+  creatorName: string
+  intro: string
+  workNum: number
+  cover: string | null
+  workList: WorkNormalItemInfo[]
 }
