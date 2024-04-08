@@ -12,6 +12,7 @@ import type {
   UserDetailInfo,
   FavoriteItemInfo,
   FavoriteDetailInfo,
+  WorkFavoriteItemInfo,
 } from '@/utils/types'
 
 // 标签列表
@@ -49,6 +50,22 @@ export const normalWorkList: WorkNormalItemInfo[] = Array(30)
       authorName: '作者1',
       authorAvatar: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
       isLiked: true,
+    }
+  })
+
+// 收藏作品列表
+export const favoriteWorkList: WorkFavoriteItemInfo[] = Array(30)
+  .fill(0)
+  .map((_, index) => {
+    return {
+      id: String(index),
+      imgList: ['https://dummyimage.com/400X400'],
+      name: '作品名称1',
+      authorId: '1',
+      authorName: '作者1',
+      authorAvatar: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+      isLiked: true,
+      favoriteId: '1',
     }
   })
 
@@ -226,6 +243,7 @@ export const favoriteList: FavoriteItemInfo[] = Array(10)
     id: index.toString(),
     name: `收藏夹${index}`,
     order: index,
+    workNum: 100,
   }))
 
 // 收藏夹详细信息
@@ -242,12 +260,13 @@ export const favoriteDetailInfo: FavoriteDetailInfo = {
   workList: Array(100)
     .fill(0)
     .map((_, index) => ({
-      id: index.toString(),
+      id: String(index),
       imgList: ['https://dummyimage.com/400X400'],
       name: '作品名称1',
       authorId: '1',
       authorName: '作者1',
       authorAvatar: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
       isLiked: true,
+      favoriteId: '1',
     })),
 }

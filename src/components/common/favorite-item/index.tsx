@@ -65,7 +65,7 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
       ref={setNodeRef}
       {...attributes}
       style={styles}
-      className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
+      className={`relative flex justify-between items-center w-250px h-15 cursor-pointer hover:bg-#f5f5f5 ${folderStatus ? 'bg-#f5f5f5' : 'bg-#fff'}`}
       onClick={() => onChooseFolder(id)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>

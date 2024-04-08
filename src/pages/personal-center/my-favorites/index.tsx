@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { favoriteDetailInfo } from '@/test/data'
 import Sidebar from '@/components/personal-center/favorites/sidebar'
 import Header from '@/components/personal-center/favorites/header'
+import WorkList from '@/components/personal-center/favorites/work-list'
 
 const MyFavorites: FC = () => {
   return (
@@ -9,6 +10,7 @@ const MyFavorites: FC = () => {
       <Sidebar />
       <div>
         <Header {...favoriteDetailInfo} />
+        <WorkList workList={favoriteDetailInfo.workList} />
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import type { FavoriteItemInfo } from '@/utils/types'
 import { favoriteList } from '@/test/data'
 import FavoriteItem from '@/components/common/favorite-item'
@@ -29,10 +30,21 @@ const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
 }
 
 const Sidebar: FC = () => {
+  const { favoriteId, userId } = useParams()
+  const navigate = useNavigate()
+
   const [folderList, setFolderList] = useState<FavoriteItemInfo[]>(favoriteList)
   const [folderStatusList, setFolderStatusList] = useState<boolean[]>(
-    new Array(favoriteList.length).fill(false),
+    new Array(folderList.length).fill(false),
   )
+
+  useEffect(() => {
+    setFolderStatusList(
+      folderList.map((item) => {
+        return item.id === favoriteId
+      }),
+    )
+  }, [favoriteId])
 
   // 拖拽结束后的操作
   const dragEndEvent = (dragItem: DragEndEvent) => {
@@ -49,11 +61,7 @@ const Sidebar: FC = () => {
   }
 
   const onChooseFolder = (id: string) => {
-    setFolderStatusList((prev) =>
-      prev.map((item, index) =>
-        index === folderList.findIndex((item) => item.id === id) ? !item : false,
-      ),
-    )
+    navigate(`/personal-center/${userId}/favorites/${id}`)
   }
 
   const onDeleteFolder = (id: string) => {
