@@ -11,6 +11,13 @@ export interface UserInfo {
   followNum: number
 }
 
+// 用户详细信息
+export interface UserDetailInfo extends UserInfo {
+  background_img: string
+  gender: boolean
+  isFollowed: boolean
+}
+
 // 标签信息
 export interface LabelInfo {
   id: string
@@ -138,4 +145,26 @@ export interface UploadWorkFormInfo {
 // 上传作品信息
 export interface UploadWorkInfo extends UploadWorkFormInfo {
   imgList: string[]
+}
+
+// 收藏夹item信息
+export interface FavoriteItemInfo {
+  id: string
+  name: string
+  order: number
+  workNum: number
+}
+
+// 收藏作品item信息
+export interface WorkFavoriteItemInfo extends WorkNormalItemInfo {
+  favoriteId: string
+}
+
+// 收藏夹详细信息
+export interface FavoriteDetailInfo extends FavoriteItemInfo {
+  creatorId: string
+  creatorName: string
+  intro: string
+  cover: string | null
+  workList: WorkFavoriteItemInfo[]
 }

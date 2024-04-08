@@ -1,9 +1,10 @@
 import { lazy } from 'react'
 import { lazyLoad } from './utils/lazyLoad'
+import type { RouteObject } from 'react-router-dom'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from '@/app'
 
-const routeList = [
+const routeList: RouteObject[] = [
   {
     path: '/',
     element: <App />,
@@ -39,6 +40,28 @@ const routeList = [
       {
         path: 'upload',
         element: lazyLoad(lazy(() => import('@/pages/upload'))),
+      },
+      {
+        path: 'personal-center/:userId',
+        element: <Navigate to='works' replace />,
+      },
+      {
+        path: 'personal-center/:userId',
+        element: lazyLoad(lazy(() => import('@/pages/personal-center'))),
+        children: [
+          {
+            path: 'works',
+            element: lazyLoad(lazy(() => import('@/pages/personal-center/my-works'))),
+          },
+          {
+            path: 'favorites/:favoriteId',
+            element: lazyLoad(lazy(() => import('@/pages/personal-center/my-favorites'))),
+          },
+          {
+            path: 'likes',
+            element: lazyLoad(lazy(() => import('@/pages/personal-center/my-likes'))),
+          },
+        ],
       },
     ],
   },

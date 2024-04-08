@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
@@ -29,9 +30,11 @@ const UserDropdown: FC<{
           className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-1000 ${className}`}>
           <div className='absolute top-0 left-0 w-full h-12.5 bg-#f5f5f5' />
           <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
-            <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
-              <img className='w-12.5' src={userInfo.avatar} alt='avatar' />
-            </div>
+            <Link to={`/personal-center/${userInfo.id}`}>
+              <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
+                <img className='w-12.5' src={userInfo.avatar} alt='avatar' />
+              </div>
+            </Link>
             <div className='font-bold font-size-14px color-#3d3d3d'>
               <span>{userInfo.username}</span>
             </div>
