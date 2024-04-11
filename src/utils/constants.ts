@@ -56,4 +56,7 @@ export const HEADER_MENU_LIST: HeaderMenuItem[] = [
 ]
 
 // 哪些路由前缀要隐藏Header
-export const HEADER_WHITE_LIST: RegExp = /^\/(login|upload)/
+export const HEADER_WHITE_LIST: RegExp = /^\/login/
+
+// 哪些路由前缀不以蒙版形式展示Sidebar
+export const SIDEBAR_WHITE_LIST = ['/home', '/followed-new', '/explore']

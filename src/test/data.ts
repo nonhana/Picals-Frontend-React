@@ -19,11 +19,14 @@ import type {
 export const labelList: LabelInfo[] = Array(100)
   .fill(0)
   .map((_, index) => {
+    const color = `#${Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0')}`
     return {
       id: index.toString(),
       name: `标签${index}`,
       img: 'https://img.yzcdn.cn/vant/cat.jpeg',
-      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+      color,
     }
   })
 
