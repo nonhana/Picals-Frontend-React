@@ -1,5 +1,5 @@
-import { FC } from 'react'
-import { Link } from 'react-router-dom'
+import { FC, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
@@ -10,27 +10,34 @@ const UserDropdown: FC<{
   className?: string
   setVisible: (visible: boolean) => void
 }> = ({ visible, className, setVisible }) => {
+  const location = useLocation()
+
+  const userInfo = useSelector((state: AppState) => state.user.userInfo)
+
   const selectItem = (route: string) => {
     console.log(route)
   }
 
-  const userInfo = useSelector((state: AppState) => state.user.userInfo)
+  // 当在这个组件内部触发路由切换时，将visible设置为false
+  useEffect(() => {
+    setVisible(false)
+  }, [location.pathname])
 
   return (
     <>
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-16 z-999'
+          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
           onClick={() => setVisible(false)}
         />
       </CSSTransition>
 
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-1000 ${className}`}>
+          className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-2000 ${className}`}>
           <div className='absolute top-0 left-0 w-full h-12.5 bg-#f5f5f5' />
           <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
-            <Link to={`/personal-center/${userInfo.id}`}>
+            <Link to={`/personal-center/${userInfo.id}/works`}>
               <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
                 <img className='w-12.5' src={userInfo.avatar} alt='avatar' />
               </div>

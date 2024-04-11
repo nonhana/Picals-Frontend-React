@@ -20,14 +20,14 @@ const SearchDropdown: FC<{
 
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-16 z-999'
+          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
           onClick={() => setVisible(false)}
         />
       </CSSTransition>
 
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className={`not-show-scrollbar absolute bg-#fff w-545px rd-6px overflow-hidden z-1000 ${className} select-none`}>
+          className={`not-show-scrollbar absolute bg-#fff w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}>
           <div className='m-b-5'>
             <div className='w-full p-10px flex justify-between items-center'>
               <span className='font-bold font-size-14px color-#6d757a'>历史记录</span>
