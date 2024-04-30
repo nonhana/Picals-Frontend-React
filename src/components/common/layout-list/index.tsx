@@ -37,11 +37,11 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap 
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}>
       <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <GreyButton
-          className='z-999 absolute top-1/2 -translate-y-1/2 left-0'
-          onClick={() => scrollX('right')}>
-          <Icon color='#fff' icon='ant-design:caret-left-filled' />
-        </GreyButton>
+        <div className='z-999 absolute top-1/2 -translate-y-1/2 left-0'>
+          <GreyButton onClick={() => scrollX('right')}>
+            <Icon color='#fff' icon='ant-design:caret-left-filled' />
+          </GreyButton>
+        </div>
       </CSSTransition>
       <div
         ref={layoutRef}
@@ -52,11 +52,11 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap 
         {children}
       </div>
       <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <GreyButton
-          className='z-999 absolute top-1/2 -translate-y-1/2 right-0'
-          onClick={() => scrollX('left')}>
-          <Icon color='#fff' icon='ant-design:caret-right-filled' />
-        </GreyButton>
+        <div className='z-999 absolute top-1/2 -translate-y-1/2 right-0'>
+          <GreyButton onClick={() => scrollX('left')}>
+            <Icon color='#fff' icon='ant-design:caret-right-filled' />
+          </GreyButton>
+        </div>
       </CSSTransition>
     </div>
   )

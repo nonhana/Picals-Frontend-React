@@ -43,18 +43,19 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
 
   return (
     <>
+      <Icon
+        className='fixed cursor-pointer z-1 left-10 h-16'
+        width={24}
+        color='#858585'
+        icon='ant-design:menu-outlined'
+        onClick={() => setShowSidebar(true)}
+      />
+
       <div
         style={{
           zIndex: showSearchDropdown ? 2000 : 0,
         }}
         className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10'>
-        <Icon
-          className='fixed cursor-pointer z-9'
-          width={24}
-          color='#858585'
-          icon='ant-design:menu-outlined'
-          onClick={() => setShowSidebar(true)}
-        />
         <img
           onClick={() => {
             navigate('/home')
