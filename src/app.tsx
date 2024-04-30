@@ -19,7 +19,7 @@ const App: FC = () => {
   }, [showSideBar, location.pathname])
 
   return (
-    <div className=''>
+    <div>
       {location.pathname !== '/login' && <Header changeSideBarStatus={setShowSideBar} />}
       <div style={{ width }} className='absolute right-0 flex transition-all duration-300'>
         <Outlet />
