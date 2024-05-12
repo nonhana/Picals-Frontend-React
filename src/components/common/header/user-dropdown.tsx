@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
@@ -10,18 +10,21 @@ const UserDropdown: FC<{
   className?: string
   setVisible: (visible: boolean) => void
 }> = ({ visible, className, setVisible }) => {
-  const location = useLocation()
-
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
 
   const selectItem = (route: string) => {
     console.log(route)
   }
 
-  // 当在这个组件内部触发路由切换时，将visible设置为false
+  const toggleBodyOverflow = (visible: boolean) => {
+    document.documentElement.style.overflow = visible ? 'hidden scroll' : ''
+    document.body.style.overflow = visible ? 'hidden' : ''
+    document.body.style.maxHeight = visible ? '100vh' : ''
+  }
+
   useEffect(() => {
-    setVisible(false)
-  }, [location.pathname])
+    toggleBodyOverflow(visible)
+  }, [visible])
 
   return (
     <>

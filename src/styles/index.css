@@ -99,6 +99,25 @@ a {
   transform: translateY(calc(100% + 20px));
 }
 
+/* 从上到下变化 */
+.up-to-down-enter {
+  transform: translateY(-100%);
+}
+
+.up-to-down-enter-active {
+  transition: transform 300ms;
+  transform: translateY(0);
+}
+
+.up-to-down-exit {
+  transform: translateY(0);
+}
+
+.up-to-down-exit-active {
+  transition: transform 300ms;
+  transform: translateY(calc(-100% - 20px));
+}
+
 /* 从左到右变化 */
 .left-to-right-enter {
   transform: translateX(-100%);

@@ -48,6 +48,7 @@ const Upload: FC = () => {
     if (!formInfoCheck) return
     console.log('表单验证成功')
   }, [formInfoCheck])
+
   return (
     <div className='relative w-100% min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
       {formInfoCheck ? (

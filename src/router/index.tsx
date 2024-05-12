@@ -1,13 +1,18 @@
 import { lazy } from 'react'
-import { lazyLoad } from './utils/lazyLoad'
 import type { RouteObject } from 'react-router-dom'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from '@/app'
+import AutoTop from './utils/auto-top'
+import LazyLoad from './utils/lazy-load'
 
 const routeList: RouteObject[] = [
   {
     path: '/',
-    element: <App />,
+    element: (
+      <AutoTop>
+        <App />
+      </AutoTop>
+    ),
     children: [
       {
         path: '/',
@@ -15,31 +20,31 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'login',
-        element: lazyLoad(lazy(() => import('@/pages/login'))),
+        element: LazyLoad(lazy(() => import('@/pages/login'))),
       },
       {
         path: 'home',
-        element: lazyLoad(lazy(() => import('@/pages/home'))),
+        element: LazyLoad(lazy(() => import('@/pages/home'))),
       },
       {
         path: 'followed-new',
-        element: lazyLoad(lazy(() => import('@/pages/followed-new'))),
+        element: LazyLoad(lazy(() => import('@/pages/home/followed-new'))),
       },
       {
         path: 'explore',
-        element: lazyLoad(lazy(() => import('@/pages/explore'))),
+        element: LazyLoad(lazy(() => import('@/pages/explore'))),
       },
       {
         path: 'search-result',
-        element: lazyLoad(lazy(() => import('@/pages/search-result'))),
+        element: LazyLoad(lazy(() => import('@/pages/search-result'))),
       },
       {
         path: 'work-detail/:workId',
-        element: lazyLoad(lazy(() => import('@/pages/work-detail'))),
+        element: LazyLoad(lazy(() => import('@/pages/work-detail'))),
       },
       {
         path: 'upload',
-        element: lazyLoad(lazy(() => import('@/pages/upload'))),
+        element: LazyLoad(lazy(() => import('@/pages/upload'))),
       },
       {
         path: 'personal-center/:userId',
@@ -47,19 +52,19 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'personal-center/:userId',
-        element: lazyLoad(lazy(() => import('@/pages/personal-center'))),
+        element: LazyLoad(lazy(() => import('@/pages/personal-center'))),
         children: [
           {
             path: 'works',
-            element: lazyLoad(lazy(() => import('@/pages/personal-center/my-works'))),
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-works'))),
           },
           {
             path: 'favorites/:favoriteId',
-            element: lazyLoad(lazy(() => import('@/pages/personal-center/my-favorites'))),
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-favorites'))),
           },
           {
             path: 'likes',
-            element: lazyLoad(lazy(() => import('@/pages/personal-center/my-likes'))),
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-likes'))),
           },
         ],
       },

@@ -7,14 +7,21 @@ import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
 import { Link } from 'react-router-dom'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
+import { useMap } from '@/hooks'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
   authorWorkList: WorkNormalItemInfo[]
 }
 
-const WorkInfo: FC<WorkInfoProps> = ({ workInfo, authorWorkList }) => {
+const WorkInfo: FC<WorkInfoProps> = ({ workInfo, authorWorkList: sourceData }) => {
   const [loading, setLoading] = useState(true)
+  const [authorWorkList, _, setAuthorWorkList] = useMap<WorkNormalItemInfo>(sourceData)
+
+  const handleLike = (id: string) => {
+    console.log('like', id)
+    setAuthorWorkList(id, { ...authorWorkList.get(id)!, isLiked: !authorWorkList.get(id)!.isLiked })
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -149,8 +156,8 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, authorWorkList }) => {
             </div>
 
             <LayoutList scrollType='work-normal'>
-              {authorWorkList.map((work, index) => (
-                <WorkLittleItem key={index} itemInfo={work} />
+              {Array.from(authorWorkList.values()).map((work, index) => (
+                <WorkLittleItem key={index} itemInfo={work} like={handleLike} />
               ))}
             </LayoutList>
           </div>

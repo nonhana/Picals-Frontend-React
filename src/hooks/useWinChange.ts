@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react'
 import type { RefObject } from 'react'
 import { debounce } from 'lodash'
 
+/**
+ * @description 监听窗口变化，返回当前窗口宽度
+ * @param target - 监听的目标元素
+ * @returns - 当前窗口宽度
+ */
 function useWinChange(target: RefObject<HTMLElement>): number {
   const [width, setWidth] = useState<number>(window.innerWidth)
 
@@ -10,7 +15,7 @@ function useWinChange(target: RefObject<HTMLElement>): number {
       if (target.current) {
         setWidth(target.current.offsetWidth)
       }
-    }, 50)
+    }, 20)
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])

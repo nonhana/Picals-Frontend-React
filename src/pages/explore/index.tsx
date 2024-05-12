@@ -1,10 +1,10 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import WorkList from '@/components/explore/work-list'
 import UserList from '@/components/explore/user-list'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { PictureOutlined, UserOutlined } from '@ant-design/icons'
-import { useWinChange } from '@/hooks'
 
 const items: MenuProps['items'] = [
   {
@@ -22,8 +22,8 @@ const items: MenuProps['items'] = [
 const Explore: FC = () => {
   const [width, setWidth] = useState<number>(1245)
   const exploreRef = useRef<HTMLDivElement>(null)
-  const currentWidth = useWinChange(exploreRef)
   const [current, setCurrent] = useState('works')
+  const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
     if (currentWidth < 1305) {

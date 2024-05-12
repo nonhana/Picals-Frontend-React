@@ -1,30 +1,45 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './components/common/header'
 import { SIDEBAR_WHITE_LIST } from './utils/constants'
+import { useWinChange } from './hooks'
 
 const App: FC = () => {
   const location = useLocation()
   const [showSideBar, setShowSideBar] = useState(false)
-  const [width, setWidth] = useState('100%')
+  const [naturalSideBarVisible, setNaturalSideBarVisible] = useState(false) // 是否自然地触发侧边栏显示与否，而非点击按钮
+  const [marginTrigger, setMarginTrigger] = useState(false) // 用来控制主窗口是否向右移动
+  const appRef = useRef<HTMLDivElement | null>(null)
+  const currentWidth = useWinChange(appRef)
 
   useEffect(() => {
-    setWidth(
-      showSideBar &&
-        location.pathname !== '/login' &&
-        SIDEBAR_WHITE_LIST.includes(location.pathname)
-        ? 'calc(100% - 240px)'
-        : '100%',
-    )
-  }, [showSideBar, location.pathname])
+    if (SIDEBAR_WHITE_LIST.includes(location.pathname)) {
+      if (naturalSideBarVisible) setMarginTrigger(showSideBar)
+      else setMarginTrigger(false)
+    } else {
+      setMarginTrigger(
+        showSideBar &&
+          location.pathname !== '/login' &&
+          SIDEBAR_WHITE_LIST.includes(location.pathname),
+      )
+    }
+  }, [showSideBar, location.pathname, currentWidth])
 
   return (
-    <div>
-      {location.pathname !== '/login' && <Header changeSideBarStatus={setShowSideBar} />}
-      <div style={{ width }} className='absolute right-0 flex transition-all duration-300'>
-        <Outlet />
+    <>
+      {location.pathname !== '/login' && (
+        <Header
+          width={currentWidth}
+          changeSideBarStatus={setShowSideBar}
+          setNaturalSideBarVisible={setNaturalSideBarVisible}
+        />
+      )}
+      <div
+        ref={appRef}
+        className={`flex transition-all duration-300 ${marginTrigger ? 'ml-240px' : ''}`}>
+        <Outlet context={currentWidth} />
       </div>
-    </div>
+    </>
   )
 }
 
