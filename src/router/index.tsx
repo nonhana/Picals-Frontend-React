@@ -28,7 +28,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'followed-new',
-        element: LazyLoad(lazy(() => import('@/pages/home/followed-new'))),
+        element: LazyLoad(lazy(() => import('@/pages/followed-new'))),
       },
       {
         path: 'explore',

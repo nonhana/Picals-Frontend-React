@@ -5,7 +5,7 @@ import Comment from './comment'
 import InputWindow from './input-window'
 import type { CommentItem } from '@/utils/types'
 import { workCommentList } from '@/test/data'
-import { Input, Button } from 'antd'
+import { Input, Button, message } from 'antd'
 
 type CommentsProps = {
   loading: boolean
@@ -18,6 +18,8 @@ interface Replying {
 }
 
 const Comments: FC<CommentsProps> = ({ loading }) => {
+  const [messageApi, contextHolder] = message.useMessage()
+
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
   const totalCount = 1000
   const [commentList, setCommentList] = useState<CommentItem[]>([])
@@ -121,40 +123,56 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
 
   const submitComment = (content: string) => {
     console.log(content)
+    if (content === '') {
+      messageApi.error('评论内容不能为空')
+    } else {
+      messageApi.success('评论成功')
+      setContent('')
+    }
   }
 
   return (
-    <div>
-      <div className='flex gap-10px items-center'>
-        <span className='font-size-18px font-bold color-#3d3d3d'>评论</span>
-        <span className='font-size-14px color-#6d757a'>目前共有{totalCount}条评论</span>
-      </div>
-      <div ref={inputRef} className='my-5 flex justify-between items-center'>
+    <>
+      {contextHolder}
+      <div>
         <div className='flex gap-10px items-center'>
-          <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
-            <img
-              className='w-full h-full object-cover'
-              src={userInfo.avatar}
-              alt={userInfo.username}
+          <span className='font-size-18px font-bold color-#3d3d3d'>评论</span>
+          <span className='font-size-14px color-#6d757a'>目前共有{totalCount}条评论</span>
+        </div>
+        <div ref={inputRef} className='my-5 flex justify-between items-center'>
+          <div className='flex gap-10px items-center'>
+            <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
+              <img
+                className='w-full h-full object-cover'
+                src={userInfo.avatar}
+                alt={userInfo.username}
+              />
+            </div>
+            <Input
+              className='w-90'
+              size='large'
+              placeholder='随便写点东东吧~'
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
             />
           </div>
-          <Input
-            className='w-90'
-            size='large'
-            placeholder='随便写点东东吧~'
-            onChange={(event) => setContent(event.target.value)}
-          />
-        </div>
 
-        <Button shape='round' size='large' type='primary' onClick={() => submitComment(content)}>
-          发布评论
-        </Button>
+          <Button shape='round' size='large' type='primary' onClick={() => submitComment(content)}>
+            发布评论
+          </Button>
+        </div>
+        {commentList.map((comment) => (
+          <Comment key={comment.id} comment={comment} reply={reply} />
+        ))}
+        <InputWindow
+          content={content}
+          setContent={setContent}
+          replyTo={replyTo}
+          showWindow={showWindow}
+          onSubmit={submitComment}
+        />
       </div>
-      {commentList.map((comment) => (
-        <Comment key={comment.id} comment={comment} reply={reply} />
-      ))}
-      <InputWindow replyTo={replyTo} showWindow={showWindow} onSubmit={submitComment} />
-    </div>
+    </>
   )
 }
 

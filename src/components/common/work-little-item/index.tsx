@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 
@@ -9,14 +9,13 @@ type WorkLittleItemProps = {
 }
 
 const WorkLittleItem: FC<WorkLittleItemProps> = ({ itemInfo, like }) => {
-  const navigate = useNavigate()
-
   return (
-    <div
-      onClick={() => navigate(`/work-detail/${itemInfo.id}`)}
-      className='shrink-0 relative w-118px h-118px rd-1 bg-white overflow-hidden select-none'>
+    <div className='shrink-0 relative w-118px h-118px rd-1 bg-white overflow-hidden select-none'>
       <div className='absolute top-0 left-0 w-full h-full z-99'>
-        <div className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-184px h-184px' />
+        <Link
+          to={`/work-detail/${itemInfo.id}`}
+          className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-118px h-118px'
+        />
         <Icon
           className='p-10px absolute bottom-0 right-0 cursor-pointer'
           width='44px'

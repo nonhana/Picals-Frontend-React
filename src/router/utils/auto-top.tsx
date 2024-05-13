@@ -7,12 +7,8 @@ type AutoTopProps = {
 
 const AutoTop: FC<AutoTopProps> = ({ children }) => {
   const { pathname } = useLocation()
-
-  useLayoutEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [pathname])
-
-  return <>{children}</>
+  useLayoutEffect(() => document.body.scrollTo({ top: 0, behavior: 'smooth' }), [pathname])
+  return children
 }
 
 export default AutoTop

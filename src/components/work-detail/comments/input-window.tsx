@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { CSSTransition } from 'react-transition-group'
@@ -7,12 +7,19 @@ import { Button, Input } from 'antd'
 type InputWindowProps = {
   showWindow: boolean
   replyTo: string
+  content: string
+  setContent: (content: string) => void
   onSubmit: (content: string) => void
 }
 
-const InputWindow: FC<InputWindowProps> = ({ showWindow, onSubmit, replyTo }) => {
+const InputWindow: FC<InputWindowProps> = ({
+  showWindow,
+  content,
+  setContent,
+  onSubmit,
+  replyTo,
+}) => {
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
-  const [content, setContent] = useState('')
 
   return (
     <CSSTransition in={showWindow} timeout={300} classNames='down-to-up' unmountOnExit>
@@ -28,6 +35,7 @@ const InputWindow: FC<InputWindowProps> = ({ showWindow, onSubmit, replyTo }) =>
           <Input
             className='w-90'
             size='large'
+            value={content}
             placeholder={replyTo ? `回复${replyTo}：` : '随便写点东东吧~'}
             onChange={(event) => setContent(event.target.value)}
           />
