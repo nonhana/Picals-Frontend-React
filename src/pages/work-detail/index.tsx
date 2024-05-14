@@ -1,11 +1,15 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { workDetailInfo, normalWorkList, workDetailUserInfo } from '@/test/data'
 import WorkInfo from '@/components/work-detail/work-info'
 import UserInfo from '@/components/work-detail/user-info'
+import { UserItemInfo } from '@/utils/types'
 
 const WorkDetail: FC = () => {
+  const [userInfo, setUserInfo] = useState<UserItemInfo>(workDetailUserInfo)
+
   const follow = (id: string) => {
     console.log('follow', id)
+    setUserInfo({ ...userInfo, isFollowed: !userInfo.isFollowed })
   }
 
   return (
@@ -15,7 +19,7 @@ const WorkDetail: FC = () => {
           <WorkInfo workInfo={workDetailInfo} authorWorkList={normalWorkList} />
         </div>
         <div>
-          <UserInfo onFollow={follow} userInfo={workDetailUserInfo} />
+          <UserInfo onFollow={follow} userInfo={userInfo} />
         </div>
       </div>
     </div>

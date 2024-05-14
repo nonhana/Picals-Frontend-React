@@ -1,4 +1,5 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import { Modal, message } from 'antd'
@@ -13,6 +14,16 @@ const SearchDropdown: FC<{
   setVisible: (visible: boolean) => void
 }> = ({ visible, className, setVisible }) => {
   const [messageApi, contextHolder] = message.useMessage()
+
+  const toggleBodyOverflow = (visible: boolean) => {
+    document.documentElement.style.overflow = visible ? 'hidden scroll' : ''
+    document.body.style.overflow = visible ? 'hidden' : ''
+    document.body.style.maxHeight = visible ? '100vh' : ''
+  }
+
+  useEffect(() => {
+    toggleBodyOverflow(visible)
+  }, [visible])
 
   return (
     <>
@@ -55,11 +66,13 @@ const SearchDropdown: FC<{
             </div>
             <ul className='list-none m-0 p-0 max-h-40 overflow-y-scroll'>
               {historyList.map((item) => (
-                <li
-                  key={item.id}
-                  className='cursor-pointer p-10px flex justify-between items-center font-size-14px color-#6d757a hover:bg-#f5f5f5 transition-duration-300'>
-                  <span>{item.name}</span>
-                  <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />
+                <li key={item.id}>
+                  <Link
+                    to={`/search-result?label=${item.name}&type=work&sortType=new`}
+                    className='cursor-pointer p-10px flex justify-between items-center font-size-14px color-#6d757a hover:bg-#f5f5f5 transition-duration-300'>
+                    <span>{item.name}</span>
+                    <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />
+                  </Link>
                 </li>
               ))}
             </ul>

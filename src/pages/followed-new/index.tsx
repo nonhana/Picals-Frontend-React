@@ -1,13 +1,13 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import MainList from '@/components/followed-new/main-list'
 import Pagination from '@/components/common/pagination'
-import { useWinChange } from '@/hooks'
 
 const FollowedNew: FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [width, setWidth] = useState<number>(1245)
   const newRef = useRef<HTMLDivElement>(null)
-  const currentWidth = useWinChange(newRef)
+  const currentWidth = useOutletContext<number>()
 
   const total = 20
   const pageSize = 30

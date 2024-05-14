@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import LayoutList from '@/components/common/layout-list'
 import WorkNormalItem from '@/components/common/work-normal-item'
-import { useMap } from '@/hooks/useMap'
+import { useMap } from '@/hooks'
 import type { WorkNormalItemInfo } from '@/utils/types'
 
 type FollowedWorksProps = {

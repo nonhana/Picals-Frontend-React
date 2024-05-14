@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { Icon } from '@iconify/react'
-import type { MenuProps } from 'antd'
+import { type MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'

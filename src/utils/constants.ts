@@ -58,5 +58,9 @@ export const HEADER_MENU_LIST: HeaderMenuItem[] = [
 // 哪些路由前缀要隐藏Header
 export const HEADER_WHITE_LIST: RegExp = /^\/login/
 
-// 哪些路由前缀不以蒙版形式展示Sidebar
+// 哪些路由前缀需要对 Sidebar 进行特殊处理
 export const SIDEBAR_WHITE_LIST = ['/home', '/followed-new', '/explore']
+
+// 主页显隐侧边栏的触发宽度
+export const TRIGGER_MIN_WIDTH = 1305
+export const TRIGGER_MAX_WIDTH = 1545

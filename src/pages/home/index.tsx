@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useWinChange } from '@/hooks'
+import { useOutletContext } from 'react-router-dom'
 import LabelList from '@/components/home/label-list/index'
 import FollowedWorks from '@/components/home/followed-works'
 import RecommendedWorks from '@/components/home/recommended-works'
@@ -9,7 +9,7 @@ import { labelList, normalWorkList, rankWorkList } from '@/test/data'
 const Home: FC = () => {
   const [width, setWidth] = useState<number>(1245)
   const homeRef = useRef<HTMLDivElement>(null)
-  const currentWidth = useWinChange(homeRef)
+  const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
     if (currentWidth < 1305) {

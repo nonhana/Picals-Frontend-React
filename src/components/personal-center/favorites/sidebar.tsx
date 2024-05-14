@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import type { FavoriteItemInfo } from '@/utils/types'
+import type { FavoriteItemInfo, FavoriteFormInfo } from '@/utils/types'
 import { favoriteList } from '@/test/data'
 import FavoriteItem from '@/components/common/favorite-item'
 import type { DragEndEvent, DragMoveEvent } from '@dnd-kit/core'
@@ -8,6 +8,7 @@ import { DndContext } from '@dnd-kit/core'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { Icon } from '@iconify/react'
+import { Modal, Input, Upload, message, Flex } from 'antd'
 
 // 获取拖动元素的索引
 const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
@@ -30,6 +31,8 @@ const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
 }
 
 const Sidebar: FC = () => {
+  const [messageApi, contextHolder] = message.useMessage()
+
   const { favoriteId, userId } = useParams()
   const navigate = useNavigate()
 
@@ -37,6 +40,13 @@ const Sidebar: FC = () => {
   const [folderStatusList, setFolderStatusList] = useState<boolean[]>(
     new Array(folderList.length).fill(false),
   )
+  const [editingFolderId, setEditingFolderId] = useState<string>('')
+  const [modalStatus, setModalStatus] = useState(false)
+  const [formInfo, setFormInfo] = useState<FavoriteFormInfo>({
+    name: '',
+    intro: '',
+    cover: null,
+  })
 
   useEffect(() => {
     setFolderStatusList(
@@ -58,6 +68,7 @@ const Sidebar: FC = () => {
 
   const onAddFolder = () => {
     console.log('add folder')
+    setModalStatus(true)
   }
 
   const onChooseFolder = (id: string) => {
@@ -65,41 +76,106 @@ const Sidebar: FC = () => {
   }
 
   const onDeleteFolder = (id: string) => {
-    console.log('delete folder ' + id)
+    Modal.confirm({
+      title: '删除收藏集',
+      content: '确定删除该收藏集吗？',
+      onOk() {
+        console.log('delete folder ' + id)
+        messageApi.success('删除成功')
+      },
+    })
   }
 
   const onEditFolder = (id: string) => {
-    console.log('edit folder ' + id)
+    setEditingFolderId(id)
+    // TODO: 根据id获取收藏夹信息并填充表单
+    setModalStatus(true)
+  }
+  const confirmAction = () => {
+    setModalStatus(false)
+    setEditingFolderId('')
+    setFormInfo({ name: '', intro: '', cover: null })
+    messageApi.success('编辑成功')
+  }
+  const cancelAction = () => {
+    setModalStatus(false)
+    setEditingFolderId('')
+    setFormInfo({ name: '', intro: '', cover: null })
   }
 
   return (
-    <DndContext onDragEnd={dragEndEvent} modifiers={[restrictToParentElement]}>
-      <SortableContext
-        items={folderList.map((item) => item.id)}
-        strategy={verticalListSortingStrategy}>
-        <div className='relative h-100% border-r-solid border-1px border-color-#858585'>
-          <div
-            className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
-            onClick={() => onAddFolder()}>
-            <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
-              <Icon width='24px' color='#858585' icon='ant-design:plus-circle-outlined' />
-              <span>新建收藏集</span>
+    <>
+      {contextHolder}
+      <DndContext onDragEnd={dragEndEvent} modifiers={[restrictToParentElement]}>
+        <SortableContext
+          items={folderList.map((item) => item.id)}
+          strategy={verticalListSortingStrategy}>
+          <div className='relative h-100% border-r-solid border-1px border-color-#858585'>
+            <div
+              className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
+              onClick={onAddFolder}>
+              <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
+                <Icon width='24px' color='#858585' icon='ant-design:plus-circle-outlined' />
+                <span>新建收藏集</span>
+              </div>
             </div>
+            {folderList.map((item, index) => (
+              <FavoriteItem
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                folderStatus={folderStatusList[index]}
+                onChooseFolder={onChooseFolder}
+                onDeleteFolder={onDeleteFolder}
+                onEditFolder={onEditFolder}
+              />
+            ))}
           </div>
-          {folderList.map((item, index) => (
-            <FavoriteItem
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              folderStatus={folderStatusList[index]}
-              onChooseFolder={onChooseFolder}
-              onDeleteFolder={onDeleteFolder}
-              onEditFolder={onEditFolder}
+        </SortableContext>
+      </DndContext>
+
+      <Modal
+        title={editingFolderId !== '' ? '编辑收藏夹' : '新建收藏夹'}
+        width='420px'
+        open={modalStatus}
+        okText='确认'
+        cancelText='取消'
+        onOk={confirmAction}
+        onCancel={cancelAction}>
+        <Flex vertical gap={20} className='mt-5'>
+          <Flex align='center'>
+            <span className='w-80px'>名称：</span>
+            <Input
+              className='w-250px'
+              placeholder='请输入收藏集名称'
+              value={formInfo.name}
+              onChange={(e) => setFormInfo({ ...formInfo, name: e.target.value })}
             />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+          </Flex>
+          <Flex align='center'>
+            <span className='w-80px'>简介：</span>
+            <Input
+              className='w-250px'
+              placeholder='请输入收藏集简介'
+              value={formInfo.intro}
+              onChange={(e) => setFormInfo({ ...formInfo, intro: e.target.value })}
+            />
+          </Flex>
+          <Flex align='center'>
+            <span className='w-80px'>封面：</span>
+            <Upload
+              showUploadList={false}
+              beforeUpload={(file) => {
+                console.log(file)
+              }}>
+              <div className='w-100px h-100px flex justify-center items-center bg-#f5f5f5'>
+                <Icon width='24px' color='#858585' icon='ant-design:upload-outlined' />
+              </div>
+            </Upload>
+          </Flex>
+        </Flex>
+      </Modal>
+    </>
   )
 }
 

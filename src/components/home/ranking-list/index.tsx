@@ -26,7 +26,7 @@ const RankingList: FC<RankingListProps> = ({ workList: sourceData }) => {
   return (
     <div className='relative p-5'>
       <div className='title m-b-10px'>
-        <span>{yesterday}排行榜（每日更新~）</span>
+        <span>{yesterday} 排行榜（每日更新~）</span>
       </div>
 
       <LayoutList scrollType='work-rank' gap={20}>

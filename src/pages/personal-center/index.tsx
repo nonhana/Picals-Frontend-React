@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import Header from '@/components/personal-center/header'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
@@ -24,8 +24,9 @@ const items: MenuProps['items'] = [
 const PersonalCenter: FC = () => {
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
 
+  const location = useLocation()
   const navigate = useNavigate()
-  const [current, setCurrent] = useState('works')
+  const [current, setCurrent] = useState(location.pathname.split('/')[3] || 'works')
 
   const checkoutMenu: MenuProps['onClick'] = (e) => {
     setCurrent(e.key)

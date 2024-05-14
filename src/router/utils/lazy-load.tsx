@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { ReactNode, LazyExoticComponent, ComponentType } from 'react'
 import { Spin } from 'antd'
 
-export const lazyLoad = (Component: LazyExoticComponent<ComponentType>): ReactNode => {
+const LazyLoad = (Component: LazyExoticComponent<ComponentType>): ReactNode => {
   return (
     <Suspense
       fallback={
@@ -21,3 +21,5 @@ export const lazyLoad = (Component: LazyExoticComponent<ComponentType>): ReactNo
     </Suspense>
   )
 }
+
+export default LazyLoad

@@ -168,3 +168,10 @@ export interface FavoriteDetailInfo extends FavoriteItemInfo {
   cover: string | null
   workList: WorkFavoriteItemInfo[]
 }
+
+// 收藏夹表单信息
+export interface FavoriteFormInfo {
+  name: string
+  intro: string
+  cover: string | null
+}

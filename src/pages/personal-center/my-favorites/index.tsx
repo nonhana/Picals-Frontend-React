@@ -6,7 +6,7 @@ import WorkList from '@/components/personal-center/favorites/work-list'
 
 const MyFavorites: FC = () => {
   return (
-    <div className='flex border-solid border-1px border-color-#858585'>
+    <div className='flex mt-5 border-solid border-1px border-color-#858585'>
       <Sidebar />
       <div>
         <Header {...favoriteDetailInfo} />

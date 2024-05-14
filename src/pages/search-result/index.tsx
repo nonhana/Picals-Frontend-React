@@ -1,9 +1,8 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { PictureOutlined, UserOutlined } from '@ant-design/icons'
-import { useWinChange } from '@/hooks'
 import { SearchFilter } from '@/utils/types'
 import { labelDetailInfo } from '@/test/data'
 import LabelInfo from '@/components/search-result/label-info'
@@ -35,7 +34,7 @@ const SearchResult: FC = () => {
   const [current, setCurrent] = useState(searchFilter.type || 'work')
   const [width, setWidth] = useState<number>(1245)
   const exploreRef = useRef<HTMLDivElement>(null)
-  const currentWidth = useWinChange(exploreRef)
+  const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
     if (currentWidth < 1305) {
@@ -53,9 +52,14 @@ const SearchResult: FC = () => {
   }
 
   return (
-    <div ref={exploreRef} className='relative w-100% my-30px'>
-      <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
-        {current === 'work' && <LabelInfo {...labelDetailInfo} />}
+    <div ref={exploreRef} className='relative overflow-hidden w-100% my-30px'>
+      <div
+        style={{
+          width: `${width}px`,
+          marginTop: current === 'work' ? '0' : '-210px',
+        }}
+        className='flex flex-col items-center mx-auto transition-all duration-300 ease-in-out'>
+        <LabelInfo {...labelDetailInfo} />
         <Menu
           className='w-100%'
           onClick={checkoutMenu}

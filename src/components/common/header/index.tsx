@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { SIDEBAR_WHITE_LIST } from '@/utils/constants'
+import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/utils/constants'
 import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button } from 'antd'
@@ -12,24 +12,38 @@ import Sidebar from './sidebar'
 
 const { Search } = Input
 
-type HomeProps = {
+type HeaderProps = {
+  width: number
   changeSideBarStatus: (status: boolean) => void
+  setNaturalSideBarVisible: (status: boolean) => void
 }
 
-const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
+const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBarVisible }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const [showSidebar, setShowSidebar] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
 
-  useEffect(() => {
-    changeSideBarStatus(showSidebar)
-  }, [showSidebar])
+  useEffect(() => changeSideBarStatus(showSidebar), [showSidebar])
 
   useEffect(() => {
-    setShowSidebar(SIDEBAR_WHITE_LIST.includes(location.pathname))
+    setShowSidebar(false)
+    setShowSearchDropdown(false)
+    setShowUserDropdown(false)
   }, [location.pathname])
+
+  useEffect(() => {
+    if (!SIDEBAR_WHITE_LIST.includes(location.pathname)) return
+    if (width < TRIGGER_MIN_WIDTH) {
+      setShowSidebar(false)
+      setNaturalSideBarVisible(false)
+    }
+    if (width > TRIGGER_MAX_WIDTH) {
+      setShowSidebar(true)
+      setNaturalSideBarVisible(true)
+    }
+  }, [width, location.pathname])
 
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
 
@@ -90,7 +104,12 @@ const Header: FC<HomeProps> = ({ changeSideBarStatus }) => {
         </div>
       </div>
 
-      <Sidebar className='top-0 left-0' visible={showSidebar} setVisible={setShowSidebar} />
+      <Sidebar
+        className='top-0 left-0'
+        width={width}
+        visible={showSidebar}
+        setVisible={setShowSidebar}
+      />
 
       <SearchDropdown
         className='top-16 left-1/2 -translate-x-50%'

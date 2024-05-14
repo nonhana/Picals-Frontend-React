@@ -1,18 +1,43 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { CSSTransition } from 'react-transition-group'
 import { Button, Input } from 'antd'
 
+interface Replying {
+  id: string
+  isChild: boolean
+  parent_id?: string
+}
+
 type InputWindowProps = {
   showWindow: boolean
   replyTo: string
-  onSubmit: (content: string) => void
+  content: string
+  setReplyTo: (replyTo: string) => void
+  setReplyData: (replyData: Replying) => void
+  setContent: (content: string) => void
+  onSubmit: (type: 'up' | 'down') => void
 }
 
-const InputWindow: FC<InputWindowProps> = ({ showWindow, onSubmit, replyTo }) => {
+const InputWindow: FC<InputWindowProps> = ({
+  showWindow,
+  content,
+  setReplyTo,
+  setReplyData,
+  setContent,
+  onSubmit,
+  replyTo,
+}) => {
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
-  const [content, setContent] = useState('')
+
+  const clearReplyInfo = () => {
+    setReplyData({
+      id: '',
+      isChild: false,
+    })
+    setReplyTo('')
+  }
 
   return (
     <CSSTransition in={showWindow} timeout={300} classNames='down-to-up' unmountOnExit>
@@ -26,14 +51,21 @@ const InputWindow: FC<InputWindowProps> = ({ showWindow, onSubmit, replyTo }) =>
             />
           </div>
           <Input
-            className='w-90'
+            className={replyTo ? 'w-80' : 'w-90'}
             size='large'
+            value={content}
             placeholder={replyTo ? `回复${replyTo}：` : '随便写点东东吧~'}
             onChange={(event) => setContent(event.target.value)}
           />
         </div>
 
-        <Button shape='round' size='large' type='primary' onClick={() => onSubmit(content)}>
+        {replyTo && (
+          <Button shape='round' size='large' type='default' onClick={clearReplyInfo}>
+            取消回复
+          </Button>
+        )}
+
+        <Button shape='round' size='large' type='primary' onClick={() => onSubmit('down')}>
           发布评论
         </Button>
       </div>

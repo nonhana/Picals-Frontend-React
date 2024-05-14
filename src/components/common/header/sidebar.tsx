@@ -1,33 +1,37 @@
 import { FC, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { HEADER_MENU_LIST, SIDEBAR_WHITE_LIST } from '@/utils/constants'
+import {
+  HEADER_MENU_LIST,
+  SIDEBAR_WHITE_LIST,
+  TRIGGER_MIN_WIDTH,
+  TRIGGER_MAX_WIDTH,
+} from '@/utils/constants'
 import { Icon } from '@iconify/react'
 import logo from '@/assets/svgs/logo.svg'
 import { CSSTransition } from 'react-transition-group'
 
-const Sidebar: FC<{
+type SidebarProps = {
+  width: number
   className?: string
   visible: boolean
   setVisible: (visible: boolean) => void
-}> = ({ className, visible, setVisible }) => {
+}
+
+const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) => {
   const location = useLocation()
-  const [maskTrigger, setMaskTrigger] = useState(false)
+  const [maskTrigger, setMaskTrigger] = useState(true)
+
+  useEffect(() => setMaskTrigger(true), [location.pathname])
 
   useEffect(() => {
-    setMaskTrigger(false)
-    if (!SIDEBAR_WHITE_LIST.includes(location.pathname)) {
-      const timer = setTimeout(() => {
-        setMaskTrigger(true)
-      }, 300)
-      return () => {
-        clearTimeout(timer)
-      }
-    }
-  }, [location.pathname])
+    if (!SIDEBAR_WHITE_LIST.includes(location.pathname)) return
+    if (width < TRIGGER_MIN_WIDTH) setMaskTrigger(true)
+    if (width > TRIGGER_MAX_WIDTH) setMaskTrigger(false)
+  }, [width, location.pathname])
 
   return (
     <>
-      {!SIDEBAR_WHITE_LIST.includes(location.pathname) && maskTrigger && (
+      {maskTrigger && (
         <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
           <div
             className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-999'
