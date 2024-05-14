@@ -7,7 +7,10 @@ type AutoTopProps = {
 
 const AutoTop: FC<AutoTopProps> = ({ children }) => {
   const { pathname } = useLocation()
-  useLayoutEffect(() => document.body.scrollTo({ top: 0, behavior: 'smooth' }), [pathname])
+  useLayoutEffect(() => {
+    if (pathname.split('/')[1] === 'personal-center') return
+    document.body.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [pathname])
   return children
 }
 

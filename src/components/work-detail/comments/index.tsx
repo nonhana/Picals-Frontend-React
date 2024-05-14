@@ -23,7 +23,8 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
   const totalCount = 1000
   const [commentList, setCommentList] = useState<CommentItem[]>([])
-  const [content, setContent] = useState('')
+  const [upContent, setUpContent] = useState('') // 上方输入框的内容
+  const [downContent, setDownContent] = useState('') // 下方输入框的内容
 
   const [replyData, setReplyData] = useState<Replying>({
     id: '',
@@ -121,13 +122,26 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
     }
   }
 
-  const submitComment = (content: string) => {
-    console.log(content)
-    if (content === '') {
-      messageApi.error('评论内容不能为空')
-    } else {
-      messageApi.success('评论成功')
-      setContent('')
+  const submitComment = (type: 'up' | 'down') => {
+    switch (type) {
+      case 'up':
+        if (upContent === '') {
+          messageApi.error('评论内容不能为空')
+        } else {
+          messageApi.success('评论成功')
+          setUpContent('')
+        }
+        break
+      case 'down':
+        if (downContent === '') {
+          messageApi.error('评论内容不能为空')
+        } else {
+          messageApi.success('评论成功')
+          setDownContent('')
+        }
+        break
+      default:
+        break
     }
   }
 
@@ -152,12 +166,12 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
               className='w-90'
               size='large'
               placeholder='随便写点东东吧~'
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
+              value={upContent}
+              onChange={(event) => setUpContent(event.target.value)}
             />
           </div>
 
-          <Button shape='round' size='large' type='primary' onClick={() => submitComment(content)}>
+          <Button shape='round' size='large' type='primary' onClick={() => submitComment('up')}>
             发布评论
           </Button>
         </div>
@@ -165,10 +179,12 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
           <Comment key={comment.id} comment={comment} reply={reply} />
         ))}
         <InputWindow
-          content={content}
-          setContent={setContent}
+          content={downContent}
           replyTo={replyTo}
           showWindow={showWindow}
+          setContent={setDownContent}
+          setReplyTo={setReplyTo}
+          setReplyData={setReplyData}
           onSubmit={submitComment}
         />
       </div>

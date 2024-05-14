@@ -163,17 +163,17 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 </Link>
               ))}
             </div>
-            <div className='flex gap-20px'>
+            <div className='flex my-3 gap-20px'>
               <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
-                <Icon width='12px' color='#858585' icon='ant-design-heart-filled' />
+                <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
                 <span>{workInfo?.likeNum}</span>
               </div>
               <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
-                <Icon width='12px' color='#858585' icon='ant-design:eye-filled' />
+                <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
                 <span> {workInfo?.viewNum}</span>
               </div>
               <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
-                <Icon width='12px' color='#858585' icon='ant-design:star-filled' />
+                <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
                 <span>{workInfo?.collectNum}</span>
               </div>
             </div>

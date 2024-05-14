@@ -13,8 +13,8 @@ interface Replying {
 
 type CommentProps = {
   comment: CommentItem
-  reply: (replyData: Replying) => void
   style?: React.CSSProperties
+  reply: (replyData: Replying) => void
 }
 
 const Comment: FC<CommentProps> = ({ comment, style, reply }) => {

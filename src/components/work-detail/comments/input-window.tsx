@@ -4,22 +4,40 @@ import type { AppState } from '@/store/types'
 import { CSSTransition } from 'react-transition-group'
 import { Button, Input } from 'antd'
 
+interface Replying {
+  id: string
+  isChild: boolean
+  parent_id?: string
+}
+
 type InputWindowProps = {
   showWindow: boolean
   replyTo: string
   content: string
+  setReplyTo: (replyTo: string) => void
+  setReplyData: (replyData: Replying) => void
   setContent: (content: string) => void
-  onSubmit: (content: string) => void
+  onSubmit: (type: 'up' | 'down') => void
 }
 
 const InputWindow: FC<InputWindowProps> = ({
   showWindow,
   content,
+  setReplyTo,
+  setReplyData,
   setContent,
   onSubmit,
   replyTo,
 }) => {
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
+
+  const clearReplyInfo = () => {
+    setReplyData({
+      id: '',
+      isChild: false,
+    })
+    setReplyTo('')
+  }
 
   return (
     <CSSTransition in={showWindow} timeout={300} classNames='down-to-up' unmountOnExit>
@@ -33,7 +51,7 @@ const InputWindow: FC<InputWindowProps> = ({
             />
           </div>
           <Input
-            className='w-90'
+            className={replyTo ? 'w-80' : 'w-90'}
             size='large'
             value={content}
             placeholder={replyTo ? `回复${replyTo}：` : '随便写点东东吧~'}
@@ -41,7 +59,13 @@ const InputWindow: FC<InputWindowProps> = ({
           />
         </div>
 
-        <Button shape='round' size='large' type='primary' onClick={() => onSubmit(content)}>
+        {replyTo && (
+          <Button shape='round' size='large' type='default' onClick={clearReplyInfo}>
+            取消回复
+          </Button>
+        )}
+
+        <Button shape='round' size='large' type='primary' onClick={() => onSubmit('down')}>
           发布评论
         </Button>
       </div>
