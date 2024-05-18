@@ -1,10 +1,20 @@
 import logo from '@/assets/svgs/logo.svg'
-import { Button, Form, Input, Row, message, type FormProps, type FormInstance } from 'antd'
+import {
+  notification,
+  Button,
+  Form,
+  Input,
+  Row,
+  message,
+  type FormProps,
+  type FormInstance,
+} from 'antd'
 import { FC, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import GreyButton from '@/components/common/grey-button'
+import { registerAPI, loginAPI, sendEmailCodeAPI } from '@/apis'
 
 // 登录表单
 type LoginForm = {
@@ -35,36 +45,58 @@ const LoginWindow: FC = () => {
   const [windowVisible, setWindowVisible] = useState(true)
 
   // 登录提交
-  const handleLogin: FormProps<LoginForm>['onFinish'] = (values) => {
-    console.log('Success:', values)
-    navigate('/home')
-  }
-  // 登录失败
-  const handleLoginFailed: FormProps<LoginForm>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo)
+  const handleLogin: FormProps<LoginForm>['onFinish'] = async (values) => {
+    try {
+      const { data } = await loginAPI(values)
+      localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
+      localStorage.setItem('accessToken', data.accessToken)
+      localStorage.setItem('refreshToken', data.refreshToken)
+      notification.success({
+        message: '登录成功',
+        description: `欢迎回来，${data.userInfo.username}！`,
+      })
+      navigate('/home')
+    } catch (error) {
+      console.error(error)
+    }
   }
   // 注册提交
-  const handleRegister: FormProps<RegisterForm>['onFinish'] = (values) => {
-    console.log('Success:', values)
-  }
-  // 注册失败
-  const handleRegisterFailed: FormProps<RegisterForm>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo)
+  const handleRegister: FormProps<RegisterForm>['onFinish'] = async (values) => {
+    try {
+      await registerAPI({
+        email: values.email,
+        password: values.password,
+        verification_code: values.validateCode,
+      })
+      notification.success({
+        message: '注册成功',
+        description: '请登录邮箱验证账号！',
+      })
+      setIsRegister(false)
+    } catch (error) {
+      console.error(error)
+    }
   }
   // 发送验证码，60s倒计时刷新状态
-  const handleSendCode = () => {
-    if (!registerFormRef.current?.getFieldValue('email')) return messageApi.error('请填写邮箱！')
+  const handleSendCode = async () => {
+    const email = registerFormRef.current?.getFieldValue('email')
+    if (!email) return messageApi.error('请填写邮箱！')
     if (codeStatus.isSent) return
-    setCodeStatus({ isSent: true, countDown: 60 })
-    const timer = setInterval(() => {
-      setCodeStatus((prev) => {
-        if (prev.countDown === 0) {
-          clearInterval(timer)
-          return { isSent: false, countDown: 0 }
-        }
-        return { isSent: true, countDown: prev.countDown - 1 }
-      })
-    }, 1000)
+    try {
+      await sendEmailCodeAPI({ email })
+      setCodeStatus({ isSent: true, countDown: 60 })
+      const timer = setInterval(() => {
+        setCodeStatus((prev) => {
+          if (prev.countDown === 0) {
+            clearInterval(timer)
+            return { isSent: false, countDown: 0 }
+          }
+          return { isSent: true, countDown: prev.countDown - 1 }
+        })
+      }, 1000)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -159,7 +191,6 @@ const LoginWindow: FC = () => {
               wrapperCol={{ span: 18 }}
               style={{ width: '100%' }}
               onFinish={handleLogin}
-              onFinishFailed={handleLoginFailed}
               autoComplete='off'>
               <Form.Item<LoginForm>
                 label='邮箱'
@@ -196,7 +227,6 @@ const LoginWindow: FC = () => {
               wrapperCol={{ span: 18 }}
               style={{ width: '100%' }}
               onFinish={handleRegister}
-              onFinishFailed={handleRegisterFailed}
               autoComplete='off'>
               <Form.Item<RegisterForm>
                 label='邮箱'
