@@ -21,9 +21,7 @@ class Request {
     this.instance.interceptors.request.use(
       (config) => {
         const accessToken = localStorage.getItem('access_token')
-        if (accessToken) {
-          config.headers.Authorization = `Bearer ${accessToken}`
-        }
+        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
         return config
       },
       (err) => Promise.reject(err),
@@ -31,9 +29,7 @@ class Request {
 
     // 全局响应拦截器
     this.instance.interceptors.response.use(
-      (response) => {
-        return response.data
-      },
+      (response) => response.data,
       async (err) => {
         if (err.code === 'ECONNABORTED' && err.message.indexOf('timeout') !== -1) {
           notification.error({
@@ -43,13 +39,11 @@ class Request {
           Promise.reject(err)
         } else {
           const { status, data, config } = err.response
-
           if (refreshing) {
             return new Promise((resolve) => {
               pendingTasks.push({ config, resolve })
             })
           }
-
           if (status === 500) {
             notification.error({
               message: '服务器错误',
@@ -74,7 +68,9 @@ class Request {
           } else if (status === 400) {
             notification.error({
               message: '客户端错误',
-              description: data.message || '未知错误',
+              description: Array.isArray(data.message)
+                ? data.message.join('；')
+                : data.message || '未知错误',
             })
           }
           Promise.reject(err)
