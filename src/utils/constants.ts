@@ -2,33 +2,29 @@
 // 用以存放项目中的常量
 
 // 下拉框中的选项列表
-type DropdownItem = {
-  route: string
+type UserHeaderItem = {
+  value: string
   name: string
 }
-export const HEADER_DROPDOWN_LIST: DropdownItem[] = [
+export const HEADER_DROPDOWN_LIST: UserHeaderItem[] = [
   {
-    route: '/1',
-    name: '我的数据',
-  },
-  {
-    route: '/2',
+    value: 'works',
     name: '我发布的作品',
   },
   {
-    route: '/3',
+    value: 'likes',
     name: '我的喜欢',
   },
   {
-    route: '/4',
+    value: 'favorites',
     name: '我的收藏',
   },
   {
-    route: '/5',
+    value: 'history',
     name: '浏览记录',
   },
   {
-    route: '/6',
+    value: 'profile',
     name: '个人资料设置',
   },
 ]
@@ -36,7 +32,9 @@ export const HEADER_DROPDOWN_LIST: DropdownItem[] = [
 // Header的菜单路由跳转
 type HeaderMenuItem = {
   icon: string
-} & DropdownItem
+  route: string
+  name: string
+}
 export const HEADER_MENU_LIST: HeaderMenuItem[] = [
   {
     icon: 'ant-design:picture-filled',

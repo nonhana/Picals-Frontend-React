@@ -10,11 +10,13 @@ import {
   type FormInstance,
 } from 'antd'
 import { FC, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import GreyButton from '@/components/common/grey-button'
 import { registerAPI, loginAPI, sendEmailCodeAPI } from '@/apis'
+import { setLoginStatus, setUserInfo } from '@/store/modules/user'
 
 // 登录表单
 type LoginForm = {
@@ -30,6 +32,7 @@ type RegisterForm = {
 }
 
 const LoginWindow: FC = () => {
+  const dispatch = useDispatch()
   const [messageApi, contextHolder] = message.useMessage()
 
   const registerFormRef = useRef<FormInstance<RegisterForm>>(null)
@@ -47,13 +50,25 @@ const LoginWindow: FC = () => {
   // 登录提交
   const handleLogin: FormProps<LoginForm>['onFinish'] = async (values) => {
     try {
-      const { data } = await loginAPI(values)
-      localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
-      localStorage.setItem('accessToken', data.accessToken)
-      localStorage.setItem('refreshToken', data.refreshToken)
+      const {
+        data: { userInfo, accessToken, refreshToken },
+      } = await loginAPI(values)
+      dispatch(
+        setUserInfo({
+          id: userInfo.id,
+          username: userInfo.username,
+          avatar: userInfo.avatar,
+          email: userInfo.email,
+          fanNum: userInfo.fanCount,
+          followNum: userInfo.followCount,
+        }),
+      )
+      dispatch(setLoginStatus(true))
+      localStorage.setItem('accessToken', accessToken)
+      localStorage.setItem('refreshToken', refreshToken)
       notification.success({
         message: '登录成功',
-        description: `欢迎回来，${data.userInfo.username}！`,
+        description: `欢迎回来，${userInfo.username}！`,
       })
       navigate('/home')
     } catch (error) {

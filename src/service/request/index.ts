@@ -20,7 +20,7 @@ class Request {
     // 全局请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        const accessToken = localStorage.getItem('access_token')
+        const accessToken = localStorage.getItem('accessToken')
         if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
         return config
       },
@@ -54,10 +54,11 @@ class Request {
           } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
             try {
               refreshing = true
+              console.log('正在刷新token')
               const refreshToken = localStorage.getItem('refresh_token')
               const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
-              localStorage.setItem('access_token', data.accessToken)
-              localStorage.setItem('refresh_token', data.refreshToken)
+              localStorage.setItem('accessToken', data.accessToken)
+              localStorage.setItem('refreshToken', data.refreshToken)
             } catch (error) {
               notification.error({
                 message: 'token已失效，请重新进行登录~',

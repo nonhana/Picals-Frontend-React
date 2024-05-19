@@ -109,6 +109,10 @@ export interface UserDetailInfo {
    * 用户名
    */
   username: string
+  /**
+   * 用户是否被当前登录用户关注
+   */
+  isFollowed: boolean
 }
 
 export interface IRefreshTokenRes {

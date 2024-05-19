@@ -14,7 +14,7 @@ export interface UserInfo {
 // 用户详细信息
 export interface UserDetailInfo extends UserInfo {
   background_img: string
-  gender: boolean
+  gender: number
   isFollowed: boolean
 }
 

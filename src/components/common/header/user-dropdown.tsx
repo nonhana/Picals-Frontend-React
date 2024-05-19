@@ -1,19 +1,73 @@
 import { FC, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
 import { CSSTransition } from 'react-transition-group'
+import { Modal, message } from 'antd'
+import { setLoginStatus, setUserInfo } from '@/store/modules/user'
+
+const { confirm } = Modal
 
 const UserDropdown: FC<{
   visible: boolean
   className?: string
   setVisible: (visible: boolean) => void
 }> = ({ visible, className, setVisible }) => {
-  const userInfo = useSelector((state: AppState) => state.user.userInfo)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {
+    user: { userInfo },
+    favorite: { favoriteList },
+  } = useSelector((state: AppState) => state)
 
-  const selectItem = (route: string) => {
-    console.log(route)
+  const selectItem = (value: string) => {
+    switch (value) {
+      case 'works':
+        navigate(`/personal-center/${userInfo.id}/works`)
+        break
+      case 'likes':
+        navigate(`/personal-center/${userInfo.id}/likes`)
+        break
+      case 'favorites':
+        navigate(`/personal-center/${userInfo.id}/favorites/${favoriteList[0].id}`)
+        break
+      case 'history':
+        // navigate(`/personal-center/${userInfo.id}/history`)
+        console.log(value)
+        break
+      case 'profile':
+        // navigate(`/personal-center/${userInfo.id}/profile`)
+        console.log(value)
+        break
+      default:
+        break
+    }
+  }
+
+  const logout = () => {
+    confirm({
+      title: '确定要退出登录吗？',
+      content: '退出登录后使用功能将受限哦~',
+      okText: '确认',
+      cancelText: '取消',
+      onOk() {
+        dispatch(
+          setUserInfo({
+            id: '',
+            username: '',
+            avatar: '',
+            email: '',
+            fanNum: 0,
+            followNum: 0,
+          }),
+        )
+        dispatch(setLoginStatus(false))
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        message.success('退出登录成功')
+      },
+    })
   }
 
   const toggleBodyOverflow = (visible: boolean) => {
@@ -67,10 +121,15 @@ const UserDropdown: FC<{
               <li
                 className='px-2.5 py-3 cursor-pointer hover:bg-#f8f8f8 transition-duration-300'
                 key={index}
-                onClick={() => selectItem(item.route)}>
+                onClick={() => selectItem(item.value)}>
                 {item.name}
               </li>
             ))}
+            <li
+              className='px-2.5 py-3 cursor-pointer hover:bg-#f8f8f8 transition-duration-300'
+              onClick={logout}>
+              退出登录
+            </li>
           </ul>
         </div>
       </CSSTransition>
