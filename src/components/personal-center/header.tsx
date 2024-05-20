@@ -17,16 +17,6 @@ const Header: FC = () => {
   const getUserDetail = async () => {
     try {
       const { data } = await getUserDetailAPI({ id: userId! })
-      return data
-    } catch (error) {
-      console.error(error)
-      return null
-    }
-  }
-
-  useEffect(() => {
-    const fetchUserDetail = async () => {
-      const data = await getUserDetail()
       if (data) {
         setUserInfo({
           id: data.id,
@@ -41,8 +31,13 @@ const Header: FC = () => {
           isFollowed: data.isFollowed,
         })
       }
+    } catch (error) {
+      console.error(error)
     }
-    fetchUserDetail()
+  }
+
+  useEffect(() => {
+    getUserDetail()
   }, [userId])
 
   return (
@@ -102,6 +97,7 @@ const Header: FC = () => {
         <EditModal
           visible={editModalVisible}
           setVisible={setEditModalVisible}
+          onConfirm={getUserDetail}
           id={userInfo?.id || ''}
         />
       )}

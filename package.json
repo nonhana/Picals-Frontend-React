@@ -23,6 +23,7 @@
     "@unocss/reset": "^0.58.5",
     "antd": "^5.15.3",
     "axios": "^1.6.8",
+    "cropperjs": "^1.6.2",
     "dotenv": "^16.4.5",
     "iconify-icon": "^2.0.0",
     "lodash": "^4.17.21",

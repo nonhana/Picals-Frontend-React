@@ -47,6 +47,9 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.6.8
+      cropperjs:
+        specifier: ^1.6.2
+        version: 1.6.2
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5

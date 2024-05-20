@@ -1,4 +1,3 @@
-import * as colorHue from './colorHue'
-import * as constants from './constants'
-
-export { colorHue, constants }
+export * from './colorHue'
+export * from './constants'
+export * from './base64ToFile'

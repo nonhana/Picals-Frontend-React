@@ -1,10 +1,14 @@
 import { FC, useEffect, useState, useRef } from 'react'
-import { getUserDetailAPI, updateUserInfoAPI } from '@/apis'
-import type { UserDetailInfo, IUpdateUserInfoReq } from '@/apis/user/types'
+import { useDispatch } from 'react-redux'
+import { getUserDetailAPI, updateUserInfoAPI, uploadImageAPI } from '@/apis'
+import type { IUpdateUserInfoReq } from '@/apis/user/types'
+import { base64ToFile, MAX_INFO_SIZE } from '@/utils'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
-import { Input, Button } from 'antd'
+import { Input, Button, message } from 'antd'
 import Modal from '../common/modal'
+import HanaCropper from '../common/hana-cropper'
+import { setUserInfo } from '@/store/modules/user'
 
 const { TextArea } = Input
 
@@ -12,15 +16,18 @@ type EditModalProps = {
   id: string
   visible: boolean
   setVisible: (visible: boolean) => void
+  onConfirm: () => void
 }
 
-export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible }) => {
+export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible, onConfirm }) => {
+  const dispatch = useDispatch()
   const [editUserInfo, setEditUserInfo] = useState<IUpdateUserInfoReq>({})
   const [loading, setLoading] = useState(false)
 
   const bgImgInput = useRef<HTMLInputElement | null>(null)
   const [bgImgFile, setBgImgFile] = useState<File | null>(null) // 背景图片文件
   const [bgHovering, setBgHovering] = useState(false)
+  const [bgCropperVisible, setBgCropperVisible] = useState(false)
 
   // 选择背景图片文件
   const chooseBgImgFile = () => {
@@ -30,14 +37,39 @@ export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible }) => {
   const bgImgFileChange = () => {
     const file = bgImgInput.current?.files?.[0]
     if (file) {
-      // setBgImgFile(file)
-      console.log(file)
+      if (file.size > MAX_INFO_SIZE) {
+        message.error('图片大小不能超过 5MB')
+        return
+      }
+      setBgImgFile(file)
+      setBgCropperVisible(true)
     }
   }
+  // 确认裁剪背景图片
+  const confirmCropBgImg = async (imgURL: string) => {
+    try {
+      setLoading(true)
+      const file = base64ToFile(imgURL, 'bgImg')
+      const { data } = await uploadImageAPI({ image: file })
+      setEditUserInfo({ ...editUserInfo, backgroundImg: data })
+      message.success('修改背景图片成功！')
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+      setBgCropperVisible(false)
+    }
+  }
+
+  // 当裁剪框消失时，清空背景图片文件
+  useEffect(() => {
+    if (!bgCropperVisible) setBgImgFile(null)
+  }, [bgCropperVisible])
 
   const avatarInput = useRef<HTMLInputElement | null>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null) // 头像文件
   const [avatarHovering, setAvatarHovering] = useState(false)
+  const [avatarCropperVisible, setAvatarCropperVisible] = useState(false)
 
   // 选择头像文件
   const chooseAvatarFile = () => {
@@ -47,14 +79,36 @@ export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible }) => {
   const avatarImgFileChange = () => {
     const file = avatarInput.current?.files?.[0]
     if (file) {
-      // setAvatarFile(file)
-      console.log(file)
+      if (file.size > MAX_INFO_SIZE) {
+        message.error('图片大小不能超过 5MB')
+        return
+      }
+      setAvatarFile(file)
+      setAvatarCropperVisible(true)
     }
   }
+  // 确认裁剪头像图片
+  const confirmCropAvatarImg = async (imgURL: string) => {
+    try {
+      setLoading(true)
+      const file = base64ToFile(imgURL, 'bgImg')
+      const { data } = await uploadImageAPI({ image: file })
+      setEditUserInfo({ ...editUserInfo, avatar: data })
+      message.success('修改头像成功！')
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+      setAvatarCropperVisible(false)
+    }
+  }
+  // 当裁剪框消失时，清空头像文件
+  useEffect(() => {
+    if (!avatarCropperVisible) setAvatarFile(null)
+  }, [avatarCropperVisible])
 
   // 获取用户的详细信息
   const getUserDetail = async () => {
-    console.log('userId', id)
     try {
       const { data } = await getUserDetailAPI({ id })
       return data
@@ -67,7 +121,6 @@ export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible }) => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       const data = await getUserDetail()
-      console.log(data)
       if (data) {
         setEditUserInfo({
           avatar: data.avatar,
@@ -85,10 +138,24 @@ export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible }) => {
     try {
       setLoading(true)
       await updateUserInfoAPI(editUserInfo)
+      const { data } = await getUserDetailAPI({ id })
+      dispatch(
+        setUserInfo({
+          id: data.id,
+          username: data.username,
+          avatar: data.avatar,
+          email: data.email,
+          fanNum: data.fanCount,
+          followNum: data.followCount,
+        }),
+      )
+      onConfirm()
+      message.success('修改个人资料成功！')
     } catch (error) {
       console.error(error)
     } finally {
       setLoading(false)
+      setVisible(false)
     }
   }
 
@@ -105,6 +172,24 @@ export const EditModal: FC<EditModalProps> = ({ id, visible, setVisible }) => {
   return (
     <Modal title='编辑个人资料' visible={visible} setVisible={setVisible}>
       <>
+        <HanaCropper
+          loading={loading}
+          type='background'
+          visible={bgCropperVisible}
+          setVisible={setBgCropperVisible}
+          imgURL={bgImgFile ? URL.createObjectURL(bgImgFile) : ''}
+          onSaveHandler={(imgURL) => confirmCropBgImg(imgURL)}
+        />
+
+        <HanaCropper
+          loading={loading}
+          type='avatar'
+          visible={avatarCropperVisible}
+          setVisible={setAvatarCropperVisible}
+          imgURL={avatarFile ? URL.createObjectURL(avatarFile) : ''}
+          onSaveHandler={(imgURL) => confirmCropAvatarImg(imgURL)}
+        />
+
         <div className='relative w-full h-63'>
           <input type='file' className='hidden' ref={bgImgInput} onChange={bgImgFileChange} />
           {editUserInfo.backgroundImg ? (

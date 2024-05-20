@@ -49,14 +49,20 @@ class Request {
               message: '服务器错误',
               description: data.message || '未知错误',
             })
+          } else if (status === 413) {
+            notification.error({
+              message: '文件过大',
+              description: '文件过大，选个小点的吧~',
+            })
           } else if (status === 404) {
             window.location.href = '/404'
           } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
             try {
               refreshing = true
               console.log('正在刷新token')
-              const refreshToken = localStorage.getItem('refresh_token')
+              const refreshToken = localStorage.getItem('refreshToken')
               const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
+              console.log('data', data)
               localStorage.setItem('accessToken', data.accessToken)
               localStorage.setItem('refreshToken', data.refreshToken)
             } catch (error) {
