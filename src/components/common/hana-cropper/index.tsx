@@ -34,6 +34,7 @@ const HanaCropper: FC<HanaCropperProps> = ({
 
   return (
     <Modal
+      zIndex={3000}
       loading={loading}
       title='裁剪图片'
       visible={visible}
@@ -45,12 +46,12 @@ const HanaCropper: FC<HanaCropperProps> = ({
         style={{ height: 500 }}
         guides={false}
         crop={onCrop}
-        viewMode={1} // viewMode 选项用来设置裁剪框的显示模式，有四个值：0, 1, 2, 3
+        viewMode={1}
         minCropBoxHeight={100}
         minCropBoxWidth={100}
         responsive={true}
         autoCropArea={1}
-        aspectRatio={type === 'background' ? 4 / 3 : 1 / 1} // aspectRatio 选项用来设置裁剪框的宽高比
+        aspectRatio={type === 'background' ? 4 / 3 : 1 / 1}
         checkOrientation={false}
       />
     </Modal>

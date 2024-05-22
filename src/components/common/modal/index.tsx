@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import { Button } from 'antd'
@@ -6,6 +6,7 @@ import { Button } from 'antd'
 type ModalProps = {
   loading?: boolean
   zIndex?: number
+  width?: number
   visible: boolean
   title: string
   setVisible: (visible: boolean) => void
@@ -13,19 +14,45 @@ type ModalProps = {
   onOk?: () => void // 触发确定按钮的回调
 }
 
-const Modal: FC<ModalProps> = ({ loading, visible, title, setVisible, children, onOk, zIndex }) => {
+const Modal: FC<ModalProps> = ({
+  loading,
+  visible,
+  width = 648,
+  title,
+  setVisible,
+  children,
+  onOk,
+  zIndex,
+}) => {
+  const toggleBodyOverflow = (visible: boolean) => {
+    document.documentElement.style.overflow = visible ? 'hidden scroll' : ''
+    document.body.style.overflow = visible ? 'hidden' : ''
+    document.body.style.maxHeight = visible ? '100vh' : ''
+  }
+
+  useEffect(() => {
+    toggleBodyOverflow(visible)
+  }, [visible])
+
   return (
     <>
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 ${zIndex ? `z-${zIndex - 1}` : 'z-1999'}`}
+          style={{
+            zIndex: zIndex ? zIndex - 1 : 1999,
+          }}
+          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32'
           onClick={() => setVisible(false)}
         />
       </CSSTransition>
 
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <div
-          className={`fixed top-1/2 left-1/2 transform -translate-1/2 w-162 bg-white rd-6 flex flex-col ${zIndex ? `z-${zIndex}` : 'z-2000'}`}>
+          style={{
+            width: `${width}px`,
+            zIndex: zIndex || 2000,
+          }}
+          className='fixed top-1/2 left-1/2 transform -translate-1/2 bg-white rd-6 flex flex-col'>
           <div className='relative w-full h-16 flex justify-center items-center color-#3d3d3d font-size-18px font-bold'>
             <span>{title}</span>
             <Icon

@@ -6,10 +6,11 @@ import WorkLittleItem from '@/components/common/work-little-item'
 import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
 import { Link } from 'react-router-dom'
-import { PhotoProvider, PhotoView } from 'react-photo-view'
+import { PhotoView } from 'react-photo-view'
 import { useMap } from '@/hooks'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
+import HanaViewer from '@/components/common/hana-viewer'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -84,37 +85,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center'>
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
-          <PhotoProvider
-            toolbarRender={({ onScale, scale }) => {
-              return (
-                <>
-                  <svg
-                    className='PhotoView-Slider__toolbarIcon'
-                    onClick={() => onScale(scale + 1)}
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='44'
-                    height='44'
-                    viewBox='0 0 1024 1024'>
-                    <path
-                      fill='currentColor'
-                      d='M637 443H519V309c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v134H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h118v134c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V519h118c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8m284 424L775 721c122.1-148.9 113.6-369.5-26-509c-148-148.1-388.4-148.1-537 0c-148.1 148.6-148.1 389 0 537c139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11M696 696c-118.8 118.7-311.2 118.7-430 0c-118.7-118.8-118.7-311.2 0-430c118.8-118.7 311.2-118.7 430 0c118.7 118.8 118.7 311.2 0 430'
-                    />
-                  </svg>
-                  <svg
-                    className='PhotoView-Slider__toolbarIcon'
-                    onClick={() => onScale(scale - 1)}
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='44'
-                    height='44'
-                    viewBox='0 0 1024 1024'>
-                    <path
-                      fill='currentColor'
-                      d='M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8m284 424L775 721c122.1-148.9 113.6-369.5-26-509c-148-148.1-388.4-148.1-537 0c-148.1 148.6-148.1 389 0 537c139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11M696 696c-118.8 118.7-311.2 118.7-430 0c-118.7-118.8-118.7-311.2 0-430c118.8-118.7 311.2-118.7 430 0c118.7 118.8 118.7 311.2 0 430'
-                    />
-                  </svg>
-                </>
-              )
-            }}>
+          <HanaViewer>
             <div className='w-100% flex flex-col gap-10px'>
               {workInfo?.imgList.map((img, index) => (
                 <PhotoView key={index} src={img}>
@@ -122,7 +93,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 </PhotoView>
               ))}
             </div>
-          </PhotoProvider>
+          </HanaViewer>
           {/* 操作栏 */}
           <div className='w-100% my-10px flex justify-end'>
             <div className='flex gap-40px'>

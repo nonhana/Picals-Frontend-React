@@ -34,6 +34,10 @@ export interface IUpdateUserInfoReq {
    * 用户名
    */
   username?: string
+  /**
+   * 用户性别，0-男，1-女，2-未知
+   */
+  gender?: 0 | 1 | 2
 }
 
 export interface IChangePasswordReq {
@@ -84,7 +88,7 @@ export interface UserDetailInfo {
   /**
    * 用户性别，0-男，1-女，2-未知
    */
-  gender: number
+  gender: 0 | 1 | 2
   /**
    * 用户id
    */
@@ -116,8 +120,8 @@ export interface UserDetailInfo {
 }
 
 export interface IRefreshTokenRes {
-  accessToken: string
-  refreshToken: string
+  access_token: string
+  refresh_token: string
 }
 
 export interface ILoginRes {

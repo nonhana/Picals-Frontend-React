@@ -9,7 +9,7 @@ interface PendingTask {
   resolve: (value: unknown) => void
 }
 let refreshing = false
-const pendingTasks: PendingTask[] = [] // 维护一个请求队列，用于刷新token时重新发起请求
+const pendingTasks: PendingTask[] = [] // 维护一个请求队列，用于刷新token时保存请求
 
 class Request {
   instance: AxiosInstance // axios实例
@@ -59,12 +59,10 @@ class Request {
           } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
             try {
               refreshing = true
-              console.log('正在刷新token')
               const refreshToken = localStorage.getItem('refreshToken')
               const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
-              console.log('data', data)
-              localStorage.setItem('accessToken', data.accessToken)
-              localStorage.setItem('refreshToken', data.refreshToken)
+              localStorage.setItem('accessToken', data.access_token)
+              localStorage.setItem('refreshToken', data.refresh_token)
             } catch (error) {
               notification.error({
                 message: 'token已失效，请重新进行登录~',
