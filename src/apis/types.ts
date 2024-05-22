@@ -158,11 +158,11 @@ export interface LabelItem {
   /**
    * 标签封面图片，当该标签的作品数达到一定量级后，由管理员在后台进行上传，默认就是随机生成的纯色背景图
    */
-  img: null | string
+  cover: null | string
   /**
    * 标签名称
    */
-  name: string
+  value: string
 }
 
 // #endregion

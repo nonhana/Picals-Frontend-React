@@ -4,10 +4,11 @@ import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
 
 type LabelListProps = {
+  loading: boolean
   labelList: LabelInfo[]
 }
 
-const LabelList: FC<LabelListProps> = ({ labelList }) => {
+const LabelList: FC<LabelListProps> = ({ labelList, loading }) => {
   return (
     <LayoutList scrollType='label'>
       {labelList.map((item) => (

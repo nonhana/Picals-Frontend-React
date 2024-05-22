@@ -22,7 +22,7 @@ export interface UserDetailInfo extends UserInfo {
 export interface LabelInfo {
   id: string
   name: string
-  img: string
+  img: string | null
   color: string
 }
 

@@ -1,17 +1,22 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap } from '@/hooks/useMap'
 import type { WorkNormalItemInfo } from '@/utils/types'
+import Empty from '@/components/common/empty'
 
 type RecommendedWorksProps = {
+  loading: boolean
   workList: WorkNormalItemInfo[]
 }
 
-const RecommendedWorks: FC<RecommendedWorksProps> = ({ workList: sourceData }) => {
-  const [workList, _, setWorkList] = useMap<WorkNormalItemInfo>(sourceData)
+const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: sourceData }) => {
+  const [workList, setWorkList, setWorkMapList] = useMap<WorkNormalItemInfo>([])
+  useEffect(() => {
+    setWorkList(sourceData)
+  }, [sourceData])
 
   const handleLike = (id: string) => {
-    setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
+    setWorkMapList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
   return (
@@ -25,6 +30,8 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ workList: sourceData }) =
           <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
         ))}
       </div>
+
+      {workList.size === 0 && !loading && <Empty />}
     </div>
   )
 }

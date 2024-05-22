@@ -5,6 +5,7 @@ import type { WorkRankItemInfo } from '@/utils/types'
 import LayoutList from '@/components/common/layout-list'
 
 type RankingListProps = {
+  loading: boolean
   workList: WorkRankItemInfo[]
 }
 
@@ -16,7 +17,7 @@ const getYesterday = () => {
 
 const yesterday = getYesterday()
 
-const RankingList: FC<RankingListProps> = ({ workList: sourceData }) => {
+const RankingList: FC<RankingListProps> = ({ loading, workList: sourceData }) => {
   const [workList, _, setWorkList] = useMap<WorkRankItemInfo>(sourceData)
 
   const handleLike = (id: string) => {
