@@ -21,6 +21,14 @@ export const getFollowNewWorksAPI = (params: Pagination) => {
   })
 }
 
+// 获取已关注用户新作总数
+export const getFollowNewWorksTotalAPI = () => {
+  return request<undefined, number>({
+    url: '/api/illustration/following-count',
+    method: 'GET',
+  })
+}
+
 // 获取昨日排行榜作品
 export const getRankWorksAPI = () => {
   return request<undefined, WorkNormalItem[]>({
