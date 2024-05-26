@@ -3,6 +3,7 @@ import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap } from '@/hooks/useMap'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import Empty from '@/components/common/empty'
+import { likeActionsAPI } from '@/apis'
 
 type RecommendedWorksProps = {
   loading: boolean
@@ -15,7 +16,8 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
     setWorkList(sourceData)
   }, [sourceData])
 
-  const handleLike = (id: string) => {
+  const handleLike = async (id: string) => {
+    await likeActionsAPI({ id })
     setWorkMapList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 

@@ -9,7 +9,7 @@ type UserWorkItemProps = {
 
 const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
   return (
-    <div className='shrink-0 relative w-184px rd-1 bg-white overflow-hidden'>
+    <div className='shrink-0 relative h-51 w-184px flex flex-col justify-between rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
         <div className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-184px h-184px' />
         {itemInfo.imgList.length > 1 && (
@@ -25,7 +25,7 @@ const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
           className='absolute bottom-10px right-10px cursor-pointer'
           width='24px'
           color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-twotone'}
           onClick={() => like(itemInfo.authorId, itemInfo.id)}
         />
       </div>

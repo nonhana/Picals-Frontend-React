@@ -11,6 +11,7 @@ import { useMap } from '@/hooks'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
 import HanaViewer from '@/components/common/hana-viewer'
+import { likeActionsAPI } from '@/apis'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -33,7 +34,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
   const [authorWorkList, _, setAuthorWorkList] = useMap<WorkNormalItemInfo>(sourceWorkList)
 
   // 喜欢当前作品
-  const handleLikeWork = () => {
+  const handleLikeWork = async () => {
+    await likeActionsAPI({ id: workInfo.id })
     setWorkInfo({ ...workInfo, isLiked: !workInfo.isLiked })
   }
 
@@ -101,7 +103,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 className='cursor-pointer'
                 width='32px'
                 color={workInfo?.isLiked ? 'red' : '#3d3d3d'}
-                icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+                icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-twotone'}
                 onClick={handleLikeWork}
               />
               <Icon

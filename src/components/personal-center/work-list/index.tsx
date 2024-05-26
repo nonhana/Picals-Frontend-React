@@ -8,7 +8,7 @@ import Pagination from '@/components/common/pagination'
 const WorkList: FC = () => {
   const { userId } = useParams<{ userId: string }>()
   const [workCount, setWorkCount] = useState<number>()
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [current, setCurrent] = useState<number>(1)
   const [workList, setWorkList] = useState<WorkNormalItemInfo[]>()
 
   const likeWork = (workId: string) => {
@@ -18,7 +18,7 @@ const WorkList: FC = () => {
   useEffect(() => {
     setWorkList(normalWorkList)
     setWorkCount(1000)
-    setCurrentPage(1)
+    setCurrent(1)
   }, [userId])
 
   return (
@@ -28,12 +28,7 @@ const WorkList: FC = () => {
       </div>
 
       <div className='relative mx-auto'>
-        <Pagination
-          pageSize={30}
-          total={workCount || 0}
-          onChange={setCurrentPage}
-          current={currentPage}
-        />
+        <Pagination pageSize={30} total={workCount || 0} onChange={setCurrent} current={current} />
       </div>
     </div>
   )

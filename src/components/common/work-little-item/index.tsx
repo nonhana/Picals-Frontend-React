@@ -20,7 +20,7 @@ const WorkLittleItem: FC<WorkLittleItemProps> = ({ itemInfo, like }) => {
           className='p-10px absolute bottom-0 right-0 cursor-pointer'
           width='44px'
           color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-twotone'}
           onClick={() => like(itemInfo.id)}
         />
       </div>

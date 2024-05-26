@@ -29,9 +29,9 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
   /* ----------分页相关---------- */
   const total = 100
   const pageSize = 12
-  const [currentPage, setCurrentPage] = useState(1)
+  const [current, setCurrent] = useState(1)
   const onPageChange = (page: number) => {
-    setCurrentPage(page)
+    setCurrent(page)
   }
 
   /* ----------Modal相关---------- */
@@ -210,12 +210,7 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
             />
           ))}
         </div>
-        <Pagination
-          total={total}
-          pageSize={pageSize}
-          current={currentPage}
-          onChange={onPageChange}
-        />
+        <Pagination total={total} pageSize={pageSize} current={current} onChange={onPageChange} />
       </div>
 
       <Modal

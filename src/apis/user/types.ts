@@ -49,6 +49,11 @@ export interface IChangeEmailReq {
   email: string
   verification_code: string
 }
+
+export interface IFavoriteActionsReq {
+  id: string
+  favoriteId: string
+}
 // #endregion
 
 // #region 返回体类型

@@ -34,7 +34,6 @@ const Explore: FC = () => {
   }, [currentWidth])
 
   const checkoutMenu: MenuProps['onClick'] = (e) => {
-    console.log('click ', e)
     setCurrent(e.key)
   }
 

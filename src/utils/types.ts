@@ -89,9 +89,13 @@ export interface WorkRankItemInfo {
 }
 
 // 用户item信息
-export interface UserItemInfo extends UserInfo {
+export interface UserItemInfo {
+  id: string
+  username: string
+  avatar: string
+  intro: string
   works: WorkNormalItemInfo[]
-  isFollowed: boolean
+  isFollowing: boolean
 }
 
 // 搜索条件

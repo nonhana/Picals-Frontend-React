@@ -2,6 +2,7 @@ import request from '@/service'
 import {
   IChangeEmailReq,
   IChangePasswordReq,
+  IFavoriteActionsReq,
   ILoginReq,
   ILoginRes,
   IRefreshTokenReq,
@@ -19,7 +20,6 @@ import {
   UserItem,
   ViewHistoryItem,
   WorkNormalItem,
-  Action,
   Email,
 } from '../types'
 
@@ -123,8 +123,8 @@ export const getUserLikeTagListAPI = (params?: Id) => {
 }
 
 // 添加/移除用户喜欢的标签
-export const tagActionsAPI = (data: Action) => {
-  return request<Action, undefined>({
+export const tagActionsAPI = (data: Id) => {
+  return request<Id, undefined>({
     url: '/api/user/like-label-actions',
     method: 'POST',
     data,
@@ -132,8 +132,8 @@ export const tagActionsAPI = (data: Action) => {
 }
 
 // 关注/取关用户
-export const userActionsAPI = (data: Action) => {
-  return request<Action, undefined>({
+export const userActionsAPI = (data: Id) => {
+  return request<Id, undefined>({
     url: '/api/user/follow-action',
     method: 'POST',
     data,
@@ -240,8 +240,8 @@ export const searchUserTotalAPI = (params: Keyword) => {
 }
 
 // 收藏/取消收藏作品
-export const favoriteActionsAPI = (data: Action) => {
-  return request<Action, undefined>({
+export const favoriteActionsAPI = (data: IFavoriteActionsReq) => {
+  return request<IFavoriteActionsReq, undefined>({
     url: '/api/user/collect',
     method: 'POST',
     data,
@@ -249,10 +249,19 @@ export const favoriteActionsAPI = (data: Action) => {
 }
 
 // 喜欢/取消喜欢作品
-export const likeActionsAPI = (data: Action) => {
-  return request<Action, undefined>({
+export const likeActionsAPI = (data: Id) => {
+  return request<Id, undefined>({
     url: '/api/user/like',
     method: 'POST',
     data,
+  })
+}
+
+// 分页获取推荐用户列表
+export const getRecommendUserListAPI = (params: Pagination) => {
+  return request<Pagination, UserItem[]>({
+    url: '/api/user/recommend-user',
+    method: 'GET',
+    params,
   })
 }

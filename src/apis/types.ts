@@ -22,11 +22,6 @@ export interface Pagination {
   pageSize: number
 }
 
-export interface Action {
-  favoriteId?: string
-  id: string
-  action: 0 | 1
-}
 // #endregion
 
 // #region 数据体类型
@@ -52,9 +47,9 @@ export interface UserItem {
    */
   username: string
   /**
-   * 用户作品列表
+   * 用户作品 id 列表
    */
-  works: WorkNormalItem[]
+  works: string[]
 }
 
 export interface WorkNormalItem {

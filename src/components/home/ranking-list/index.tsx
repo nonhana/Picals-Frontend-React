@@ -3,6 +3,8 @@ import WorkRankItem from '@/components/common/work-rank-item'
 import { useMap } from '@/hooks/useMap'
 import type { WorkRankItemInfo } from '@/utils/types'
 import LayoutList from '@/components/common/layout-list'
+import { likeActionsAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 
 type RankingListProps = {
   loading: boolean
@@ -20,7 +22,8 @@ const yesterday = getYesterday()
 const RankingList: FC<RankingListProps> = ({ loading, workList: sourceData }) => {
   const [workList, _, setWorkList] = useMap<WorkRankItemInfo>(sourceData)
 
-  const handleLike = (id: string) => {
+  const handleLike = async (id: string) => {
+    await likeActionsAPI({ id })
     setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
@@ -35,6 +38,8 @@ const RankingList: FC<RankingListProps> = ({ loading, workList: sourceData }) =>
           <WorkRankItem key={item.id} itemInfo={item} like={handleLike} />
         ))}
       </LayoutList>
+
+      {workList.size === 0 && !loading && <Empty text='emmm，昨日没有作品上榜哦~' />}
     </div>
   )
 }

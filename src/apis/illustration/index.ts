@@ -67,6 +67,15 @@ export const getWorkDetailAPI = (params: Id) => {
   })
 }
 
+// 获取某个作品的简要信息
+export const getWorkSimpleAPI = (params: Id) => {
+  return request<Id, WorkNormalItem>({
+    url: '/api/illustration/simple',
+    method: 'GET',
+    params,
+  })
+}
+
 // 根据标签分页搜索作品
 export const searchWorksByTagAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({

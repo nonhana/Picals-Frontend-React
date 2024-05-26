@@ -66,6 +66,9 @@ const UserDropdown: FC<{
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
         message.success('退出登录成功')
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
       },
     })
   }

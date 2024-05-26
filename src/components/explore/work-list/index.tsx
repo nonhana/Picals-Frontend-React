@@ -1,37 +1,52 @@
 import { FC, useEffect, useState } from 'react'
 import type { WorkNormalItemInfo } from '@/utils/types'
-import { normalWorkList } from '@/test/data'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap, useAtBottom } from '@/hooks'
+import { getRecommendWorksAPI } from '@/apis'
+import { message } from 'antd'
+import Empty from '@/components/common/empty'
+import { likeActionsAPI } from '@/apis'
 
 const WorkList: FC = () => {
+  const [loading, setLoading] = useState(false)
   const [workList, setWorkList, updateItem] = useMap<WorkNormalItemInfo>([])
-  const [currentPage, setCurrentPage] = useState(1)
+  const [current, setCurrent] = useState(1)
+
+  const getRecommentWorks = async () => {
+    try {
+      setLoading(true)
+      const { data } = await getRecommendWorksAPI({ pageSize: 30, current })
+      if (data.length === 0) return message.info('暂时没有更多了...')
+      setWorkList([...Array.from(workList.values()), ...data])
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getRecommentWorks()
+  }, [current])
+
   const isBottom = useAtBottom()
 
-  const handleLike = (id: string) => {
+  const handleLike = async (id: string) => {
+    await likeActionsAPI({ id })
     updateItem(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
   useEffect(() => {
-    setWorkList(normalWorkList)
-  }, [])
-
-  useEffect(() => {
     if (isBottom) {
-      setCurrentPage((prev) => prev + 1)
+      console.log('到达底部')
+      setCurrent((prev) => prev + 1)
     }
   }, [isBottom])
 
-  useEffect(() => {
-    if (currentPage === 1) return
-    setWorkList([...normalWorkList])
-  }, [currentPage])
-
   return (
-    <div className='relative p-5'>
+    <div className='relative w-full p-5'>
       <div className='title m-b-10px'>
-        <span>已关注用户新作</span>
+        <span>推荐作品</span>
       </div>
 
       <div className='relative w-full flex flex-wrap gap-20px'>
@@ -39,6 +54,8 @@ const WorkList: FC = () => {
           <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
         ))}
       </div>
+
+      {workList.size === 0 && !loading && <Empty />}
     </div>
   )
 }
