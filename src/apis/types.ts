@@ -27,13 +27,17 @@ export interface Pagination {
 // #region 数据体类型
 export interface UserItem {
   /**
-   * 用户头像
-   */
-  avatar: string
-  /**
    * 用户id
    */
   id: string
+  /**
+   * 用户名
+   */
+  username: string
+  /**
+   * 用户头像
+   */
+  avatar: string
   /**
    * 用户简介
    */
@@ -43,13 +47,9 @@ export interface UserItem {
    */
   isFollowing: boolean
   /**
-   * 用户名
-   */
-  username: string
-  /**
    * 用户作品 id 列表
    */
-  works: string[]
+  works?: string[]
 }
 
 export interface WorkNormalItem {
@@ -157,7 +157,7 @@ export interface LabelItem {
   /**
    * 标签名称
    */
-  value: string
+  name: string
 }
 
 // #endregion

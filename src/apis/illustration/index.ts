@@ -1,7 +1,6 @@
 import request from '@/service'
 import { Id, Pagination, WorkNormalItem } from '../types'
-import { IEditWorkReq, IUploadWorkReq } from './types'
-import { WorkDetailInfo } from '@/utils/types'
+import { IEditWorkReq, IUploadWorkReq, WorkDetailInfo } from './types'
 
 // 分页获取推荐作品列表
 export const getRecommendWorksAPI = (params: Pagination) => {

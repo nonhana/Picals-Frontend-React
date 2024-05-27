@@ -68,6 +68,15 @@ export const getUserDetailAPI = (params: Id) => {
   })
 }
 
+// 获取用户简要信息
+export const getUserSimpleAPI = (params: Id) => {
+  return request<Id, UserItem>({
+    url: '/api/user/simple',
+    method: 'GET',
+    params,
+  })
+}
+
 // 更新用户信息
 export const updateUserInfoAPI = (data: IUpdateUserInfoReq) => {
   return request<IUpdateUserInfoReq, undefined>({
@@ -188,7 +197,7 @@ export const getUserWorksTagsAPI = (params?: Id) => {
 // 分页获取用户发布的作品列表
 export const getUserWorksListAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
-    url: '/api/user/published-works',
+    url: '/api/user/works',
     method: 'GET',
     params,
   })

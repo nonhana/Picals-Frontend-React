@@ -20,6 +20,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
   const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
   const [current, setCurrent] = useState(1)
 
+  // 获取推荐用户列表
   const getRecommendUserList = async () => {
     try {
       setLoading(true)

@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
 import HanaViewer from '@/components/common/hana-viewer'
 import { likeActionsAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -70,7 +71,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
   const handleFollow = () => {
     setWorkInfo({
       ...workInfo,
-      authorInfo: { ...workInfo.authorInfo, isFollowed: !workInfo.authorInfo.isFollowed },
+      authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
     })
   }
 
@@ -174,9 +175,9 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 <Button
                   shape='round'
                   size='large'
-                  type={workInfo?.authorInfo.isFollowed ? 'default' : 'primary'}
+                  type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
                   onClick={handleFollow}>
-                  {workInfo?.authorInfo.isFollowed ? '已关注' : '关注'}
+                  {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
                 </Button>
               </div>
               <Link to={`/personal-center/${workInfo?.authorInfo.id}`}>
@@ -186,11 +187,15 @@ const WorkInfo: FC<WorkInfoProps> = ({
               </Link>
             </div>
 
-            <LayoutList scrollType='work-normal'>
-              {Array.from(authorWorkList.values()).map((work, index) => (
-                <WorkLittleItem key={index} itemInfo={work} like={handleLike} />
-              ))}
-            </LayoutList>
+            {authorWorkList.size === 0 ? (
+              <Empty showImg={false} text='暂无其他作品' />
+            ) : (
+              <LayoutList scrollType='work-normal'>
+                {Array.from(authorWorkList.values()).map((work, index) => (
+                  <WorkLittleItem key={index} itemInfo={work} like={handleLike} />
+                ))}
+              </LayoutList>
+            )}
           </div>
         </div>
         <Divider />

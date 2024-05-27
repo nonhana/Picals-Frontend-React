@@ -66,12 +66,14 @@ export interface WorkDetailInfo {
     id: string
     username: string
     avatar: string
-    isFollowed: boolean
+    intro: string
+    isFollowing: boolean
   }
   illustratorInfo?: {
     id: string
     username: string
     avatar: string
+    intro: string
     homepage: string
   }
 }
@@ -94,8 +96,8 @@ export interface UserItemInfo {
   username: string
   avatar: string
   intro: string
-  works: WorkNormalItemInfo[]
   isFollowing: boolean
+  works?: WorkNormalItemInfo[]
 }
 
 // 搜索条件

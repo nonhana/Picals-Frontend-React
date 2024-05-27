@@ -55,7 +55,7 @@ class Request {
               description: '文件过大，选个小点的吧~',
             })
           } else if (status === 404) {
-            window.location.href = '/404'
+            // window.location.href = '/404'
           } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
             try {
               refreshing = true
