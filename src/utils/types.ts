@@ -53,6 +53,7 @@ export interface WorkDetailInfo {
   labels: Option[]
   isLiked: boolean
   isCollected: boolean
+  favoriteId?: string
   isReprinted: boolean
   openComment: boolean
   isAIGenerated: boolean
@@ -157,6 +158,8 @@ export interface UploadWorkInfo extends UploadWorkFormInfo {
 export interface FavoriteItemInfo {
   id: string
   name: string
+  intro: string
+  cover: null | string
   order: number
   workNum: number
 }
@@ -170,8 +173,6 @@ export interface WorkFavoriteItemInfo extends WorkNormalItemInfo {
 export interface FavoriteDetailInfo extends FavoriteItemInfo {
   creatorId: string
   creatorName: string
-  intro: string
-  cover: string | null
   workList: WorkFavoriteItemInfo[]
 }
 

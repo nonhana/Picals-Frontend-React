@@ -96,6 +96,10 @@ export interface WorkDetailInfo {
    */
   isCollected: boolean
   /**
+   * 已经被收藏的收藏夹id，如果没有被收藏则不传
+   */
+  favoriteId?: string
+  /**
    * 用户是否已经喜欢
    */
   isLiked: boolean

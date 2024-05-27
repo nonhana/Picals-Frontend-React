@@ -19,6 +19,7 @@ const WorkDetail: FC = () => {
     try {
       setWorkInfoLoading(true)
       const { data } = await getWorkDetailAPI({ id: workId! })
+      console.log('data', data)
       const { authorId, ...rest } = data
       const authorInfo = (await getUserSimpleAPI({ id: authorId })).data
       const labels = data.labels.map((label) => ({ value: label.id, label: label.name }))

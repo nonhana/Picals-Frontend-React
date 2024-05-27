@@ -15,8 +15,9 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import GreyButton from '@/components/common/grey-button'
-import { registerAPI, loginAPI, sendEmailCodeAPI } from '@/apis'
+import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
 import { setLoginStatus, setUserInfo } from '@/store/modules/user'
+import { setFavoriteList } from '@/store/modules/favorites'
 
 // 登录表单
 type LoginForm = {
@@ -66,6 +67,9 @@ const LoginWindow: FC = () => {
       dispatch(setLoginStatus(true))
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('refreshToken', refreshToken)
+
+      const { data } = await getUserFavoriteListAPI({ id: userInfo.id })
+      dispatch(setFavoriteList(data))
       notification.success({
         message: '登录成功',
         description: `欢迎回来，${userInfo.username}！`,

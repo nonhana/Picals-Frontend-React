@@ -105,9 +105,9 @@ export const changeEmailAPI = (data: IChangeEmailReq) => {
 }
 
 // 获取用户收藏夹列表
-export const getUserFavoriteListAPI = (params?: Id) => {
+export const getUserFavoriteListAPI = (params: Id) => {
   return request<Id, FavoriteItem[]>({
-    url: '/api/user/favorite-list',
+    url: '/api/user/favorites',
     method: 'GET',
     params,
   })

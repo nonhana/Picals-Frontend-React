@@ -11,7 +11,7 @@ import { useMap } from '@/hooks'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
 import HanaViewer from '@/components/common/hana-viewer'
-import { likeActionsAPI } from '@/apis'
+import { likeActionsAPI, favoriteActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 
 type WorkInfoProps = {
@@ -41,15 +41,16 @@ const WorkInfo: FC<WorkInfoProps> = ({
   }
 
   // 添加当前作品到收藏夹
-  const handleCollectWork = () => {
+  const handleCollectWork = async () => {
     if (workInfo.isCollected) {
+      await favoriteActionsAPI({ id: workInfo.id, favoriteId: workInfo.favoriteId! })
       setWorkInfo({ ...workInfo, isCollected: false })
     } else {
       setCollecting(true)
     }
   }
-  const collectConfirm = () => {
-    console.log(workInfo.id, folderId)
+  const collectConfirm = async () => {
+    await favoriteActionsAPI({ id: workInfo.id, favoriteId: folderId })
     setCollecting(false)
     setWorkInfo({ ...workInfo, isCollected: true })
     messageApi.success('收藏成功')
@@ -104,7 +105,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 className='cursor-pointer'
                 width='32px'
                 color={workInfo?.isLiked ? 'red' : '#3d3d3d'}
-                icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-twotone'}
+                icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
                 onClick={handleLikeWork}
               />
               <Icon
