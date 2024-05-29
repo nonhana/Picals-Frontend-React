@@ -24,7 +24,8 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
       const { data } = await getFollowNewWorksAPI({ pageSize, current })
       setWorkList(data)
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     } finally {
       setLoading(false)
     }

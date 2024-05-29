@@ -26,7 +26,8 @@ const WorkDetail: FC = () => {
 
       setWorkInfo({ ...rest, authorInfo, labels })
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     } finally {
       setWorkInfoLoading(false)
     }
@@ -57,7 +58,8 @@ const WorkDetail: FC = () => {
       })
       setAuthorWorkList(authorWorksListData)
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     } finally {
       setUserInfoLoading(false)
       setAuthorWorkListLoading(false)
@@ -81,7 +83,8 @@ const WorkDetail: FC = () => {
         await userActionsAPI({ id })
         setUserInfo((prev) => prev && { ...prev, isFollowing: !prev.isFollowing })
       } catch (error) {
-        console.error(error)
+        console.error('出现错误了喵！！', error)
+        return
       }
     },
     [userInfo],

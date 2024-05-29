@@ -76,7 +76,8 @@ const LoginWindow: FC = () => {
       })
       navigate('/home')
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     }
   }
   // 注册提交
@@ -93,7 +94,8 @@ const LoginWindow: FC = () => {
       })
       setIsRegister(false)
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     }
   }
   // 发送验证码，60s倒计时刷新状态
@@ -114,7 +116,8 @@ const LoginWindow: FC = () => {
         })
       }, 1000)
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     }
   }
 

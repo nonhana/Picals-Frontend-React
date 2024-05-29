@@ -36,7 +36,6 @@ class Request {
             message: '请求超时',
             description: '请求超时，请检查网络',
           })
-          Promise.reject(err)
         } else {
           const { status, data, config } = err.response
           if (refreshing) {
@@ -55,7 +54,10 @@ class Request {
               description: '文件过大，选个小点的吧~',
             })
           } else if (status === 404) {
-            // window.location.href = '/404'
+            notification.error({
+              message: '请求资源不存在',
+              description: '请求的资源不存在，请检查接口地址',
+            })
           } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
             try {
               refreshing = true
@@ -78,8 +80,8 @@ class Request {
                 : data.message || '未知错误',
             })
           }
-          Promise.reject(err)
         }
+        return Promise.reject(err) // 返回一个错误的promise，防止继续执行
       },
     )
   }

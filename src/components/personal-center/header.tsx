@@ -59,7 +59,8 @@ const Header: FC = () => {
         )
       }
     } catch (error) {
-      console.error(error)
+      console.error('出现错误了喵！！', error)
+      return
     }
   }
 
