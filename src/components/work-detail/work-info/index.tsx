@@ -11,7 +11,7 @@ import { useMap } from '@/hooks'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
 import HanaViewer from '@/components/common/hana-viewer'
-import { likeActionsAPI, favoriteActionsAPI } from '@/apis'
+import { likeActionsAPI, favoriteActionsAPI, userActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 
 type WorkInfoProps = {
@@ -25,7 +25,12 @@ const WorkInfo: FC<WorkInfoProps> = ({
 }) => {
   const [messageApi, contextHolder] = message.useMessage()
 
-  const { favoriteList } = useSelector((state: AppState) => state.favorite)
+  const {
+    favorite: { favoriteList },
+    user: {
+      userInfo: { id },
+    },
+  } = useSelector((state: AppState) => state)
 
   const [loading, setLoading] = useState(true)
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>(sourceWorkInfo)
@@ -37,7 +42,11 @@ const WorkInfo: FC<WorkInfoProps> = ({
   // 喜欢当前作品
   const handleLikeWork = async () => {
     await likeActionsAPI({ id: workInfo.id })
-    setWorkInfo({ ...workInfo, isLiked: !workInfo.isLiked })
+    setWorkInfo({
+      ...workInfo,
+      likeNum: workInfo.isLiked ? workInfo.likeNum - 1 : workInfo.likeNum + 1,
+      isLiked: !workInfo.isLiked,
+    })
   }
 
   // 添加当前作品到收藏夹
@@ -50,6 +59,10 @@ const WorkInfo: FC<WorkInfoProps> = ({
     }
   }
   const collectConfirm = async () => {
+    if (!folderId) {
+      setCollecting(false)
+      return
+    }
     await favoriteActionsAPI({ id: workInfo.id, favoriteId: folderId })
     setCollecting(false)
     setWorkInfo({ ...workInfo, isCollected: true })
@@ -69,11 +82,17 @@ const WorkInfo: FC<WorkInfoProps> = ({
   }
 
   // 关注用户
-  const handleFollow = () => {
-    setWorkInfo({
-      ...workInfo,
-      authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
-    })
+  const handleFollow = async () => {
+    try {
+      await userActionsAPI({ id: workInfo.authorInfo.id })
+      setWorkInfo({
+        ...workInfo,
+        authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
+      })
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
   }
 
   useEffect(() => {
@@ -128,7 +147,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
             <div className='font-bold font-size-18px color-#3d3d3d'>
               <span>{workInfo?.name}</span>
             </div>
-            <div className='font-bold font-size-14px color-#6d757a'>
+            <div className='font-bold font-size-14px color-#6d757a line-height-normal'>
               <span>{workInfo?.intro}</span>
             </div>
             <div className='flex flex-wrap gap-10px font-size-14px'>
@@ -173,13 +192,15 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 <Link className='color-#3d3d3d' to={`/personal-center/${workInfo?.authorInfo.id}`}>
                   {workInfo?.authorInfo.username}
                 </Link>
-                <Button
-                  shape='round'
-                  size='large'
-                  type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
-                  onClick={handleFollow}>
-                  {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
-                </Button>
+                {workInfo.authorInfo.id !== id && (
+                  <Button
+                    shape='round'
+                    size='large'
+                    type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
+                    onClick={handleFollow}>
+                    {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
+                  </Button>
+                )}
               </div>
               <Link to={`/personal-center/${workInfo?.authorInfo.id}`}>
                 <Button shape='round' size='large' type='default'>
@@ -212,21 +233,25 @@ const WorkInfo: FC<WorkInfoProps> = ({
         cancelText='取消'
         onOk={() => collectConfirm()}
         onCancel={cancelCollect}>
-        <div className='h-110 overflow-y-scroll'>
-          <Radio.Group className='w-full' onChange={onChooseFolder} value={folderId}>
-            {favoriteList.map((item) => (
-              <Radio
-                key={item.id}
-                value={item.id}
-                className='w-full h-15 px-5 flex justify-between items-center'>
-                <div className='w-70 flex justify-between'>
-                  <span>{item.name}</span>
-                  <span>作品数：{item.workNum}</span>
-                </div>
-              </Radio>
-            ))}
-          </Radio.Group>
-        </div>
+        {favoriteList.length !== 0 ? (
+          <div className='h-110 overflow-y-scroll'>
+            <Radio.Group className='w-full' onChange={onChooseFolder} value={folderId}>
+              {favoriteList.map((item) => (
+                <Radio
+                  key={item.id}
+                  value={item.id}
+                  className='w-full h-15 px-5 flex justify-between items-center'>
+                  <div className='w-70 flex justify-between'>
+                    <span>{item.name}</span>
+                    <span>作品数：{item.workNum}</span>
+                  </div>
+                </Radio>
+              ))}
+            </Radio.Group>
+          </div>
+        ) : (
+          <Empty text='暂无收藏夹，可以先去个人中心创建一个哦！' />
+        )}
       </Modal>
     </>
   )

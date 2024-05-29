@@ -1,5 +1,7 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { AppState } from '@/store/types'
 import type { UserItemInfo, WorkNormalItemInfo } from '@/utils/types'
 import WorkLeastItem from '@/components/common/work-least-item'
 import LayoutList from '@/components/common/layout-list'
@@ -13,6 +15,12 @@ type UserInfoProps = {
 }
 
 const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => {
+  const {
+    user: {
+      userInfo: { id },
+    },
+  } = useSelector((state: AppState) => state)
+
   return (
     <div className='relative flex flex-col gap-5 p-5 rd-6 bg-#fff w-82.5'>
       <div className='flex gap-10px items-center font-bold font-size-14px color-#3d3d3d'>
@@ -41,13 +49,15 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => 
       ) : (
         <Empty showImg={false} text='暂无其他作品' />
       )}
-      <Button
-        shape='round'
-        size='large'
-        type={userInfo.isFollowing ? 'default' : 'primary'}
-        onClick={() => onFollow(userInfo.id)}>
-        {userInfo.isFollowing ? '取消关注' : '关注'}
-      </Button>
+      {userInfo.id !== id && (
+        <Button
+          shape='round'
+          size='large'
+          type={userInfo.isFollowing ? 'default' : 'primary'}
+          onClick={() => onFollow(userInfo.id)}>
+          {userInfo.isFollowing ? '取消关注' : '关注'}
+        </Button>
+      )}
     </div>
   )
 }
