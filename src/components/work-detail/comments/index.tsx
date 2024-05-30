@@ -149,7 +149,8 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       onOk: async () => {
         try {
           await deleteCommentAPI({ id })
-          setCount((prevCount) => prevCount - 1)
+          const commentCount = commentList.find((comment) => comment.id === id)?.childComments
+          setCount((prevCount) => prevCount - (commentCount ? commentCount.length + 1 : 1))
           fetchCommentList()
           message.success('删除评论成功')
         } catch (error) {

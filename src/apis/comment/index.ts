@@ -21,10 +21,10 @@ export const postCommentAPI = (data: IPostCommentReq) => {
 }
 
 // 删除某条评论
-export const deleteCommentAPI = (params: Id) => {
+export const deleteCommentAPI = (data: Id) => {
   return request<Id, undefined>({
     url: '/api/comment/delete',
     method: 'POST',
-    params,
+    data,
   })
 }
