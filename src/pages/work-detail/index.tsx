@@ -3,7 +3,13 @@ import { useParams } from 'react-router-dom'
 import WorkInfo from '@/components/work-detail/work-info'
 import UserInfo from '@/components/work-detail/user-info'
 import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
-import { getWorkDetailAPI, getUserWorksListAPI, userActionsAPI, getUserSimpleAPI } from '@/apis'
+import {
+  getWorkDetailAPI,
+  getUserWorksListAPI,
+  userActionsAPI,
+  getUserSimpleAPI,
+  addWorkViewAPI,
+} from '@/apis'
 
 const WorkDetail: FC = () => {
   const { workId } = useParams<{ workId: string }>()
@@ -14,6 +20,15 @@ const WorkDetail: FC = () => {
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
   const [authorWorkListLoading, setAuthorWorkListLoading] = useState(true)
   const [authorWorkList, setAuthorWorkList] = useState<WorkNormalItemInfo[]>([])
+
+  const addWorkView = async () => {
+    try {
+      await addWorkViewAPI({ id: workId! })
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
+  }
 
   const fetchWorkDetail = async () => {
     try {
@@ -68,6 +83,7 @@ const WorkDetail: FC = () => {
 
   useEffect(() => {
     fetchWorkDetail()
+    addWorkView()
   }, [workId])
 
   useEffect(() => {

@@ -1,28 +1,51 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import Comment from './comment'
 import InputWindow from './input-window'
 import type { CommentItem } from '@/utils/types'
-import { workCommentList } from '@/test/data'
-import { Input, Button, message } from 'antd'
+import { Input, Button, message, Modal } from 'antd'
+import { deleteCommentAPI, getCommentListAPI, postCommentAPI } from '@/apis'
+import Empty from '@/components/common/empty'
+import { IPostCommentReq } from '@/apis/comment/types'
+
+const { confirm } = Modal
 
 type CommentsProps = {
+  totalCount: number
   loading: boolean
 }
 
 interface Replying {
   id: string
   isChild: boolean
-  parent_id?: string
+  parentId?: string
+  userId?: string
 }
 
-const Comments: FC<CommentsProps> = ({ loading }) => {
+const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
+  const { workId } = useParams<{ workId: string }>()
   const [messageApi, contextHolder] = message.useMessage()
 
   const userInfo = useSelector((state: AppState) => state.user.userInfo)
-  const totalCount = 1000
   const [commentList, setCommentList] = useState<CommentItem[]>([])
+  const [count, setCount] = useState(totalCount)
+
+  const fetchCommentList = async () => {
+    try {
+      const { data } = await getCommentListAPI({ id: workId! })
+      setCommentList(data)
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    fetchCommentList()
+  }, [workId])
+
   const [upContent, setUpContent] = useState('') // 上方输入框的内容
   const [downContent, setDownContent] = useState('') // 下方输入框的内容
 
@@ -41,10 +64,6 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
   const workInfoRef = useRef<HTMLElement | null>(null)
   const [workInfoIsInWindow, setWorkInfoIsInWindow] = useState(false)
   let workInfoRefObserver: IntersectionObserver | null = null
-
-  useEffect(() => {
-    setCommentList(workCommentList)
-  })
 
   useEffect(() => {
     if (!loading) workInfoRef.current = document.getElementById('work-info')
@@ -101,7 +120,8 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
       setReplyData((prevReplyData) => ({
         ...prevReplyData,
         isChild: true,
-        parent_id: data.parent_id,
+        parentId: data.parentId,
+        userId: data.userId,
       }))
       commentList.forEach((comment) => {
         if (comment.childComments) {
@@ -122,12 +142,56 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
     }
   }
 
-  const submitComment = (type: 'up' | 'down') => {
+  const handleDelete = async (id: string) => {
+    confirm({
+      title: '删除评论',
+      content: '你确定要删除这条评论吗？',
+      onOk: async () => {
+        try {
+          await deleteCommentAPI({ id })
+          setCount((prevCount) => prevCount - 1)
+          fetchCommentList()
+          message.success('删除评论成功')
+        } catch (error) {
+          console.error('出现错误了喵！！', error)
+        }
+      },
+    })
+  }
+
+  const postComment = async (data: IPostCommentReq) => {
+    try {
+      await postCommentAPI(data)
+      setCount((prevCount) => prevCount + 1)
+      fetchCommentList()
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+    }
+  }
+
+  const submitComment = async (type: 'up' | 'down') => {
+    const reqData: IPostCommentReq = {
+      content: '',
+      id: workId!,
+    }
+    if (replyData.id !== '') {
+      if (replyData.isChild) {
+        reqData.replyInfo = {
+          replyCommentId: replyData.parentId!,
+          replyUserId: replyData.userId,
+        }
+      } else {
+        reqData.replyInfo = {
+          replyCommentId: replyData.id,
+        }
+      }
+    }
     switch (type) {
       case 'up':
         if (upContent === '') {
           messageApi.error('评论内容不能为空')
         } else {
+          reqData.content = upContent
           messageApi.success('评论成功')
           setUpContent('')
         }
@@ -136,6 +200,7 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
         if (downContent === '') {
           messageApi.error('评论内容不能为空')
         } else {
+          reqData.content = downContent
           messageApi.success('评论成功')
           setDownContent('')
         }
@@ -143,6 +208,12 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
       default:
         break
     }
+    await postComment(reqData)
+    setReplyData({
+      id: '',
+      isChild: false,
+    })
+    setReplyTo('')
   }
 
   return (
@@ -151,7 +222,7 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
       <div>
         <div className='flex gap-10px items-center'>
           <span className='font-size-18px font-bold color-#3d3d3d'>评论</span>
-          <span className='font-size-14px color-#6d757a'>目前共有{totalCount}条评论</span>
+          <span className='font-size-14px color-#6d757a'>目前共有{count}条评论</span>
         </div>
         <div ref={inputRef} className='my-5 flex justify-between items-center'>
           <div className='flex gap-10px items-center'>
@@ -175,9 +246,20 @@ const Comments: FC<CommentsProps> = ({ loading }) => {
             发布评论
           </Button>
         </div>
-        {commentList.map((comment) => (
-          <Comment key={comment.id} comment={comment} reply={reply} />
-        ))}
+        {commentList.length === 0 ? (
+          <Empty showImg={false} text='暂无评论，评个论吧好吗' />
+        ) : (
+          <>
+            {commentList.map((comment) => (
+              <Comment
+                key={comment.id}
+                comment={comment}
+                reply={reply}
+                deleteComment={handleDelete}
+              />
+            ))}
+          </>
+        )}
         <InputWindow
           content={downContent}
           replyTo={replyTo}

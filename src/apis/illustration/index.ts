@@ -83,3 +83,12 @@ export const searchWorksByTagAPI = (params: Pagination) => {
     params,
   })
 }
+
+// 新增作品浏览量
+export const addWorkViewAPI = (params: Id) => {
+  return request<Id, undefined>({
+    url: '/api/illustration/view',
+    method: 'POST',
+    params,
+  })
+}

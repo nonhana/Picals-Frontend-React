@@ -222,7 +222,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
         </div>
         <Divider />
         {/* 评论 */}
-        <Comments loading={loading} />
+        <Comments loading={loading} totalCount={workInfo.commentNum} />
       </div>
 
       <Modal

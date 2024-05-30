@@ -48,6 +48,7 @@ export interface UserItem {
   isFollowing: boolean
   /**
    * 用户作品 id 列表
+   * 获取用户列表相关接口包含此字段，getUserSimpleAPI 不包含此字段
    */
   works?: string[]
 }

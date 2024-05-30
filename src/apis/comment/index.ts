@@ -24,7 +24,7 @@ export const postCommentAPI = (data: IPostCommentReq) => {
 export const deleteCommentAPI = (params: Id) => {
   return request<Id, undefined>({
     url: '/api/comment/delete',
-    method: 'DELETE',
+    method: 'POST',
     params,
   })
 }

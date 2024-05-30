@@ -29,7 +29,7 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like }) => {
           className='p-10px absolute bottom-0 right-0 cursor-pointer'
           width='44px'
           color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-twotone'}
+          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
           onClick={() => like(itemInfo.id)}
         />
       </div>

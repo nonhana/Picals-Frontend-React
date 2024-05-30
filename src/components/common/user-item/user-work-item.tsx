@@ -25,7 +25,7 @@ const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
           className='absolute bottom-10px right-10px cursor-pointer'
           width='24px'
           color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-twotone'}
+          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
           onClick={() => like(itemInfo.authorId, itemInfo.id)}
         />
       </div>
