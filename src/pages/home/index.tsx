@@ -29,14 +29,7 @@ const Home: FC = () => {
     try {
       setLoading(true)
       const { data } = await getRecommendLabelListAPI()
-      setLabelList(
-        data.map((label) => ({
-          id: label.id,
-          name: label.value,
-          img: label.cover,
-          color: label.color,
-        })),
-      )
+      setLabelList(data)
     } catch (error) {
       console.error('获取标签列表失败', error)
     } finally {

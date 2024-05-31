@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useRef } from 'react'
-import { updateUserInfoAPI, uploadImageAPI } from '@/apis'
+import { updateUserInfoAPI, uploadSingleImageAPI } from '@/apis'
 import type { IUpdateUserInfoReq } from '@/apis/user/types'
 import type { UserDetailInfo } from '@/utils/types'
 import { base64ToFile, MAX_INFO_SIZE } from '@/utils'
@@ -58,7 +58,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
     try {
       setLoading(true)
       const file = base64ToFile(imgURL, 'bgImg')
-      const { data } = await uploadImageAPI({ image: file })
+      const { data } = await uploadSingleImageAPI({ image: file })
       setEditUserInfo({ ...editUserInfo, backgroundImg: data })
       message.success('修改背景图片成功！')
     } catch (error) {
@@ -101,7 +101,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
     try {
       setLoading(true)
       const file = base64ToFile(imgURL, 'bgImg')
-      const { data } = await uploadImageAPI({ image: file })
+      const { data } = await uploadSingleImageAPI({ image: file })
       setEditUserInfo({ ...editUserInfo, avatar: data })
       message.success('修改头像成功！')
     } catch (error) {
