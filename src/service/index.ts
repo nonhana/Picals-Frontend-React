@@ -27,7 +27,7 @@ interface DEVRequestConfig<T, R> extends RequestConfig<DEVResponse<R>> {
 
 // 创建axios的实例
 const request = new Request({
-  baseURL: '',
+  baseURL: import.meta.env.VITE_BASE_URL, // 从环境变量文件中获取baseURL
   timeout: 1000 * 60 * 5, // 超时时间5分钟
   interceptors: {
     // 请求拦截器
