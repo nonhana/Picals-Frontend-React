@@ -57,7 +57,7 @@ const UserItem: FC<UserItemProps> = ({
         )}
       </div>
 
-      {works.length === 0 ? (
+      {!works || works.length === 0 ? (
         <Empty showImg={false} />
       ) : (
         <div className='flex gap-5'>

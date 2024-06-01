@@ -24,7 +24,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
       ...userList.get(userId)!,
       works: userList
         .get(userId)!
-        .works.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
+        .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
     })
   }
 

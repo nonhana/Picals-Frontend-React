@@ -25,7 +25,7 @@ export const labelList: LabelInfo[] = Array(100)
     return {
       id: index.toString(),
       name: `标签${index}`,
-      img: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      cover: 'https://img.yzcdn.cn/vant/cat.jpeg',
       color,
     }
   })
@@ -115,7 +115,7 @@ export const userList: UserItemInfo[] = Array(20)
             isLiked: false,
           }
         }),
-      isFollowed: false,
+      isFollowing: false,
     }
   })
 
@@ -123,7 +123,7 @@ export const userList: UserItemInfo[] = Array(20)
 export const labelDetailInfo: LabelDetailInfo = {
   id: '1',
   name: '标签1',
-  img: 'https://img.yzcdn.cn/vant/cat.jpeg',
+  cover: 'https://img.yzcdn.cn/vant/cat.jpeg',
   color: '#3d3d3d',
   isMyLike: false,
   workCount: 100,
@@ -164,13 +164,15 @@ export const workDetailInfo: WorkDetailInfo = {
     id: '1',
     username: 'non_hana',
     avatar: 'https://dummyimage.com/400X400',
-    isFollowed: false,
+    isFollowing: false,
+    intro: '作者个人简介',
   },
   illustratorInfo: {
     id: '1',
     username: 'ちふり',
     avatar: 'https://dummyimage.com/400X400',
     homepage: 'https://www.pixiv.net/users/12818930',
+    intro: '画师个人价绍',
   },
 }
 
@@ -235,7 +237,7 @@ export const userDetailInfo: UserDetailInfo = {
   fanNum: 100,
   followNum: 100,
   background_img: 'https://dummyimage.com/400X400',
-  gender: true,
+  gender: 0,
   isFollowed: false,
 }
 
@@ -247,6 +249,8 @@ export const favoriteList: FavoriteItemInfo[] = Array(10)
     name: `收藏夹${index}`,
     order: index,
     workNum: 100,
+    intro: '收藏夹简介',
+    cover: 'https://dummyimage.com/400X400',
   }))
 
 // 收藏夹详细信息

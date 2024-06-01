@@ -28,7 +28,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
       const userSource = await Promise.all(
         data.map(async (user) => {
           const works = await Promise.all(
-            user.works.map(async (workId) => (await getWorkSimpleAPI({ id: workId })).data),
+            user.works!.map(async (workId) => (await getWorkSimpleAPI({ id: workId })).data),
           )
           return { ...user, works }
         }),
@@ -63,7 +63,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
       ...userList.get(userId)!,
       works: userList
         .get(userId)!
-        .works.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
+        .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
     })
   }
 
