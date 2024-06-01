@@ -16,7 +16,7 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
   const uploadProps: UploadProps = {
     name: 'image',
     multiple: true,
-    action: '/api/tool/upload-single-img',
+    action: `${import.meta.env.VITE_BASE_URL}/api/tool/upload-single-img`,
     showUploadList: false,
     accept: '.jpg,.png,.gif',
     onChange(info) {
