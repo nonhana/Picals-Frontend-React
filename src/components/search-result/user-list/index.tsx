@@ -4,6 +4,7 @@ import { userList as userListSource } from '@/test/data'
 import UserItem from '@/components/common/user-item'
 import { useMap } from '@/hooks'
 import Pagination from '@/components/common/pagination'
+import { likeActionsAPI, userActionsAPI } from '@/apis'
 
 type UserListProps = {
   width: number
@@ -12,16 +13,18 @@ type UserListProps = {
 const UserList: FC<UserListProps> = ({ width }) => {
   const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
 
-  const handleFollow = (id: string) => {
-    updateItem(id, { ...userList.get(id)!, isFollowed: !userList.get(id)!.isFollowed })
+  const handleFollow = async (id: string) => {
+    await userActionsAPI({ id })
+    updateItem(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
   }
 
-  const handleLikeWork = (userId: string, workId: string) => {
+  const handleLikeWork = async (userId: string, workId: string) => {
+    await likeActionsAPI({ id: workId })
     updateItem(userId, {
       ...userList.get(userId)!,
       works: userList
         .get(userId)!
-        .works.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
+        .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
     })
   }
 
@@ -30,22 +33,22 @@ const UserList: FC<UserListProps> = ({ width }) => {
   }, [])
 
   /* ----------分页相关--------- */
-  const [currentPage, setCurrentPage] = useState(1)
+  const [current, setCurrent] = useState(1)
   const pageSize = 30
   const total = 1000
 
   const pageChange = (page: number) => {
-    currentPage !== page && setCurrentPage(page)
+    current !== page && setCurrent(page)
   }
 
   useEffect(() => {
-    console.log('currentPage:', currentPage)
-  }, [currentPage])
+    console.log('current:', current)
+  }, [current])
 
   useEffect(() => {
-    if (currentPage === 1) return
+    if (current === 1) return
     setUserList([...userListSource])
-  }, [currentPage])
+  }, [current])
 
   return (
     <div className='relative p-5'>
@@ -73,7 +76,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
       </div>
 
       <div className='flex justify-center'>
-        <Pagination total={total} pageSize={pageSize} current={currentPage} onChange={pageChange} />
+        <Pagination total={total} pageSize={pageSize} current={current} onChange={pageChange} />
       </div>
     </div>
   )

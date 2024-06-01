@@ -1,6 +1,8 @@
 // src/apis/illustration/types.ts
 // 定义 illustration 模块的 API 类型
 
+import { LabelItem } from '../types'
+
 // #region 请求体类型
 export interface IUploadWorkReq {
   /**
@@ -52,5 +54,82 @@ export interface IUploadWorkReq {
 
 export interface IEditWorkReq extends Partial<IUploadWorkReq> {
   id: string
+}
+// #endregion
+
+// #region 响应体类型
+export interface WorkDetailInfo {
+  /**
+   * 作者id
+   */
+  authorId: string
+  /**
+   * 被收藏次数
+   */
+  collectNum: number
+  /**
+   * 评论个数
+   */
+  commentNum: number
+  /**
+   * 创建日期
+   */
+  createdDate: string
+  /**
+   * 作品id
+   */
+  id: string
+  /**
+   * 作品图片url列表
+   */
+  imgList: string[]
+  /**
+   * 作品简介
+   */
+  intro: string
+  /**
+   * 是否是AI生成作品
+   */
+  isAIGenerated: boolean
+  /**
+   * 是否已经收藏
+   */
+  isCollected: boolean
+  /**
+   * 已经被收藏的收藏夹id，如果没有被收藏则不传
+   */
+  favoriteId?: string
+  /**
+   * 用户是否已经喜欢
+   */
+  isLiked: boolean
+  /**
+   * 是否是转载作品
+   */
+  isReprinted: boolean
+  /**
+   * 标签列表
+   */
+  labels: LabelItem[]
+  /**
+   * 被喜欢次数
+   */
+  likeNum: number
+  /**
+   * 作品名称
+   */
+  name: string
+  /**
+   * 是否打开评论
+   */
+  openComment: boolean
+  /**
+   * 更新日期
+   */
+  updatedDate: string
+  /**
+   * 被浏览次数
+   */
+  viewNum: number
 }
 // #endregion

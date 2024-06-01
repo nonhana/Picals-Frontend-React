@@ -6,6 +6,7 @@ import UploadSuccess from '@/components/upload/success'
 import type { UploadFile } from 'antd'
 import { Button } from 'antd'
 import type { UploadWorkFormInfo, UploadWorkInfo } from '@/utils/types'
+import { uploadWorkAPI } from '@/apis'
 
 const Upload: FC = () => {
   const navigate = useNavigate()
@@ -21,6 +22,7 @@ const Upload: FC = () => {
     labels: [],
   })
   const [formInfoCheck, setFormInfoCheck] = useState<boolean>(false)
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
   const [workInfo, setWorkInfo] = useState<UploadWorkInfo>({
     basicInfo: {
       name: '',
@@ -40,18 +42,33 @@ const Upload: FC = () => {
       basicInfo: formInfo.basicInfo,
       labels: formInfo.labels,
       originInfo: formInfo.originInfo,
-      imgList: imgList.map((file) => (file.response ? file.response.data.url : file.url)),
+      imgList: imgList.map((file) => (file.response ? file.response.data : file.url)),
     })
   }, [formInfo, imgList])
 
+  const uploadWork = async () => {
+    try {
+      await uploadWorkAPI({
+        ...workInfo.basicInfo,
+        labels: workInfo.labels,
+        imgList: workInfo.imgList,
+      })
+      setUploadSuccess(true)
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
+  }
+
   useEffect(() => {
     if (!formInfoCheck) return
-    console.log('表单验证成功')
+    console.log('表单验证成功', workInfo)
+    uploadWork()
   }, [formInfoCheck])
 
   return (
     <div className='relative w-100% min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
-      {formInfoCheck ? (
+      {uploadSuccess ? (
         <UploadSuccess workName={workInfo.basicInfo.name} />
       ) : (
         <>

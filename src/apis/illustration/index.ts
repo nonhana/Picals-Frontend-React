@@ -1,7 +1,6 @@
 import request from '@/service'
 import { Id, Pagination, WorkNormalItem } from '../types'
-import { IEditWorkReq, IUploadWorkReq } from './types'
-import { WorkDetailInfo } from '@/utils/types'
+import { IEditWorkReq, IUploadWorkReq, WorkDetailInfo } from './types'
 
 // 分页获取推荐作品列表
 export const getRecommendWorksAPI = (params: Pagination) => {
@@ -18,6 +17,14 @@ export const getFollowNewWorksAPI = (params: Pagination) => {
     url: '/api/illustration/following',
     method: 'GET',
     params,
+  })
+}
+
+// 获取已关注用户新作总数
+export const getFollowNewWorksTotalAPI = () => {
+  return request<undefined, number>({
+    url: '/api/illustration/following-count',
+    method: 'GET',
   })
 }
 
@@ -59,11 +66,29 @@ export const getWorkDetailAPI = (params: Id) => {
   })
 }
 
+// 获取某个作品的简要信息
+export const getWorkSimpleAPI = (params: Id) => {
+  return request<Id, WorkNormalItem>({
+    url: '/api/illustration/simple',
+    method: 'GET',
+    params,
+  })
+}
+
 // 根据标签分页搜索作品
 export const searchWorksByTagAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/illustration/search',
     method: 'GET',
+    params,
+  })
+}
+
+// 新增作品浏览量
+export const addWorkViewAPI = (params: Id) => {
+  return request<Id, undefined>({
+    url: '/api/illustration/view',
+    method: 'POST',
     params,
   })
 }

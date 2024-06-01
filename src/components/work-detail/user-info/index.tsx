@@ -1,16 +1,26 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
-import type { UserItemInfo } from '@/utils/types'
+import { useSelector } from 'react-redux'
+import { AppState } from '@/store/types'
+import type { UserItemInfo, WorkNormalItemInfo } from '@/utils/types'
 import WorkLeastItem from '@/components/common/work-least-item'
 import LayoutList from '@/components/common/layout-list'
 import { Button } from 'antd'
+import Empty from '@/components/common/empty'
 
 type UserInfoProps = {
   userInfo: UserItemInfo
+  authorWorkList: WorkNormalItemInfo[]
   onFollow: (id: string) => void
 }
 
-const UserInfo: FC<UserInfoProps> = ({ userInfo, onFollow }) => {
+const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => {
+  const {
+    user: {
+      userInfo: { id },
+    },
+  } = useSelector((state: AppState) => state)
+
   return (
     <div className='relative flex flex-col gap-5 p-5 rd-6 bg-#fff w-82.5'>
       <div className='flex gap-10px items-center font-bold font-size-14px color-#3d3d3d'>
@@ -30,18 +40,24 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, onFollow }) => {
       <div className='font-bold font-size-14px color-#3d3d3d text-wrap line-height-normal'>
         <span>{userInfo.intro}</span>
       </div>
-      <LayoutList scrollType='work-normal'>
-        {userInfo.works.map((work) => (
-          <WorkLeastItem key={work.id} itemInfo={work} />
-        ))}
-      </LayoutList>
-      <Button
-        shape='round'
-        size='large'
-        type={userInfo.isFollowed ? 'default' : 'primary'}
-        onClick={() => onFollow(userInfo.id)}>
-        {userInfo.isFollowed ? '取消关注' : '关注'}
-      </Button>
+      {authorWorkList.length !== 0 ? (
+        <LayoutList scrollType='work-normal'>
+          {authorWorkList.map((work) => (
+            <WorkLeastItem key={work.id} itemInfo={work} />
+          ))}
+        </LayoutList>
+      ) : (
+        <Empty showImg={false} text='暂无其他作品' />
+      )}
+      {userInfo.id !== id && (
+        <Button
+          shape='round'
+          size='large'
+          type={userInfo.isFollowing ? 'default' : 'primary'}
+          onClick={() => onFollow(userInfo.id)}>
+          {userInfo.isFollowing ? '取消关注' : '关注'}
+        </Button>
+      )}
     </div>
   )
 }

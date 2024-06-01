@@ -12,7 +12,7 @@ type PaginationProps = {
 
 const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange }) => {
   // 计算得出总共的页数
-  const totalPages = Math.ceil(total / pageSize)
+  const totalPages = Math.ceil(total / pageSize) || 1
 
   // 递增/递减页数
   const stepPage = (type: 'prev' | 'next') => {

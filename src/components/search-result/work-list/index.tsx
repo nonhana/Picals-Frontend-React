@@ -5,6 +5,7 @@ import { useMap } from '@/hooks/useMap'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { Radio, RadioChangeEvent } from 'antd'
+import { likeActionsAPI } from '@/apis'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -17,7 +18,8 @@ const WorkList: FC = () => {
   const [workList, _, setWorkList] = useMap<WorkNormalItemInfo>(normalWorkList)
   const [sortType, setSortType] = useState('new')
 
-  const handleLike = (id: string) => {
+  const handleLike = async (id: string) => {
+    await likeActionsAPI({ id })
     setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
@@ -26,17 +28,17 @@ const WorkList: FC = () => {
   }
 
   /* ----------分页相关--------- */
-  const [currentPage, setCurrentPage] = useState(1)
+  const [current, setCurrent] = useState(1)
   const pageSize = 30
   const total = 1000
 
   const pageChange = (page: number) => {
-    currentPage !== page && setCurrentPage(page)
+    current !== page && setCurrent(page)
   }
 
   useEffect(() => {
-    console.log('currentPage:', currentPage)
-  }, [currentPage])
+    console.log('current:', current)
+  }, [current])
 
   return (
     <div className='relative p-5'>
@@ -65,7 +67,7 @@ const WorkList: FC = () => {
       </div>
 
       <div className='flex justify-center'>
-        <Pagination total={total} pageSize={pageSize} current={currentPage} onChange={pageChange} />
+        <Pagination total={total} pageSize={pageSize} current={current} onChange={pageChange} />
       </div>
     </div>
   )

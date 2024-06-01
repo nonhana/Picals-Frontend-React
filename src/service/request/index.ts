@@ -9,7 +9,7 @@ interface PendingTask {
   resolve: (value: unknown) => void
 }
 let refreshing = false
-const pendingTasks: PendingTask[] = [] // 维护一个请求队列，用于刷新token时重新发起请求
+const pendingTasks: PendingTask[] = [] // 维护一个请求队列，用于刷新token时保存请求
 
 class Request {
   instance: AxiosInstance // axios实例
@@ -20,7 +20,7 @@ class Request {
     // 全局请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        const accessToken = localStorage.getItem('access_token')
+        const accessToken = localStorage.getItem('accessToken')
         if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
         return config
       },
@@ -36,7 +36,6 @@ class Request {
             message: '请求超时',
             description: '请求超时，请检查网络',
           })
-          Promise.reject(err)
         } else {
           const { status, data, config } = err.response
           if (refreshing) {
@@ -49,15 +48,23 @@ class Request {
               message: '服务器错误',
               description: data.message || '未知错误',
             })
+          } else if (status === 413) {
+            notification.error({
+              message: '文件过大',
+              description: '文件过大，选个小点的吧~',
+            })
           } else if (status === 404) {
-            window.location.href = '/404'
+            notification.error({
+              message: '请求资源不存在',
+              description: '请求的资源不存在，请检查接口地址',
+            })
           } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
             try {
               refreshing = true
-              const refreshToken = localStorage.getItem('refresh_token')
+              const refreshToken = localStorage.getItem('refreshToken')
               const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
-              localStorage.setItem('access_token', data.accessToken)
-              localStorage.setItem('refresh_token', data.refreshToken)
+              localStorage.setItem('accessToken', data.access_token)
+              localStorage.setItem('refreshToken', data.refresh_token)
             } catch (error) {
               notification.error({
                 message: 'token已失效，请重新进行登录~',
@@ -73,8 +80,8 @@ class Request {
                 : data.message || '未知错误',
             })
           }
-          Promise.reject(err)
         }
+        return Promise.reject(err) // 返回一个错误的promise，防止继续执行
       },
     )
   }

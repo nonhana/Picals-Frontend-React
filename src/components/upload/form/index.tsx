@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
-import { workUploadLabelList } from '@/test/data'
 import type { UploadWorkFormInfo } from '@/utils/types'
 import { Form, FormProps, Input, Radio, Select, message } from 'antd'
+import { getLabelsInPagesAPI } from '@/apis'
 
 type UploadFormProps = {
   formInfo: UploadWorkFormInfo
@@ -30,6 +30,22 @@ const UploadForm: FC<UploadFormProps> = ({
   submitTrigger,
   setFormInfoCheck,
 }) => {
+  const [labels, setLabels] = useState<{ value: string; label: string }[]>([])
+
+  const getLabels = async () => {
+    try {
+      const { data } = await getLabelsInPagesAPI({ pageSize: 100, current: 1 })
+      setLabels(data.map((item) => ({ value: item.name, label: item.name })))
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    getLabels()
+  }, [])
+
   const [isMounted, setIsMounted] = useState(false)
   const [messageApi, contextHolder] = message.useMessage()
   const [workForm] = Form.useForm()
@@ -44,8 +60,11 @@ const UploadForm: FC<UploadFormProps> = ({
     setFormInfoCheck(false)
   }
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`)
+  const handleSelectLabel = (value: string[]) => {
+    setFormInfo((prevFormInfo) => ({
+      ...prevFormInfo,
+      labels: value,
+    }))
   }
 
   const changeReprinted = (value: boolean) => {
@@ -221,8 +240,8 @@ const UploadForm: FC<UploadFormProps> = ({
               style={{ width: '100%' }}
               placeholder='选择不超过10个标签，或者自己输入'
               maxCount={10}
-              onChange={handleChange}
-              options={workUploadLabelList}
+              onChange={handleSelectLabel}
+              options={labels}
             />
           </Form.Item>
         </div>

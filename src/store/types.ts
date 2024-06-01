@@ -2,6 +2,7 @@ import type { UserInfo, FavoriteItemInfo } from '@/utils/types'
 
 interface UserState {
   userInfo: UserInfo
+  isLogin: boolean
 }
 
 interface FavoritesState {

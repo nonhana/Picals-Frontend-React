@@ -6,10 +6,13 @@ import WorkLittleItem from '@/components/common/work-little-item'
 import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
 import { Link } from 'react-router-dom'
-import { PhotoProvider, PhotoView } from 'react-photo-view'
+import { PhotoView } from 'react-photo-view'
 import { useMap } from '@/hooks'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
+import HanaViewer from '@/components/common/hana-viewer'
+import { likeActionsAPI, favoriteActionsAPI, userActionsAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -22,7 +25,12 @@ const WorkInfo: FC<WorkInfoProps> = ({
 }) => {
   const [messageApi, contextHolder] = message.useMessage()
 
-  const { favoriteList } = useSelector((state: AppState) => state.favorite)
+  const {
+    favorite: { favoriteList },
+    user: {
+      userInfo: { id },
+    },
+  } = useSelector((state: AppState) => state)
 
   const [loading, setLoading] = useState(true)
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>(sourceWorkInfo)
@@ -32,20 +40,30 @@ const WorkInfo: FC<WorkInfoProps> = ({
   const [authorWorkList, _, setAuthorWorkList] = useMap<WorkNormalItemInfo>(sourceWorkList)
 
   // 喜欢当前作品
-  const handleLikeWork = () => {
-    setWorkInfo({ ...workInfo, isLiked: !workInfo.isLiked })
+  const handleLikeWork = async () => {
+    await likeActionsAPI({ id: workInfo.id })
+    setWorkInfo({
+      ...workInfo,
+      likeNum: workInfo.isLiked ? workInfo.likeNum - 1 : workInfo.likeNum + 1,
+      isLiked: !workInfo.isLiked,
+    })
   }
 
   // 添加当前作品到收藏夹
-  const handleCollectWork = () => {
+  const handleCollectWork = async () => {
     if (workInfo.isCollected) {
+      await favoriteActionsAPI({ id: workInfo.id, favoriteId: workInfo.favoriteId! })
       setWorkInfo({ ...workInfo, isCollected: false })
     } else {
       setCollecting(true)
     }
   }
-  const collectConfirm = () => {
-    console.log(workInfo.id, folderId)
+  const collectConfirm = async () => {
+    if (!folderId) {
+      setCollecting(false)
+      return
+    }
+    await favoriteActionsAPI({ id: workInfo.id, favoriteId: folderId })
     setCollecting(false)
     setWorkInfo({ ...workInfo, isCollected: true })
     messageApi.success('收藏成功')
@@ -64,11 +82,17 @@ const WorkInfo: FC<WorkInfoProps> = ({
   }
 
   // 关注用户
-  const handleFollow = () => {
-    setWorkInfo({
-      ...workInfo,
-      authorInfo: { ...workInfo.authorInfo, isFollowed: !workInfo.authorInfo.isFollowed },
-    })
+  const handleFollow = async () => {
+    try {
+      await userActionsAPI({ id: workInfo.authorInfo.id })
+      setWorkInfo({
+        ...workInfo,
+        authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
+      })
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
   }
 
   useEffect(() => {
@@ -84,37 +108,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center'>
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
-          <PhotoProvider
-            toolbarRender={({ onScale, scale }) => {
-              return (
-                <>
-                  <svg
-                    className='PhotoView-Slider__toolbarIcon'
-                    onClick={() => onScale(scale + 1)}
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='44'
-                    height='44'
-                    viewBox='0 0 1024 1024'>
-                    <path
-                      fill='currentColor'
-                      d='M637 443H519V309c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v134H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h118v134c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V519h118c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8m284 424L775 721c122.1-148.9 113.6-369.5-26-509c-148-148.1-388.4-148.1-537 0c-148.1 148.6-148.1 389 0 537c139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11M696 696c-118.8 118.7-311.2 118.7-430 0c-118.7-118.8-118.7-311.2 0-430c118.8-118.7 311.2-118.7 430 0c118.7 118.8 118.7 311.2 0 430'
-                    />
-                  </svg>
-                  <svg
-                    className='PhotoView-Slider__toolbarIcon'
-                    onClick={() => onScale(scale - 1)}
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='44'
-                    height='44'
-                    viewBox='0 0 1024 1024'>
-                    <path
-                      fill='currentColor'
-                      d='M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8m284 424L775 721c122.1-148.9 113.6-369.5-26-509c-148-148.1-388.4-148.1-537 0c-148.1 148.6-148.1 389 0 537c139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11M696 696c-118.8 118.7-311.2 118.7-430 0c-118.7-118.8-118.7-311.2 0-430c118.8-118.7 311.2-118.7 430 0c118.7 118.8 118.7 311.2 0 430'
-                    />
-                  </svg>
-                </>
-              )
-            }}>
+          <HanaViewer>
             <div className='w-100% flex flex-col gap-10px'>
               {workInfo?.imgList.map((img, index) => (
                 <PhotoView key={index} src={img}>
@@ -122,7 +116,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 </PhotoView>
               ))}
             </div>
-          </PhotoProvider>
+          </HanaViewer>
           {/* 操作栏 */}
           <div className='w-100% my-10px flex justify-end'>
             <div className='flex gap-40px'>
@@ -153,7 +147,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
             <div className='font-bold font-size-18px color-#3d3d3d'>
               <span>{workInfo?.name}</span>
             </div>
-            <div className='font-bold font-size-14px color-#6d757a'>
+            <div className='font-bold font-size-14px color-#6d757a line-height-normal'>
               <span>{workInfo?.intro}</span>
             </div>
             <div className='flex flex-wrap gap-10px font-size-14px'>
@@ -198,13 +192,15 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 <Link className='color-#3d3d3d' to={`/personal-center/${workInfo?.authorInfo.id}`}>
                   {workInfo?.authorInfo.username}
                 </Link>
-                <Button
-                  shape='round'
-                  size='large'
-                  type={workInfo?.authorInfo.isFollowed ? 'default' : 'primary'}
-                  onClick={handleFollow}>
-                  {workInfo?.authorInfo.isFollowed ? '已关注' : '关注'}
-                </Button>
+                {workInfo.authorInfo.id !== id && (
+                  <Button
+                    shape='round'
+                    size='large'
+                    type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
+                    onClick={handleFollow}>
+                    {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
+                  </Button>
+                )}
               </div>
               <Link to={`/personal-center/${workInfo?.authorInfo.id}`}>
                 <Button shape='round' size='large' type='default'>
@@ -213,16 +209,20 @@ const WorkInfo: FC<WorkInfoProps> = ({
               </Link>
             </div>
 
-            <LayoutList scrollType='work-normal'>
-              {Array.from(authorWorkList.values()).map((work, index) => (
-                <WorkLittleItem key={index} itemInfo={work} like={handleLike} />
-              ))}
-            </LayoutList>
+            {authorWorkList.size === 0 ? (
+              <Empty showImg={false} text='暂无其他作品' />
+            ) : (
+              <LayoutList scrollType='work-normal'>
+                {Array.from(authorWorkList.values()).map((work, index) => (
+                  <WorkLittleItem key={index} itemInfo={work} like={handleLike} />
+                ))}
+              </LayoutList>
+            )}
           </div>
         </div>
         <Divider />
         {/* 评论 */}
-        <Comments loading={loading} />
+        <Comments loading={loading} totalCount={workInfo.commentNum} />
       </div>
 
       <Modal
@@ -233,21 +233,25 @@ const WorkInfo: FC<WorkInfoProps> = ({
         cancelText='取消'
         onOk={() => collectConfirm()}
         onCancel={cancelCollect}>
-        <div className='h-110 overflow-y-scroll'>
-          <Radio.Group className='w-full' onChange={onChooseFolder} value={folderId}>
-            {favoriteList.map((item) => (
-              <Radio
-                key={item.id}
-                value={item.id}
-                className='w-full h-15 px-5 flex justify-between items-center'>
-                <div className='w-70 flex justify-between'>
-                  <span>{item.name}</span>
-                  <span>作品数：{item.workNum}</span>
-                </div>
-              </Radio>
-            ))}
-          </Radio.Group>
-        </div>
+        {favoriteList.length !== 0 ? (
+          <div className='h-110 overflow-y-scroll'>
+            <Radio.Group className='w-full' onChange={onChooseFolder} value={folderId}>
+              {favoriteList.map((item) => (
+                <Radio
+                  key={item.id}
+                  value={item.id}
+                  className='w-full h-15 px-5 flex justify-between items-center'>
+                  <div className='w-70 flex justify-between'>
+                    <span>{item.name}</span>
+                    <span>作品数：{item.workNum}</span>
+                  </div>
+                </Radio>
+              ))}
+            </Radio.Group>
+          </div>
+        ) : (
+          <Empty text='暂无收藏夹，可以先去个人中心创建一个哦！' />
+        )}
       </Modal>
     </>
   )

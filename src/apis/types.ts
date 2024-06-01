@@ -22,23 +22,22 @@ export interface Pagination {
   pageSize: number
 }
 
-export interface Action {
-  favoriteId?: string
-  id: string
-  action: 0 | 1
-}
 // #endregion
 
 // #region 数据体类型
 export interface UserItem {
   /**
-   * 用户头像
-   */
-  avatar: string
-  /**
    * 用户id
    */
   id: string
+  /**
+   * 用户名
+   */
+  username: string
+  /**
+   * 用户头像
+   */
+  avatar: string
   /**
    * 用户简介
    */
@@ -48,13 +47,10 @@ export interface UserItem {
    */
   isFollowing: boolean
   /**
-   * 用户名
+   * 用户作品 id 列表
+   * 获取用户列表相关接口包含此字段，getUserSimpleAPI 不包含此字段
    */
-  username: string
-  /**
-   * 用户作品列表
-   */
-  works: WorkNormalItem[]
+  works?: string[]
 }
 
 export interface WorkNormalItem {
@@ -158,7 +154,7 @@ export interface LabelItem {
   /**
    * 标签封面图片，当该标签的作品数达到一定量级后，由管理员在后台进行上传，默认就是随机生成的纯色背景图
    */
-  img: null | string
+  cover: null | string
   /**
    * 标签名称
    */

@@ -2,33 +2,29 @@
 // 用以存放项目中的常量
 
 // 下拉框中的选项列表
-type DropdownItem = {
-  route: string
+type UserHeaderItem = {
+  value: string
   name: string
 }
-export const HEADER_DROPDOWN_LIST: DropdownItem[] = [
+export const HEADER_DROPDOWN_LIST: UserHeaderItem[] = [
   {
-    route: '/1',
-    name: '我的数据',
-  },
-  {
-    route: '/2',
+    value: 'works',
     name: '我发布的作品',
   },
   {
-    route: '/3',
+    value: 'likes',
     name: '我的喜欢',
   },
   {
-    route: '/4',
+    value: 'favorites',
     name: '我的收藏',
   },
   {
-    route: '/5',
+    value: 'history',
     name: '浏览记录',
   },
   {
-    route: '/6',
+    value: 'profile',
     name: '个人资料设置',
   },
 ]
@@ -36,7 +32,9 @@ export const HEADER_DROPDOWN_LIST: DropdownItem[] = [
 // Header的菜单路由跳转
 type HeaderMenuItem = {
   icon: string
-} & DropdownItem
+  route: string
+  name: string
+}
 export const HEADER_MENU_LIST: HeaderMenuItem[] = [
   {
     icon: 'ant-design:picture-filled',
@@ -64,3 +62,7 @@ export const SIDEBAR_WHITE_LIST = ['/home', '/followed-new', '/explore']
 // 主页显隐侧边栏的触发宽度
 export const TRIGGER_MIN_WIDTH = 1305
 export const TRIGGER_MAX_WIDTH = 1545
+
+// 上传文件的最大大小
+export const MAX_WORK_SIZE = 1024 * 1024 * 10 // 上传作品，每张图片最大10MB
+export const MAX_INFO_SIZE = 1024 * 1024 * 5 // 修改个人信息（如头像），每张图片最大5MB

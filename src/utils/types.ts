@@ -14,7 +14,7 @@ export interface UserInfo {
 // 用户详细信息
 export interface UserDetailInfo extends UserInfo {
   background_img: string
-  gender: boolean
+  gender: 0 | 1 | 2
   isFollowed: boolean
 }
 
@@ -22,7 +22,7 @@ export interface UserDetailInfo extends UserInfo {
 export interface LabelInfo {
   id: string
   name: string
-  img: string
+  cover: string | null
   color: string
 }
 
@@ -53,6 +53,7 @@ export interface WorkDetailInfo {
   labels: Option[]
   isLiked: boolean
   isCollected: boolean
+  favoriteId?: string
   isReprinted: boolean
   openComment: boolean
   isAIGenerated: boolean
@@ -66,12 +67,14 @@ export interface WorkDetailInfo {
     id: string
     username: string
     avatar: string
-    isFollowed: boolean
+    intro: string
+    isFollowing: boolean
   }
   illustratorInfo?: {
     id: string
     username: string
     avatar: string
+    intro: string
     homepage: string
   }
 }
@@ -89,9 +92,13 @@ export interface WorkRankItemInfo {
 }
 
 // 用户item信息
-export interface UserItemInfo extends UserInfo {
-  works: WorkNormalItemInfo[]
-  isFollowed: boolean
+export interface UserItemInfo {
+  id: string
+  username: string
+  avatar: string
+  intro: string
+  isFollowing: boolean
+  works?: WorkNormalItemInfo[]
 }
 
 // 搜索条件
@@ -151,6 +158,8 @@ export interface UploadWorkInfo extends UploadWorkFormInfo {
 export interface FavoriteItemInfo {
   id: string
   name: string
+  intro: string
+  cover: null | string
   order: number
   workNum: number
 }
@@ -164,8 +173,6 @@ export interface WorkFavoriteItemInfo extends WorkNormalItemInfo {
 export interface FavoriteDetailInfo extends FavoriteItemInfo {
   creatorId: string
   creatorName: string
-  intro: string
-  cover: string | null
   workList: WorkFavoriteItemInfo[]
 }
 

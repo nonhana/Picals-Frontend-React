@@ -5,27 +5,31 @@ const userStore = createSlice({
   name: 'user',
   initialState: {
     userInfo: {
-      id: '1',
-      username: 'picals',
-      avatar: 'https://dummyimage.com/400X400',
-      email: '1209220829@qq.com',
-      fanNum: 100,
-      followNum: 100,
+      id: '',
+      username: '',
+      avatar: '',
+      email: '',
+      fanNum: 0,
+      followNum: 0,
     } as UserInfo,
+    isLogin: false,
   },
   reducers: {
     setUserInfo(state, action) {
       state.userInfo = action.payload
     },
+    setLoginStatus(state, action) {
+      state.isLogin = action.payload
+    },
   },
 })
 
 // 解构出increment和decrement方法
-const { setUserInfo } = userStore.actions
+const { setUserInfo, setLoginStatus } = userStore.actions
 
 // 获取reducer函数
 const userReducer = userStore.reducer
 
 // 导出
-export { setUserInfo }
+export { setUserInfo, setLoginStatus }
 export default userReducer

@@ -45,7 +45,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
     }
   }, [width, location.pathname])
 
-  const userInfo = useSelector((state: AppState) => state.user.userInfo)
+  const { userInfo, isLogin } = useSelector((state: AppState) => state.user)
 
   const handleSearch = (value: string) => {
     navigate({
@@ -96,11 +96,19 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
             </Button>
           </Link>
           <Icon width={24} color='#858585' icon='ant-design:bell-filled' />
-          <div
-            className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
-            onClick={() => setShowUserDropdown(!showUserDropdown)}>
-            <img className='w-10' src={userInfo.avatar} alt='avatar' />
-          </div>
+          {isLogin ? (
+            <div
+              className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
+              onClick={() => setShowUserDropdown(!showUserDropdown)}>
+              <img className='w-10' src={userInfo.avatar} alt='avatar' />
+            </div>
+          ) : (
+            <Link
+              to='/login'
+              className='w-10 h-10 rounded-full flex items-center justify-center cursor-pointer color-white font-size-14px bg-#c0c0c0'>
+              <span>登录</span>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -117,11 +125,13 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
         setVisible={setShowSearchDropdown}
       />
 
-      <UserDropdown
-        className='top-16 right-10'
-        visible={showUserDropdown}
-        setVisible={setShowUserDropdown}
-      />
+      {isLogin && (
+        <UserDropdown
+          className='top-16 right-10'
+          visible={showUserDropdown}
+          setVisible={setShowUserDropdown}
+        />
+      )}
     </>
   )
 }
