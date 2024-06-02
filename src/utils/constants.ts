@@ -66,3 +66,6 @@ export const TRIGGER_MAX_WIDTH = 1545
 // 上传文件的最大大小
 export const MAX_WORK_SIZE = 1024 * 1024 * 10 // 上传作品，每张图片最大10MB
 export const MAX_INFO_SIZE = 1024 * 1024 * 5 // 修改个人信息（如头像），每张图片最大5MB
+
+// 加载时的提示语
+export const LOADING_TIP = '加载中，请稍等...'

@@ -18,6 +18,8 @@ import GreyButton from '@/components/common/grey-button'
 import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
 import { setLoginStatus, setUserInfo } from '@/store/modules/user'
 import { setFavoriteList } from '@/store/modules/favorites'
+import { LOADING_TIP } from '@/utils'
+import Loading from '@/components/common/loading'
 
 // 登录表单
 type LoginForm = {
@@ -49,8 +51,10 @@ const LoginWindow: FC = () => {
   const [windowVisible, setWindowVisible] = useState(true)
 
   // 登录提交
+  const [loginLoading, setLoginLoading] = useState(false)
   const handleLogin: FormProps<LoginForm>['onFinish'] = async (values) => {
     try {
+      setLoginLoading(true)
       const {
         data: { userInfo, accessToken, refreshToken },
       } = await loginAPI(values)
@@ -78,11 +82,15 @@ const LoginWindow: FC = () => {
     } catch (error) {
       console.error('出现错误了喵！！', error)
       return
+    } finally {
+      setLoginLoading(false)
     }
   }
   // 注册提交
+  const [registerLoading, setRegisterLoading] = useState(false)
   const handleRegister: FormProps<RegisterForm>['onFinish'] = async (values) => {
     try {
+      setRegisterLoading(true)
       await registerAPI({
         email: values.email,
         password: values.password,
@@ -96,6 +104,8 @@ const LoginWindow: FC = () => {
     } catch (error) {
       console.error('出现错误了喵！！', error)
       return
+    } finally {
+      setRegisterLoading(false)
     }
   }
   // 发送验证码，60s倒计时刷新状态
@@ -139,17 +149,11 @@ const LoginWindow: FC = () => {
         <div
           onMouseEnter={() => setMouseEnter(true)}
           onMouseLeave={() => setMouseEnter(false)}
-          className='select-none absolute top-1/2 left-1/2 -translate-x-50% -translate-y-50% w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white border-color-#E5E5E5 z-2'>
+          className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-50% -translate-y-50% w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white border-color-#E5E5E5 z-2'>
+          <Loading loading={loginLoading || registerLoading} text={LOADING_TIP} />
           <div className='flex flex-col items-center justify-center'>
             <img className='w-50' src={logo} alt='picals-logo' />
-            <span
-              className='
-            font-normal 
-            font-size-14px
-            color-#6d757a
-        '>
-              兴趣使然的插画收藏小站
-            </span>
+            <span className='font-normal font-size-14px color-#6d757a'>兴趣使然的插画收藏小站</span>
           </div>
 
           {/* 返回按钮 */}

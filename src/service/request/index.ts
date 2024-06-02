@@ -7,7 +7,9 @@ import { refreshTokenAPI } from '@/apis/user'
 interface PendingTask {
   config: AxiosRequestConfig
   resolve: (value: unknown) => void
+  reject: (reason?: any) => void
 }
+
 let refreshing = false
 const pendingTasks: PendingTask[] = [] // 维护一个请求队列，用于刷新token时保存请求
 
@@ -38,11 +40,38 @@ class Request {
           })
         } else {
           const { status, data, config } = err.response
-          if (refreshing) {
-            return new Promise((resolve) => {
-              pendingTasks.push({ config, resolve })
+          if (status === 401 && !config.url.includes('/user/refresh-token')) {
+            if (!refreshing) {
+              try {
+                refreshing = true
+                const refreshToken = localStorage.getItem('refreshToken')
+                const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
+                localStorage.setItem('accessToken', data.access_token)
+                localStorage.setItem('refreshToken', data.refresh_token)
+
+                // 重新发起之前失败的请求
+                pendingTasks.forEach((task) => {
+                  task.config.headers!.Authorization = `Bearer ${data.access_token}`
+                  this.instance.request(task.config).then(task.resolve).catch(task.reject)
+                })
+                pendingTasks.length = 0 // 清空队列
+              } catch (error) {
+                notification.error({
+                  message: 'token已失效，请重新进行登录~',
+                })
+                pendingTasks.forEach((task) => {
+                  task.reject(error)
+                })
+                pendingTasks.length = 0 // 清空队列
+              } finally {
+                refreshing = false
+              }
+            }
+            return new Promise((resolve, reject) => {
+              pendingTasks.push({ config, resolve, reject })
             })
           }
+
           if (status === 500) {
             notification.error({
               message: '服务器错误',
@@ -58,20 +87,6 @@ class Request {
               message: '请求资源不存在',
               description: '请求的资源不存在，请检查接口地址',
             })
-          } else if (status === 401 && !config.url.includes('/user/refresh-token')) {
-            try {
-              refreshing = true
-              const refreshToken = localStorage.getItem('refreshToken')
-              const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
-              localStorage.setItem('accessToken', data.access_token)
-              localStorage.setItem('refreshToken', data.refresh_token)
-            } catch (error) {
-              notification.error({
-                message: 'token已失效，请重新进行登录~',
-              })
-            } finally {
-              refreshing = false
-            }
           } else if (status === 400) {
             notification.error({
               message: '客户端错误',
