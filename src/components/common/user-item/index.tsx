@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import type { UserItemInfo } from '@/utils/types'
 import UserWorkItem from './user-work-item'
 import { Button } from 'antd'
@@ -23,14 +24,18 @@ const UserItem: FC<UserItemProps> = ({
 }) => {
   return (
     <div className='relative p-5 h-61 flex gap-5 rd-1 bg-white'>
-      <div className='shrink-0 w-20 h-20 rd-full overflow-hidden cursor-pointer'>
+      <Link
+        to={`/personal-center/${id}/works`}
+        className='shrink-0 w-20 h-20 rd-full overflow-hidden cursor-pointer'>
         <img className='w-full h-full object-cover' src={avatar} alt={username} />
-      </div>
+      </Link>
 
       <div className='flex flex-col gap-5'>
-        <div className='font-size-14px font-bold color-#3d3d3d'>
+        <Link
+          to={`/personal-center/${id}/works`}
+          className='font-size-14px font-bold color-#3d3d3d'>
           <span>{username}</span>
-        </div>
+        </Link>
 
         <div className='font-size-12px color-#6d757a w-70 break-words'>
           <span>{intro}</span>

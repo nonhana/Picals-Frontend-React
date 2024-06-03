@@ -53,18 +53,28 @@ const UserList: FC<UserListProps> = ({ width }) => {
       message.error('不能关注自己')
       return
     }
-    await userActionsAPI({ id })
-    updateItem(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    try {
+      await userActionsAPI({ id })
+      updateItem(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
   }
 
   const handleLikeWork = async (userId: string, workId: string) => {
-    await likeActionsAPI({ id: workId })
-    updateItem(userId, {
-      ...userList.get(userId)!,
-      works: userList
-        .get(userId)!
-        .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
-    })
+    try {
+      await likeActionsAPI({ id: workId })
+      updateItem(userId, {
+        ...userList.get(userId)!,
+        works: userList
+          .get(userId)!
+          .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
+      })
+    } catch (error) {
+      console.error('出现错误了喵！！', error)
+      return
+    }
   }
 
   useEffect(() => {
