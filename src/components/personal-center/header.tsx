@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { setUserInfo as setStoreUserInfo } from '@/store/modules/user'
+import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { useParams } from 'react-router-dom'
 import type { UserDetailInfo } from '@/utils/types'
@@ -12,7 +11,6 @@ import { PhotoView } from 'react-photo-view'
 import HanaViewer from '../common/hana-viewer'
 
 const Header: FC = () => {
-  const dispatch = useDispatch()
   const { userId } = useParams<{ userId: string }>()
   const [userInfo, setUserInfo] = useState<UserDetailInfo>({
     id: '',
@@ -47,16 +45,6 @@ const Header: FC = () => {
           gender: data.gender,
           isFollowed: data.isFollowed,
         })
-        dispatch(
-          setStoreUserInfo({
-            id: data.id,
-            username: data.username,
-            avatar: data.avatar,
-            email: data.email,
-            fanNum: data.fanCount,
-            followNum: data.followCount,
-          }),
-        )
       }
     } catch (error) {
       console.error('出现错误了喵！！', error)

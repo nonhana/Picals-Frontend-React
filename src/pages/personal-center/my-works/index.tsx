@@ -2,13 +2,24 @@ import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import LabelList from '@/components/personal-center/label-list'
 import WorkList from '@/components/personal-center/work-list'
+import { getUserWorksTotalAPI } from '@/apis'
 
 const MyWorks: FC = () => {
   const { userId } = useParams<{ userId: string }>()
-  const [workCount, setWorkCount] = useState<number>()
+  const [workCount, setWorkCount] = useState<number>(0)
+
+  const getWorkCount = async () => {
+    try {
+      const { data } = await getUserWorksTotalAPI({ id: userId! })
+      setWorkCount(data)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
 
   useEffect(() => {
-    setWorkCount(1000)
+    getWorkCount()
   }, [userId])
 
   return (
@@ -20,7 +31,7 @@ const MyWorks: FC = () => {
         </div>
       </div>
       <LabelList />
-      <WorkList />
+      <WorkList workCount={workCount} />
     </div>
   )
 }

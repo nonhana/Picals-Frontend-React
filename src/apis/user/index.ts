@@ -186,9 +186,9 @@ export const getFansTotalAPI = (params?: Id) => {
 }
 
 // 获取用户已发布作品中所有携带的标签
-export const getUserWorksTagsAPI = (params?: Id) => {
+export const getUserWorksLabelsAPI = (params?: Id) => {
   return request<Id, LabelItem[]>({
-    url: '/api/user/published-tags',
+    url: '/api/user/published-labels',
     method: 'GET',
     params,
   })
@@ -206,7 +206,7 @@ export const getUserWorksListAPI = (params: Pagination) => {
 // 获取用户发布的作品总数
 export const getUserWorksTotalAPI = (params?: Id) => {
   return request<Id, number>({
-    url: '/api/user/work-count',
+    url: '/api/user/works-count',
     method: 'GET',
     params,
   })
@@ -224,7 +224,7 @@ export const getUserLikeWorksAPI = (params: Pagination) => {
 // 获取用户喜欢的作品总数
 export const getUserLikeWorksTotalAPI = (params?: Id) => {
   return request<Id, number>({
-    url: '/api/user/work-like-count',
+    url: '/api/user/like-works-count',
     method: 'GET',
     params,
   })

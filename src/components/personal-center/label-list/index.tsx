@@ -1,15 +1,25 @@
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { LabelInfo } from '@/utils/types'
-import { labelList } from '@/test/data'
 import LabelItem from '@/components/common/label-item'
+import { getUserWorksLabelsAPI } from '@/apis'
 
 const LabelList: FC = () => {
   const { userId } = useParams<{ userId: string }>()
   const [labels, setLabels] = useState<LabelInfo[]>()
 
+  const getLabels = async () => {
+    try {
+      const { data } = await getUserWorksLabelsAPI({ id: userId! })
+      setLabels(data)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
   useEffect(() => {
-    setLabels(labelList)
+    getLabels()
   }, [userId])
 
   return (
