@@ -35,7 +35,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
       )
       setUserList(userSource)
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     } finally {
       setLoading(false)
@@ -57,7 +57,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
       await userActionsAPI({ id })
       updateItem(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     }
   }
@@ -72,7 +72,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
           .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
       })
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     }
   }

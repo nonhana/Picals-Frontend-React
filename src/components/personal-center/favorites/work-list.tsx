@@ -2,37 +2,56 @@ import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
-import type { WorkFavoriteItemInfo } from '@/utils/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkFavoriteItem from '@/components/common/work-favorite-item'
 import Pagination from '@/components/common/pagination'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
+import Empty from '@/components/common/empty'
 
 const { Search } = Input
 const { confirm } = Modal
 
 type WorkListProps = {
-  workList: WorkFavoriteItemInfo[]
+  total: number
+  workList: WorkNormalItemInfo[]
+  current: number
+  setCurrent: (current: number) => void
+  handleSearch: (keyword: string) => void
+  searchStatus: boolean
+  setSearchStatus: (status: boolean) => void
 }
 
-const WorkList: FC<WorkListProps> = ({ workList }) => {
+const WorkList: FC<WorkListProps> = ({
+  total,
+  workList,
+  current,
+  setCurrent,
+  handleSearch,
+  searchStatus,
+  setSearchStatus,
+}) => {
   const [messageApi, contextHolder] = message.useMessage()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
   const { favoriteId } = useParams()
 
-  /* ----------搜索相关---------- */
   const [keyword, setKeyword] = useState('')
-  const onSearch = (value: string) => {
-    console.log(value)
+
+  const onSearch = () => {
+    if (keyword === '') {
+      setSearchStatus(false)
+      return
+    }
+    setSearchStatus(true)
+    handleSearch(keyword)
   }
 
-  /* ----------分页相关---------- */
-  const total = 100
-  const pageSize = 12
-  const [current, setCurrent] = useState(1)
-  const onPageChange = (page: number) => {
-    setCurrent(page)
+  const handleCancelSearch = () => {
+    setKeyword('')
+    setSearchStatus(false)
   }
+
+  const onPageChange = (page: number) => setCurrent(page)
 
   /* ----------Modal相关---------- */
   //#region
@@ -50,7 +69,7 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        console.log('cancel ' + choosedWorkList)
+        console.log('cancel ' + chosenWorkList)
         messageApi.success('取消收藏成功')
       },
     })
@@ -60,7 +79,7 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
     setMoveFolderId(e.target.value)
   }
   const moveConfirm = (folderId: string) => {
-    console.log('move ' + choosedWorkList + ' to ' + folderId)
+    console.log('move ' + chosenWorkList + ' to ' + folderId)
     setMoveModalStatus(false)
     messageApi.success('移动成功')
   }
@@ -73,7 +92,7 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
     setCopyFolderId(e.target.value)
   }
   const copyConfirm = (folderId: string) => {
-    console.log('copy ' + choosedWorkList + ' to ' + folderId)
+    console.log('copy ' + chosenWorkList + ' to ' + folderId)
     setCopyModalStatus(false)
     messageApi.success('复制成功')
   }
@@ -87,8 +106,8 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
   //#region
   const [settingStatus, setSettingStatus] = useState(false) // 是否处于批量编辑状态
   const [chooseStatusList, setChooseStatusList] = useState<boolean[]>([]) // 每个作品的选中状态
-  const [choosedWorkList, setChoosedWorkList] = useState<string[]>([]) // 选中的作品id列表
-  const [allChoosen, setAllChoosen] = useState(false) // 是否全选
+  const [chosenWorkList, setChosenWorkList] = useState<string[]>([]) // 选中的作品id列表
+  const [allChosen, setAllChosen] = useState(false) // 是否全选
 
   const like = (id: string) => {
     console.log(id)
@@ -103,34 +122,34 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
   }
   // 全选或取消全选
   const chooseAllWorks = (e: RadioChangeEvent) => {
-    setAllChoosen(e.target.value)
+    setAllChosen(e.target.value)
     setChooseStatusList(new Array(workList.length).fill(e.target.value))
   }
   // 单个作品取消收藏
   const cancelSingleWork = (id: string) => {
-    setChoosedWorkList([id])
+    setChosenWorkList([id])
     cancelConfirm()
   }
   // 单个作品移动
   const moveSingleWork = (id: string) => {
-    setChoosedWorkList([id])
+    setChosenWorkList([id])
     setMoveModalStatus(true)
   }
   // 单个作品复制
   const copySingleWork = (id: string) => {
-    setChoosedWorkList([id])
+    setChosenWorkList([id])
     setCopyModalStatus(true)
   }
 
   useEffect(() => {
     if (settingStatus) return
     setChooseStatusList(new Array(workList.length).fill(false))
-    setAllChoosen(false)
-    setChoosedWorkList([])
+    setAllChosen(false)
+    setChosenWorkList([])
   }, [settingStatus])
 
   useEffect(() => {
-    setChoosedWorkList(
+    setChosenWorkList(
       workList.reduce((acc, item, index) => {
         if (chooseStatusList[index]) {
           acc.push(item.id)
@@ -155,21 +174,21 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
         {settingStatus ? (
           <div className='w-100% h-16 px-5 flex justify-between items-center border-1px border-b-solid border-color-#858585'>
             <div className='flex gap-10px items-center'>
-              <Radio.Group value={allChoosen} onChange={chooseAllWorks}>
+              <Radio.Group value={allChosen} onChange={chooseAllWorks}>
                 <Radio value={true}>全选</Radio>
                 <Radio value={false}>取消全选</Radio>
               </Radio.Group>
-              <Button disabled={choosedWorkList.length === 0} type='link' onClick={cancelConfirm}>
+              <Button disabled={chosenWorkList.length === 0} type='link' onClick={cancelConfirm}>
                 取消收藏
               </Button>
               <Button
-                disabled={choosedWorkList.length === 0}
+                disabled={chosenWorkList.length === 0}
                 type='link'
                 onClick={() => setMoveModalStatus(true)}>
                 移动到
               </Button>
               <Button
-                disabled={choosedWorkList.length === 0}
+                disabled={chosenWorkList.length === 0}
                 type='link'
                 onClick={() => setCopyModalStatus(true)}>
                 复制到
@@ -185,6 +204,11 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
               <Button type='link' onClick={() => setSettingStatus(!settingStatus)}>
                 批量操作
               </Button>
+              {searchStatus && (
+                <Button type='link' onClick={handleCancelSearch}>
+                  取消搜索
+                </Button>
+              )}
               <Search
                 value={keyword}
                 placeholder='输入作品名称'
@@ -195,22 +219,27 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
           </div>
         )}
 
-        <div className='mt-5 w-826px flex flex-wrap gap-30px'>
-          {workList.map((item, index) => (
-            <WorkFavoriteItem
-              key={item.id}
-              itemInfo={item}
-              settingStatus={settingStatus}
-              chooseStatus={chooseStatusList[index]}
-              choose={choose}
-              like={like}
-              cancel={cancelSingleWork}
-              move={moveSingleWork}
-              copy={copySingleWork}
-            />
-          ))}
-        </div>
-        <Pagination total={total} pageSize={pageSize} current={current} onChange={onPageChange} />
+        {workList.length === 0 ? (
+          <Empty text={searchStatus ? '没有找到相关作品' : '暂无作品，快去收藏一些吧~'} />
+        ) : (
+          <div className='mt-5 w-826px flex flex-wrap gap-30px'>
+            {workList.map((item, index) => (
+              <WorkFavoriteItem
+                key={item.id}
+                itemInfo={item}
+                settingStatus={settingStatus}
+                chooseStatus={chooseStatusList[index]}
+                choose={choose}
+                like={like}
+                cancel={cancelSingleWork}
+                move={moveSingleWork}
+                copy={copySingleWork}
+              />
+            ))}
+          </div>
+        )}
+
+        <Pagination total={total} pageSize={12} current={current} onChange={onPageChange} />
       </div>
 
       <Modal

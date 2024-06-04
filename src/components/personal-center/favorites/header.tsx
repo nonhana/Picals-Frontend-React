@@ -5,24 +5,12 @@ import { Button } from 'antd'
 
 type HeaderProps = FavoriteDetailInfo
 
-const Header: FC<HeaderProps> = ({
-  name,
-  intro,
-  creatorId,
-  creatorName,
-  cover,
-  workList,
-  workNum,
-}) => {
+const Header: FC<HeaderProps> = ({ name, intro, creatorId, creatorName, cover, workNum }) => {
   return (
     <div className='relative w-954px p-5 flex justify-between border-b-solid border-1px border-color-#858585'>
       <div className='flex gap-5 items-center'>
         <div className='w-40 h-40 flex justify-center items-center'>
-          <img
-            className='w-full h-full object-cover'
-            src={cover || workList[0].imgList[0]}
-            alt={name}
-          />
+          <img className='w-full h-full object-cover' src={cover} alt={name} />
         </div>
         <div className='w-100 flex flex-col gap-10px font-size-14px color-#3d3d3d'>
           <span className='font-size-18px font-bold'>{name}</span>

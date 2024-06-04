@@ -1,9 +1,10 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useRef } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { getUserWorksListAPI, getUserLikeWorksAPI, likeActionsAPI } from '@/apis'
+import Loading from '@/components/common/loading'
 
 type WorkListProps = {
   workCount: number
@@ -13,13 +14,23 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   const location = useLocation()
   const { userId } = useParams<{ userId: string }>()
   const [current, setCurrent] = useState<number>(1)
-  const [workList, setWorkList] = useState<WorkNormalItemInfo[]>()
+  const [workList, setWorkList] = useState<WorkNormalItemInfo[]>([])
+  const workListRef = useRef<HTMLDivElement>(null)
+  const [placeHolderHeight, setPlaceHolderHeight] = useState<number>(0)
+
+  useEffect(() => {
+    if (workListRef.current) {
+      const { clientHeight } = workListRef.current
+      if (clientHeight === 0) return
+      setPlaceHolderHeight(clientHeight)
+    }
+  }, [workList])
 
   const likeWork = async (workId: string) => {
     try {
       await likeActionsAPI({ id: workId })
       setWorkList(
-        workList?.map((work) => {
+        workList.map((work) => {
           if (work.id === workId) {
             return { ...work, isLiked: !work.isLiked }
           }
@@ -57,6 +68,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   }
 
   useEffect(() => {
+    setWorkList([])
     const currentPath = location.pathname.split('/')[3]
     if (currentPath === 'works') getUserWorks()
     if (currentPath === 'likes') getUserLikeWorks()
@@ -64,9 +76,17 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   return (
     <div className='relative w-100% flex gap-10px flex-wrap'>
-      <div className='relative w-full flex flex-wrap gap-5'>
-        {workList?.map((work) => <WorkNormalItem key={work.id} itemInfo={work} like={likeWork} />)}
-      </div>
+      {workList.length === 0 ? (
+        <div style={{ height: `${placeHolderHeight}px` }} className='relative w-full'>
+          <Loading loading={workList.length === 0} />
+        </div>
+      ) : (
+        <div ref={workListRef} className='relative w-full flex flex-wrap gap-5'>
+          {workList.map((work) => (
+            <WorkNormalItem key={work.id} itemInfo={work} like={likeWork} />
+          ))}
+        </div>
+      )}
 
       <div className='relative mx-auto'>
         <Pagination pageSize={30} total={workCount || 0} onChange={setCurrent} current={current} />

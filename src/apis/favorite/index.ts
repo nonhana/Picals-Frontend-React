@@ -3,6 +3,7 @@ import {
   FavoriteDetailInfo,
   IChangeFavoriteOrderReq,
   IEditFavoriteReq,
+  IGetSearchResultNumReq,
   IMoveWorkToFavoriteReq,
   INewFavoriteReq,
 } from './types'
@@ -75,6 +76,15 @@ export const getFavoriteWorkListAPI = (params: Pagination) => {
 export const searchFavoriteWorkAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/favorite/search',
+    method: 'GET',
+    params,
+  })
+}
+
+// 获取搜索结果数量
+export const getSearchResultNumAPI = (params: IGetSearchResultNumReq) => {
+  return request<IGetSearchResultNumReq, number>({
+    url: '/api/favorite/search-count',
     method: 'GET',
     params,
   })

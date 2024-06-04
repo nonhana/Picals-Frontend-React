@@ -31,7 +31,7 @@ const Home: FC = () => {
       const { data } = await getRecommendLabelListAPI()
       setLabelList(data)
     } catch (error) {
-      console.error('获取标签列表失败', error)
+      console.log('获取标签列表失败', error)
     } finally {
       setLoading(false)
     }
@@ -45,7 +45,7 @@ const Home: FC = () => {
       const { data } = await getFollowNewWorksAPI({ pageSize: 30, current: 1 })
       setFollowWorkList(data)
     } catch (error) {
-      console.error('获取最新关注作品失败', error)
+      console.log('获取最新关注作品失败', error)
     } finally {
       setLoading(false)
     }
@@ -59,7 +59,7 @@ const Home: FC = () => {
       const { data } = await getRecommendWorksAPI({ pageSize: 30, current: 1 })
       setRecommendWorkList(data)
     } catch (error) {
-      console.error('获取推荐作品失败', error)
+      console.log('获取推荐作品失败', error)
     } finally {
       setLoading(false)
     }
