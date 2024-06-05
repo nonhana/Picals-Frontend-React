@@ -8,7 +8,7 @@ import Pagination from '@/components/common/pagination'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import Empty from '@/components/common/empty'
-import { favoriteActionsAPI } from '@/apis'
+import { favoriteActionsAPI, moveFavoriteWorksAPI, copyFavoriteWorksAPI } from '@/apis'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -77,11 +77,10 @@ const WorkList: FC<WorkListProps> = ({
   }
   // 选中作品，将对应的作品选中状态取反
   const choose = (id: string) => {
-    setChooseStatusList((prev) =>
-      prev.map((item, index) =>
-        index === workList.findIndex((item) => item.id === id) ? !item : item,
-      ),
-    )
+    setChooseStatusList((prev) => {
+      const targetIndex = workList.findIndex((item) => item.id === id)
+      return prev.map((item, index) => (index === targetIndex ? !item : item))
+    })
   }
   // 全选或取消全选
   const chooseAllWorks = (e: RadioChangeEvent) => {
@@ -159,21 +158,9 @@ const WorkList: FC<WorkListProps> = ({
   const onChooseMoveFolder = (e: RadioChangeEvent) => {
     setMoveFolderId(e.target.value)
   }
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
   const moveConfirm = async (idList: string[], targetId: string) => {
     try {
-      // 先执行所有取消收藏的操作
-      const cancelPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
-      await Promise.all(cancelPromises)
-
-      // 等待 1 秒
-      await sleep(1000)
-
-      // 然后执行所有添加到新收藏夹的操作
-      const addPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: targetId }))
-      await Promise.all(addPromises)
-
-      // 操作完成后进行其他更新和通知
+      await moveFavoriteWorksAPI({ idList, fromId: folderId!, toId: targetId })
       setMoveModalStatus(false)
       refresh()
       resetSettingStatus()

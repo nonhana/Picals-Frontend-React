@@ -54,6 +54,17 @@ export interface IFavoriteActionsReq {
   id: string
   favoriteId: string
 }
+
+export interface IMoveFavoriteWorksReq {
+  idList: string[]
+  fromId: string
+  toId: string
+}
+
+export interface ICopyFavoriteWorksReq {
+  idList: string[]
+  toId: string
+}
 // #endregion
 
 // #region 返回体类型

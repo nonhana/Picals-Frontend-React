@@ -54,15 +54,6 @@ export const getFavoriteDetailAPI = (params: Id) => {
   })
 }
 
-// 移动作品到其他收藏夹
-export const moveWorkToFavoriteAPI = (data: IMoveWorkToFavoriteReq) => {
-  return request<IMoveWorkToFavoriteReq, undefined>({
-    url: '/api/favorite/move',
-    method: 'POST',
-    data,
-  })
-}
-
 // 分页获取收藏夹作品列表
 export const getFavoriteWorkListAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
