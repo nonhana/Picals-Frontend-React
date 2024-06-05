@@ -159,11 +159,15 @@ const WorkList: FC<WorkListProps> = ({
   const onChooseMoveFolder = (e: RadioChangeEvent) => {
     setMoveFolderId(e.target.value)
   }
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
   const moveConfirm = async (idList: string[], targetId: string) => {
     try {
       // 先执行所有取消收藏的操作
       const cancelPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
       await Promise.all(cancelPromises)
+
+      // 等待 1 秒
+      await sleep(1000)
 
       // 然后执行所有添加到新收藏夹的操作
       const addPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: targetId }))
@@ -176,9 +180,9 @@ const WorkList: FC<WorkListProps> = ({
       messageApi.success('移动成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)
-      return
     }
   }
+
   const cancelMove = () => {
     setMoveModalStatus(false)
     setMoveFolderId(folderId!)
