@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
-import type { WorkFavoriteItemInfo } from '@/utils/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 
@@ -21,7 +21,7 @@ const dropdownList: MenuProps['items'] = [
 ]
 
 type WorkFavoriteItemProps = {
-  itemInfo: WorkFavoriteItemInfo
+  itemInfo: WorkNormalItemInfo
   settingStatus: boolean // 是否正处于批量编辑状态
   chooseStatus: boolean // 是否被选中
   like: (id: string) => void

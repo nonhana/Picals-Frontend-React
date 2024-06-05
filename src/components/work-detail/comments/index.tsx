@@ -37,7 +37,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       const { data } = await getCommentListAPI({ id: workId! })
       setCommentList(data)
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     }
   }
@@ -154,7 +154,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
           fetchCommentList()
           message.success('删除评论成功')
         } catch (error) {
-          console.error('出现错误了喵！！', error)
+          console.log('出现错误了喵！！', error)
         }
       },
     })
@@ -166,7 +166,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       setCount((prevCount) => prevCount + 1)
       fetchCommentList()
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
     }
   }
 

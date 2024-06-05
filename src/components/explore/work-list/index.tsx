@@ -19,7 +19,7 @@ const WorkList: FC = () => {
       if (data.length === 0) return message.info('暂时没有更多了...')
       setWorkList([...Array.from(workList.values()), ...data])
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     } finally {
       setLoading(false)

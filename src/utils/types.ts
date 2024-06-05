@@ -164,21 +164,20 @@ export interface FavoriteItemInfo {
   workNum: number
 }
 
-// 收藏作品item信息
-export interface WorkFavoriteItemInfo extends WorkNormalItemInfo {
-  favoriteId: string
-}
-
 // 收藏夹详细信息
-export interface FavoriteDetailInfo extends FavoriteItemInfo {
+export interface FavoriteDetailInfo {
+  id: string
+  name: string
+  intro: string
+  cover: null | string
+  workNum: number
   creatorId: string
   creatorName: string
-  workList: WorkFavoriteItemInfo[]
 }
 
 // 收藏夹表单信息
 export interface FavoriteFormInfo {
   name: string
   intro: string
-  cover: string | null
+  cover?: string
 }

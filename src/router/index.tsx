@@ -59,7 +59,7 @@ const routeList: RouteObject[] = [
             element: LazyLoad(lazy(() => import('@/pages/personal-center/my-works'))),
           },
           {
-            path: 'favorites/:favoriteId',
+            path: 'favorites',
             element: LazyLoad(lazy(() => import('@/pages/personal-center/my-favorites'))),
           },
           {

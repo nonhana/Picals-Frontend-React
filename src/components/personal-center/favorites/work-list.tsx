@@ -1,94 +1,76 @@
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
-import type { WorkFavoriteItemInfo } from '@/utils/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkFavoriteItem from '@/components/common/work-favorite-item'
 import Pagination from '@/components/common/pagination'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
+import Empty from '@/components/common/empty'
+import { favoriteActionsAPI } from '@/apis'
 
 const { Search } = Input
 const { confirm } = Modal
 
 type WorkListProps = {
-  workList: WorkFavoriteItemInfo[]
+  total: number
+  workList: WorkNormalItemInfo[]
+  current: number
+  setCurrent: (current: number) => void
+  handleSearch: (keyword: string) => void
+  searchStatus: boolean
+  setSearchStatus: (status: boolean) => void
+  refresh: () => void
 }
 
-const WorkList: FC<WorkListProps> = ({ workList }) => {
+const WorkList: FC<WorkListProps> = ({
+  total,
+  workList,
+  current,
+  setCurrent,
+  handleSearch,
+  searchStatus,
+  setSearchStatus,
+  refresh,
+}) => {
   const [messageApi, contextHolder] = message.useMessage()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
-  const { favoriteId } = useParams()
+  const searchParams = useSearchParams()[0]
+  const folderId = searchParams.get('folderId')
 
-  /* ----------搜索相关---------- */
   const [keyword, setKeyword] = useState('')
-  const onSearch = (value: string) => {
-    console.log(value)
+
+  const onSearch = () => {
+    if (keyword === '') {
+      setSearchStatus(false)
+      return
+    }
+    setSearchStatus(true)
+    handleSearch(keyword)
   }
 
-  /* ----------分页相关---------- */
-  const total = 100
-  const pageSize = 12
-  const [current, setCurrent] = useState(1)
-  const onPageChange = (page: number) => {
-    setCurrent(page)
+  const handleCancelSearch = () => {
+    setKeyword('')
+    setSearchStatus(false)
   }
 
-  /* ----------Modal相关---------- */
-  //#region
-  const [moveModalStatus, setMoveModalStatus] = useState(false)
-  const [moveFolderId, setMoveFolderId] = useState<string>(favoriteId || '')
-  const [copyModalStatus, setCopyModalStatus] = useState(false)
-  const [copyFolderId, setCopyFolderId] = useState<string>(favoriteId || '')
-
-  const cancelConfirm = () => {
-    confirm({
-      title: '确定要取消收藏该作品吗？',
-      icon: <ExclamationCircleFilled />,
-      content: '该操作无法撤销',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        console.log('cancel ' + choosedWorkList)
-        messageApi.success('取消收藏成功')
-      },
-    })
-  }
-
-  const onChooseMoveFolder = (e: RadioChangeEvent) => {
-    setMoveFolderId(e.target.value)
-  }
-  const moveConfirm = (folderId: string) => {
-    console.log('move ' + choosedWorkList + ' to ' + folderId)
-    setMoveModalStatus(false)
-    messageApi.success('移动成功')
-  }
-  const cancelMove = () => {
-    setMoveModalStatus(false)
-    setMoveFolderId(favoriteId || '')
-  }
-
-  const onChooseCopyFolder = (e: RadioChangeEvent) => {
-    setCopyFolderId(e.target.value)
-  }
-  const copyConfirm = (folderId: string) => {
-    console.log('copy ' + choosedWorkList + ' to ' + folderId)
-    setCopyModalStatus(false)
-    messageApi.success('复制成功')
-  }
-  const cancelCopy = () => {
-    setCopyModalStatus(false)
-    setCopyFolderId(favoriteId || '')
-  }
-  //#endregion
+  const onPageChange = (page: number) => setCurrent(page)
 
   /* ----------作品编辑相关---------- */
   //#region
   const [settingStatus, setSettingStatus] = useState(false) // 是否处于批量编辑状态
   const [chooseStatusList, setChooseStatusList] = useState<boolean[]>([]) // 每个作品的选中状态
-  const [choosedWorkList, setChoosedWorkList] = useState<string[]>([]) // 选中的作品id列表
-  const [allChoosen, setAllChoosen] = useState(false) // 是否全选
+  const [chosenWorkList, setChosenWorkList] = useState<string[]>([]) // 选中的作品id列表
+  const [allChosen, setAllChosen] = useState(false) // 是否全选
+
+  // 重置编辑状态
+  const resetSettingStatus = () => {
+    setSettingStatus(false)
+    setChooseStatusList(new Array(workList.length).fill(false))
+    setAllChosen(false)
+    setChosenWorkList([])
+  }
 
   const like = (id: string) => {
     console.log(id)
@@ -103,34 +85,34 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
   }
   // 全选或取消全选
   const chooseAllWorks = (e: RadioChangeEvent) => {
-    setAllChoosen(e.target.value)
+    setAllChosen(e.target.value)
     setChooseStatusList(new Array(workList.length).fill(e.target.value))
   }
   // 单个作品取消收藏
   const cancelSingleWork = (id: string) => {
-    setChoosedWorkList([id])
-    cancelConfirm()
+    setChosenWorkList([id])
+    cancelConfirm([id])
   }
   // 单个作品移动
   const moveSingleWork = (id: string) => {
-    setChoosedWorkList([id])
+    setChosenWorkList([id])
     setMoveModalStatus(true)
   }
   // 单个作品复制
   const copySingleWork = (id: string) => {
-    setChoosedWorkList([id])
+    setChosenWorkList([id])
     setCopyModalStatus(true)
   }
 
   useEffect(() => {
     if (settingStatus) return
     setChooseStatusList(new Array(workList.length).fill(false))
-    setAllChoosen(false)
-    setChoosedWorkList([])
+    setAllChosen(false)
+    setChosenWorkList([])
   }, [settingStatus])
 
   useEffect(() => {
-    setChoosedWorkList(
+    setChosenWorkList(
       workList.reduce((acc, item, index) => {
         if (chooseStatusList[index]) {
           acc.push(item.id)
@@ -141,13 +123,92 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
   }, [chooseStatusList])
   //#endregion
 
+  /* ----------Modal相关---------- */
+  //#region
+  const [moveModalStatus, setMoveModalStatus] = useState(false)
+  const [moveFolderId, setMoveFolderId] = useState<string>(folderId!)
+  const [copyModalStatus, setCopyModalStatus] = useState(false)
+  const [copyFolderId, setCopyFolderId] = useState<string>(folderId!)
+
+  const cancelConfirm = (idList: string[]) => {
+    confirm({
+      title: `确定要取消收藏${idList.length === 1 ? '该' : '这些'}作品吗？`,
+      icon: <ExclamationCircleFilled />,
+      content: '该操作无法撤销',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        await handleCancelFavorite(idList)
+        refresh()
+        resetSettingStatus()
+        messageApi.success('取消收藏成功')
+      },
+    })
+  }
+
+  const handleCancelFavorite = async (idList: string[]) => {
+    try {
+      const promises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
+      await Promise.all(promises)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+    }
+  }
+
+  const onChooseMoveFolder = (e: RadioChangeEvent) => {
+    setMoveFolderId(e.target.value)
+  }
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+  const moveConfirm = async (idList: string[], targetId: string) => {
+    try {
+      // 先执行所有取消收藏的操作
+      const cancelPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
+      await Promise.all(cancelPromises)
+
+      // 等待 1 秒
+      await sleep(1000)
+
+      // 然后执行所有添加到新收藏夹的操作
+      const addPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: targetId }))
+      await Promise.all(addPromises)
+
+      // 操作完成后进行其他更新和通知
+      setMoveModalStatus(false)
+      refresh()
+      resetSettingStatus()
+      messageApi.success('移动成功')
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+    }
+  }
+
+  const cancelMove = () => {
+    setMoveModalStatus(false)
+    setMoveFolderId(folderId!)
+  }
+
+  const onChooseCopyFolder = (e: RadioChangeEvent) => {
+    setCopyFolderId(e.target.value)
+  }
+  const copyConfirm = (folderId: string) => {
+    console.log('copy ' + chosenWorkList + ' to ' + folderId)
+    setCopyModalStatus(false)
+    messageApi.success('复制成功')
+  }
+  const cancelCopy = () => {
+    setCopyModalStatus(false)
+    setCopyFolderId(folderId!)
+  }
+  //#endregion
+
   return (
     <>
       {contextHolder}
       <div className='relative w-954px flex flex-col items-center'>
         {settingStatus && (
           <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#858585'>
-            <Button type='default' onClick={() => setSettingStatus(!settingStatus)}>
+            <Button type='default' onClick={() => setSettingStatus(false)}>
               取消批量编辑
             </Button>
           </div>
@@ -155,21 +216,24 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
         {settingStatus ? (
           <div className='w-100% h-16 px-5 flex justify-between items-center border-1px border-b-solid border-color-#858585'>
             <div className='flex gap-10px items-center'>
-              <Radio.Group value={allChoosen} onChange={chooseAllWorks}>
+              <Radio.Group value={allChosen} onChange={chooseAllWorks}>
                 <Radio value={true}>全选</Radio>
                 <Radio value={false}>取消全选</Radio>
               </Radio.Group>
-              <Button disabled={choosedWorkList.length === 0} type='link' onClick={cancelConfirm}>
+              <Button
+                disabled={chosenWorkList.length === 0}
+                type='link'
+                onClick={() => cancelConfirm(chosenWorkList)}>
                 取消收藏
               </Button>
               <Button
-                disabled={choosedWorkList.length === 0}
+                disabled={chosenWorkList.length === 0}
                 type='link'
                 onClick={() => setMoveModalStatus(true)}>
                 移动到
               </Button>
               <Button
-                disabled={choosedWorkList.length === 0}
+                disabled={chosenWorkList.length === 0}
                 type='link'
                 onClick={() => setCopyModalStatus(true)}>
                 复制到
@@ -182,9 +246,14 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
         ) : (
           <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#858585'>
             <div className='flex gap-5 items-center'>
-              <Button type='link' onClick={() => setSettingStatus(!settingStatus)}>
+              <Button type='link' onClick={() => setSettingStatus(true)}>
                 批量操作
               </Button>
+              {searchStatus && (
+                <Button type='link' onClick={handleCancelSearch}>
+                  取消搜索
+                </Button>
+              )}
               <Search
                 value={keyword}
                 placeholder='输入作品名称'
@@ -195,22 +264,27 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
           </div>
         )}
 
-        <div className='mt-5 w-826px flex flex-wrap gap-30px'>
-          {workList.map((item, index) => (
-            <WorkFavoriteItem
-              key={item.id}
-              itemInfo={item}
-              settingStatus={settingStatus}
-              chooseStatus={chooseStatusList[index]}
-              choose={choose}
-              like={like}
-              cancel={cancelSingleWork}
-              move={moveSingleWork}
-              copy={copySingleWork}
-            />
-          ))}
-        </div>
-        <Pagination total={total} pageSize={pageSize} current={current} onChange={onPageChange} />
+        {workList.length === 0 ? (
+          <Empty text={searchStatus ? '没有找到相关作品' : '暂无作品，快去收藏一些吧~'} />
+        ) : (
+          <div className='mt-5 w-826px flex flex-wrap gap-30px'>
+            {workList.map((item, index) => (
+              <WorkFavoriteItem
+                key={item.id}
+                itemInfo={item}
+                settingStatus={settingStatus}
+                chooseStatus={chooseStatusList[index]}
+                choose={choose}
+                like={like}
+                cancel={cancelSingleWork}
+                move={moveSingleWork}
+                copy={copySingleWork}
+              />
+            ))}
+          </div>
+        )}
+
+        <Pagination total={total} pageSize={12} current={current} onChange={onPageChange} />
       </div>
 
       <Modal
@@ -219,13 +293,13 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
         open={moveModalStatus}
         okText='移动'
         cancelText='取消'
-        onOk={() => moveConfirm(moveFolderId)}
+        onOk={() => moveConfirm(chosenWorkList, moveFolderId)}
         onCancel={cancelMove}>
         <div className='h-110 overflow-y-scroll'>
           <Radio.Group className='w-full' onChange={onChooseMoveFolder} value={moveFolderId}>
             {favoriteList.map((item) => (
               <Radio
-                disabled={item.id === favoriteId}
+                disabled={item.id === folderId}
                 key={item.id}
                 value={item.id}
                 className='w-full h-15 px-5 flex justify-between items-center'>
@@ -251,7 +325,7 @@ const WorkList: FC<WorkListProps> = ({ workList }) => {
           <Radio.Group className='w-full' onChange={onChooseCopyFolder} value={copyFolderId}>
             {favoriteList.map((item) => (
               <Radio
-                disabled={item.id === favoriteId}
+                disabled={item.id === folderId}
                 key={item.id}
                 value={item.id}
                 className='w-full h-15 px-5 flex justify-between items-center'>

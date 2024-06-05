@@ -90,7 +90,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
         authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
       })
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     }
   }

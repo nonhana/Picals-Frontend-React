@@ -37,7 +37,7 @@ const UploadForm: FC<UploadFormProps> = ({
       const { data } = await getLabelsInPagesAPI({ pageSize: 100, current: 1 })
       setLabels(data.map((item) => ({ value: item.name, label: item.name })))
     } catch (error) {
-      console.error('出现错误了喵！！', error)
+      console.log('出现错误了喵！！', error)
       return
     }
   }

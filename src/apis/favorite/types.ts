@@ -44,6 +44,11 @@ export interface IMoveWorkToFavoriteReq {
    */
   workIdList: string[]
 }
+
+export interface IGetSearchResultNumReq {
+  keyword: string
+  favoriteId: string
+}
 // # endregion
 
 // #region 响应体类型
