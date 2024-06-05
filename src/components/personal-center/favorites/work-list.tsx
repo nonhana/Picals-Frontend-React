@@ -64,6 +64,14 @@ const WorkList: FC<WorkListProps> = ({
   const [chosenWorkList, setChosenWorkList] = useState<string[]>([]) // 选中的作品id列表
   const [allChosen, setAllChosen] = useState(false) // 是否全选
 
+  // 重置编辑状态
+  const resetSettingStatus = () => {
+    setSettingStatus(false)
+    setChooseStatusList(new Array(workList.length).fill(false))
+    setAllChosen(false)
+    setChosenWorkList([])
+  }
+
   const like = (id: string) => {
     console.log(id)
   }
@@ -133,6 +141,7 @@ const WorkList: FC<WorkListProps> = ({
       async onOk() {
         await handleCancelFavorite(idList)
         refresh()
+        resetSettingStatus()
         messageApi.success('取消收藏成功')
       },
     })
@@ -150,10 +159,25 @@ const WorkList: FC<WorkListProps> = ({
   const onChooseMoveFolder = (e: RadioChangeEvent) => {
     setMoveFolderId(e.target.value)
   }
-  const moveConfirm = (folderId: string) => {
-    console.log('move ' + chosenWorkList + ' to ' + folderId)
-    setMoveModalStatus(false)
-    messageApi.success('移动成功')
+  const moveConfirm = async (idList: string[], targetId: string) => {
+    try {
+      // 先执行所有取消收藏的操作
+      const cancelPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
+      await Promise.all(cancelPromises)
+
+      // 然后执行所有添加到新收藏夹的操作
+      const addPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: targetId }))
+      await Promise.all(addPromises)
+
+      // 操作完成后进行其他更新和通知
+      setMoveModalStatus(false)
+      refresh()
+      resetSettingStatus()
+      messageApi.success('移动成功')
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
   }
   const cancelMove = () => {
     setMoveModalStatus(false)
@@ -180,7 +204,7 @@ const WorkList: FC<WorkListProps> = ({
       <div className='relative w-954px flex flex-col items-center'>
         {settingStatus && (
           <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#858585'>
-            <Button type='default' onClick={() => setSettingStatus(!settingStatus)}>
+            <Button type='default' onClick={() => setSettingStatus(false)}>
               取消批量编辑
             </Button>
           </div>
@@ -218,7 +242,7 @@ const WorkList: FC<WorkListProps> = ({
         ) : (
           <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#858585'>
             <div className='flex gap-5 items-center'>
-              <Button type='link' onClick={() => setSettingStatus(!settingStatus)}>
+              <Button type='link' onClick={() => setSettingStatus(true)}>
                 批量操作
               </Button>
               {searchStatus && (
@@ -265,7 +289,7 @@ const WorkList: FC<WorkListProps> = ({
         open={moveModalStatus}
         okText='移动'
         cancelText='取消'
-        onOk={() => moveConfirm(moveFolderId)}
+        onOk={() => moveConfirm(chosenWorkList, moveFolderId)}
         onCancel={cancelMove}>
         <div className='h-110 overflow-y-scroll'>
           <Radio.Group className='w-full' onChange={onChooseMoveFolder} value={moveFolderId}>
