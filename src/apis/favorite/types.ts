@@ -38,6 +38,17 @@ export interface IGetSearchResultNumReq {
   keyword: string
   favoriteId: string
 }
+
+export interface IMoveFavoriteWorksReq {
+  idList: string[]
+  fromId: string
+  toId: string
+}
+
+export interface ICopyFavoriteWorksReq {
+  idList: string[]
+  toId: string
+}
 // # endregion
 
 // #region 响应体类型

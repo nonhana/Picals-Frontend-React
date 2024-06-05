@@ -2,11 +2,9 @@ import request from '@/service'
 import {
   IChangeEmailReq,
   IChangePasswordReq,
-  ICopyFavoriteWorksReq,
   IFavoriteActionsReq,
   ILoginReq,
   ILoginRes,
-  IMoveFavoriteWorksReq,
   IRefreshTokenReq,
   IRefreshTokenRes,
   IRegisterReq,
@@ -254,24 +252,6 @@ export const searchUserTotalAPI = (params: Keyword) => {
 export const favoriteActionsAPI = (data: IFavoriteActionsReq) => {
   return request<IFavoriteActionsReq, undefined>({
     url: '/api/user/collect',
-    method: 'POST',
-    data,
-  })
-}
-
-// 移动作品到其他收藏夹
-export const moveFavoriteWorksAPI = (data: IMoveFavoriteWorksReq) => {
-  return request<IMoveFavoriteWorksReq, undefined>({
-    url: '/api/user/move-collect',
-    method: 'POST',
-    data,
-  })
-}
-
-// 复制作品到其他收藏夹
-export const copyFavoriteWorksAPI = (data: ICopyFavoriteWorksReq) => {
-  return request<ICopyFavoriteWorksReq, undefined>({
-    url: '/api/user/copy-collect',
     method: 'POST',
     data,
   })

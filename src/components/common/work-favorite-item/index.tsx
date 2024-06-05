@@ -69,7 +69,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
           <div className='absolute top-10px right-10px'>
             <Icon
               width='32px'
-              color={chooseStatus ? '#0090F0' : '#fff'}
+              color={chooseStatus ? '#0090F0' : '#ffffff'}
               icon={
                 chooseStatus ? 'ant-design:check-square-filled' : 'ant-design:check-square-outlined'
               }
@@ -93,8 +93,8 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
           </div>
         )}
         <Icon
-          className='absolute bottom-10px right-10px cursor-pointer'
-          width='24px'
+          className='p-10px absolute bottom-0 right-0 cursor-pointer'
+          width='44px'
           color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
           icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
           onClick={() => like(itemInfo.id)}
