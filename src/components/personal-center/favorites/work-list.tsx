@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
@@ -8,6 +8,7 @@ import Pagination from '@/components/common/pagination'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import Empty from '@/components/common/empty'
+import { favoriteActionsAPI } from '@/apis'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -20,6 +21,7 @@ type WorkListProps = {
   handleSearch: (keyword: string) => void
   searchStatus: boolean
   setSearchStatus: (status: boolean) => void
+  refresh: () => void
 }
 
 const WorkList: FC<WorkListProps> = ({
@@ -30,10 +32,12 @@ const WorkList: FC<WorkListProps> = ({
   handleSearch,
   searchStatus,
   setSearchStatus,
+  refresh,
 }) => {
   const [messageApi, contextHolder] = message.useMessage()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
-  const { favoriteId } = useParams()
+  const searchParams = useSearchParams()[0]
+  const folderId = searchParams.get('folderId')
 
   const [keyword, setKeyword] = useState('')
 
@@ -52,55 +56,6 @@ const WorkList: FC<WorkListProps> = ({
   }
 
   const onPageChange = (page: number) => setCurrent(page)
-
-  /* ----------Modal相关---------- */
-  //#region
-  const [moveModalStatus, setMoveModalStatus] = useState(false)
-  const [moveFolderId, setMoveFolderId] = useState<string>(favoriteId || '')
-  const [copyModalStatus, setCopyModalStatus] = useState(false)
-  const [copyFolderId, setCopyFolderId] = useState<string>(favoriteId || '')
-
-  const cancelConfirm = () => {
-    confirm({
-      title: '确定要取消收藏该作品吗？',
-      icon: <ExclamationCircleFilled />,
-      content: '该操作无法撤销',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        console.log('cancel ' + chosenWorkList)
-        messageApi.success('取消收藏成功')
-      },
-    })
-  }
-
-  const onChooseMoveFolder = (e: RadioChangeEvent) => {
-    setMoveFolderId(e.target.value)
-  }
-  const moveConfirm = (folderId: string) => {
-    console.log('move ' + chosenWorkList + ' to ' + folderId)
-    setMoveModalStatus(false)
-    messageApi.success('移动成功')
-  }
-  const cancelMove = () => {
-    setMoveModalStatus(false)
-    setMoveFolderId(favoriteId || '')
-  }
-
-  const onChooseCopyFolder = (e: RadioChangeEvent) => {
-    setCopyFolderId(e.target.value)
-  }
-  const copyConfirm = (folderId: string) => {
-    console.log('copy ' + chosenWorkList + ' to ' + folderId)
-    setCopyModalStatus(false)
-    messageApi.success('复制成功')
-  }
-  const cancelCopy = () => {
-    setCopyModalStatus(false)
-    setCopyFolderId(favoriteId || '')
-  }
-  //#endregion
 
   /* ----------作品编辑相关---------- */
   //#region
@@ -128,7 +83,7 @@ const WorkList: FC<WorkListProps> = ({
   // 单个作品取消收藏
   const cancelSingleWork = (id: string) => {
     setChosenWorkList([id])
-    cancelConfirm()
+    cancelConfirm([id])
   }
   // 单个作品移动
   const moveSingleWork = (id: string) => {
@@ -160,6 +115,65 @@ const WorkList: FC<WorkListProps> = ({
   }, [chooseStatusList])
   //#endregion
 
+  /* ----------Modal相关---------- */
+  //#region
+  const [moveModalStatus, setMoveModalStatus] = useState(false)
+  const [moveFolderId, setMoveFolderId] = useState<string>(folderId!)
+  const [copyModalStatus, setCopyModalStatus] = useState(false)
+  const [copyFolderId, setCopyFolderId] = useState<string>(folderId!)
+
+  const cancelConfirm = (idList: string[]) => {
+    confirm({
+      title: `确定要取消收藏${idList.length === 1 ? '该' : '这些'}作品吗？`,
+      icon: <ExclamationCircleFilled />,
+      content: '该操作无法撤销',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        await handleCancelFavorite(idList)
+        refresh()
+        messageApi.success('取消收藏成功')
+      },
+    })
+  }
+
+  const handleCancelFavorite = async (idList: string[]) => {
+    try {
+      const promises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
+      await Promise.all(promises)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+    }
+  }
+
+  const onChooseMoveFolder = (e: RadioChangeEvent) => {
+    setMoveFolderId(e.target.value)
+  }
+  const moveConfirm = (folderId: string) => {
+    console.log('move ' + chosenWorkList + ' to ' + folderId)
+    setMoveModalStatus(false)
+    messageApi.success('移动成功')
+  }
+  const cancelMove = () => {
+    setMoveModalStatus(false)
+    setMoveFolderId(folderId!)
+  }
+
+  const onChooseCopyFolder = (e: RadioChangeEvent) => {
+    setCopyFolderId(e.target.value)
+  }
+  const copyConfirm = (folderId: string) => {
+    console.log('copy ' + chosenWorkList + ' to ' + folderId)
+    setCopyModalStatus(false)
+    messageApi.success('复制成功')
+  }
+  const cancelCopy = () => {
+    setCopyModalStatus(false)
+    setCopyFolderId(folderId!)
+  }
+  //#endregion
+
   return (
     <>
       {contextHolder}
@@ -178,7 +192,10 @@ const WorkList: FC<WorkListProps> = ({
                 <Radio value={true}>全选</Radio>
                 <Radio value={false}>取消全选</Radio>
               </Radio.Group>
-              <Button disabled={chosenWorkList.length === 0} type='link' onClick={cancelConfirm}>
+              <Button
+                disabled={chosenWorkList.length === 0}
+                type='link'
+                onClick={() => cancelConfirm(chosenWorkList)}>
                 取消收藏
               </Button>
               <Button
@@ -254,7 +271,7 @@ const WorkList: FC<WorkListProps> = ({
           <Radio.Group className='w-full' onChange={onChooseMoveFolder} value={moveFolderId}>
             {favoriteList.map((item) => (
               <Radio
-                disabled={item.id === favoriteId}
+                disabled={item.id === folderId}
                 key={item.id}
                 value={item.id}
                 className='w-full h-15 px-5 flex justify-between items-center'>
@@ -280,7 +297,7 @@ const WorkList: FC<WorkListProps> = ({
           <Radio.Group className='w-full' onChange={onChooseCopyFolder} value={copyFolderId}>
             {favoriteList.map((item) => (
               <Radio
-                disabled={item.id === favoriteId}
+                disabled={item.id === folderId}
                 key={item.id}
                 value={item.id}
                 className='w-full h-15 px-5 flex justify-between items-center'>

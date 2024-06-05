@@ -83,6 +83,14 @@ const MyFavorites: FC = () => {
     }
   }
 
+  const refresh = () => {
+    setSearchTotal(0)
+    setCurrent(1)
+    setSearchCurrent(1)
+    setSearchStatus(false)
+    getFavoriteWorkList()
+  }
+
   return (
     <div className='flex mt-5 border-solid border-1px border-color-#858585'>
       <Sidebar />
@@ -99,6 +107,7 @@ const MyFavorites: FC = () => {
                 searchStatus={searchStatus}
                 setSearchStatus={setSearchStatus}
                 handleSearch={handleSearch}
+                refresh={refresh}
               />
             </>
           )

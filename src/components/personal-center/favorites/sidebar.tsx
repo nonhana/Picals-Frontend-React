@@ -95,6 +95,7 @@ const Sidebar: FC = () => {
       async onOk() {
         try {
           await deleteFavoriteAPI({ id })
+          navigate(`/personal-center/${userId}/favorites`)
           fetchFavoriteList()
           messageApi.success('删除成功')
         } catch (error) {
