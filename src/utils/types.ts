@@ -53,7 +53,7 @@ export interface WorkDetailInfo {
   labels: Option[]
   isLiked: boolean
   isCollected: boolean
-  favoriteId?: string
+  favoriteIds?: string[]
   isReprinted: boolean
   openComment: boolean
   isAIGenerated: boolean

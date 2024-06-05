@@ -2,9 +2,10 @@ import request from '@/service'
 import {
   FavoriteDetailInfo,
   IChangeFavoriteOrderReq,
+  ICopyFavoriteWorksReq,
   IEditFavoriteReq,
   IGetSearchResultNumReq,
-  IMoveWorkToFavoriteReq,
+  IMoveFavoriteWorksReq,
   INewFavoriteReq,
 } from './types'
 import { Id, Pagination, WorkNormalItem } from '../types'
@@ -54,15 +55,6 @@ export const getFavoriteDetailAPI = (params: Id) => {
   })
 }
 
-// 移动作品到其他收藏夹
-export const moveWorkToFavoriteAPI = (data: IMoveWorkToFavoriteReq) => {
-  return request<IMoveWorkToFavoriteReq, undefined>({
-    url: '/api/favorite/move',
-    method: 'POST',
-    data,
-  })
-}
-
 // 分页获取收藏夹作品列表
 export const getFavoriteWorkListAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
@@ -87,5 +79,23 @@ export const getSearchResultNumAPI = (params: IGetSearchResultNumReq) => {
     url: '/api/favorite/search-count',
     method: 'GET',
     params,
+  })
+}
+
+// 移动作品到其他收藏夹
+export const moveFavoriteWorksAPI = (data: IMoveFavoriteWorksReq) => {
+  return request<IMoveFavoriteWorksReq, undefined>({
+    url: '/api/favorite/move',
+    method: 'POST',
+    data,
+  })
+}
+
+// 复制作品到其他收藏夹
+export const copyFavoriteWorksAPI = (data: ICopyFavoriteWorksReq) => {
+  return request<ICopyFavoriteWorksReq, undefined>({
+    url: '/api/favorite/copy',
+    method: 'POST',
+    data,
   })
 }

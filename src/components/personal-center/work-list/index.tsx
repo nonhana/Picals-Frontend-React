@@ -1,10 +1,11 @@
-import { FC, useEffect, useState, useRef } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { getUserWorksListAPI, getUserLikeWorksAPI, likeActionsAPI } from '@/apis'
 import Loading from '@/components/common/loading'
+import Empty from '@/components/common/empty'
 
 type WorkListProps = {
   workCount: number
@@ -15,19 +16,11 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   const { userId } = useParams<{ userId: string }>()
   const [current, setCurrent] = useState<number>(1)
   const [workList, setWorkList] = useState<WorkNormalItemInfo[]>([])
-  const workListRef = useRef<HTMLDivElement>(null)
-  const [placeHolderHeight, setPlaceHolderHeight] = useState<number>(0)
-
-  useEffect(() => {
-    if (workListRef.current) {
-      const { clientHeight } = workListRef.current
-      if (clientHeight === 0) return
-      setPlaceHolderHeight(clientHeight)
-    }
-  }, [workList])
+  const [loading, setLoading] = useState<boolean>(false)
 
   const likeWork = async (workId: string) => {
     try {
+      setLoading(true)
       await likeActionsAPI({ id: workId })
       setWorkList(
         workList.map((work) => {
@@ -40,6 +33,8 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -55,6 +50,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   const getUserLikeWorks = async () => {
     try {
+      setLoading(true)
       const { data } = await getUserLikeWorksAPI({
         id: userId!,
         current,
@@ -64,6 +60,8 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -76,12 +74,14 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   return (
     <div className='relative w-100% flex gap-10px flex-wrap'>
-      {workList.length === 0 ? (
-        <div style={{ height: `${placeHolderHeight}px` }} className='relative w-full'>
-          <Loading loading={workList.length === 0} />
+      {loading ? (
+        <div className='relative w-full h-100'>
+          <Loading loading={loading} />
         </div>
+      ) : workList.length === 0 ? (
+        <Empty />
       ) : (
-        <div ref={workListRef} className='relative w-full flex flex-wrap gap-5'>
+        <div className='relative w-full flex flex-wrap gap-5'>
           {workList.map((work) => (
             <WorkNormalItem key={work.id} itemInfo={work} like={likeWork} />
           ))}

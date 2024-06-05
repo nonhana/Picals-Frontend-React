@@ -8,7 +8,7 @@ import Pagination from '@/components/common/pagination'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import Empty from '@/components/common/empty'
-import { favoriteActionsAPI } from '@/apis'
+import { favoriteActionsAPI, moveFavoriteWorksAPI, copyFavoriteWorksAPI } from '@/apis'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -21,7 +21,8 @@ type WorkListProps = {
   handleSearch: (keyword: string) => void
   searchStatus: boolean
   setSearchStatus: (status: boolean) => void
-  refresh: () => void
+  refresh: () => Promise<void> // 刷新作品列表
+  like: (id: string) => void
 }
 
 const WorkList: FC<WorkListProps> = ({
@@ -33,6 +34,7 @@ const WorkList: FC<WorkListProps> = ({
   searchStatus,
   setSearchStatus,
   refresh,
+  like,
 }) => {
   const [messageApi, contextHolder] = message.useMessage()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
@@ -72,16 +74,12 @@ const WorkList: FC<WorkListProps> = ({
     setChosenWorkList([])
   }
 
-  const like = (id: string) => {
-    console.log(id)
-  }
   // 选中作品，将对应的作品选中状态取反
   const choose = (id: string) => {
-    setChooseStatusList((prev) =>
-      prev.map((item, index) =>
-        index === workList.findIndex((item) => item.id === id) ? !item : item,
-      ),
-    )
+    setChooseStatusList((prev) => {
+      const targetIndex = workList.findIndex((item) => item.id === id)
+      return prev.map((item, index) => (index === targetIndex ? !item : item))
+    })
   }
   // 全选或取消全选
   const chooseAllWorks = (e: RadioChangeEvent) => {
@@ -109,7 +107,7 @@ const WorkList: FC<WorkListProps> = ({
     setChooseStatusList(new Array(workList.length).fill(false))
     setAllChosen(false)
     setChosenWorkList([])
-  }, [settingStatus])
+  }, [settingStatus, workList])
 
   useEffect(() => {
     setChosenWorkList(
@@ -126,9 +124,9 @@ const WorkList: FC<WorkListProps> = ({
   /* ----------Modal相关---------- */
   //#region
   const [moveModalStatus, setMoveModalStatus] = useState(false)
-  const [moveFolderId, setMoveFolderId] = useState<string>(folderId!)
+  const [moveFolderId, setMoveFolderId] = useState<string>('')
   const [copyModalStatus, setCopyModalStatus] = useState(false)
-  const [copyFolderId, setCopyFolderId] = useState<string>(folderId!)
+  const [copyFolderId, setCopyFolderId] = useState<string>('')
 
   const cancelConfirm = (idList: string[]) => {
     confirm({
@@ -140,66 +138,61 @@ const WorkList: FC<WorkListProps> = ({
       cancelText: '取消',
       async onOk() {
         await handleCancelFavorite(idList)
-        refresh()
+        await refresh()
         resetSettingStatus()
         messageApi.success('取消收藏成功')
       },
     })
   }
 
+  // 批量取消收藏
   const handleCancelFavorite = async (idList: string[]) => {
     try {
-      const promises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
+      const promises = idList.map((id) => favoriteActionsAPI({ id, favoriteIds: [folderId!] }))
       await Promise.all(promises)
     } catch (error) {
       console.log('出现错误了喵！！', error)
     }
   }
 
+  // 移动作品
   const onChooseMoveFolder = (e: RadioChangeEvent) => {
     setMoveFolderId(e.target.value)
   }
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
   const moveConfirm = async (idList: string[], targetId: string) => {
     try {
-      // 先执行所有取消收藏的操作
-      const cancelPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: folderId! }))
-      await Promise.all(cancelPromises)
-
-      // 等待 1 秒
-      await sleep(1000)
-
-      // 然后执行所有添加到新收藏夹的操作
-      const addPromises = idList.map((id) => favoriteActionsAPI({ id, favoriteId: targetId }))
-      await Promise.all(addPromises)
-
-      // 操作完成后进行其他更新和通知
+      await moveFavoriteWorksAPI({ idList, fromId: folderId!, toId: targetId })
       setMoveModalStatus(false)
-      refresh()
+      await refresh()
       resetSettingStatus()
       messageApi.success('移动成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)
     }
   }
+  useEffect(() => {
+    if (!moveModalStatus) setMoveFolderId(folderId!)
+  }, [moveModalStatus, folderId])
 
-  const cancelMove = () => {
-    setMoveModalStatus(false)
-    setMoveFolderId(folderId!)
-  }
-
+  // 复制作品
   const onChooseCopyFolder = (e: RadioChangeEvent) => {
     setCopyFolderId(e.target.value)
   }
-  const copyConfirm = (folderId: string) => {
-    console.log('copy ' + chosenWorkList + ' to ' + folderId)
-    setCopyModalStatus(false)
-    messageApi.success('复制成功')
+  const copyConfirm = async (idList: string[], targetId: string) => {
+    try {
+      await copyFavoriteWorksAPI({ idList, toId: targetId })
+      setCopyModalStatus(false)
+      await refresh()
+      resetSettingStatus()
+      messageApi.success('复制成功')
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
   }
-  const cancelCopy = () => {
-    setCopyModalStatus(false)
-    setCopyFolderId(folderId!)
-  }
+  useEffect(() => {
+    if (!copyModalStatus) setCopyFolderId(folderId!)
+  }, [copyModalStatus, folderId])
   //#endregion
 
   return (
@@ -294,7 +287,7 @@ const WorkList: FC<WorkListProps> = ({
         okText='移动'
         cancelText='取消'
         onOk={() => moveConfirm(chosenWorkList, moveFolderId)}
-        onCancel={cancelMove}>
+        onCancel={() => setMoveModalStatus(false)}>
         <div className='h-110 overflow-y-scroll'>
           <Radio.Group className='w-full' onChange={onChooseMoveFolder} value={moveFolderId}>
             {favoriteList.map((item) => (
@@ -319,8 +312,8 @@ const WorkList: FC<WorkListProps> = ({
         open={copyModalStatus}
         okText='复制'
         cancelText='取消'
-        onOk={() => copyConfirm(copyFolderId)}
-        onCancel={cancelCopy}>
+        onOk={() => copyConfirm(chosenWorkList, copyFolderId)}
+        onCancel={() => setCopyModalStatus(false)}>
         <div className='h-110 overflow-y-scroll'>
           <Radio.Group className='w-full' onChange={onChooseCopyFolder} value={copyFolderId}>
             {favoriteList.map((item) => (

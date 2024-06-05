@@ -52,8 +52,9 @@ export interface IChangeEmailReq {
 
 export interface IFavoriteActionsReq {
   id: string
-  favoriteId: string
+  favoriteIds: string[]
 }
+
 // #endregion
 
 // #region 返回体类型

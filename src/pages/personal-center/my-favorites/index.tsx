@@ -9,6 +9,7 @@ import {
   getFavoriteWorkListAPI,
   searchFavoriteWorkAPI,
   getSearchResultNumAPI,
+  likeActionsAPI,
 } from '@/apis'
 import Empty from '@/components/common/empty'
 
@@ -83,12 +84,24 @@ const MyFavorites: FC = () => {
     }
   }
 
-  const refresh = () => {
+  const refresh = async () => {
     setSearchTotal(0)
     setCurrent(1)
     setSearchCurrent(1)
     setSearchStatus(false)
-    getFavoriteWorkList()
+    await getFavoriteWorkList()
+  }
+
+  const like = async (id: string) => {
+    try {
+      await likeActionsAPI({ id })
+      setWorkList(
+        workList.map((item) => (item.id === id ? { ...item, isLiked: !item.isLiked } : item)),
+      )
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
   }
 
   return (
@@ -108,6 +121,7 @@ const MyFavorites: FC = () => {
                 setSearchStatus={setSearchStatus}
                 handleSearch={handleSearch}
                 refresh={refresh}
+                like={like}
               />
             </>
           )

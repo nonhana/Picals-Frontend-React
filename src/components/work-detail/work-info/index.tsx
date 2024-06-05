@@ -52,7 +52,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
   // 添加当前作品到收藏夹
   const handleCollectWork = async () => {
     if (workInfo.isCollected) {
-      await favoriteActionsAPI({ id: workInfo.id, favoriteId: workInfo.favoriteId! })
+      await favoriteActionsAPI({ id: workInfo.id, favoriteIds: workInfo.favoriteIds! })
       setWorkInfo({ ...workInfo, isCollected: false })
     } else {
       setCollecting(true)
@@ -63,7 +63,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       setCollecting(false)
       return
     }
-    await favoriteActionsAPI({ id: workInfo.id, favoriteId: folderId })
+    await favoriteActionsAPI({ id: workInfo.id, favoriteIds: [folderId] })
     setCollecting(false)
     setWorkInfo({ ...workInfo, isCollected: true })
     messageApi.success('收藏成功')

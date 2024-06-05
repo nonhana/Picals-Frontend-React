@@ -34,20 +34,20 @@ export interface IChangeFavoriteOrderReq {
   }[]
 }
 
-export interface IMoveWorkToFavoriteReq {
-  /**
-   * 要移动到的收藏夹id
-   */
-  id: string
-  /**
-   * 选中的作品id列表
-   */
-  workIdList: string[]
-}
-
 export interface IGetSearchResultNumReq {
   keyword: string
   favoriteId: string
+}
+
+export interface IMoveFavoriteWorksReq {
+  idList: string[]
+  fromId: string
+  toId: string
+}
+
+export interface ICopyFavoriteWorksReq {
+  idList: string[]
+  toId: string
 }
 // # endregion
 
