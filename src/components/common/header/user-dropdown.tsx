@@ -18,7 +18,6 @@ const UserDropdown: FC<{
   const dispatch = useDispatch()
   const {
     user: { userInfo },
-    favorite: { favoriteList },
   } = useSelector((state: AppState) => state)
 
   const selectItem = (value: string) => {
@@ -30,7 +29,7 @@ const UserDropdown: FC<{
         navigate(`/personal-center/${userInfo.id}/likes`)
         break
       case 'favorites':
-        navigate(`/personal-center/${userInfo.id}/favorites/${favoriteList[0].id}`)
+        navigate(`/personal-center/${userInfo.id}/favorites`)
         break
       case 'history':
         // navigate(`/personal-center/${userInfo.id}/history`)

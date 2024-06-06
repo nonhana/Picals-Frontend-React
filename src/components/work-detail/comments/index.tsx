@@ -248,7 +248,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
           </Button>
         </div>
         {commentList.length === 0 ? (
-          <Empty showImg={false} text='暂无评论，评个论吧好吗' />
+          <div className='relative w-150'>
+            <Empty showImg={false} text='暂无评论，评个论吧好吗' />
+          </div>
         ) : (
           <>
             {commentList.map((comment) => (

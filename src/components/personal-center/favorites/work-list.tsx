@@ -138,8 +138,6 @@ const WorkList: FC<WorkListProps> = ({
       cancelText: '取消',
       async onOk() {
         await handleCancelFavorite(idList)
-        await refresh()
-        resetSettingStatus()
         messageApi.success('取消收藏成功')
       },
     })
@@ -150,6 +148,8 @@ const WorkList: FC<WorkListProps> = ({
     try {
       const promises = idList.map((id) => favoriteActionsAPI({ id, favoriteIds: [folderId!] }))
       await Promise.all(promises)
+      await refresh()
+      resetSettingStatus()
     } catch (error) {
       console.log('出现错误了喵！！', error)
     }
