@@ -40,7 +40,7 @@ export const deleteFavoriteAPI = (data: Id) => {
 // 修改收藏夹的排序
 export const changeFavoriteOrderAPI = (data: IChangeFavoriteOrderReq) => {
   return request<IChangeFavoriteOrderReq, undefined>({
-    url: '/api/favorite/changeOrder',
+    url: '/api/favorite/order',
     method: 'POST',
     data,
   })

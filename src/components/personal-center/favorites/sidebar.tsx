@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import type { FavoriteItemInfo, FavoriteFormInfo } from '@/utils/types'
 import FavoriteItem from '@/components/common/favorite-item'
@@ -9,8 +8,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { Icon } from '@iconify/react'
 import { Modal, Input, Upload, message, Flex, type UploadProps, notification } from 'antd'
-import { getUserFavoriteListAPI, newFavoriteAPI, deleteFavoriteAPI, editFavoriteAPI } from '@/apis'
-import { setFavoriteList } from '@/store/modules/favorites'
+import { newFavoriteAPI, deleteFavoriteAPI, editFavoriteAPI, changeFavoriteOrderAPI } from '@/apis'
 import { CSSTransition } from 'react-transition-group'
 
 // 获取拖动元素的索引
@@ -33,29 +31,20 @@ const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
   return { activeIndex, overIndex }
 }
 
-const Sidebar: FC = () => {
-  const dispatch = useDispatch()
+type SidebarProps = {
+  folderList: FavoriteItemInfo[]
+  setFolderList: (list: FavoriteItemInfo[]) => void
+  fetchFavoriteList: () => Promise<void>
+}
 
+const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteList }) => {
   const [messageApi, contextHolder] = message.useMessage()
+
   const { userId } = useParams()
   const [searchParams] = useSearchParams()
   const folderId = searchParams.get('folderId')
-  const navigate = useNavigate()
 
-  const [folderList, setFolderList] = useState<FavoriteItemInfo[]>([])
-  const fetchFavoriteList = async () => {
-    try {
-      const { data } = await getUserFavoriteListAPI({ id: userId! })
-      dispatch(setFavoriteList(data))
-      setFolderList(data)
-    } catch (error) {
-      console.log('出现错误了喵！！', error)
-      return
-    }
-  }
-  useEffect(() => {
-    fetchFavoriteList()
-  }, [userId])
+  const navigate = useNavigate()
 
   const [folderStatusList, setFolderStatusList] = useState<boolean[]>(
     new Array(folderList.length).fill(false),
@@ -71,13 +60,28 @@ const Sidebar: FC = () => {
   })
 
   // 拖拽结束后的操作
-  const dragEndEvent = (dragItem: DragEndEvent) => {
-    setFolderList((prevDataList) => {
-      const moveDataList = [...prevDataList]
-      const { activeIndex, overIndex } = getMoveIndex(moveDataList, dragItem)
-      const newDataList = arrayMove(moveDataList, activeIndex, overIndex)
-      return newDataList
-    })
+  const dragEndEvent = async (dragItem: DragEndEvent) => {
+    const moveDataList = [...folderList]
+    const { activeIndex, overIndex } = getMoveIndex(moveDataList, dragItem)
+    const newDataList = arrayMove(moveDataList, activeIndex, overIndex)
+    await changeFavoriteOrder(newDataList)
+    setFolderList(newDataList)
+  }
+
+  // 调用接口更改收藏夹的排序
+  const changeFavoriteOrder = async (orderedList: FavoriteItemInfo[]) => {
+    try {
+      const orderList = orderedList.map((item, index) => ({
+        id: item.id,
+        order: index,
+      }))
+      await changeFavoriteOrderAPI({ orderList })
+      await fetchFavoriteList()
+      messageApi.success('排序成功')
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
   }
 
   const onAddFolder = () => {
@@ -96,7 +100,7 @@ const Sidebar: FC = () => {
         try {
           await deleteFavoriteAPI({ id })
           navigate(`/personal-center/${userId}/favorites`)
-          fetchFavoriteList()
+          await fetchFavoriteList()
           messageApi.success('删除成功')
         } catch (error) {
           console.log('出现错误了喵！！', error)
@@ -124,7 +128,7 @@ const Sidebar: FC = () => {
         await newFavoriteAPI(formInfo)
       }
       setModalStatus(false)
-      fetchFavoriteList()
+      await fetchFavoriteList()
       messageApi.success(editingFolderId !== '' ? '编辑成功' : '新建成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)

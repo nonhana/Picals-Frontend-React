@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import type { WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Button, Divider, Modal, Radio, RadioChangeEvent, message } from 'antd'
@@ -11,8 +12,9 @@ import { useMap } from '@/hooks'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
 import HanaViewer from '@/components/common/hana-viewer'
-import { likeActionsAPI, favoriteActionsAPI, userActionsAPI } from '@/apis'
+import { likeActionsAPI, favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
+import { setFavoriteList } from '@/store/modules/favorites'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -23,6 +25,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
   workInfo: sourceWorkInfo,
   authorWorkList: sourceWorkList,
 }) => {
+  const dispatch = useDispatch()
+
   const [messageApi, contextHolder] = message.useMessage()
 
   const {
@@ -49,10 +53,17 @@ const WorkInfo: FC<WorkInfoProps> = ({
     })
   }
 
+  // 刷新收藏夹列表数据
+  const refreshFavoriteList = async () => {
+    const { data } = await getUserFavoriteListAPI({ id })
+    dispatch(setFavoriteList(data))
+  }
+
   // 添加当前作品到收藏夹
   const handleCollectWork = async () => {
     if (workInfo.isCollected) {
       await favoriteActionsAPI({ id: workInfo.id, favoriteIds: workInfo.favoriteIds! })
+      await refreshFavoriteList()
       setWorkInfo({ ...workInfo, isCollected: false })
     } else {
       setCollecting(true)
@@ -64,6 +75,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       return
     }
     await favoriteActionsAPI({ id: workInfo.id, favoriteIds: [folderId] })
+    await refreshFavoriteList()
     setCollecting(false)
     setWorkInfo({ ...workInfo, isCollected: true })
     messageApi.success('收藏成功')
@@ -135,7 +147,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 onClick={handleCollectWork}
               />
               <Icon
-                className='cursor-pointer'
+                className='cursor-pointer hidden'
                 width='32px'
                 color='#3d3d3d'
                 icon='ant-design:share-alt-outlined'
