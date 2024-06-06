@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react'
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import { FC, useEffect, useState, useContext } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import type { FavoriteItemInfo, FavoriteFormInfo } from '@/utils/types'
 import FavoriteItem from '@/components/common/favorite-item'
 import type { DragEndEvent, DragMoveEvent } from '@dnd-kit/core'
@@ -10,6 +10,8 @@ import { Icon } from '@iconify/react'
 import { Modal, Input, Upload, message, Flex, type UploadProps, notification } from 'antd'
 import { newFavoriteAPI, deleteFavoriteAPI, editFavoriteAPI, changeFavoriteOrderAPI } from '@/apis'
 import { CSSTransition } from 'react-transition-group'
+import { PersonalContext } from '@/pages/personal-center'
+import Empty from '@/components/common/empty'
 
 // 获取拖动元素的索引
 const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
@@ -38,9 +40,9 @@ type SidebarProps = {
 }
 
 const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteList }) => {
+  const { isMe, userId } = useContext(PersonalContext)
   const [messageApi, contextHolder] = message.useMessage()
 
-  const { userId } = useParams()
   const [searchParams] = useSearchParams()
   const folderId = searchParams.get('folderId')
 
@@ -179,26 +181,34 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
         <SortableContext
           items={folderList.map((item) => item.id)}
           strategy={verticalListSortingStrategy}>
-          <div className='relative h-100%'>
-            <div
-              className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
-              onClick={onAddFolder}>
-              <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
-                <Icon width='24px' color='#858585' icon='ant-design:plus-circle-outlined' />
-                <span>新建收藏集</span>
+          <div className='relative h-full'>
+            {isMe && (
+              <div
+                className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
+                onClick={onAddFolder}>
+                <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
+                  <Icon width='24px' color='#858585' icon='ant-design:plus-circle-outlined' />
+                  <span>新建收藏集</span>
+                </div>
               </div>
-            </div>
-            {folderList.map((item, index) => (
-              <FavoriteItem
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                folderStatus={folderStatusList[index]}
-                onChooseFolder={onChooseFolder}
-                onDeleteFolder={onDeleteFolder}
-                onEditFolder={onEditFolder}
-              />
-            ))}
+            )}
+            {folderList.length === 0 ? (
+              <div className='w-250px bg-#fff'>
+                <Empty showImg={false} text='暂无收藏集' />
+              </div>
+            ) : (
+              folderList.map((item, index) => (
+                <FavoriteItem
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  folderStatus={folderStatusList[index]}
+                  onChooseFolder={onChooseFolder}
+                  onDeleteFolder={onDeleteFolder}
+                  onEditFolder={onEditFolder}
+                />
+              ))
+            )}
           </div>
         </SortableContext>
       </DndContext>

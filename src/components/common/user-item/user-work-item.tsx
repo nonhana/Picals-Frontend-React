@@ -1,4 +1,6 @@
 import { FC } from 'react'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { Link } from 'react-router-dom'
@@ -9,6 +11,7 @@ type UserWorkItemProps = {
 }
 
 const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
   return (
     <div className='shrink-0 relative h-51 w-184px flex flex-col justify-between rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
@@ -25,13 +28,15 @@ const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
             </div>
           </div>
         )}
-        <Icon
-          className='absolute bottom-10px right-10px cursor-pointer'
-          width='24px'
-          color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
-          onClick={() => like(itemInfo.authorId, itemInfo.id)}
-        />
+        {isLogin && (
+          <Icon
+            className='p-10px absolute bottom-0 right-0 cursor-pointer'
+            width='44px'
+            color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
+            icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+            onClick={() => like(itemInfo.authorId, itemInfo.id)}
+          />
+        )}
       </div>
 
       <div className='relative w-184px h-184px rd-1 flex items-center justify-center overflow-hidden'>

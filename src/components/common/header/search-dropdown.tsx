@@ -1,5 +1,7 @@
 import { FC, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import { Modal, message } from 'antd'
@@ -13,6 +15,8 @@ const SearchDropdown: FC<{
   className?: string
   setVisible: (visible: boolean) => void
 }> = ({ visible, className, setVisible }) => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
+
   const [messageApi, contextHolder] = message.useMessage()
 
   const toggleBodyOverflow = (visible: boolean) => {
@@ -78,16 +82,18 @@ const SearchDropdown: FC<{
             </ul>
           </div>
 
-          <div className='relative m-b-5'>
-            <div className='w-full p-10px font-bold font-size-14px color-#6d757a'>
-              <span>喜欢的标签</span>
+          {isLogin && (
+            <div className='relative m-b-5'>
+              <div className='w-full p-10px font-bold font-size-14px color-#6d757a'>
+                <span>喜欢的标签</span>
+              </div>
+              <LayoutList className='px-10px' scrollType='label'>
+                {labelList.map((item) => (
+                  <LabelItem key={item.id} {...item} />
+                ))}
+              </LayoutList>
             </div>
-            <LayoutList className='px-10px' scrollType='label'>
-              {labelList.map((item) => (
-                <LabelItem key={item.id} {...item} />
-              ))}
-            </LayoutList>
-          </div>
+          )}
 
           <div className='relative m-b-5'>
             <div className='w-full p-10px font-bold font-size-14px color-#6d757a'>

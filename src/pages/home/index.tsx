@@ -1,5 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import LabelList from '@/components/home/label-list/index'
 import FollowedWorks from '@/components/home/followed-works'
 import RecommendedWorks from '@/components/home/recommended-works'
@@ -8,6 +10,8 @@ import { getRecommendLabelListAPI, getFollowNewWorksAPI, getRecommendWorksAPI } 
 import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
 
 const Home: FC = () => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
+
   const [width, setWidth] = useState<number>(1245)
   const homeRef = useRef<HTMLDivElement>(null)
   const currentWidth = useOutletContext<number>()
@@ -67,7 +71,7 @@ const Home: FC = () => {
 
   useEffect(() => {
     getLabelList()
-    getFollowNewWorks()
+    if (isLogin) getFollowNewWorks()
     getRecommendWorks()
   }, [])
 
@@ -75,7 +79,7 @@ const Home: FC = () => {
     <div ref={homeRef} className='relative w-100% my-30px'>
       <div style={{ width: `${width}px` }} className='flex flex-col mx-auto'>
         <LabelList loading={loading} labelList={labelList} />
-        <FollowedWorks loading={loading} workList={followWorkList} />
+        {isLogin && <FollowedWorks loading={loading} workList={followWorkList} />}
         <RecommendedWorks loading={loading} workList={recommendWorkList} />
         {/* TODO: 暂时没写好排行榜接口 */}
         {/* <RankingList loading={loading} workList={rankWorkList} /> */}

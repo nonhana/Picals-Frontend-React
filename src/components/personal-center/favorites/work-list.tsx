@@ -38,6 +38,7 @@ const WorkList: FC<WorkListProps> = ({
 }) => {
   const [messageApi, contextHolder] = message.useMessage()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
+  const { isLogin } = useSelector((state: AppState) => state.user)
   const searchParams = useSearchParams()[0]
   const folderId = searchParams.get('folderId')
 
@@ -239,9 +240,11 @@ const WorkList: FC<WorkListProps> = ({
         ) : (
           <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#858585'>
             <div className='flex gap-5 items-center'>
-              <Button type='link' onClick={() => setSettingStatus(true)}>
-                批量操作
-              </Button>
+              {isLogin && (
+                <Button type='link' onClick={() => setSettingStatus(true)}>
+                  批量操作
+                </Button>
+              )}
               {searchStatus && (
                 <Button type='link' onClick={handleCancelSearch}>
                   取消搜索

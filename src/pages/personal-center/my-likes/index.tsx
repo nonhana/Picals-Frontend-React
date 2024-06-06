@@ -1,10 +1,11 @@
-import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { FC, useEffect, useState, useContext } from 'react'
 import WorkList from '@/components/personal-center/work-list'
 import { getUserLikeWorksTotalAPI } from '@/apis'
+import { PersonalContext } from '..'
 
 const MyLikes: FC = () => {
-  const { userId } = useParams<{ userId: string }>()
+  const { userId } = useContext(PersonalContext)
+
   const [workCount, setWorkCount] = useState<number>(0)
 
   const getLikeWorkCount = async () => {

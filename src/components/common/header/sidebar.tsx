@@ -1,7 +1,10 @@
 import { FC, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import {
   HEADER_MENU_LIST,
+  HEADER_MENU_LIST_VISITOR,
   SIDEBAR_WHITE_LIST,
   TRIGGER_MIN_WIDTH,
   TRIGGER_MAX_WIDTH,
@@ -18,6 +21,8 @@ type SidebarProps = {
 }
 
 const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
+
   const location = useLocation()
   const [maskTrigger, setMaskTrigger] = useState(true)
 
@@ -55,7 +60,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
           </div>
 
           <ul className='list-none m-0 p-0'>
-            {HEADER_MENU_LIST.map((item) => (
+            {(isLogin ? HEADER_MENU_LIST : HEADER_MENU_LIST_VISITOR).map((item) => (
               <Link key={item.route} to={item.route}>
                 <li
                   className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-#f5f5f5 transition-duration-300 ${location.pathname === item.route ? 'bg-#f5f5f5' : ''}`}>

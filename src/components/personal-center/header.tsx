@@ -1,17 +1,20 @@
-import { FC, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { FC, useEffect, useState, useContext } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
-import { useParams } from 'react-router-dom'
+import { setUserInfo as setLocalUserInfo } from '@/store/modules/user'
 import type { UserDetailInfo } from '@/utils/types'
-import { getUserDetailAPI } from '@/apis'
+import { getUserDetailAPI, userActionsAPI } from '@/apis'
 import { Button } from 'antd'
 import EditModal from './edit-modal'
 import InfoModal from './info-modal'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '../common/hana-viewer'
+import { PersonalContext } from '@/pages/personal-center'
 
 const Header: FC = () => {
-  const { userId } = useParams<{ userId: string }>()
+  const { isLogin } = useSelector((state: AppState) => state.user)
+  const { isMe, userId } = useContext(PersonalContext)
+
   const [userInfo, setUserInfo] = useState<UserDetailInfo>({
     id: '',
     username: '',
@@ -26,26 +29,37 @@ const Header: FC = () => {
   })
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [infoModalVisible, setInfoModalVisible] = useState(false)
-  const { userInfo: localUserInfo } = useSelector((state: AppState) => state.user)
+
+  const dispatch = useDispatch()
 
   // 获取用户的详细信息
   const getUserDetail = async () => {
     try {
       const { data } = await getUserDetailAPI({ id: userId! })
-      if (data) {
-        setUserInfo({
-          id: data.id,
-          username: data.username,
-          email: data.email,
-          avatar: data.avatar,
-          intro: data.signature,
-          fanNum: data.fanCount,
-          followNum: data.followCount,
-          background_img: data.backgroundImg,
-          gender: data.gender,
-          isFollowed: data.isFollowed,
-        })
-      }
+      setUserInfo({
+        id: data.id,
+        username: data.username,
+        email: data.email,
+        avatar: data.avatar,
+        intro: data.signature,
+        fanNum: data.fanCount,
+        followNum: data.followCount,
+        background_img: data.backgroundImg,
+        gender: data.gender,
+        isFollowed: data.isFollowed,
+      })
+      if (isMe) dispatch(setLocalUserInfo(data))
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  // 关注或取消关注
+  const handleFollow = async () => {
+    try {
+      await userActionsAPI({ id: userId! })
+      setUserInfo((prev) => ({ ...prev, isFollowed: !prev.isFollowed }))
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -89,7 +103,7 @@ const Header: FC = () => {
             </div>
           </div>
           <div className='flex gap-5'>
-            {localUserInfo.id === userId && (
+            {isMe && (
               <Button
                 shape='round'
                 size='large'
@@ -105,8 +119,12 @@ const Header: FC = () => {
               onClick={() => setInfoModalVisible(true)}>
               查看个人资料
             </Button>
-            {localUserInfo.id !== userId && (
-              <Button shape='round' size='large' type={userInfo.isFollowed ? 'default' : 'primary'}>
+            {!isMe && isLogin && (
+              <Button
+                shape='round'
+                size='large'
+                type={userInfo.isFollowed ? 'default' : 'primary'}
+                onClick={handleFollow}>
                 {userInfo.isFollowed ? '取消关注' : '加关注'}
               </Button>
             )}
@@ -121,7 +139,12 @@ const Header: FC = () => {
         info={userInfo}
       />
 
-      <InfoModal visible={infoModalVisible} setVisible={setInfoModalVisible} info={userInfo} />
+      <InfoModal
+        visible={infoModalVisible}
+        setVisible={setInfoModalVisible}
+        info={userInfo}
+        follow={handleFollow}
+      />
     </>
   )
 }

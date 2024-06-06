@@ -1,35 +1,29 @@
-import { FC, useEffect, useState } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import { FC, useEffect, useState, useContext } from 'react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { getUserWorksListAPI, getUserLikeWorksAPI, likeActionsAPI } from '@/apis'
 import Loading from '@/components/common/loading'
 import Empty from '@/components/common/empty'
+import { useMap } from '@/hooks'
+import { PersonalContext } from '@/pages/personal-center'
 
 type WorkListProps = {
   workCount: number
 }
 
 const WorkList: FC<WorkListProps> = ({ workCount }) => {
-  const location = useLocation()
-  const { userId } = useParams<{ userId: string }>()
+  const { userId, currentPath } = useContext(PersonalContext)
+
   const [current, setCurrent] = useState<number>(1)
-  const [workList, setWorkList] = useState<WorkNormalItemInfo[]>([])
+  const [workList, setWorkList, setWorkMap] = useMap<WorkNormalItemInfo>([])
   const [loading, setLoading] = useState<boolean>(false)
 
   const likeWork = async (workId: string) => {
     try {
       setLoading(true)
       await likeActionsAPI({ id: workId })
-      setWorkList(
-        workList.map((work) => {
-          if (work.id === workId) {
-            return { ...work, isLiked: !work.isLiked }
-          }
-          return work
-        }),
-      )
+      setWorkMap(workId, { ...workList.get(workId)!, isLiked: !workList.get(workId)!.isLiked })
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -67,10 +61,9 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   useEffect(() => {
     setWorkList([])
-    const currentPath = location.pathname.split('/')[3]
     if (currentPath === 'works') getUserWorks()
     if (currentPath === 'likes') getUserLikeWorks()
-  }, [userId, current, location.pathname])
+  }, [userId, current, currentPath])
 
   return (
     <div className='relative w-100% flex gap-10px flex-wrap'>
@@ -78,11 +71,11 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
         <div className='relative w-full h-100'>
           <Loading loading={loading} />
         </div>
-      ) : workList.length === 0 ? (
+      ) : workList.size === 0 ? (
         <Empty />
       ) : (
         <div className='relative w-full flex flex-wrap gap-5'>
-          {workList.map((work) => (
+          {Array.from(workList.values()).map((work) => (
             <WorkNormalItem key={work.id} itemInfo={work} like={likeWork} />
           ))}
         </div>

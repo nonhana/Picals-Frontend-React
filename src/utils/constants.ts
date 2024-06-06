@@ -52,6 +52,18 @@ export const HEADER_MENU_LIST: HeaderMenuItem[] = [
     name: '探索页',
   },
 ]
+export const HEADER_MENU_LIST_VISITOR: HeaderMenuItem[] = [
+  {
+    icon: 'ant-design:picture-filled',
+    route: '/home',
+    name: '插画',
+  },
+  {
+    icon: 'ant-design:compass-outlined',
+    route: '/explore',
+    name: '探索页',
+  },
+]
 
 // 哪些路由前缀要隐藏Header
 export const HEADER_WHITE_LIST: RegExp = /^\/login/

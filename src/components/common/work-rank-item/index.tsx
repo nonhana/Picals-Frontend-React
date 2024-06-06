@@ -1,5 +1,7 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
 import type { WorkRankItemInfo } from '@/utils/types'
 
@@ -9,6 +11,7 @@ type WorkRankItemProps = {
 }
 
 const WorkRankItem: FC<WorkRankItemProps> = ({ itemInfo, like }) => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
   return (
     <div className='shrink-0 relative w-288px rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-288px h-288px z-99'>
@@ -28,13 +31,15 @@ const WorkRankItem: FC<WorkRankItemProps> = ({ itemInfo, like }) => {
             </div>
           </div>
         )}
-        <Icon
-          className='p-10px absolute bottom-0 right-0 cursor-pointer'
-          width='44px'
-          color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
-          onClick={() => like(itemInfo.id)}
-        />
+        {isLogin && (
+          <Icon
+            className='p-10px absolute bottom-0 right-0 cursor-pointer'
+            width='44px'
+            color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
+            icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+            onClick={() => like(itemInfo.id)}
+          />
+        )}
       </div>
 
       <div className='relative w-288px h-288px rd-1 flex items-center justify-center overflow-hidden'>

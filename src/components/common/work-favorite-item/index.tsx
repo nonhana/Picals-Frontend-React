@@ -1,5 +1,7 @@
 import { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import type { MenuProps } from 'antd'
@@ -41,7 +43,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
   move,
   copy,
 }) => {
-  const navigate = useNavigate()
+  const { isLogin } = useSelector((state: AppState) => state.user)
 
   const onChooseItem: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
@@ -79,8 +81,8 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
       )}
 
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
-        <div
-          onClick={() => navigate(`/work-detail/${itemInfo.id}`)}
+        <Link
+          to={`/work-detail/${itemInfo.id}`}
           className='cursor-pointer hover:bg-white hover:opacity-16 absolute top-0 left-0 w-184px h-184px'
         />
         {itemInfo.imgList.length > 1 && (
@@ -92,13 +94,15 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
             </div>
           </div>
         )}
-        <Icon
-          className='p-10px absolute bottom-0 right-0 cursor-pointer'
-          width='44px'
-          color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
-          icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
-          onClick={() => like(itemInfo.id)}
-        />
+        {isLogin && (
+          <Icon
+            className='p-10px absolute bottom-0 right-0 cursor-pointer'
+            width='44px'
+            color={itemInfo.isLiked ? 'red' : '#3d3d3d'}
+            icon={itemInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+            onClick={() => like(itemInfo.id)}
+          />
+        )}
       </div>
 
       <div className='relative w-184px h-184px rd-1 flex items-center justify-center overflow-hidden'>
@@ -106,24 +110,36 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
       </div>
 
       <div className='relative p-10px flex flex-col gap-5px'>
-        <div className='cursor-pointer font-size-14px color-#3d3d3d font-bold'>
+        <Link
+          to={`/work-detail/${itemInfo.id}`}
+          className='cursor-pointer font-size-14px color-#3d3d3d font-bold'>
           <span>{itemInfo.name}</span>
-        </div>
-
+        </Link>
         <div className='w-full flex justify-between '>
           <div className='flex items-center gap-10px font-size-14px color-#6d757a'>
-            <div className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
+            <Link
+              to={`/personal-center/${itemInfo.authorId}/works`}
+              className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
               <img
                 className='w-full h-full object-cover'
                 src={itemInfo.authorAvatar}
                 alt={itemInfo.authorName}
               />
-            </div>
-            <span className='cursor-pointer'>{itemInfo.authorName}</span>
+            </Link>
+            <Link
+              to={`/personal-center/${itemInfo.authorId}/works`}
+              className='cursor-pointer color-#3d3d3d'>
+              <span>{itemInfo.authorName}</span>
+            </Link>
           </div>
-          <Dropdown menu={{ items: dropdownList, onClick: onChooseItem }} placement='bottom' arrow>
-            <Icon width='24px' color='#858585' icon='ant-design:more-outlined' />
-          </Dropdown>
+          {isLogin && (
+            <Dropdown
+              menu={{ items: dropdownList, onClick: onChooseItem }}
+              placement='bottom'
+              arrow>
+              <Icon width='24px' color='#858585' icon='ant-design:more-outlined' />
+            </Dropdown>
+          )}
         </div>
       </div>
     </div>
