@@ -1,5 +1,7 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import type { UserItemInfo } from '@/utils/types'
 import UserWorkItem from './user-work-item'
 import { Button } from 'antd'
@@ -22,6 +24,7 @@ const UserItem: FC<UserItemProps> = ({
   isFollowing,
   width,
 }) => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
   return (
     <div className='relative p-5 h-61 flex gap-5 rd-1 bg-white'>
       <Link
@@ -41,25 +44,26 @@ const UserItem: FC<UserItemProps> = ({
           <span>{intro}</span>
         </div>
 
-        {isFollowing ? (
-          <Button
-            className='w-25'
-            shape='round'
-            size='large'
-            type='default'
-            onClick={() => follow(id)}>
-            已关注
-          </Button>
-        ) : (
-          <Button
-            className='w-25'
-            shape='round'
-            size='large'
-            type='primary'
-            onClick={() => follow(id)}>
-            加关注
-          </Button>
-        )}
+        {isLogin &&
+          (isFollowing ? (
+            <Button
+              className='w-25'
+              shape='round'
+              size='large'
+              type='default'
+              onClick={() => follow(id)}>
+              已关注
+            </Button>
+          ) : (
+            <Button
+              className='w-25'
+              shape='round'
+              size='large'
+              type='primary'
+              onClick={() => follow(id)}>
+              加关注
+            </Button>
+          ))}
       </div>
 
       {!works || works.length === 0 ? (

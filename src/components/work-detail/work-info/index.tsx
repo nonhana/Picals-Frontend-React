@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { AppState } from '@/store/types'
 import type { WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Button, Divider, Modal, Radio, RadioChangeEvent, message } from 'antd'
@@ -9,8 +10,6 @@ import Comments from '../comments'
 import { Link } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
 import { useMap } from '@/hooks'
-import { useSelector } from 'react-redux'
-import { AppState } from '@/store/types'
 import HanaViewer from '@/components/common/hana-viewer'
 import { likeActionsAPI, favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
@@ -29,12 +28,11 @@ const WorkInfo: FC<WorkInfoProps> = ({
 
   const [messageApi, contextHolder] = message.useMessage()
 
+  const { favoriteList } = useSelector((state: AppState) => state.favorite)
   const {
-    favorite: { favoriteList },
-    user: {
-      userInfo: { id },
-    },
-  } = useSelector((state: AppState) => state)
+    userInfo: { id },
+    isLogin,
+  } = useSelector((state: AppState) => state.user)
 
   const [loading, setLoading] = useState(true)
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>(sourceWorkInfo)
@@ -130,30 +128,34 @@ const WorkInfo: FC<WorkInfoProps> = ({
             </div>
           </HanaViewer>
           {/* 操作栏 */}
-          <div className='w-100% my-10px flex justify-end'>
-            <div className='flex gap-40px'>
-              <Icon
-                className='cursor-pointer'
-                width='32px'
-                color={workInfo?.isLiked ? 'red' : '#3d3d3d'}
-                icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
-                onClick={handleLikeWork}
-              />
-              <Icon
-                className='cursor-pointer'
-                width='32px'
-                color={workInfo?.isCollected ? 'yellow' : '#3d3d3d'}
-                icon={workInfo?.isCollected ? 'ant-design:star-filled' : 'ant-design:star-outlined'}
-                onClick={handleCollectWork}
-              />
-              <Icon
-                className='cursor-pointer hidden'
-                width='32px'
-                color='#3d3d3d'
-                icon='ant-design:share-alt-outlined'
-              />
+          {isLogin && (
+            <div className='w-100% my-10px flex justify-end'>
+              <div className='flex gap-40px'>
+                <Icon
+                  className='cursor-pointer'
+                  width='32px'
+                  color={workInfo?.isLiked ? 'red' : '#3d3d3d'}
+                  icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+                  onClick={handleLikeWork}
+                />
+                <Icon
+                  className='cursor-pointer'
+                  width='32px'
+                  color={workInfo?.isCollected ? 'yellow' : '#3d3d3d'}
+                  icon={
+                    workInfo?.isCollected ? 'ant-design:star-filled' : 'ant-design:star-outlined'
+                  }
+                  onClick={handleCollectWork}
+                />
+                <Icon
+                  className='cursor-pointer hidden'
+                  width='32px'
+                  color='#3d3d3d'
+                  icon='ant-design:share-alt-outlined'
+                />
+              </div>
             </div>
-          </div>
+          )}
           {/* 作品信息 */}
           <div className='w-150 flex flex-col gap-10px'>
             <div className='font-bold font-size-18px color-#3d3d3d'>
@@ -204,7 +206,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 <Link className='color-#3d3d3d' to={`/personal-center/${workInfo?.authorInfo.id}`}>
                   {workInfo?.authorInfo.username}
                 </Link>
-                {workInfo.authorInfo.id !== id && (
+                {workInfo.authorInfo.id !== id && isLogin && (
                   <Button
                     shape='round'
                     size='large'
@@ -232,9 +234,13 @@ const WorkInfo: FC<WorkInfoProps> = ({
             )}
           </div>
         </div>
-        <Divider />
-        {/* 评论 */}
-        <Comments loading={loading} totalCount={workInfo.commentNum} />
+        {isLogin && (
+          <>
+            <Divider />
+            {/* 评论 */}
+            <Comments loading={loading} totalCount={workInfo.commentNum} />
+          </>
+        )}
       </div>
 
       <Modal

@@ -16,10 +16,9 @@ type UserInfoProps = {
 
 const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => {
   const {
-    user: {
-      userInfo: { id },
-    },
-  } = useSelector((state: AppState) => state)
+    userInfo: { id },
+    isLogin,
+  } = useSelector((state: AppState) => state.user)
 
   return (
     <div className='relative flex flex-col gap-5 p-5 rd-6 bg-#fff w-82.5'>
@@ -49,7 +48,7 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => 
       ) : (
         <Empty showImg={false} text='暂无其他作品' />
       )}
-      {userInfo.id !== id && (
+      {userInfo.id !== id && isLogin && (
         <Button
           shape='round'
           size='large'

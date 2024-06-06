@@ -4,8 +4,8 @@ import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button } from 'antd'
 import { useSelector } from 'react-redux'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
 import type { AppState } from '@/store/types'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
@@ -90,12 +90,13 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
         </div>
 
         <div className='flex items-center gap-5'>
-          <Link to='/upload'>
-            <Button shape='round' type='default' size='large'>
-              <span className='color-#6d757a'>投稿作品</span>
-            </Button>
-          </Link>
-          <Icon width={24} color='#858585' icon='ant-design:bell-filled' />
+          {isLogin && (
+            <Link to='/upload'>
+              <Button shape='round' type='default' size='large'>
+                <span className='color-#6d757a'>投稿作品</span>
+              </Button>
+            </Link>
+          )}
           {isLogin ? (
             <div
               className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'

@@ -38,7 +38,7 @@ const PersonalCenter: FC = () => {
   }
 
   useEffect(() => {
-    setCurrentPath(location.pathname.split('/')[3] || 'works')
+    setCurrentPath(location.pathname.split('/')[3])
   }, [location.pathname])
 
   return (

@@ -1,5 +1,6 @@
 import { FC, useEffect, useState, useContext } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { setUserInfo as setLocalUserInfo } from '@/store/modules/user'
 import type { UserDetailInfo } from '@/utils/types'
 import { getUserDetailAPI, userActionsAPI } from '@/apis'
@@ -11,6 +12,7 @@ import HanaViewer from '../common/hana-viewer'
 import { PersonalContext } from '@/pages/personal-center'
 
 const Header: FC = () => {
+  const { isLogin } = useSelector((state: AppState) => state.user)
   const { isMe, userId } = useContext(PersonalContext)
 
   const [userInfo, setUserInfo] = useState<UserDetailInfo>({
@@ -117,7 +119,7 @@ const Header: FC = () => {
               onClick={() => setInfoModalVisible(true)}>
               查看个人资料
             </Button>
-            {!isMe && (
+            {!isMe && isLogin && (
               <Button
                 shape='round'
                 size='large'
