@@ -17,9 +17,10 @@ type InfoModalProps = {
   visible: boolean
   setVisible: (visible: boolean) => void
   info: UserDetailInfo
+  follow: () => void
 }
 
-const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
+const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) => {
   const {
     userInfo: { id },
   } = useSelector((state: AppState) => state.user)
@@ -38,7 +39,11 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
             </HanaViewer>
             <span>{info.username}</span>
             {id !== info.id && (
-              <Button type={info.isFollowed ? 'default' : 'primary'} size='large' shape='round'>
+              <Button
+                type={info.isFollowed ? 'default' : 'primary'}
+                size='large'
+                shape='round'
+                onClick={follow}>
                 {info.isFollowed ? '已关注' : '加关注'}
               </Button>
             )}

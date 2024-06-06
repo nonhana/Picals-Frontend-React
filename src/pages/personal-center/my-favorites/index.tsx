@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react'
-import { useSearchParams, useParams } from 'react-router-dom'
+import { FC, useEffect, useState, useContext } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setFavoriteList } from '@/store/modules/favorites'
 import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
@@ -15,13 +15,15 @@ import {
   getUserFavoriteListAPI,
 } from '@/apis'
 import Empty from '@/components/common/empty'
+import { PersonalContext } from '..'
 
 const MyFavorites: FC = () => {
+  const { userId } = useContext(PersonalContext)
+
   const dispatch = useDispatch()
 
   const searchParams = useSearchParams()[0]
   const folderId = searchParams.get('folderId')
-  const { userId } = useParams()
 
   /* ----------收藏夹信息相关---------- */
   const [favoriteDetailInfo, setFavoriteDetailInfo] = useState<FavoriteDetailInfo>()

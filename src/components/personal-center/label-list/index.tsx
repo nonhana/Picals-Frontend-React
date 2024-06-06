@@ -1,11 +1,12 @@
-import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { FC, useEffect, useState, useContext } from 'react'
 import type { LabelInfo } from '@/utils/types'
 import LabelItem from '@/components/common/label-item'
 import { getUserWorksLabelsAPI } from '@/apis'
+import { PersonalContext } from '@/pages/personal-center'
 
 const LabelList: FC = () => {
-  const { userId } = useParams<{ userId: string }>()
+  const { userId } = useContext(PersonalContext)
+
   const [labels, setLabels] = useState<LabelInfo[]>()
 
   const getLabels = async () => {

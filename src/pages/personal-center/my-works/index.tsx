@@ -1,16 +1,17 @@
-import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { FC, useEffect, useState, useContext } from 'react'
 import LabelList from '@/components/personal-center/label-list'
 import WorkList from '@/components/personal-center/work-list'
 import { getUserWorksTotalAPI } from '@/apis'
+import { PersonalContext } from '..'
 
 const MyWorks: FC = () => {
-  const { userId } = useParams<{ userId: string }>()
+  const { userId } = useContext(PersonalContext)
+
   const [workCount, setWorkCount] = useState<number>(0)
 
   const getWorkCount = async () => {
     try {
-      const { data } = await getUserWorksTotalAPI({ id: userId! })
+      const { data } = await getUserWorksTotalAPI({ id: userId })
       setWorkCount(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)

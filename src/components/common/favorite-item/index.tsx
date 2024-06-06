@@ -1,9 +1,10 @@
-import { FC, useState } from 'react'
+import { FC, useState, useContext } from 'react'
 import { Icon } from '@iconify/react'
 import { type MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { PersonalContext } from '@/pages/personal-center'
 
 const dropdownList: MenuProps['items'] = [
   {
@@ -33,6 +34,8 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
   onDeleteFolder,
   onEditFolder,
 }) => {
+  const { isMe } = useContext(PersonalContext)
+
   const [hovering, setHovering] = useState(false)
 
   const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
@@ -70,13 +73,15 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>
       <div className='flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
-        <div
-          {...listeners}
-          style={{ visibility: hovering ? 'visible' : 'hidden' }}
-          className='bg-#c0c0c0 w-3 h-15 flex justify-center items-center cursor-all-scroll'>
-          <Icon width='8px' color='#fff' icon='heroicons-outline:bars-3' />
-        </div>
-        <div>
+        {isMe && (
+          <div
+            {...listeners}
+            style={{ visibility: hovering ? 'visible' : 'hidden' }}
+            className='bg-#c0c0c0 w-3 h-15 flex justify-center items-center cursor-all-scroll'>
+            <Icon width='8px' color='#fff' icon='heroicons-outline:bars-3' />
+          </div>
+        )}
+        <div className={`${isMe ? '' : 'pl-3'}`}>
           <Icon
             width='24px'
             color='#858585'
