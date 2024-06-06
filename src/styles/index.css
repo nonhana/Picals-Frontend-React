@@ -20,6 +20,10 @@ body {
   background: #fff;
 }
 
+img {
+  -webkit-user-drag: none;
+}
+
 a {
   text-decoration: none;
 }
