@@ -4,12 +4,12 @@ import storage from 'redux-persist/lib/storage'
 
 import userReducer from './modules/user'
 import favoriteReducer from './modules/favorites'
-import imageReducer from './modules/image'
+import searchHistoryReducer from './modules/searchHistory'
 
 const rootReducer = combineReducers({
   user: userReducer,
   favorite: favoriteReducer,
-  image: imageReducer,
+  searchHistory: searchHistoryReducer,
 })
 
 // 持久化配置

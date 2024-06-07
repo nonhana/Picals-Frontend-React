@@ -76,7 +76,7 @@ export const getWorkSimpleAPI = (params: Id) => {
 }
 
 // 根据标签分页搜索作品
-export const searchWorksByTagAPI = (params: Pagination) => {
+export const searchWorksByLabelAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/illustration/search',
     method: 'GET',

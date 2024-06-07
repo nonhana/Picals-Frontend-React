@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { UserInfo } from '@/utils/types'
+import { LabelItem } from '@/apis/types'
 
 const userStore = createSlice({
   name: 'user',
@@ -8,28 +9,44 @@ const userStore = createSlice({
       id: '',
       username: '',
       avatar: '',
+      intro: '',
       email: '',
       fanNum: 0,
       followNum: 0,
     } as UserInfo,
+    likedLabels: [] as LabelItem[],
     isLogin: false,
   },
   reducers: {
     setUserInfo(state, action) {
       state.userInfo = action.payload
     },
+    setLikedLabels(state, action) {
+      state.likedLabels = action.payload
+    },
     setLoginStatus(state, action) {
       state.isLogin = action.payload
+    },
+    logout(state) {
+      state.userInfo = {
+        id: '',
+        username: '',
+        avatar: '',
+        intro: '',
+        email: '',
+        fanNum: 0,
+        followNum: 0,
+      }
+      state.likedLabels = []
+      state.isLogin = false
     },
   },
 })
 
-// 解构出increment和decrement方法
-const { setUserInfo, setLoginStatus } = userStore.actions
+const { setUserInfo, setLikedLabels, setLoginStatus, logout } = userStore.actions
 
-// 获取reducer函数
 const userReducer = userStore.reducer
 
 // 导出
-export { setUserInfo, setLoginStatus }
+export { setUserInfo, setLikedLabels, setLoginStatus, logout }
 export default userReducer

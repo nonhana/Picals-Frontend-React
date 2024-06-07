@@ -24,7 +24,10 @@ const UserItem: FC<UserItemProps> = ({
   isFollowing,
   width,
 }) => {
-  const { isLogin } = useSelector((state: AppState) => state.user)
+  const {
+    isLogin,
+    userInfo: { id: localUserId },
+  } = useSelector((state: AppState) => state.user)
   return (
     <div className='relative p-5 h-61 flex gap-5 rd-1 bg-white'>
       <Link
@@ -44,8 +47,8 @@ const UserItem: FC<UserItemProps> = ({
           <span>{intro}</span>
         </div>
 
-        {isLogin &&
-          (isFollowing ? (
+        {isLogin && localUserId !== id ? (
+          isFollowing ? (
             <Button
               className='w-25'
               shape='round'
@@ -63,7 +66,12 @@ const UserItem: FC<UserItemProps> = ({
               onClick={() => follow(id)}>
               加关注
             </Button>
-          ))}
+          )
+        ) : (
+          <Button className='w-25' shape='round' size='large' type='primary' disabled>
+            你自己
+          </Button>
+        )}
       </div>
 
       {!works || works.length === 0 ? (

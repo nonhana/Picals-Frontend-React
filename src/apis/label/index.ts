@@ -1,6 +1,6 @@
 import request from '@/service'
 import { LabelDetailInfo, INewLabelReq } from './types'
-import { Id, LabelItem, Pagination } from '../types'
+import { LabelItem, Name, Pagination } from '../types'
 
 // 新建标签
 export const newLabelAPI = (data: INewLabelReq) => {
@@ -29,8 +29,8 @@ export const getLabelsInPagesAPI = (params: Pagination) => {
 }
 
 // 获取某个标签的详细信息
-export const getLabelDetailAPI = (params: Id) => {
-  return request<Id, LabelDetailInfo>({
+export const getLabelDetailAPI = (params: Name) => {
+  return request<Name, LabelDetailInfo | null>({
     url: '/api/label/detail',
     method: 'GET',
     params,

@@ -1,13 +1,15 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
+import { useSearchParams, useNavigate, useOutletContext } from 'react-router-dom'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { PictureOutlined, UserOutlined } from '@ant-design/icons'
 import { SearchFilter } from '@/utils/types'
-import { labelDetailInfo } from '@/test/data'
+import type { LabelDetailInfo } from '@/utils/types'
 import LabelInfo from '@/components/search-result/label-info'
 import WorkList from '@/components/search-result/work-list'
 import UserList from '@/components/search-result/user-list'
+import { getLabelDetailAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 
 const items: MenuProps['items'] = [
   {
@@ -24,8 +26,7 @@ const items: MenuProps['items'] = [
 
 const SearchResult: FC = () => {
   const navigate = useNavigate()
-  const { search } = useLocation()
-  const query = new URLSearchParams(search)
+  const query = useSearchParams()[0]
   const searchFilter: SearchFilter = {
     label: query.get('label') || '',
     type: query.get('type') || 'work',
@@ -45,11 +46,36 @@ const SearchResult: FC = () => {
   }, [currentWidth])
 
   const checkoutMenu: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key)
     navigate({
       search: `?type=${e.key}&label=${searchFilter.label}&sortType=${searchFilter.sortType}`,
     })
   }
+
+  useEffect(() => {
+    setCurrent(searchFilter.type || 'work')
+  }, [searchFilter.type])
+
+  const [labelDetail, setLabelDetail] = useState<LabelDetailInfo>()
+
+  const getLabelDetail = async () => {
+    try {
+      const { data } = await getLabelDetailAPI({ name: searchFilter.label })
+      if (data) {
+        setLabelDetail(data)
+      } else {
+        setLabelDetail(undefined)
+      }
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    getLabelDetail()
+  }, [searchFilter.label])
+
+  const likeLabel = () => setLabelDetail((prev) => ({ ...prev!, isMyLike: !prev!.isMyLike }))
 
   return (
     <div ref={exploreRef} className='relative overflow-hidden w-100% my-30px'>
@@ -59,7 +85,13 @@ const SearchResult: FC = () => {
           marginTop: current === 'work' ? '0' : '-210px',
         }}
         className='flex flex-col items-center mx-auto transition-all duration-300 ease-in-out'>
-        <LabelInfo {...labelDetailInfo} />
+        {labelDetail ? (
+          <LabelInfo {...labelDetail} like={likeLabel} />
+        ) : (
+          <div className='relative w-full h-210px'>
+            <Empty showImg={false} text='目前暂未收录该标签哦~' />
+          </div>
+        )}
         <Menu
           className='w-100%'
           onClick={checkoutMenu}
@@ -67,7 +99,17 @@ const SearchResult: FC = () => {
           mode='horizontal'
           items={items}
         />
-        {current === 'work' ? <WorkList /> : <UserList width={width} />}
+        {current === 'work' ? (
+          labelDetail && (
+            <WorkList
+              labelName={labelDetail.name}
+              sortType={searchFilter.sortType}
+              workCount={labelDetail.workCount}
+            />
+          )
+        ) : (
+          <UserList labelName={searchFilter.label} width={width} />
+        )}
       </div>
     </div>
   )

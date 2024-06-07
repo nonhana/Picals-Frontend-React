@@ -1,5 +1,6 @@
 // src/apis/user/types.ts
 // 定义 user 模块的 API 类型
+import { LabelItem } from '../types'
 
 // #region 请求体类型
 export interface IRefreshTokenReq {
@@ -130,8 +131,28 @@ export interface IRefreshTokenRes {
   refresh_token: string
 }
 
+export interface UserLoginInfo {
+  id: string
+  username: string
+  email: string
+  backgroundImg: string
+  avatar: string
+  signature: string
+  gender: number
+  fanCount: number
+  followCount: number
+  originCount: number
+  reprintedCount: number
+  likeCount: number
+  collectCount: number
+  favoriteCount: number
+  createdTime: Date
+  updatedTime: Date
+  likedLabels: LabelItem[]
+}
+
 export interface ILoginRes {
-  userInfo: UserDetailInfo
+  userInfo: UserLoginInfo
   accessToken: string
   refreshToken: string
 }

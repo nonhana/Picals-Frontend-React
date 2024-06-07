@@ -20,11 +20,11 @@ export interface LabelDetailInfo {
   /**
    * 标签封面图片，当该标签的作品数达到一定量级后，由管理员在后台进行上传，默认就是随机生成的纯色背景图
    */
-  img: string
+  cover: string
   /**
    * 是否是我喜欢的标签
    */
-  isMyLike: string
+  isMyLike: boolean
   /**
    * 标签名称
    */
@@ -32,6 +32,6 @@ export interface LabelDetailInfo {
   /**
    * 该标签下的作品总数
    */
-  workCount: string
+  workCount: number
 }
 // #endregion
