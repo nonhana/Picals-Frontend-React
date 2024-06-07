@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+import { isWarmHue } from '@/utils'
 
 type LabelImgItemProps = {
   id: string
@@ -15,7 +16,10 @@ const LabelImgItem: FC<LabelImgItemProps> = ({ name, color, cover }) => {
       className='relative flex-shrink-0 w-118px h-118px rd-6px overflow-hidden flex items-center justify-center cursor-pointer hover:opacity-80'>
       <img
         className='w-118px'
-        src={cover || `https://dummyimage.com/400x400/${color.slice(1)}/ffffff&text=${name}`}
+        src={
+          cover ||
+          `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
+        }
         alt={name}
       />
       <div className='absolute w-118px h-118px top-0 left-0 bg-black opacity-32' />

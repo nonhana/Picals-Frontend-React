@@ -12,7 +12,7 @@ const Header: FC<HeaderProps> = ({ name, intro, creatorId, creatorName, cover, w
         <div className='w-40 h-40 flex justify-center items-center'>
           <img
             className='w-full h-full object-cover'
-            src={cover || `https://dummyimage.com/400x400&text=${name}`}
+            src={cover || `https://fakeimg.pl/400x400?font=noto&text=${name}`}
             alt={name}
           />
         </div>
