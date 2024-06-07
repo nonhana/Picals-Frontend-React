@@ -1,26 +1,34 @@
 import { FC, useEffect, useState } from 'react'
 import type { UserItemInfo } from '@/utils/types'
-import { userList as userListSource } from '@/test/data'
 import UserItem from '@/components/common/user-item'
 import { useMap } from '@/hooks'
 import Pagination from '@/components/common/pagination'
-import { likeActionsAPI, userActionsAPI } from '@/apis'
+import {
+  likeActionsAPI,
+  userActionsAPI,
+  searchUserAPI,
+  searchUserTotalAPI,
+  getWorkSimpleAPI,
+} from '@/apis'
+import Empty from '@/components/common/empty'
 
 type UserListProps = {
   width: number
+  labelName: string
 }
 
-const UserList: FC<UserListProps> = ({ width }) => {
-  const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
+const UserList: FC<UserListProps> = ({ width, labelName }) => {
+  const [userList, setUserList, updateUserList] = useMap<UserItemInfo>([])
+  const [total, setTotal] = useState(0)
 
   const handleFollow = async (id: string) => {
     await userActionsAPI({ id })
-    updateItem(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
   }
 
   const handleLikeWork = async (userId: string, workId: string) => {
     await likeActionsAPI({ id: workId })
-    updateItem(userId, {
+    updateUserList(userId, {
       ...userList.get(userId)!,
       works: userList
         .get(userId)!
@@ -28,30 +36,56 @@ const UserList: FC<UserListProps> = ({ width }) => {
     })
   }
 
-  useEffect(() => {
-    setUserList(userListSource)
-  }, [])
-
   /* ----------分页相关--------- */
   const [current, setCurrent] = useState(1)
-  const pageSize = 30
-  const total = 1000
+  const pageSize = 6
 
   const pageChange = (page: number) => {
     current !== page && setCurrent(page)
   }
 
-  useEffect(() => {
-    console.log('current:', current)
-  }, [current])
+  const getUserCount = async () => {
+    try {
+      const { data } = await searchUserTotalAPI({ keyword: labelName })
+      setTotal(data)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  const searchUser = async () => {
+    try {
+      const { data } = await searchUserAPI({
+        keyword: labelName,
+        current,
+        pageSize,
+      })
+      const userSource = await Promise.all(
+        data.map(async (user) => {
+          const works = await Promise.all(
+            user.works!.map(async (workId) => (await getWorkSimpleAPI({ id: workId })).data),
+          )
+          return { ...user, works }
+        }),
+      )
+      setUserList(userSource)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
 
   useEffect(() => {
-    if (current === 1) return
-    setUserList([...userListSource])
-  }, [current])
+    getUserCount()
+  }, [labelName])
+
+  useEffect(() => {
+    searchUser()
+  }, [labelName, current])
 
   return (
-    <div className='relative p-5'>
+    <div className='relative p-5 w-full'>
       <div className='w-100% flex justify-between items-center mb-10px'>
         <div className='flex gap-10px items-center'>
           <div className='title font-size-24px'>
@@ -64,15 +98,21 @@ const UserList: FC<UserListProps> = ({ width }) => {
       </div>
 
       <div className='relative w-full flex flex-col gap-20px'>
-        {Array.from(userList.values()).map((item) => (
-          <UserItem
-            key={item.id}
-            {...item}
-            width={width}
-            follow={handleFollow}
-            likeWork={handleLikeWork}
-          />
-        ))}
+        {userList.size === 0 ? (
+          <Empty text='暂无数据' />
+        ) : (
+          <>
+            {Array.from(userList.values()).map((item) => (
+              <UserItem
+                key={item.id}
+                {...item}
+                width={width}
+                follow={handleFollow}
+                likeWork={handleLikeWork}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       <div className='flex justify-center'>

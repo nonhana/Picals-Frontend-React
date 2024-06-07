@@ -1,6 +1,6 @@
 export type Option = { label: string; value: string }
 
-// 用户个人信息
+// 用户登录时获取的基本个人信息
 export interface UserInfo {
   id: string
   username: string
@@ -12,7 +12,14 @@ export interface UserInfo {
 }
 
 // 用户详细信息
-export interface UserDetailInfo extends UserInfo {
+export interface UserDetailInfo {
+  id: string
+  username: string
+  email: string
+  avatar: string
+  intro: string
+  fanNum: number
+  followNum: number
   background_img: string
   gender: 0 | 1 | 2
   isFollowed: boolean

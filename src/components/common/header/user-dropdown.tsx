@@ -5,7 +5,7 @@ import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
 import { CSSTransition } from 'react-transition-group'
 import { Modal, message } from 'antd'
-import { setLoginStatus, setUserInfo } from '@/store/modules/user'
+import { logout } from '@/store/modules/user'
 
 const { confirm } = Modal
 
@@ -44,24 +44,14 @@ const UserDropdown: FC<{
     }
   }
 
-  const logout = () => {
+  const handleLogout = () => {
     confirm({
       title: '确定要退出登录吗？',
       content: '退出登录后使用功能将受限哦~',
       okText: '确认',
       cancelText: '取消',
       onOk() {
-        dispatch(
-          setUserInfo({
-            id: '',
-            username: '',
-            avatar: '',
-            email: '',
-            fanNum: 0,
-            followNum: 0,
-          }),
-        )
-        dispatch(setLoginStatus(false))
+        dispatch(logout())
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
         message.success('退出登录成功')
@@ -129,7 +119,7 @@ const UserDropdown: FC<{
             ))}
             <li
               className='px-2.5 py-3 cursor-pointer hover:bg-#f8f8f8 transition-duration-300'
-              onClick={logout}>
+              onClick={handleLogout}>
               退出登录
             </li>
           </ul>

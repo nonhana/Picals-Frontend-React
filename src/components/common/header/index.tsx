@@ -1,14 +1,16 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/utils/constants'
 import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
-import { Input, Button } from 'antd'
-import { useSelector } from 'react-redux'
+import { Input, Button, message } from 'antd'
+import type { InputRef } from 'antd'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
+import { addRecord } from '@/store/modules/searchHistory'
 
 const { Search } = Input
 
@@ -19,6 +21,8 @@ type HeaderProps = {
 }
 
 const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBarVisible }) => {
+  const dispatch = useDispatch()
+
   const location = useLocation()
   const navigate = useNavigate()
   const [showSidebar, setShowSidebar] = useState(false)
@@ -27,11 +31,12 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
 
   useEffect(() => changeSideBarStatus(showSidebar), [showSidebar])
 
+  // 当路径变化时，隐藏所有工具栏
   useEffect(() => {
     setShowSidebar(false)
     setShowSearchDropdown(false)
     setShowUserDropdown(false)
-  }, [location.pathname])
+  }, [location])
 
   useEffect(() => {
     if (!SIDEBAR_WHITE_LIST.includes(location.pathname)) return
@@ -47,12 +52,22 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
 
   const { userInfo, isLogin } = useSelector((state: AppState) => state.user)
 
+  const searchRef = useRef<InputRef>(null)
+  const [keyword, setKeyword] = useState('')
+
   const handleSearch = (value: string) => {
+    value = value.trim()
+    if (!value) {
+      message.warning('请输入有效搜索内容~')
+      return
+    }
     navigate({
       pathname: '/search-result',
       search: `?label=${value}&type=work&sortType=new`,
     })
+    dispatch(addRecord(value))
     setShowSearchDropdown(false)
+    searchRef.current?.input?.blur()
   }
 
   return (
@@ -81,9 +96,12 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
 
         <div className='absolute w-30% top-1/2 left-1/2 -translate-x-50% -translate-y-50%'>
           <Search
+            ref={searchRef}
             size='large'
             placeholder='请输入你想搜索的内容呀~'
             allowClear
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
             onFocus={() => setShowSearchDropdown(true)}
             onSearch={(value) => handleSearch(value)}
           />
@@ -124,6 +142,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
         className='top-16 left-1/2 -translate-x-50%'
         visible={showSearchDropdown}
         setVisible={setShowSearchDropdown}
+        setKeyword={setKeyword}
       />
 
       {isLogin && (

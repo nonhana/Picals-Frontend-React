@@ -48,7 +48,18 @@ const Header: FC = () => {
         gender: data.gender,
         isFollowed: data.isFollowed,
       })
-      if (isMe) dispatch(setLocalUserInfo(data))
+      if (isMe)
+        dispatch(
+          setLocalUserInfo({
+            id: data.id,
+            username: data.username,
+            avatar: data.avatar,
+            intro: data.signature,
+            email: data.email,
+            fanNum: data.fanCount,
+            followNum: data.followCount,
+          }),
+        )
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return

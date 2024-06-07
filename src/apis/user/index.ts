@@ -132,7 +132,7 @@ export const getUserLikeTagListAPI = (params?: Id) => {
 }
 
 // 添加/移除用户喜欢的标签
-export const tagActionsAPI = (data: Id) => {
+export const labelActionsAPI = (data: Id) => {
   return request<Id, undefined>({
     url: '/api/user/like-label-actions',
     method: 'POST',

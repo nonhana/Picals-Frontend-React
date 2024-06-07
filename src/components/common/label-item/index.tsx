@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
-import { isWarmHue } from '@/utils/colorHue'
+import { isWarmHue } from '@/utils'
 
 type LabelItemProps = {
   id: string

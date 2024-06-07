@@ -6,6 +6,10 @@ export interface Id {
   id: string
 }
 
+export interface Name {
+  name: string
+}
+
 export interface Email {
   email: string
 }
@@ -18,6 +22,7 @@ export interface Pagination {
   id?: string
   keyword?: string
   labelName?: string
+  sortType?: string
   current: number
   pageSize: number
 }
