@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import type { LabelDetailInfo } from '@/utils/types'
 import { Button } from 'antd'
 import LabelItem from '@/components/common/label-item'
@@ -6,15 +7,23 @@ import LayoutList from '@/components/common/layout-list'
 import { isWarmHue } from '@/utils'
 import { labelActionsAPI, getRecommendLabelListAPI } from '@/apis'
 import type { LabelInfo } from '@/utils/types'
+import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
 
 type LabelInfoProps = LabelDetailInfo & {
   like: () => void
 }
 
 const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workCount, like }) => {
+  const dispatch = useDispatch()
+
   const handleLike = async () => {
     try {
       await labelActionsAPI({ id })
+      if (isMyLike) {
+        dispatch(removeLikedLabel(id))
+      } else {
+        dispatch(addLikedLabel({ id, name, color, cover }))
+      }
       like()
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -46,7 +55,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
               className='w-full h-full object-cover'
               src={
                 cover ||
-                `https://dummyimage.com/400x400/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}&text=${name}`
+                `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
               }
               alt={name}
             />
