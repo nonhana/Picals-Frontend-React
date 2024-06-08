@@ -77,6 +77,7 @@ export interface WorkDetailInfo {
     intro: string
     isFollowing: boolean
   }
+  workUrl?: string
   illustrator?: {
     id: string
     name: string

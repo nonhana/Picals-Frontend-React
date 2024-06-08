@@ -5,7 +5,13 @@ import { Outlet, useNavigate, useLocation, useParams } from 'react-router-dom'
 import Header from '@/components/personal-center/header'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
-import { PictureOutlined, HeartOutlined, StarOutlined } from '@ant-design/icons'
+import {
+  PictureOutlined,
+  HeartOutlined,
+  StarOutlined,
+  UserOutlined,
+  TeamOutlined,
+} from '@ant-design/icons'
 
 const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '' })
 
@@ -24,6 +30,16 @@ const items: MenuProps['items'] = [
     label: '收藏集',
     key: 'favorites',
     icon: <StarOutlined />,
+  },
+  {
+    label: '关注',
+    key: 'follow',
+    icon: <UserOutlined />,
+  },
+  {
+    label: '粉丝',
+    key: 'fans',
+    icon: <TeamOutlined />,
   },
 ]
 

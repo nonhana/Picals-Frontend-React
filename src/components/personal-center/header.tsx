@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { setUserInfo as setLocalUserInfo } from '@/store/modules/user'
@@ -12,6 +13,8 @@ import HanaViewer from '../common/hana-viewer'
 import { PersonalContext } from '@/pages/personal-center'
 
 const Header: FC = () => {
+  const navigate = useNavigate()
+
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { isMe, userId } = useContext(PersonalContext)
 
@@ -107,8 +110,20 @@ const Header: FC = () => {
             <div className='w-150 flex flex-col gap-10px font-size-14px color-#3d3d3d text-wrap'>
               <span className='font-size-18px font-bold'>{userInfo.username}</span>
               <div className='flex gap-10px'>
-                <span>关注数：{userInfo.followNum}</span>
-                <span>粉丝数：{userInfo.fanNum}</span>
+                <span
+                  className='cursor-pointer'
+                  onClick={() => {
+                    navigate(`/personal-center/${userId}/follow`)
+                  }}>
+                  关注数：{userInfo.followNum}
+                </span>
+                <span
+                  className='cursor-pointer'
+                  onClick={() => {
+                    navigate(`/personal-center/${userId}/fans`)
+                  }}>
+                  粉丝数：{userInfo.fanNum}
+                </span>
               </div>
               <span>{userInfo.intro}</span>
             </div>
