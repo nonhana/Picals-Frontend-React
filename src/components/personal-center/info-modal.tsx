@@ -21,10 +21,8 @@ type InfoModalProps = {
 }
 
 const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) => {
-  const {
-    userInfo: { id },
-    isLogin,
-  } = useSelector((state: AppState) => state.user)
+  const { isLogin } = useSelector((state: AppState) => state.user)
+  const { id } = useSelector((state: AppState) => state.user.userInfo)
 
   return (
     <Modal title='个人信息' visible={visible} setVisible={setVisible}>

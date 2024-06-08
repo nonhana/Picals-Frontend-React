@@ -13,9 +13,7 @@ type UserListProps = {
 }
 
 const UserList: FC<UserListProps> = ({ width }) => {
-  const {
-    userInfo: { id: storeId },
-  } = useSelector((state: AppState) => state.user)
+  const { id: storeId } = useSelector((state: AppState) => state.user.userInfo)
   const [loading, setLoading] = useState(false)
   const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
   const [current, setCurrent] = useState(1)

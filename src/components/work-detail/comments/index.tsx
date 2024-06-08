@@ -28,7 +28,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
   const { workId } = useParams<{ workId: string }>()
   const [messageApi, contextHolder] = message.useMessage()
 
-  const userInfo = useSelector((state: AppState) => state.user.userInfo)
+  const { userInfo } = useSelector((state: AppState) => state.user)
   const [commentList, setCommentList] = useState<CommentItem[]>([])
   const [count, setCount] = useState(totalCount)
 

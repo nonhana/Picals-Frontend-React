@@ -15,10 +15,8 @@ type UserInfoProps = {
 }
 
 const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => {
-  const {
-    userInfo: { id },
-    isLogin,
-  } = useSelector((state: AppState) => state.user)
+  const { isLogin } = useSelector((state: AppState) => state.user)
+  const { id } = useSelector((state: AppState) => state.user.userInfo)
 
   return (
     <div className='relative flex flex-col gap-5 p-5 rd-6 bg-#fff w-82.5'>
