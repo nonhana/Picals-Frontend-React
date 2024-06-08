@@ -59,12 +59,20 @@ const routeList: RouteObject[] = [
             element: LazyLoad(lazy(() => import('@/pages/personal-center/my-works'))),
           },
           {
+            path: 'likes',
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-likes'))),
+          },
+          {
             path: 'favorites',
             element: LazyLoad(lazy(() => import('@/pages/personal-center/my-favorites'))),
           },
           {
-            path: 'likes',
-            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-likes'))),
+            path: 'follow',
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-follow'))),
+          },
+          {
+            path: 'fans',
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-fans'))),
           },
         ],
       },

@@ -13,6 +13,8 @@ import HanaViewer from '@/components/common/hana-viewer'
 import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
+import pixiv from '@/assets/svgs/pixiv.svg'
+import { verifyPixivUser, verifyPixivWork } from '@/utils'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -226,9 +228,20 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
               </LayoutList>
             )}
           </div>
-
+          {/* 原作信息 */}
           {workInfo.isReprinted && (
             <div className='bg-#f5f5f5 relative p-5 w-full'>
+              <div className='flex gap-10px items-center'>
+                <span className='font-size-18px font-bold color-#3d3d3d'>原作品地址</span>
+              </div>
+              <div className='my-10px flex gap-20px items-center'>
+                <Link to={workInfo.workUrl!} target='_blank'>
+                  {workInfo.workUrl}
+                </Link>
+                {verifyPixivWork(workInfo.workUrl!) && (
+                  <img className='w-15' src={pixiv} alt='pixiv' />
+                )}
+              </div>
               <div className='flex gap-10px items-center'>
                 <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
                 <span className='font-size-14px color-#6d757a'>
@@ -238,6 +251,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
               <div className='mt-10px flex gap-20px items-center'>
                 <Link
                   to={workInfo.illustrator!.homeUrl}
+                  target='_blank'
                   className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
                   <img
                     className='w-full h-full object-cover'
@@ -245,17 +259,11 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                     alt={workInfo.illustrator!.name}
                   />
                 </Link>
-                <Link className='color-#3d3d3d' to={workInfo.illustrator!.homeUrl}>
+                <Link className='color-#3d3d3d' to={workInfo.illustrator!.homeUrl} target='_blank'>
                   {workInfo.illustrator!.name}（点击前往个人主页）
                 </Link>
-                {workInfo.authorInfo.id !== id && isLogin && (
-                  <Button
-                    shape='round'
-                    size='large'
-                    type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
-                    onClick={handleFollow}>
-                    {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
-                  </Button>
+                {verifyPixivUser(workInfo.illustrator!.homeUrl) && (
+                  <img className='w-15' src={pixiv} alt='pixiv' />
                 )}
               </div>
             </div>

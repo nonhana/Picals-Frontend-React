@@ -170,7 +170,7 @@ export const getFollowingTotalAPI = (params?: Id) => {
 // 分页获取用户的粉丝列表
 export const getFansListAPI = (params: Pagination) => {
   return request<Pagination, UserItem[]>({
-    url: '/api/user/fans',
+    url: '/api/user/followers',
     method: 'GET',
     params,
   })
@@ -179,7 +179,7 @@ export const getFansListAPI = (params: Pagination) => {
 // 获取用户的粉丝总数
 export const getFansTotalAPI = (params?: Id) => {
   return request<Id, number>({
-    url: '/api/user/fans-count',
+    url: '/api/user/followers-count',
     method: 'GET',
     params,
   })

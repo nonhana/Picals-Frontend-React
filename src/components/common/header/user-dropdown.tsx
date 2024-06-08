@@ -29,6 +29,12 @@ const UserDropdown: FC<{
       case 'favorites':
         navigate(`/personal-center/${userInfo.id}/favorites`)
         break
+      case 'follow':
+        navigate(`/personal-center/${userInfo.id}/follow`)
+        break
+      case 'fans':
+        navigate(`/personal-center/${userInfo.id}/fans`)
+        break
       case 'history':
         // navigate(`/personal-center/${userInfo.id}/history`)
         console.log(value)
@@ -97,11 +103,15 @@ const UserDropdown: FC<{
             </div>
           </div>
           <div className='p-2.5 w-30 flex justify-between'>
-            <div className='h-9 flex flex-col justify-between items-start cursor-pointer'>
+            <div
+              className='h-9 flex flex-col justify-between items-start cursor-pointer'
+              onClick={() => selectItem('follow')}>
               <span className='font-size-14px color-#3d3d3d'>{userInfo.followNum}</span>
               <span className='font-size-12px color-#6d757a'>已关注</span>
             </div>
-            <div className='h-9 flex flex-col justify-between items-start cursor-pointer'>
+            <div
+              className='h-9 flex flex-col justify-between items-start cursor-pointer'
+              onClick={() => selectItem('fans')}>
               <span className='font-size-14px color-#3d3d3d'>{userInfo.fanNum}</span>
               <span className='font-size-12px color-#6d757a'>粉丝</span>
             </div>
