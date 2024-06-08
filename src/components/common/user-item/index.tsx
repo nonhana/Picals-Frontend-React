@@ -24,10 +24,8 @@ const UserItem: FC<UserItemProps> = ({
   isFollowing,
   width,
 }) => {
-  const {
-    isLogin,
-    userInfo: { id: localUserId },
-  } = useSelector((state: AppState) => state.user)
+  const { isLogin } = useSelector((state: AppState) => state.user)
+  const { id: localUserId } = useSelector((state: AppState) => state.user.userInfo)
   return (
     <div className='relative p-5 h-61 flex gap-5 rd-1 bg-white'>
       <Link

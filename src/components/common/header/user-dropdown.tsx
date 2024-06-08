@@ -16,9 +16,7 @@ const UserDropdown: FC<{
 }> = ({ visible, className, setVisible }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const {
-    user: { userInfo },
-  } = useSelector((state: AppState) => state)
+  const { userInfo } = useSelector((state: AppState) => state.user)
 
   const selectItem = (value: string) => {
     switch (value) {

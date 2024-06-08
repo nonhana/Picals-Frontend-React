@@ -27,10 +27,8 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   const [messageApi, contextHolder] = message.useMessage()
 
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
-  const {
-    userInfo: { id },
-    isLogin,
-  } = useSelector((state: AppState) => state.user)
+  const { isLogin } = useSelector((state: AppState) => state.user)
+  const { id } = useSelector((state: AppState) => state.user.userInfo)
 
   const [loading, setLoading] = useState(true)
   const [collecting, setCollecting] = useState(false)
@@ -92,21 +90,36 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     }, 1000)
   }, [])
 
+  // 防止图片列表预览组件因图片列表获取不完全而出现显示错误（setXxx是异步的）
+  const [imgList, setImgList] = useState<string[]>([])
+  const [imgListVisible, setImgListVisible] = useState(false)
+
+  useEffect(() => {
+    setImgListVisible(false)
+    setImgList(workInfo.imgList)
+  }, [workInfo.imgList])
+
+  useEffect(() => {
+    setImgListVisible(true)
+  }, [imgList])
+
   return (
     <>
       {contextHolder}
       <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center'>
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
-          <HanaViewer>
-            <div className='w-100% flex flex-col gap-10px'>
-              {workInfo?.imgList.map((img, index) => (
-                <PhotoView key={index} src={img}>
-                  <img src={img} alt={`${workInfo.name}-${index}`} />
-                </PhotoView>
-              ))}
-            </div>
-          </HanaViewer>
+          {imgListVisible && (
+            <HanaViewer>
+              <div className='w-100% flex flex-col gap-10px'>
+                {imgList.map((img, index) => (
+                  <PhotoView key={index} src={img}>
+                    <img src={img} alt={`${workInfo.name}-${index}`} />
+                  </PhotoView>
+                ))}
+              </div>
+            </HanaViewer>
+          )}
           {/* 操作栏 */}
           {isLogin && (
             <div className='w-100% mt-10px flex justify-end'>

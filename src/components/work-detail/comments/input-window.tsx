@@ -29,7 +29,7 @@ const InputWindow: FC<InputWindowProps> = ({
   onSubmit,
   replyTo,
 }) => {
-  const userInfo = useSelector((state: AppState) => state.user.userInfo)
+  const { userInfo } = useSelector((state: AppState) => state.user)
 
   const clearReplyInfo = () => {
     setReplyData({

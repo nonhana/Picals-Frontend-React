@@ -112,7 +112,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
       <div className='relative p-10px flex flex-col gap-5px'>
         <Link
           to={`/work-detail/${itemInfo.id}`}
-          className='cursor-pointer font-size-14px color-#3d3d3d font-bold'>
+          className='w-full cursor-pointer font-size-14px color-#3d3d3d font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
           <span>{itemInfo.name}</span>
         </Link>
         <div className='w-full flex justify-between '>
