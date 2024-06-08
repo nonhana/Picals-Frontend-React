@@ -9,21 +9,19 @@ import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
 import { Link } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
-import { useMap } from '@/hooks'
 import HanaViewer from '@/components/common/hana-viewer'
-import { likeActionsAPI, favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
+import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
+  setWorkInfo: (workInfo: WorkDetailInfo) => void
   authorWorkList: WorkNormalItemInfo[]
+  likeWork: (id: string) => void
 }
 
-const WorkInfo: FC<WorkInfoProps> = ({
-  workInfo: sourceWorkInfo,
-  authorWorkList: sourceWorkList,
-}) => {
+const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, likeWork }) => {
   const dispatch = useDispatch()
 
   const [messageApi, contextHolder] = message.useMessage()
@@ -35,21 +33,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
   } = useSelector((state: AppState) => state.user)
 
   const [loading, setLoading] = useState(true)
-  const [workInfo, setWorkInfo] = useState<WorkDetailInfo>(sourceWorkInfo)
   const [collecting, setCollecting] = useState(false)
   const [folderId, setFolderId] = useState<string>('')
-
-  const [authorWorkList, _, setAuthorWorkList] = useMap<WorkNormalItemInfo>(sourceWorkList)
-
-  // 喜欢当前作品
-  const handleLikeWork = async () => {
-    await likeActionsAPI({ id: workInfo.id })
-    setWorkInfo({
-      ...workInfo,
-      likeNum: workInfo.isLiked ? workInfo.likeNum - 1 : workInfo.likeNum + 1,
-      isLiked: !workInfo.isLiked,
-    })
-  }
 
   // 刷新收藏夹列表数据
   const refreshFavoriteList = async () => {
@@ -84,11 +69,6 @@ const WorkInfo: FC<WorkInfoProps> = ({
   }
   const onChooseFolder = (e: RadioChangeEvent) => {
     setFolderId(e.target.value)
-  }
-
-  // 喜欢作品列表中的作品
-  const handleLike = (id: string) => {
-    setAuthorWorkList(id, { ...authorWorkList.get(id)!, isLiked: !authorWorkList.get(id)!.isLiked })
   }
 
   // 关注用户
@@ -129,14 +109,14 @@ const WorkInfo: FC<WorkInfoProps> = ({
           </HanaViewer>
           {/* 操作栏 */}
           {isLogin && (
-            <div className='w-100% my-10px flex justify-end'>
+            <div className='w-100% mt-10px flex justify-end'>
               <div className='flex gap-40px'>
                 <Icon
                   className='cursor-pointer'
                   width='32px'
                   color={workInfo?.isLiked ? 'red' : '#3d3d3d'}
                   icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
-                  onClick={handleLikeWork}
+                  onClick={() => likeWork(workInfo.id)}
                 />
                 <Icon
                   className='cursor-pointer'
@@ -157,7 +137,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
             </div>
           )}
           {/* 作品信息 */}
-          <div className='w-150 flex flex-col gap-10px'>
+          <div className='w-150 mt-10px flex flex-col gap-10px'>
             <div className='font-bold font-size-18px color-#3d3d3d'>
               <span>{workInfo?.name}</span>
             </div>
@@ -223,27 +203,65 @@ const WorkInfo: FC<WorkInfoProps> = ({
               </Link>
             </div>
 
-            {authorWorkList.size === 0 ? (
+            {authorWorkList.length === 0 ? (
               <Empty showImg={false} text='暂无其他作品' />
             ) : (
               <LayoutList scrollType='work-normal'>
                 {Array.from(authorWorkList.values()).map((work, index) => (
-                  <WorkLittleItem key={index} itemInfo={work} like={handleLike} />
+                  <WorkLittleItem key={index} itemInfo={work} like={likeWork} />
                 ))}
               </LayoutList>
             )}
           </div>
+
+          {workInfo.isReprinted && (
+            <div className='bg-#f5f5f5 relative p-5 w-full'>
+              <div className='flex gap-10px items-center'>
+                <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
+                <span className='font-size-14px color-#6d757a'>
+                  目前共有{workInfo.illustrator!.workCount}个作品
+                </span>
+              </div>
+              <div className='mt-10px flex gap-20px items-center'>
+                <Link
+                  to={workInfo.illustrator!.homeUrl}
+                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
+                  <img
+                    className='w-full h-full object-cover'
+                    src={workInfo.illustrator!.avatar}
+                    alt={workInfo.illustrator!.name}
+                  />
+                </Link>
+                <Link className='color-#3d3d3d' to={workInfo.illustrator!.homeUrl}>
+                  {workInfo.illustrator!.name}（点击前往个人主页）
+                </Link>
+                {workInfo.authorInfo.id !== id && isLogin && (
+                  <Button
+                    shape='round'
+                    size='large'
+                    type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
+                    onClick={handleFollow}>
+                    {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
-        {isLogin && (
-          <>
-            <Divider />
-            {/* 评论 */}
-            <Comments loading={loading} totalCount={workInfo.commentNum} />
-          </>
-        )}
+        {isLogin &&
+          (workInfo.openComment ? (
+            <>
+              <Divider />
+              {/* 评论 */}
+              <Comments loading={loading} totalCount={workInfo.commentNum} />
+            </>
+          ) : (
+            <Empty showImg={false} text='该用户已关闭评论' />
+          ))}
       </div>
 
       <Modal
+        className='not-show-scrollbar '
         title='选择想要收藏的收藏夹'
         width='420px'
         open={collecting}

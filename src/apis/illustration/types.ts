@@ -17,10 +17,6 @@ export interface IUploadWorkReq {
      * 作者名，名称
      */
     name: string
-    /**
-     * 作品原链接
-     */
-    workUrl: string
   }
   /**
    * 图片列表
@@ -50,6 +46,10 @@ export interface IUploadWorkReq {
    * 是否开启评论
    */
   openComment: boolean
+  /**
+   * 作品原链接
+   */
+  workUrl?: string
 }
 
 export interface IEditWorkReq extends Partial<IUploadWorkReq> {
@@ -131,5 +131,16 @@ export interface WorkDetailInfo {
    * 被浏览次数
    */
   viewNum: number
+  /**
+   * 插画家信息（转载作品）
+   */
+  illustrator?: {
+    id: string
+    name: string
+    intro: string
+    avatar: string
+    homeUrl: string
+    workCount: number
+  }
 }
 // #endregion

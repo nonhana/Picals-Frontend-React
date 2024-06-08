@@ -47,31 +47,32 @@ const UserItem: FC<UserItemProps> = ({
           <span>{intro}</span>
         </div>
 
-        {isLogin && localUserId !== id ? (
-          isFollowing ? (
-            <Button
-              className='w-25'
-              shape='round'
-              size='large'
-              type='default'
-              onClick={() => follow(id)}>
-              已关注
-            </Button>
+        {isLogin &&
+          (localUserId !== id ? (
+            isFollowing ? (
+              <Button
+                className='w-25'
+                shape='round'
+                size='large'
+                type='default'
+                onClick={() => follow(id)}>
+                已关注
+              </Button>
+            ) : (
+              <Button
+                className='w-25'
+                shape='round'
+                size='large'
+                type='primary'
+                onClick={() => follow(id)}>
+                加关注
+              </Button>
+            )
           ) : (
-            <Button
-              className='w-25'
-              shape='round'
-              size='large'
-              type='primary'
-              onClick={() => follow(id)}>
-              加关注
+            <Button className='w-25' shape='round' size='large' type='primary' disabled>
+              你自己
             </Button>
-          )
-        ) : (
-          <Button className='w-25' shape='round' size='large' type='primary' disabled>
-            你自己
-          </Button>
-        )}
+          ))}
       </div>
 
       {!works || works.length === 0 ? (

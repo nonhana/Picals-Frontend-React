@@ -7,7 +7,7 @@ type UploadFormProps = {
   formInfo: UploadWorkFormInfo
   setFormInfo: React.Dispatch<React.SetStateAction<UploadWorkFormInfo>>
   setFormInfoCheck: React.Dispatch<React.SetStateAction<boolean>>
-  submitTrigger: boolean
+  submitTrigger: number
 }
 
 const wrapperStyle = 'relative bg-#fff w-155 p-5 rd-6 mb-5'
@@ -46,7 +46,6 @@ const UploadForm: FC<UploadFormProps> = ({
     getLabels()
   }, [])
 
-  const [isMounted, setIsMounted] = useState(false)
   const [messageApi, contextHolder] = message.useMessage()
   const [workForm] = Form.useForm()
 
@@ -78,26 +77,22 @@ const UploadForm: FC<UploadFormProps> = ({
     if (value) {
       setFormInfo((prevFormInfo) => ({
         ...prevFormInfo,
-        originInfo: {
-          url: '',
-          authorName: '',
-          authorHomepage: '',
+        illustratorInfo: {
+          name: '',
+          homeUrl: '',
         },
       }))
     } else {
       setFormInfo((prevFormInfo) => {
-        const { originInfo: _, ...rest } = prevFormInfo
+        const { illustratorInfo: _, ...rest } = prevFormInfo
         return rest
       })
     }
   }
 
   useEffect(() => {
-    if (isMounted) {
-      workForm.submit()
-    } else {
-      setIsMounted(true)
-    }
+    if (submitTrigger === 0) return
+    workForm.submit()
   }, [submitTrigger])
 
   return (
@@ -172,18 +167,18 @@ const UploadForm: FC<UploadFormProps> = ({
             <>
               <Form.Item<UploadWorkFormInfo>
                 label={<Label text='作品URL' />}
-                name={['originInfo', 'url']}
+                name={['basicInfo', 'workUrl']}
                 rules={[
                   { required: true, message: '请输入收藏作品的源地址！' },
                   { type: 'url', message: '请输入正确的URL地址！' },
                 ]}>
                 <Input
                   placeholder='请输入收藏作品的源地址'
-                  value={formInfo.originInfo?.url}
+                  value={formInfo.basicInfo.workUrl}
                   onChange={(e) =>
                     setFormInfo({
                       ...formInfo,
-                      basicInfo: { ...formInfo.basicInfo, name: e.target.value },
+                      basicInfo: { ...formInfo.basicInfo, workUrl: e.target.value },
                     })
                   }
                 />
@@ -191,7 +186,7 @@ const UploadForm: FC<UploadFormProps> = ({
 
               <Form.Item<UploadWorkFormInfo>
                 label={<Label text='原作者名' />}
-                name={['originInfo', 'authorName']}
+                name={['illustratorInfo', 'name']}
                 rules={[{ required: true, message: '请输入原作者的名称！' }]}>
                 <Input
                   placeholder='请输入您收藏原作品的原作者名称'
@@ -199,7 +194,7 @@ const UploadForm: FC<UploadFormProps> = ({
                   onChange={(e) =>
                     setFormInfo({
                       ...formInfo,
-                      basicInfo: { ...formInfo.basicInfo, name: e.target.value },
+                      illustratorInfo: { ...formInfo.illustratorInfo!, name: e.target.value },
                     })
                   }
                 />
@@ -207,7 +202,7 @@ const UploadForm: FC<UploadFormProps> = ({
 
               <Form.Item<UploadWorkFormInfo>
                 label={<Label text='作者主页' />}
-                name={['originInfo', 'authorHomepage']}
+                name={['illustratorInfo', 'homeUrl']}
                 rules={[
                   { required: true, message: '请输入原作者的主页url地址！' },
                   { type: 'url', message: '请输入正确的URL地址！' },
@@ -218,7 +213,7 @@ const UploadForm: FC<UploadFormProps> = ({
                   onChange={(e) =>
                     setFormInfo({
                       ...formInfo,
-                      basicInfo: { ...formInfo.basicInfo, name: e.target.value },
+                      illustratorInfo: { ...formInfo.illustratorInfo!, homeUrl: e.target.value },
                     })
                   }
                 />
@@ -293,11 +288,19 @@ const UploadForm: FC<UploadFormProps> = ({
               这个小站只是因纯粹的热爱而搭建，大家所上传的图片全部都会在后台管理系统进行审核，通过后会在本站进行展示。
             </span>
             <span>包含以下要素的作品将不予上传：</span>
-            <span>现实世界的照片（这是二次元，二次元，二次元）；</span>
-            <span>转载时，原作者明确要求不能转载的；</span>
-            <span>
-              他人制作的作品，发售中的商品图像，第三者持有权利的图像，游戏、视频作品的截图，包含屏幕截图图像的作品。
-            </span>
+            <ul className='flex flex-col m-0 pl-5 gap-10px'>
+              <li>
+                <span>现实世界的照片（这是二次元，二次元，二次元）；</span>
+              </li>
+              <li>
+                <span>转载时，原作者明确要求不能转载的；</span>
+              </li>
+              <li>
+                <span>
+                  他人制作的作品，发售中的商品图像，第三者持有权利的图像，游戏、视频作品的截图，包含屏幕截图图像的作品。
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
       </Form>

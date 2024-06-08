@@ -77,12 +77,13 @@ export interface WorkDetailInfo {
     intro: string
     isFollowing: boolean
   }
-  illustratorInfo?: {
+  illustrator?: {
     id: string
-    username: string
+    name: string
     avatar: string
     intro: string
-    homepage: string
+    homeUrl: string
+    workCount: number
   }
 }
 
@@ -147,18 +148,13 @@ export interface UploadWorkFormInfo {
     isReprinted: boolean
     openComment: boolean
     isAIGenerated: boolean
+    workUrl?: string
   }
-  labels: string[] // 标签id列表
-  originInfo?: {
-    url: string
-    authorName: string
-    authorHomepage: string
+  labels: string[]
+  illustratorInfo?: {
+    name: string
+    homeUrl: string
   }
-}
-
-// 上传作品信息
-export interface UploadWorkInfo extends UploadWorkFormInfo {
-  imgList: string[]
 }
 
 // 收藏夹item信息

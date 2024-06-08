@@ -17,6 +17,7 @@ type EmptyProps = {
   height?: number | string
   text?: string
   showImg?: boolean
+  children?: React.ReactNode
 }
 
 const Empty: FC<EmptyProps> = ({
@@ -25,6 +26,7 @@ const Empty: FC<EmptyProps> = ({
   text = '暂无数据',
   showImg = true,
   className = '',
+  children,
 }) => {
   const [randomImg, setRandomImg] = useState<string | undefined>(undefined)
 
@@ -43,6 +45,7 @@ const Empty: FC<EmptyProps> = ({
         </LazyLoad>
       )}
       <span className='color-#858585 font-size-14px font-bold'>{text}</span>
+      {children}
     </div>
   )
 }

@@ -3,8 +3,8 @@ import { LabelDetailInfo, INewLabelReq } from './types'
 import { LabelItem, Name, Pagination } from '../types'
 
 // 新建标签
-export const newLabelAPI = (data: INewLabelReq) => {
-  return request<INewLabelReq, undefined>({
+export const newLabelAPI = (data: INewLabelReq[]) => {
+  return request<INewLabelReq[], undefined>({
     url: '/api/label/new',
     method: 'POST',
     data,

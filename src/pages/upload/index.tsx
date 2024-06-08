@@ -5,7 +5,7 @@ import UploadForm from '@/components/upload/form'
 import UploadSuccess from '@/components/upload/success'
 import type { UploadFile } from 'antd'
 import { Button } from 'antd'
-import type { UploadWorkFormInfo, UploadWorkInfo } from '@/utils/types'
+import type { UploadWorkFormInfo } from '@/utils/types'
 import { uploadWorkAPI } from '@/apis'
 
 const Upload: FC = () => {
@@ -23,36 +23,18 @@ const Upload: FC = () => {
   })
   const [formInfoCheck, setFormInfoCheck] = useState<boolean>(false)
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
-  const [workInfo, setWorkInfo] = useState<UploadWorkInfo>({
-    basicInfo: {
-      name: '',
-      intro: '',
-      isReprinted: false,
-      openComment: false,
-      isAIGenerated: false,
-    },
-    labels: [],
-    imgList: [],
-  })
-  const [submitTrigger, setSubmitTrigger] = useState(false)
-
-  useEffect(() => {
-    setWorkInfo({
-      ...workInfo,
-      basicInfo: formInfo.basicInfo,
-      labels: formInfo.labels,
-      originInfo: formInfo.originInfo,
-      imgList: imgList.map((file) => (file.response ? file.response.data : file.url)),
-    })
-  }, [formInfo, imgList])
+  const [submitTrigger, setSubmitTrigger] = useState(0)
 
   const uploadWork = async () => {
     try {
-      await uploadWorkAPI({
-        ...workInfo.basicInfo,
-        labels: workInfo.labels,
-        imgList: workInfo.imgList,
-      })
+      const uploadWorkInfo = {
+        ...formInfo.basicInfo,
+        labels: formInfo.labels,
+        imgList: imgList.map((file) => (file.response ? file.response.data : file.url)),
+        illustratorInfo: formInfo.illustratorInfo,
+      }
+      console.log('uploadWorkInfo', uploadWorkInfo)
+      await uploadWorkAPI(uploadWorkInfo)
       setUploadSuccess(true)
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -62,14 +44,13 @@ const Upload: FC = () => {
 
   useEffect(() => {
     if (!formInfoCheck) return
-    console.log('表单验证成功', workInfo)
     uploadWork()
   }, [formInfoCheck])
 
   return (
     <div className='relative w-100% min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
       {uploadSuccess ? (
-        <UploadSuccess workName={workInfo.basicInfo.name} />
+        <UploadSuccess workName={formInfo.basicInfo.name} />
       ) : (
         <>
           <ImgUpload imgList={imgList} setImgList={setImgList} />
@@ -93,7 +74,7 @@ const Upload: FC = () => {
               shape='round'
               size='large'
               type='primary'
-              onClick={() => setSubmitTrigger(!submitTrigger)}>
+              onClick={() => setSubmitTrigger((prev) => prev + 1)}>
               投稿作品
             </Button>
           </div>
