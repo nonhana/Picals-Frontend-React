@@ -23,6 +23,7 @@ type InfoModalProps = {
 const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) => {
   const {
     userInfo: { id },
+    isLogin,
   } = useSelector((state: AppState) => state.user)
 
   return (
@@ -38,7 +39,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
               </div>
             </HanaViewer>
             <span>{info.username}</span>
-            {id !== info.id && (
+            {isLogin && id !== info.id && (
               <Button
                 type={info.isFollowed ? 'default' : 'primary'}
                 size='large'

@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useMemo, useCallback } from 'react'
+import { FC, useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import WorkInfo from '@/components/work-detail/work-info'
 import UserInfo from '@/components/work-detail/user-info'
@@ -9,17 +9,16 @@ import {
   userActionsAPI,
   getUserSimpleAPI,
   addWorkViewAPI,
+  likeActionsAPI,
 } from '@/apis'
+import { useMap } from '@/hooks'
 
 const WorkDetail: FC = () => {
   const { workId } = useParams<{ workId: string }>()
 
-  const [workInfoLoading, setWorkInfoLoading] = useState(true)
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
-  const [userInfoLoading, setUserInfoLoading] = useState(true)
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
-  const [authorWorkListLoading, setAuthorWorkListLoading] = useState(true)
-  const [authorWorkList, setAuthorWorkList] = useState<WorkNormalItemInfo[]>([])
+  const [authorWorkList, setAuthorWorkList, updateAuthorWorkList] = useMap<WorkNormalItemInfo>([])
 
   const addWorkView = async () => {
     try {
@@ -32,9 +31,7 @@ const WorkDetail: FC = () => {
 
   const fetchWorkDetail = async () => {
     try {
-      setWorkInfoLoading(true)
       const { data } = await getWorkDetailAPI({ id: workId! })
-      console.log('data', data)
       const { authorId, ...rest } = data
       const authorInfo = (await getUserSimpleAPI({ id: authorId })).data
       const labels = data.labels.map((label) => ({ value: label.id, label: label.name }))
@@ -43,16 +40,11 @@ const WorkDetail: FC = () => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
-    } finally {
-      setWorkInfoLoading(false)
     }
   }
 
   const fetchUserInfoAndWorks = async (authorId: string) => {
     try {
-      setUserInfoLoading(true)
-      setAuthorWorkListLoading(true)
-
       const userInfoPromise = getUserSimpleAPI({ id: authorId })
       const authorWorksListPromise = getUserWorksListAPI({ id: authorId, pageSize: 30, current: 1 })
 
@@ -75,9 +67,6 @@ const WorkDetail: FC = () => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
-    } finally {
-      setUserInfoLoading(false)
-      setAuthorWorkListLoading(false)
     }
   }
 
@@ -87,10 +76,8 @@ const WorkDetail: FC = () => {
   }, [workId])
 
   useEffect(() => {
-    if (workInfo) {
-      fetchUserInfoAndWorks(workInfo.authorInfo.id)
-    }
-  }, [workInfo])
+    if (workInfo) fetchUserInfoAndWorks(workInfo.authorInfo.id)
+  }, [workInfo?.id])
 
   const follow = useCallback(
     async (id: string) => {
@@ -106,25 +93,59 @@ const WorkDetail: FC = () => {
     [userInfo],
   )
 
-  const workInfoContent = useMemo(() => {
-    if (workInfo && !workInfoLoading && !authorWorkListLoading) {
-      return <WorkInfo workInfo={workInfo} authorWorkList={authorWorkList} />
+  const likeWork = async (id: string) => {
+    if (workId === id) {
+      setWorkInfo((prev) => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          likeNum: prev.isLiked ? prev.likeNum - 1 : prev.likeNum + 1,
+          isLiked: !prev.isLiked,
+        }
+      })
     }
-    return <div>Loading...</div> // TODO: 预计替换为骨架屏
-  }, [workInfo, workInfoLoading, authorWorkListLoading, authorWorkList])
+    await likeActions(id)
+    updateAuthorWorkList(id, {
+      ...authorWorkList.get(id)!,
+      isLiked: !authorWorkList.get(id)!.isLiked,
+    })
+  }
 
-  const userInfoContent = useMemo(() => {
-    if (userInfo && !userInfoLoading && !authorWorkListLoading) {
-      return <UserInfo onFollow={follow} userInfo={userInfo} authorWorkList={authorWorkList} />
+  const likeActions = async (id: string) => {
+    try {
+      await likeActionsAPI({ id })
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
     }
-    return <div>Loading...</div> // TODO: 预计替换为骨架屏
-  }, [userInfo, userInfoLoading, authorWorkListLoading, authorWorkList, follow])
+  }
 
   return (
     <div className='bg-#f5f5f5 w-100% flex justify-center'>
       <div className='flex gap-5 my-5'>
-        <div>{workInfoContent}</div>
-        <div>{userInfoContent}</div>
+        <div>
+          {workInfo ? (
+            <WorkInfo
+              workInfo={workInfo}
+              setWorkInfo={setWorkInfo}
+              likeWork={likeWork}
+              authorWorkList={Array.from(authorWorkList.values())}
+            />
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
+        <div>
+          {userInfo ? (
+            <UserInfo
+              onFollow={follow}
+              userInfo={userInfo}
+              authorWorkList={Array.from(authorWorkList.values())}
+            />
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -6,7 +6,7 @@ import { Input, Button, message } from 'antd'
 import type { InputRef } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
@@ -23,6 +23,8 @@ type HeaderProps = {
 const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBarVisible }) => {
   const dispatch = useDispatch()
 
+  const searchParams = useSearchParams()[0]
+  const searchLabel = searchParams.get('label')
   const location = useLocation()
   const navigate = useNavigate()
   const [showSidebar, setShowSidebar] = useState(false)
@@ -54,6 +56,10 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
 
   const searchRef = useRef<InputRef>(null)
   const [keyword, setKeyword] = useState('')
+
+  useEffect(() => {
+    setKeyword(searchParams.get('label') || '')
+  }, [searchLabel])
 
   const handleSearch = (value: string) => {
     value = value.trim()
