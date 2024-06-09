@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { InboxOutlined } from '@ant-design/icons'
-import type { UploadProps, UploadFile } from 'antd'
+import type { UploadProps } from 'antd'
 import { message, Upload, notification } from 'antd'
 import HanaViewer from '@/components/common/hana-viewer'
 import { PhotoView } from 'react-photo-view'
@@ -8,8 +8,8 @@ import { PhotoView } from 'react-photo-view'
 const { Dragger } = Upload
 
 type ImgUploadProps = {
-  imgList: UploadFile[]
-  setImgList: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>
+  imgList: string[]
+  setImgList: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
@@ -22,7 +22,7 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
     onChange(info) {
       const { status } = info.file
       if (status === 'done') {
-        setImgList([...imgList, info.file])
+        setImgList([...imgList, info.file.response ? info.file.response.data : info.file.url])
         message.success(`${info.file.name} 上传成功`)
       } else if (status === 'error') {
         notification.error({
@@ -51,14 +51,10 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
 
       <div className='w-212 flex flex-wrap gap-5'>
         <HanaViewer onDelete={onDelete}>
-          {imgList.map((file, index) => (
+          {imgList.map((url, index) => (
             <div key={index} className='w-29.5 h-29.5 rd-1 overflow-hidden cursor-pointer'>
-              <PhotoView key={index} src={file.response ? file.response.data : file.url}>
-                <img
-                  className='w-full h-full object-cover'
-                  src={file.response ? file.response.data : file.url}
-                  alt={file.name}
-                />
+              <PhotoView key={index} src={url}>
+                <img className='w-full h-full object-cover' src={url} alt={url} />
               </PhotoView>
             </div>
           ))}

@@ -7,7 +7,7 @@ import { Button, Divider, Modal, Radio, RadioChangeEvent, message } from 'antd'
 import WorkLittleItem from '@/components/common/work-little-item'
 import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
 import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
@@ -15,6 +15,8 @@ import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
 import pixiv from '@/assets/svgs/pixiv.svg'
 import { verifyPixivUser, verifyPixivWork } from '@/utils'
+
+const { confirm } = Modal
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -24,6 +26,8 @@ type WorkInfoProps = {
 }
 
 const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, likeWork }) => {
+  const navigate = useNavigate()
+
   const dispatch = useDispatch()
 
   const [messageApi, contextHolder] = message.useMessage()
@@ -105,6 +109,18 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     setImgListVisible(true)
   }, [imgList])
 
+  const handleEdit = () => {
+    confirm({
+      title: '是否要进入编辑页面？',
+      content: '进入编辑页，可重新编辑该作品的全部信息',
+      okText: '确认',
+      cancelText: '取消',
+      onOk() {
+        navigate(`/upload?type=edit&workId=${workInfo.id}`)
+      },
+    })
+  }
+
   return (
     <>
       {contextHolder}
@@ -148,6 +164,15 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                   color='#3d3d3d'
                   icon='ant-design:share-alt-outlined'
                 />
+                {id === workInfo.authorInfo.id && (
+                  <Icon
+                    className='cursor-pointer'
+                    width='32px'
+                    color='#3d3d3d'
+                    icon='ant-design:edit-outlined'
+                    onClick={handleEdit}
+                  />
+                )}
               </div>
             </div>
           )}
@@ -234,7 +259,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
               <div className='flex gap-10px items-center'>
                 <span className='font-size-18px font-bold color-#3d3d3d'>原作品地址</span>
               </div>
-              <div className='my-10px flex gap-20px items-center'>
+              <div className='my-10px flex gap-20px items-center flex justify-between'>
                 <Link to={workInfo.workUrl!} target='_blank'>
                   {workInfo.workUrl}
                 </Link>
@@ -242,26 +267,32 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                   <img className='w-15' src={pixiv} alt='pixiv' />
                 )}
               </div>
+              <Divider />
               <div className='flex gap-10px items-center'>
                 <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
                 <span className='font-size-14px color-#6d757a'>
                   目前共有{workInfo.illustrator!.workCount}个作品
                 </span>
               </div>
-              <div className='mt-10px flex gap-20px items-center'>
-                <Link
-                  to={workInfo.illustrator!.homeUrl}
-                  target='_blank'
-                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
-                  <img
-                    className='w-full h-full object-cover'
-                    src={workInfo.illustrator!.avatar}
-                    alt={workInfo.illustrator!.name}
-                  />
-                </Link>
-                <Link className='color-#3d3d3d' to={workInfo.illustrator!.homeUrl} target='_blank'>
-                  {workInfo.illustrator!.name}（点击前往个人主页）
-                </Link>
+              <div className='mt-10px flex items-center justify-between'>
+                <div className='flex gap-20px items-center'>
+                  <Link
+                    to={workInfo.illustrator!.homeUrl}
+                    target='_blank'
+                    className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
+                    <img
+                      className='w-full h-full object-cover'
+                      src={workInfo.illustrator!.avatar}
+                      alt={workInfo.illustrator!.name}
+                    />
+                  </Link>
+                  <Link
+                    className='color-#3d3d3d'
+                    to={workInfo.illustrator!.homeUrl}
+                    target='_blank'>
+                    {workInfo.illustrator!.name}（点击前往个人主页）
+                  </Link>
+                </div>
                 {verifyPixivUser(workInfo.illustrator!.homeUrl) && (
                   <img className='w-15' src={pixiv} alt='pixiv' />
                 )}

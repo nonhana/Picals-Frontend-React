@@ -1,16 +1,24 @@
 import { FC, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import ImgUpload from '@/components/upload/img-upload'
 import UploadForm from '@/components/upload/form'
 import UploadSuccess from '@/components/upload/success'
-import type { UploadFile } from 'antd'
-import { Button } from 'antd'
+import { Button, notification } from 'antd'
 import type { UploadWorkFormInfo } from '@/utils/types'
-import { uploadWorkAPI } from '@/apis'
+import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 
 const Upload: FC = () => {
+  const { id: localUserId } = useSelector((state: AppState) => state.user.userInfo)
+
   const navigate = useNavigate()
-  const [imgList, setImgList] = useState<UploadFile[]>([])
+  const workStatus = useSearchParams()[0].get('type')
+  const workId = useSearchParams()[0].get('workId')
+  const editMode = workStatus && workId && workStatus === 'edit'
+
+  const [imgList, setImgList] = useState<string[]>([])
   const [formInfo, setFormInfo] = useState<UploadWorkFormInfo>({
     basicInfo: {
       name: '',
@@ -21,7 +29,62 @@ const Upload: FC = () => {
     },
     labels: [],
   })
-  const [formInfoCheck, setFormInfoCheck] = useState<boolean>(false)
+
+  const [showEditForm, setShowEditForm] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (editMode) {
+      const fetchWorkDetail = async () => {
+        try {
+          const { data } = await getWorkDetailAPI({ id: workId! })
+
+          if (!data) {
+            notification.error({
+              message: '作品不存在！',
+              description: '请检查作品 ID 是否正确，不要随便输入 ID 哦！',
+            })
+            return
+          }
+          if (data.authorId !== localUserId) {
+            notification.error({
+              message: '无权编辑！',
+              description: '只能编辑自己的作品哦！',
+            })
+            return
+          }
+
+          const originWorkInfo: UploadWorkFormInfo = {
+            basicInfo: {
+              name: data.name,
+              intro: data.intro,
+              isReprinted: data.isReprinted,
+              openComment: data.openComment,
+              isAIGenerated: data.isAIGenerated,
+            },
+            labels: data.labels.map((label) => label.name),
+          }
+          if (data.isReprinted) {
+            originWorkInfo.basicInfo.workUrl = data.workUrl
+            originWorkInfo.illustratorInfo = {
+              name: data.illustrator!.name,
+              homeUrl: data.illustrator!.homeUrl,
+            }
+          }
+          setImgList(data.imgList)
+          setFormInfo(originWorkInfo)
+        } catch (error) {
+          console.log('出现错误了喵！！', error)
+          return
+        }
+      }
+      fetchWorkDetail()
+    }
+  }, [editMode])
+
+  useEffect(() => {
+    if (editMode && formInfo.basicInfo.name) setShowEditForm(true)
+  }, [workStatus, formInfo.basicInfo.name])
+
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
   const [submitTrigger, setSubmitTrigger] = useState(0)
 
@@ -30,22 +93,20 @@ const Upload: FC = () => {
       const uploadWorkInfo = {
         ...formInfo.basicInfo,
         labels: formInfo.labels,
-        imgList: imgList.map((file) => (file.response ? file.response.data : file.url)),
+        imgList,
         illustratorInfo: formInfo.illustratorInfo,
       }
-      console.log('uploadWorkInfo', uploadWorkInfo)
-      await uploadWorkAPI(uploadWorkInfo)
+      if (workStatus && workId && workStatus === 'edit') {
+        await editWorkAPI({ id: workId!, ...uploadWorkInfo })
+      } else {
+        await uploadWorkAPI(uploadWorkInfo)
+      }
       setUploadSuccess(true)
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
     }
   }
-
-  useEffect(() => {
-    if (!formInfoCheck) return
-    uploadWork()
-  }, [formInfoCheck])
 
   return (
     <div className='relative w-100% min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
@@ -54,12 +115,18 @@ const Upload: FC = () => {
       ) : (
         <>
           <ImgUpload imgList={imgList} setImgList={setImgList} />
-          <UploadForm
-            formInfo={formInfo}
-            setFormInfo={setFormInfo}
-            submitTrigger={submitTrigger}
-            setFormInfoCheck={setFormInfoCheck}
-          />
+          {showEditForm || !editMode ? (
+            <UploadForm
+              formInfo={formInfo}
+              setFormInfo={setFormInfo}
+              submitTrigger={submitTrigger}
+              uploadWork={uploadWork}
+            />
+          ) : (
+            <div className='relative h-100'>
+              <Empty text='看到这个，你肯定是做了一些不好的事情，对吗？' />
+            </div>
+          )}
           <div className='flex gap-5'>
             <Button
               className='w-50'

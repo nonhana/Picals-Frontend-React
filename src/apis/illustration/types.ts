@@ -132,6 +132,10 @@ export interface WorkDetailInfo {
    */
   viewNum: number
   /**
+   * 原作品地址（转载作品）
+   */
+  workUrl?: string
+  /**
    * 插画家信息（转载作品）
    */
   illustrator?: {
