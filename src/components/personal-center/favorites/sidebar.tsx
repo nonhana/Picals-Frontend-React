@@ -35,7 +35,7 @@ const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
 
 type SidebarProps = {
   folderList: FavoriteItemInfo[]
-  setFolderList: (list: FavoriteItemInfo[]) => void
+  setFolderList: (folderList: FavoriteItemInfo[]) => void
   fetchFavoriteList: () => Promise<void>
 }
 
@@ -66,8 +66,8 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
     const moveDataList = [...folderList]
     const { activeIndex, overIndex } = getMoveIndex(moveDataList, dragItem)
     const newDataList = arrayMove(moveDataList, activeIndex, overIndex)
-    await changeFavoriteOrder(newDataList)
     setFolderList(newDataList)
+    await changeFavoriteOrder(newDataList)
   }
 
   // 调用接口更改收藏夹的排序
@@ -78,7 +78,6 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
         order: index,
       }))
       await changeFavoriteOrderAPI({ orderList })
-      await fetchFavoriteList()
       messageApi.success('排序成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)

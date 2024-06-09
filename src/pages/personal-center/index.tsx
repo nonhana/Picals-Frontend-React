@@ -63,16 +63,16 @@ const PersonalCenter: FC = () => {
 
   return (
     <PersonalContext.Provider value={{ isMe, currentPath, userId: userId! }}>
-      <div className='relative w-100% flex flex-col items-center'>
+      <div className='relative w-full flex flex-col items-center'>
         <Header />
         <Menu
-          className='w-350'
+          className='w-full max-w-350'
           onClick={checkoutMenu}
           selectedKeys={[currentPath]}
           mode='horizontal'
           items={items}
         />
-        <div className='mb-5'>
+        <div className='relative w-full max-w-350 mb-5 px-15 flex justify-center'>
           <Outlet />
         </div>
       </div>

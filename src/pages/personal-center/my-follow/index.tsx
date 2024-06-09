@@ -23,7 +23,7 @@ const MyFollow: FC = () => {
   }, [userId])
 
   return (
-    <div className='relative w-320'>
+    <div className='relative w-full'>
       <div className='flex gap-10px py-5 items-center'>
         <span className='title'>关注列表</span>
         <div className='bg-#858585 rd-full py-3px px-6px font-size-14px color-#fff font-bold'>
