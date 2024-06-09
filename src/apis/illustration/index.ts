@@ -57,6 +57,15 @@ export const editWorkAPI = (data: IEditWorkReq) => {
   })
 }
 
+// 删除作品
+export const deleteWorkAPI = (params: Id) => {
+  return request<Id, undefined>({
+    url: '/api/illustration/delete',
+    method: 'POST',
+    params,
+  })
+}
+
 // 获取某个作品的详细信息
 export const getWorkDetailAPI = (params: Id) => {
   return request<Id, WorkDetailInfo>({

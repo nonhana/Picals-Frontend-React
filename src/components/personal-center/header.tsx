@@ -86,15 +86,15 @@ const Header: FC = () => {
 
   return (
     <>
-      <div className='relative w-100%'>
-        <div className='relative w-100% h-120 overflow-hidden'>
+      <div className='relative w-full'>
+        <div className='relative w-full h-120 overflow-hidden'>
           <img
             className='w-full h-full object-cover'
             src={userInfo.background_img}
             alt={userInfo.background_img}
           />
         </div>
-        <div className='relative mx-auto w-350 p-5 flex justify-between'>
+        <div className='relative mx-auto w-full max-w-350 p-5 flex justify-between'>
           <div className='flex gap-5'>
             <div className='border-solid border-2px border-#fff mt--17 w-24 h-24 rd-full overflow-hidden cursor-pointer z-1'>
               <HanaViewer>
