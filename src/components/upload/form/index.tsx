@@ -6,8 +6,8 @@ import { getLabelsInPagesAPI } from '@/apis'
 type UploadFormProps = {
   formInfo: UploadWorkFormInfo
   setFormInfo: React.Dispatch<React.SetStateAction<UploadWorkFormInfo>>
-  setFormInfoCheck: React.Dispatch<React.SetStateAction<boolean>>
   submitTrigger: number
+  uploadWork: () => void
 }
 
 const wrapperStyle = 'relative bg-#fff w-155 p-5 rd-6 mb-5'
@@ -24,12 +24,7 @@ const Label: FC<{ text: string }> = ({ text }) => {
   )
 }
 
-const UploadForm: FC<UploadFormProps> = ({
-  formInfo,
-  setFormInfo,
-  submitTrigger,
-  setFormInfoCheck,
-}) => {
+const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger, uploadWork }) => {
   const [labels, setLabels] = useState<{ value: string; label: string }[]>([])
 
   const getLabels = async () => {
@@ -49,14 +44,10 @@ const UploadForm: FC<UploadFormProps> = ({
   const [messageApi, contextHolder] = message.useMessage()
   const [workForm] = Form.useForm()
 
-  const submitWork: FormProps<UploadWorkFormInfo>['onFinish'] = (values) => {
-    console.log('Success:', values)
-    setFormInfoCheck(true)
-  }
+  const submitWork: FormProps<UploadWorkFormInfo>['onFinish'] = () => uploadWork()
 
   const handleFailed: FormProps<UploadWorkFormInfo>['onFinishFailed'] = () => {
     messageApi.error('检查一下表单是否填写完整！')
-    setFormInfoCheck(false)
   }
 
   const handleSelectLabel = (value: string[]) => {
@@ -105,7 +96,7 @@ const UploadForm: FC<UploadFormProps> = ({
         labelAlign='left'
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
-        initialValues={{ remember: true }}
+        initialValues={formInfo}
         onFinish={submitWork}
         onFinishFailed={handleFailed}
         autoComplete='off'>

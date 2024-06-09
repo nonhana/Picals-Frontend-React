@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
@@ -27,6 +27,7 @@ type WorkNormalItemProps = {
 }
 
 const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork }) => {
+  const navigate = useNavigate()
   const { userId, currentPath } = useContext(PersonalContext)
 
   const { isLogin } = useSelector((state: AppState) => state.user)
@@ -39,7 +40,7 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork })
         handleDelete(itemInfo.id)
         break
       case 'edit':
-        console.log('编辑作品')
+        handleEdit(itemInfo.id)
         break
       default:
         break
@@ -54,6 +55,18 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork })
       cancelText: '取消',
       onOk() {
         deleteWork && deleteWork(id)
+      },
+    })
+  }
+
+  const handleEdit = (id: string) => {
+    confirm({
+      title: '是否要进入编辑页面？',
+      content: '进入编辑页，可重新编辑该作品的全部信息',
+      okText: '确认',
+      cancelText: '取消',
+      onOk() {
+        navigate(`/upload?type=edit&workId=${id}`)
       },
     })
   }
