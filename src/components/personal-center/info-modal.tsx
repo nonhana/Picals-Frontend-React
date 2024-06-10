@@ -37,6 +37,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
               </div>
             </HanaViewer>
             <span>{info.username}</span>
+            <span className='font-normal font-size-14px color-#6d757a'>{info.email}</span>
             {isLogin && id !== info.id && (
               <Button
                 type={info.isFollowed ? 'default' : 'primary'}

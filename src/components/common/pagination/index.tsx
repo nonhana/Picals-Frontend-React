@@ -52,7 +52,7 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
           key={1}
           className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === 1 ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
           onClick={() => onChange(1)}>
-          <span className={`${current === 1 ? 'color-white' : 'color-#858585'}`}>1</span>
+          <span className={`${current === 1 ? 'color-white' : 'color-#6d757a'}`}>1</span>
         </div>,
       )
     }
@@ -75,7 +75,7 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
           key={i}
           className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${i === current ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
           onClick={() => onChange(i)}>
-          <span className={`${i === current ? 'color-white' : 'color-#858585'}`}>{i}</span>
+          <span className={`${i === current ? 'color-white' : 'color-#6d757a'}`}>{i}</span>
         </div>,
       )
     }
@@ -97,7 +97,7 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
           key={totalPages}
           className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === totalPages ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
           onClick={() => onChange(totalPages)}>
-          <span className={`${current === totalPages ? 'color-white' : 'color-#858585'}`}>
+          <span className={`${current === totalPages ? 'color-white' : 'color-#6d757a'}`}>
             {totalPages}
           </span>
         </div>,

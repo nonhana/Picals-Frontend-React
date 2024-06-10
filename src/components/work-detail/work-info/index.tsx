@@ -192,15 +192,15 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
               ))}
             </div>
             <div className='flex my-3 gap-20px'>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+              <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
                 <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
                 <span>{workInfo?.likeNum}</span>
               </div>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+              <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
                 <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
                 <span> {workInfo?.viewNum}</span>
               </div>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+              <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
                 <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
                 <span>{workInfo?.collectNum}</span>
               </div>
