@@ -6,6 +6,8 @@ import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
 import { CSSTransition } from 'react-transition-group'
 import { Modal, message } from 'antd'
 import { logout } from '@/store/modules/user'
+import { clear } from '@/store/modules/searchHistory'
+import { reset } from '@/store/modules/favorites'
 
 const { confirm } = Modal
 
@@ -36,11 +38,11 @@ const UserDropdown: FC<{
         navigate(`/personal-center/${userInfo.id}/fans`)
         break
       case 'history':
-        // navigate(`/personal-center/${userInfo.id}/history`)
+        message.info('该功能暂未开放，敬请期待~！')
         console.log(value)
         break
       case 'profile':
-        // navigate(`/personal-center/${userInfo.id}/profile`)
+        message.info('该功能暂未开放，敬请期待~！')
         console.log(value)
         break
       default:
@@ -56,6 +58,8 @@ const UserDropdown: FC<{
       cancelText: '取消',
       onOk() {
         dispatch(logout())
+        dispatch(clear())
+        dispatch(reset())
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
         message.success('退出登录成功')

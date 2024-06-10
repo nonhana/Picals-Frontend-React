@@ -18,7 +18,7 @@ import Empty from '@/components/common/empty'
 import { PersonalContext } from '..'
 
 const MyFavorites: FC = () => {
-  const { userId } = useContext(PersonalContext)
+  const { isMe, userId } = useContext(PersonalContext)
 
   const dispatch = useDispatch()
 
@@ -125,7 +125,7 @@ const MyFavorites: FC = () => {
     try {
       const { data } = await getUserFavoriteListAPI({ id: userId! })
       data.sort((a, b) => a.order - b.order)
-      dispatch(setFavoriteList(data))
+      if (isMe) dispatch(setFavoriteList(data))
       setFolderList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)

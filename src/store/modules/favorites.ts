@@ -10,12 +10,15 @@ const favoriteStore = createSlice({
     setFavoriteList(state, action) {
       state.favoriteList = action.payload
     },
+    reset(state) {
+      state.favoriteList = []
+    },
   },
 })
 
-const { setFavoriteList } = favoriteStore.actions
+const { setFavoriteList, reset } = favoriteStore.actions
 
 const favoriteReducer = favoriteStore.reducer
 
-export { setFavoriteList }
+export { setFavoriteList, reset }
 export default favoriteReducer
