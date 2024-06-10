@@ -26,6 +26,13 @@ type WorkInfoProps = {
 }
 
 const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, likeWork }) => {
+  const workIntro = workInfo.intro.split('\n').map((item, index) => (
+    <span key={index}>
+      {item}
+      <br />
+    </span>
+  ))
+
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
@@ -69,11 +76,13 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   }
   const cancelCollect = () => {
     setCollecting(false)
-    setFolderId('')
   }
   const onChooseFolder = (e: RadioChangeEvent) => {
     setFolderId(e.target.value)
   }
+  useEffect(() => {
+    if (!collecting) setFolderId('')
+  }, [collecting])
 
   // 关注用户
   const handleFollow = async () => {
@@ -145,16 +154,16 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                 <Icon
                   className='cursor-pointer'
                   width='32px'
-                  color={workInfo?.isLiked ? 'red' : '#3d3d3d'}
-                  icon={workInfo?.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
+                  color={workInfo.isLiked ? 'red' : '#3d3d3d'}
+                  icon={workInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
                   onClick={() => likeWork(workInfo.id)}
                 />
                 <Icon
                   className='cursor-pointer'
                   width='32px'
-                  color={workInfo?.isCollected ? 'yellow' : '#3d3d3d'}
+                  color={workInfo.isCollected ? 'yellow' : '#3d3d3d'}
                   icon={
-                    workInfo?.isCollected ? 'ant-design:star-filled' : 'ant-design:star-outlined'
+                    workInfo.isCollected ? 'ant-design:star-filled' : 'ant-design:star-outlined'
                   }
                   onClick={handleCollectWork}
                 />
@@ -179,13 +188,13 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
           {/* 作品信息 */}
           <div className='w-150 mt-10px flex flex-col gap-10px'>
             <div className='font-bold font-size-18px color-#3d3d3d'>
-              <span>{workInfo?.name}</span>
+              <span>{workInfo.name}</span>
             </div>
             <div className='font-bold font-size-14px color-#6d757a line-height-normal'>
-              <span>{workInfo?.intro}</span>
+              <span>{workIntro}</span>
             </div>
             <div className='flex flex-wrap gap-10px font-size-14px'>
-              {workInfo?.labels.map((label, index) => (
+              {workInfo.labels.map((label, index) => (
                 <Link to={`/search-result?label=${label.label}&type=work&sortType=new`} key={index}>
                   #{label.label}
                 </Link>
@@ -194,20 +203,20 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             <div className='flex my-3 gap-20px'>
               <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
                 <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
-                <span>{workInfo?.likeNum}</span>
+                <span>{workInfo.likeNum}</span>
               </div>
               <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
                 <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
-                <span> {workInfo?.viewNum}</span>
+                <span> {workInfo.viewNum}</span>
               </div>
               <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
                 <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
-                <span>{workInfo?.collectNum}</span>
+                <span>{workInfo.collectNum}</span>
               </div>
             </div>
             <div className='flex flex-col gap-10px font-size-14px font-bold color-#3d3d3d'>
-              <span>发布日期：{workInfo?.createdDate}</span>
-              <span>更新日期：{workInfo?.updatedDate}</span>
+              <span>发布日期：{workInfo.createdDate}</span>
+              <span>更新日期：{workInfo.updatedDate}</span>
             </div>
           </div>
           {/* 用户信息 */}
@@ -215,28 +224,28 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             <div className='w-150 mb-3 flex justify-between'>
               <div className='flex gap-20px items-center'>
                 <Link
-                  to={`/personal-center/${workInfo?.authorInfo.id}`}
+                  to={`/personal-center/${workInfo.authorInfo.id}`}
                   className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
                   <img
                     className='w-full h-full object-cover'
-                    src={workInfo?.authorInfo.avatar}
-                    alt={workInfo?.authorInfo.username}
+                    src={workInfo.authorInfo.avatar}
+                    alt={workInfo.authorInfo.username}
                   />
                 </Link>
-                <Link className='color-#3d3d3d' to={`/personal-center/${workInfo?.authorInfo.id}`}>
-                  {workInfo?.authorInfo.username}
+                <Link className='color-#3d3d3d' to={`/personal-center/${workInfo.authorInfo.id}`}>
+                  {workInfo.authorInfo.username}
                 </Link>
                 {workInfo.authorInfo.id !== id && isLogin && (
                   <Button
                     shape='round'
                     size='large'
-                    type={workInfo?.authorInfo.isFollowing ? 'default' : 'primary'}
+                    type={workInfo.authorInfo.isFollowing ? 'default' : 'primary'}
                     onClick={handleFollow}>
-                    {workInfo?.authorInfo.isFollowing ? '已关注' : '关注'}
+                    {workInfo.authorInfo.isFollowing ? '已关注' : '关注'}
                   </Button>
                 )}
               </div>
-              <Link to={`/personal-center/${workInfo?.authorInfo.id}`}>
+              <Link to={`/personal-center/${workInfo.authorInfo.id}`}>
                 <Button shape='round' size='large' type='default'>
                   查看作品列表
                 </Button>
