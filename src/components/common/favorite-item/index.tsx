@@ -72,7 +72,7 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
       onClick={() => onChooseFolder(id)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>
-      <div className='flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
+      <div className='w-full flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
         {isMe && (
           <div
             {...listeners}
@@ -88,11 +88,13 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
             icon={folderStatus ? 'ant-design:folder-open-filled' : 'ant-design:folder-filled'}
           />
         </div>
-        <span>{name}</span>
+        <span className='w-39 whitespace-nowrap overflow-hidden text-ellipsis'>{name}</span>
       </div>
-      <Dropdown menu={{ items: dropdownList, onClick: onChooseItem }} placement='bottom' arrow>
-        <Icon className='mr-5' width='24px' color='#858585' icon='ant-design:more-outlined' />
-      </Dropdown>
+      {isMe && (
+        <Dropdown menu={{ items: dropdownList, onClick: onChooseItem }} placement='bottom' arrow>
+          <Icon className='mr-5' width='24px' color='#858585' icon='ant-design:more-outlined' />
+        </Dropdown>
+      )}
     </div>
   )
 }

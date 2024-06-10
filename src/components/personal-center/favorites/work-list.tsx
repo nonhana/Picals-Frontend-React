@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useContext } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
@@ -9,6 +9,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import Empty from '@/components/common/empty'
 import { favoriteActionsAPI, moveFavoriteWorksAPI, copyFavoriteWorksAPI } from '@/apis'
+import { PersonalContext } from '@/pages/personal-center'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -36,6 +37,8 @@ const WorkList: FC<WorkListProps> = ({
   refresh,
   like,
 }) => {
+  const { isMe } = useContext(PersonalContext)
+
   const [messageApi, contextHolder] = message.useMessage()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
   const { isLogin } = useSelector((state: AppState) => state.user)
@@ -201,14 +204,14 @@ const WorkList: FC<WorkListProps> = ({
       {contextHolder}
       <div className='relative w-954px flex flex-col items-center'>
         {settingStatus && (
-          <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#858585'>
+          <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#6d757a'>
             <Button type='default' onClick={() => setSettingStatus(false)}>
               取消批量编辑
             </Button>
           </div>
         )}
         {settingStatus ? (
-          <div className='w-100% h-16 px-5 flex justify-between items-center border-1px border-b-solid border-color-#858585'>
+          <div className='w-100% h-16 px-5 flex justify-between items-center border-1px border-b-solid border-color-#6d757a'>
             <div className='flex gap-10px items-center'>
               <Radio.Group value={allChosen} onChange={chooseAllWorks}>
                 <Radio value={true}>全选</Radio>
@@ -238,9 +241,9 @@ const WorkList: FC<WorkListProps> = ({
             </span>
           </div>
         ) : (
-          <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#858585'>
+          <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#6d757a'>
             <div className='flex gap-5 items-center'>
-              {isLogin && (
+              {isLogin && isMe && (
                 <Button type='link' onClick={() => setSettingStatus(true)}>
                   批量操作
                 </Button>

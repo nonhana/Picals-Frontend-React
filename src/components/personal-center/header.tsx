@@ -108,7 +108,10 @@ const Header: FC = () => {
               </HanaViewer>
             </div>
             <div className='w-150 flex flex-col gap-10px font-size-14px color-#3d3d3d text-wrap'>
-              <span className='font-size-18px font-bold'>{userInfo.username}</span>
+              <div className='flex items-center gap-10px'>
+                <span className='font-size-18px font-bold'>{userInfo.username}</span>
+                <span className='color-#6d757a'>{userInfo.email}</span>
+              </div>
               <div className='flex gap-10px'>
                 <span
                   className='cursor-pointer'

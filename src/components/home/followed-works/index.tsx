@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
 import LayoutList from '@/components/common/layout-list'
@@ -15,11 +15,15 @@ type FollowedWorksProps = {
 
 const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
-  const [workList, _, setWorkList] = useMap<WorkNormalItemInfo>(sourceData)
+  const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
+
+  useEffect(() => {
+    setWorkList(sourceData)
+  }, [sourceData])
 
   const handleLike = async (id: string) => {
     await likeActionsAPI({ id })
-    setWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
+    updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
   return (

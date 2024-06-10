@@ -97,7 +97,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
       )}
 
       <div className='relative mx-auto'>
-        <Pagination pageSize={30} total={workCount || 0} onChange={setCurrent} current={current} />
+        <Pagination total={workCount} pageSize={30} onChange={setCurrent} current={current} />
       </div>
     </div>
   )

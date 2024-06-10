@@ -14,7 +14,7 @@ const LabelItem: FC<LabelItemProps> = ({ name, color }) => {
       to={`/search-result?label=${name}&type=work&sortType=new`}
       className='select-none flex items-center h-10 flex-shrink-0 rd-1 px-6 font-size-14px cursor-pointer hover:opacity-80'
       style={{ backgroundColor: color }}>
-      <span className={`${isWarmHue(color) ? 'color-#000' : 'color-#fff'}`}>#{name}</span>
+      <span className={`${isWarmHue(color) ? 'color-#000' : 'color-white'}`}>#{name}</span>
     </Link>
   )
 }

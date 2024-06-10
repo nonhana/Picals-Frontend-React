@@ -23,7 +23,7 @@ const LabelImgItem: FC<LabelImgItemProps> = ({ name, color, cover }) => {
         alt={name}
       />
       <div className='absolute w-118px h-118px top-0 left-0 bg-black opacity-32' />
-      <span className='absolute bottom-20px left-1/2 -translate-x-50% color-#fff font-size-14px font-bold'>
+      <span className='absolute bottom-20px left-1/2 -translate-x-50% color-white font-size-14px font-bold'>
         #{name}
       </span>
     </Link>
