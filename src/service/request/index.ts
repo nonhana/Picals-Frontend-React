@@ -10,7 +10,7 @@ interface PendingTask {
   reject: (reason?: any) => void
 }
 
-let refreshing = false
+let refreshing = false // 是否正在刷新token
 const pendingTasks: PendingTask[] = [] // 维护一个请求队列，用于刷新token时保存请求
 
 class Request {
@@ -40,36 +40,40 @@ class Request {
           })
         } else {
           const { status, data, config } = err.response
-          if (status === 401 && !config.url.includes('/user/refresh-token')) {
-            if (!refreshing) {
-              try {
-                refreshing = true
-                const refreshToken = localStorage.getItem('refreshToken')
-                const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
-                localStorage.setItem('accessToken', data.access_token)
-                localStorage.setItem('refreshToken', data.refresh_token)
 
-                // 重新发起之前失败的请求
-                pendingTasks.forEach((task) => {
-                  task.config.headers!.Authorization = `Bearer ${data.access_token}`
-                  this.instance.request(task.config).then(task.resolve).catch(task.reject)
-                })
-                pendingTasks.length = 0 // 清空队列
-              } catch (error) {
-                notification.error({
-                  message: 'token已失效，请重新进行登录~',
-                })
-                pendingTasks.forEach((task) => {
-                  task.reject(error)
-                })
-                pendingTasks.length = 0 // 清空队列
-              } finally {
-                refreshing = false
-              }
-            }
+          if (refreshing) {
             return new Promise((resolve, reject) => {
               pendingTasks.push({ config, resolve, reject })
             })
+          }
+
+          // 无感刷新token
+          if (status === 401 && !config.url.includes('/user/refresh-token')) {
+            try {
+              refreshing = true
+              const refreshToken = localStorage.getItem('refreshToken')
+              const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
+              localStorage.setItem('accessToken', data.access_token)
+              localStorage.setItem('refreshToken', data.refresh_token)
+
+              // 重新发起之前失败的请求
+              pendingTasks.forEach((task) => {
+                task.config.headers!.Authorization = `Bearer ${data.access_token}`
+                this.instance.request(task.config).then(task.resolve).catch(task.reject)
+              })
+              pendingTasks.length = 0 // 清空队列
+              return this.instance.request(config)
+            } catch (error) {
+              notification.error({
+                message: 'token已失效，请重新进行登录~',
+              })
+              pendingTasks.forEach((task) => {
+                task.reject(error)
+              })
+              pendingTasks.length = 0 // 清空队列
+            } finally {
+              refreshing = false
+            }
           }
 
           if (status === 500) {
