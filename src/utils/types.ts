@@ -20,7 +20,7 @@ export interface UserDetailInfo {
   intro: string
   fanNum: number
   followNum: number
-  background_img: string
+  background_img: string | null
   gender: 0 | 1 | 2
   isFollowed: boolean
 }
