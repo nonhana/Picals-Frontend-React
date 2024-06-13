@@ -43,7 +43,7 @@ const WorkRankItem: FC<WorkRankItemProps> = ({ itemInfo, like }) => {
       </div>
 
       <div className='relative w-288px h-288px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.imgList[0]} alt={itemInfo.name} />
+        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
       </div>
 
       <div className='relative p-10px flex flex-col gap-5px'>

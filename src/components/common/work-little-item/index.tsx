@@ -34,7 +34,7 @@ const WorkLittleItem: FC<WorkLittleItemProps> = ({ itemInfo, like }) => {
         )}
       </div>
       <div className='relative w-118px h-118px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.imgList[0]} alt={itemInfo.name} />
+        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
       </div>
     </div>
   )

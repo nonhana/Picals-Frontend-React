@@ -99,7 +99,7 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork })
       </div>
 
       <div className='relative w-184px h-184px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.imgList[0]} alt={itemInfo.name} />
+        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
       </div>
 
       <div className='relative p-10px flex flex-col gap-5px'>

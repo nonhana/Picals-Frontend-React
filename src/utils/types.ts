@@ -44,6 +44,7 @@ export interface HistorySearchInfo {
 export interface WorkNormalItemInfo {
   id: string
   imgList: string[]
+  cover: string
   name: string
   authorId: string
   authorName: string
@@ -93,6 +94,7 @@ export interface WorkRankItemInfo {
   id: string
   range: number
   imgList: string[]
+  cover: string
   name: string
   authorId: string
   authorName: string
