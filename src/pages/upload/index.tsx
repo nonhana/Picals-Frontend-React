@@ -87,9 +87,11 @@ const Upload: FC = () => {
 
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
   const [submitTrigger, setSubmitTrigger] = useState(0)
+  const [uploading, setUploading] = useState(false)
 
   const uploadWork = async () => {
     try {
+      setUploading(true)
       const uploadWorkInfo = {
         ...formInfo.basicInfo,
         labels: formInfo.labels,
@@ -105,6 +107,8 @@ const Upload: FC = () => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -141,6 +145,7 @@ const Upload: FC = () => {
               shape='round'
               size='large'
               type='primary'
+              loading={uploading}
               onClick={() => setSubmitTrigger((prev) => prev + 1)}>
               投稿作品
             </Button>

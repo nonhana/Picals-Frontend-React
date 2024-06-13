@@ -18,8 +18,6 @@ import GreyButton from '@/components/common/grey-button'
 import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
 import { setLikedLabels, setLoginStatus, setUserInfo } from '@/store/modules/user'
 import { setFavoriteList } from '@/store/modules/favorites'
-import { LOADING_TIP } from '@/utils'
-import Loading from '@/components/common/loading'
 
 // 登录表单
 type LoginForm = {
@@ -110,11 +108,13 @@ const LoginWindow: FC = () => {
     }
   }
   // 发送验证码，60s倒计时刷新状态
+  const [sendingCode, setSendingCode] = useState(false)
   const handleSendCode = async () => {
     const email = registerFormRef.current?.getFieldValue('email')
     if (!email) return messageApi.error('请填写邮箱！')
     if (codeStatus.isSent) return
     try {
+      setSendingCode(true)
       await sendEmailCodeAPI({ email })
       setCodeStatus({ isSent: true, countDown: 60 })
       const timer = setInterval(() => {
@@ -129,6 +129,8 @@ const LoginWindow: FC = () => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setSendingCode(false)
     }
   }
 
@@ -151,7 +153,6 @@ const LoginWindow: FC = () => {
           onMouseEnter={() => setMouseEnter(true)}
           onMouseLeave={() => setMouseEnter(false)}
           className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-50% -translate-y-50% w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white border-color-#E5E5E5 z-2'>
-          <Loading loading={loginLoading || registerLoading} text={LOADING_TIP} />
           <div className='flex flex-col items-center justify-center'>
             <img className='w-50' src={logo} alt='picals-logo' />
             <span className='font-normal font-size-14px color-#6d757a'>兴趣使然的插画收藏小站</span>
@@ -237,6 +238,7 @@ const LoginWindow: FC = () => {
                   type='default'
                   shape='round'
                   size='large'
+                  loading={loginLoading}
                   htmlType='submit'>
                   登录
                 </Button>
@@ -271,6 +273,7 @@ const LoginWindow: FC = () => {
                     disabled={codeStatus.isSent}
                     size='large'
                     type='primary'
+                    loading={sendingCode}
                     onClick={handleSendCode}>
                     {codeStatus.isSent ? `${codeStatus.countDown}s` : '发送验证码'}
                   </Button>
@@ -304,6 +307,7 @@ const LoginWindow: FC = () => {
                   type='default'
                   shape='round'
                   size='large'
+                  loading={registerLoading}
                   htmlType='submit'>
                   注册
                 </Button>
