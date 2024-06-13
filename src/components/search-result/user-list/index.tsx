@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import type { UserItemInfo } from '@/utils/types'
 import UserItem from '@/components/common/user-item'
 import { useMap } from '@/hooks'
@@ -11,6 +12,7 @@ import {
   getWorkSimpleAPI,
 } from '@/apis'
 import Empty from '@/components/common/empty'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 
 type UserListProps = {
   width: number
@@ -18,12 +20,24 @@ type UserListProps = {
 }
 
 const UserList: FC<UserListProps> = ({ width, labelName }) => {
+  const dispatch = useDispatch()
+
   const [userList, setUserList, updateUserList] = useMap<UserItemInfo>([])
   const [total, setTotal] = useState(0)
 
   const handleFollow = async (id: string) => {
-    await userActionsAPI({ id })
-    updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    try {
+      await userActionsAPI({ id })
+      if (!userList.get(id)!.isFollowing) {
+        dispatch(increaseFollowNum())
+      } else {
+        dispatch(decreaseFollowNum())
+      }
+      updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
   }
 
   const handleLikeWork = async (userId: string, workId: string) => {

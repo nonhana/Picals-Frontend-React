@@ -1,4 +1,5 @@
 import { FC, useState, useEffect, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import WorkInfo from '@/components/work-detail/work-info'
 import UserInfo from '@/components/work-detail/user-info'
@@ -13,8 +14,11 @@ import {
 } from '@/apis'
 import { useMap } from '@/hooks'
 import { notification } from 'antd'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 
 const WorkDetail: FC = () => {
+  const dispatch = useDispatch()
+
   const { workId } = useParams<{ workId: string }>()
 
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
@@ -93,6 +97,11 @@ const WorkDetail: FC = () => {
       if (!userInfo) return
       try {
         await userActionsAPI({ id })
+        if (!userInfo.isFollowing) {
+          dispatch(increaseFollowNum())
+        } else {
+          dispatch(decreaseFollowNum())
+        }
         setUserInfo((prev) => prev && { ...prev, isFollowing: !prev.isFollowing })
       } catch (error) {
         console.log('出现错误了喵！！', error)
