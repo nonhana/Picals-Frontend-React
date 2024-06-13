@@ -71,7 +71,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     await favoriteActionsAPI({ id: workInfo.id, favoriteIds: [folderId] })
     await refreshFavoriteList()
     setCollecting(false)
-    setWorkInfo({ ...workInfo, isCollected: true })
+    setWorkInfo({ ...workInfo, isCollected: true, favoriteIds: [folderId] })
     messageApi.success('收藏成功')
   }
   const cancelCollect = () => {
