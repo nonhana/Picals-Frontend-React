@@ -12,6 +12,7 @@ import {
   likeActionsAPI,
 } from '@/apis'
 import { useMap } from '@/hooks'
+import { notification } from 'antd'
 
 const WorkDetail: FC = () => {
   const { workId } = useParams<{ workId: string }>()
@@ -32,6 +33,14 @@ const WorkDetail: FC = () => {
   const fetchWorkDetail = async () => {
     try {
       const { data } = await getWorkDetailAPI({ id: workId! })
+      if (!data) {
+        notification.error({
+          message: '作品不存在',
+          description: '该作品id存在问题，不要手动输入的说',
+        })
+        return
+      }
+
       const { authorId, ...rest } = data
       const authorInfo = (await getUserSimpleAPI({ id: authorId })).data
       const labels = data.labels.map((label) => ({ value: label.id, label: label.name }))
