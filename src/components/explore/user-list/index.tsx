@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '@/store/types'
 import type { UserItemInfo } from '@/utils/types'
 import UserItem from '@/components/common/user-item'
@@ -7,12 +7,15 @@ import { useMap, useAtBottom } from '@/hooks'
 import { getRecommendUserListAPI, getWorkSimpleAPI, likeActionsAPI, userActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { message } from 'antd'
+import { increaseFollowNum, decreaseFollowNum } from '@/store/modules/user'
 
 type UserListProps = {
   width: number
 }
 
 const UserList: FC<UserListProps> = ({ width }) => {
+  const dispatch = useDispatch()
+
   const { id: storeId } = useSelector((state: AppState) => state.user.userInfo)
   const [loading, setLoading] = useState(false)
   const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
@@ -53,6 +56,11 @@ const UserList: FC<UserListProps> = ({ width }) => {
     }
     try {
       await userActionsAPI({ id })
+      if (!userList.get(id)!.isFollowing) {
+        dispatch(increaseFollowNum())
+      } else {
+        dispatch(decreaseFollowNum())
+      }
       updateItem(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
     } catch (error) {
       console.log('出现错误了喵！！', error)

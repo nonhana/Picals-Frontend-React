@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import type { UserItemInfo } from '@/utils/types'
 import UserItem from '@/components/common/user-item'
 import { useMap } from '@/hooks'
@@ -12,6 +13,7 @@ import {
 } from '@/apis'
 import Empty from '@/components/common/empty'
 import { PersonalContext } from '@/pages/personal-center'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 
 type UserListProps = {
   width: number
@@ -19,14 +21,26 @@ type UserListProps = {
 }
 
 const UserList: FC<UserListProps> = ({ width, total }) => {
+  const dispatch = useDispatch()
+
   const { currentPath, userId } = useContext(PersonalContext)
 
   const [userList, setUserList, updateUserList] = useMap<UserItemInfo>([]) // 用户列表
 
   // 关注/取消关注
   const handleFollow = async (id: string) => {
-    await userActionsAPI({ id })
-    updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    try {
+      await userActionsAPI({ id })
+      if (!userList.get(id)!.isFollowing) {
+        dispatch(increaseFollowNum())
+      } else {
+        dispatch(decreaseFollowNum())
+      }
+      updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
   }
 
   // 喜欢/取消喜欢用户作品

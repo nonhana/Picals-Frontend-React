@@ -1,8 +1,12 @@
 import { FC, useEffect, useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
-import { setUserInfo as setLocalUserInfo } from '@/store/modules/user'
+import {
+  decreaseFollowNum,
+  increaseFollowNum,
+  setUserInfo as setLocalUserInfo,
+} from '@/store/modules/user'
 import type { UserDetailInfo } from '@/utils/types'
 import { getUserDetailAPI, userActionsAPI } from '@/apis'
 import { Button } from 'antd'
@@ -15,6 +19,7 @@ import { Icon } from '@iconify/react'
 
 const Header: FC = () => {
   const navigate = useNavigate()
+  const type = useSearchParams()[0].get('type')
 
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { isMe, userId } = useContext(PersonalContext)
@@ -32,6 +37,15 @@ const Header: FC = () => {
     isFollowed: false,
   })
   const [editModalVisible, setEditModalVisible] = useState(false)
+
+  useEffect(() => {
+    if (type && type === 'profile') {
+      setTimeout(() => {
+        setEditModalVisible(true)
+      }, 300)
+    }
+  }, [type])
+
   const [infoModalVisible, setInfoModalVisible] = useState(false)
 
   const dispatch = useDispatch()
@@ -52,6 +66,7 @@ const Header: FC = () => {
         gender: data.gender,
         isFollowed: data.isFollowed,
       })
+      // 如果当前页面为用户本身的主页，每次进入页面都要更新用户信息
       if (isMe)
         dispatch(
           setLocalUserInfo({
@@ -74,6 +89,11 @@ const Header: FC = () => {
   const handleFollow = async () => {
     try {
       await userActionsAPI({ id: userId! })
+      if (!userInfo.isFollowed) {
+        dispatch(increaseFollowNum())
+      } else {
+        dispatch(decreaseFollowNum())
+      }
       setUserInfo((prev) => ({ ...prev, isFollowed: !prev.isFollowed }))
     } catch (error) {
       console.log('出现错误了喵！！', error)

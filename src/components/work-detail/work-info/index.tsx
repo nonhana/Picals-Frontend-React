@@ -15,6 +15,7 @@ import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
 import pixiv from '@/assets/svgs/pixiv.svg'
 import { verifyPixivUser, verifyPixivWork } from '@/utils'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 
 const { confirm } = Modal
 
@@ -88,6 +89,12 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   const handleFollow = async () => {
     try {
       await userActionsAPI({ id: workInfo.authorInfo.id })
+      const prevFollowStatus = workInfo.authorInfo.isFollowing
+      if (!prevFollowStatus) {
+        dispatch(increaseFollowNum())
+      } else {
+        dispatch(decreaseFollowNum())
+      }
       setWorkInfo({
         ...workInfo,
         authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },

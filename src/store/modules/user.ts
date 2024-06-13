@@ -30,6 +30,12 @@ const userStore = createSlice({
     removeLikedLabel(state, action) {
       state.likedLabels = state.likedLabels.filter((item) => item.id !== action.payload)
     },
+    increaseFollowNum(state) {
+      state.userInfo.followNum++
+    },
+    decreaseFollowNum(state) {
+      state.userInfo.followNum--
+    },
     setLoginStatus(state, action) {
       state.isLogin = action.payload
     },
@@ -49,11 +55,28 @@ const userStore = createSlice({
   },
 })
 
-const { setUserInfo, setLikedLabels, addLikedLabel, removeLikedLabel, setLoginStatus, logout } =
-  userStore.actions
+const {
+  setUserInfo,
+  setLikedLabels,
+  addLikedLabel,
+  removeLikedLabel,
+  increaseFollowNum,
+  decreaseFollowNum,
+  setLoginStatus,
+  logout,
+} = userStore.actions
 
 const userReducer = userStore.reducer
 
 // 导出
-export { setUserInfo, setLikedLabels, addLikedLabel, removeLikedLabel, setLoginStatus, logout }
+export {
+  setUserInfo,
+  setLikedLabels,
+  addLikedLabel,
+  removeLikedLabel,
+  increaseFollowNum,
+  decreaseFollowNum,
+  setLoginStatus,
+  logout,
+}
 export default userReducer

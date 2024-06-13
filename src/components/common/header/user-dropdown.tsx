@@ -39,11 +39,9 @@ const UserDropdown: FC<{
         break
       case 'history':
         message.info('该功能暂未开放，敬请期待~！')
-        console.log(value)
         break
       case 'profile':
-        message.info('该功能暂未开放，敬请期待~！')
-        console.log(value)
+        navigate(`/personal-center/${userInfo.id}/works?type=profile`)
         break
       default:
         break
