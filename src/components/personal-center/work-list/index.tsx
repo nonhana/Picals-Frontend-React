@@ -3,7 +3,6 @@ import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { getUserWorksListAPI, getUserLikeWorksAPI, likeActionsAPI, deleteWorkAPI } from '@/apis'
-import Loading from '@/components/common/loading'
 import Empty from '@/components/common/empty'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
@@ -18,37 +17,31 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   const [current, setCurrent] = useState<number>(1)
   const [workList, setWorkList, setWorkMap, removeWork] = useMap<WorkNormalItemInfo>([])
-  const [loading, setLoading] = useState<boolean>(false)
 
   const likeWork = async (workId: string) => {
     try {
-      setLoading(true)
       await likeActionsAPI({ id: workId })
       setWorkMap(workId, { ...workList.get(workId)!, isLiked: !workList.get(workId)!.isLiked })
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
-    } finally {
-      setLoading(false)
     }
   }
 
   const deleteWork = async (workId: string) => {
     try {
-      setLoading(true)
       await deleteWorkAPI({ id: workId })
       removeWork(workId)
       message.success('删除成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
-    } finally {
-      setLoading(false)
     }
   }
 
   const getUserWorks = async () => {
     try {
+      setWorkList([])
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
       setWorkList(data)
     } catch (error) {
@@ -59,7 +52,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   const getUserLikeWorks = async () => {
     try {
-      setLoading(true)
+      setWorkList([])
       const { data } = await getUserLikeWorksAPI({
         id: userId!,
         current,
@@ -69,24 +62,17 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
-    } finally {
-      setLoading(false)
     }
   }
 
   useEffect(() => {
-    setWorkList([])
     if (currentPath === 'works') getUserWorks()
     if (currentPath === 'likes') getUserLikeWorks()
   }, [userId, current, currentPath])
 
   return (
     <div className='relative w-100% flex gap-10px flex-wrap'>
-      {loading ? (
-        <div className='relative w-full h-100'>
-          <Loading loading={loading} />
-        </div>
-      ) : workList.size === 0 ? (
+      {workList.size === 0 ? (
         <Empty />
       ) : (
         <div className='relative w-full flex flex-wrap gap-5'>

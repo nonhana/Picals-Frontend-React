@@ -11,6 +11,7 @@ import InfoModal from './info-modal'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '../common/hana-viewer'
 import { PersonalContext } from '@/pages/personal-center'
+import { Icon } from '@iconify/react'
 
 const Header: FC = () => {
   const navigate = useNavigate()
@@ -87,13 +88,27 @@ const Header: FC = () => {
   return (
     <>
       <div className='relative w-full'>
-        <div className='relative w-full h-120 overflow-hidden'>
-          <img
-            className='w-full h-full object-cover'
-            src={userInfo.background_img}
-            alt={userInfo.background_img}
-          />
-        </div>
+        {userInfo.background_img ? (
+          <div className='relative w-full h-120 overflow-hidden'>
+            <img
+              className='w-full h-full object-cover'
+              src={userInfo.background_img}
+              alt={userInfo.background_img}
+            />
+          </div>
+        ) : (
+          <div className='relative w-full h-80'>
+            <div
+              className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
+              onClick={() => setEditModalVisible(true)}>
+              <div className='flex flex-col items-center color-#6d757a font-size-14px font-bold'>
+                <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
+                <span>上传背景图</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className='relative mx-auto w-full max-w-350 p-5 flex justify-between'>
           <div className='flex gap-5'>
             <div className='border-solid border-2px border-#fff mt--17 w-24 h-24 rd-full overflow-hidden cursor-pointer z-1'>

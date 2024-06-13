@@ -102,7 +102,7 @@ const SearchDropdown: FC<{
               </span>
             </div>
             {historyList.length === 0 ? (
-              <div className='relative w-full mx-10px'>
+              <div className='relative mx-10px'>
                 <Empty showImg={false} />
               </div>
             ) : (
@@ -128,7 +128,7 @@ const SearchDropdown: FC<{
                 <span>喜欢的标签</span>
               </div>
               {likedLabels.length === 0 ? (
-                <div className='relative w-full mx-10px'>
+                <div className='relative mx-10px'>
                   <Empty showImg={false} />
                 </div>
               ) : (
@@ -146,7 +146,7 @@ const SearchDropdown: FC<{
               <span>最近流行的插画标签</span>
             </div>
             {popularLabels.length === 0 ? (
-              <div className='relative w-full mx-10px'>
+              <div className='relative mx-10px'>
                 <Empty showImg={false} />
               </div>
             ) : (

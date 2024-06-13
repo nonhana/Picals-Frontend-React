@@ -76,9 +76,13 @@ export interface WorkNormalItem {
    */
   id: string
   /**
-   * 作品图片url列表
+   * 作品图片列表
    */
   imgList: string[]
+  /**
+   * 作品封面
+   */
+  cover: string
   /**
    * 用户是否已经喜欢
    */

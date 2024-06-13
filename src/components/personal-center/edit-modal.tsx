@@ -21,13 +21,14 @@ type EditModalProps = {
 const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info }) => {
   const [editUserInfo, setEditUserInfo] = useState<IUpdateUserInfoReq>({})
   useEffect(() => {
-    setEditUserInfo({
+    const editInfo: IUpdateUserInfoReq = {
       avatar: info.avatar,
-      backgroundImg: info.background_img,
       signature: info.intro,
       username: info.username,
       gender: info.gender,
-    })
+    }
+    if (info.background_img) editInfo.backgroundImg = info.background_img
+    setEditUserInfo(editInfo)
   }, [info])
 
   const [loading, setLoading] = useState(false)
@@ -163,11 +164,11 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
               </div>
             ) : (
               <div
-                className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer'
+                className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
                 onClick={chooseBgImgFile}>
                 <div className='flex flex-col items-center color-#6d757a font-size-14px font-bold'>
                   <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
-                  <span>上传封面</span>
+                  <span>上传背景图</span>
                 </div>
               </div>
             )}
