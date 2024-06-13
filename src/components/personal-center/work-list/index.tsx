@@ -41,6 +41,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   const getUserWorks = async () => {
     try {
+      setWorkList([])
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
       setWorkList(data)
     } catch (error) {
@@ -51,6 +52,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
 
   const getUserLikeWorks = async () => {
     try {
+      setWorkList([])
       const { data } = await getUserLikeWorksAPI({
         id: userId!,
         current,
@@ -64,7 +66,6 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   }
 
   useEffect(() => {
-    setWorkList([])
     if (currentPath === 'works') getUserWorks()
     if (currentPath === 'likes') getUserLikeWorks()
   }, [userId, current, currentPath])
