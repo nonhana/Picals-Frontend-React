@@ -6,7 +6,7 @@ import { base64ToFile, MAX_INFO_SIZE } from '@/utils'
 import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import { Input, Button, message, Radio } from 'antd'
-import Modal from '../common/modal'
+import HanaModal from '../common/hana-modal'
 import HanaCropper from '../common/hana-cropper'
 
 const { TextArea } = Input
@@ -136,7 +136,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
 
   return (
     <>
-      <Modal title='编辑个人资料' visible={visible} setVisible={setVisible}>
+      <HanaModal title='编辑个人资料' visible={visible} setVisible={setVisible}>
         <>
           <div className='relative w-full h-63'>
             <input type='file' className='hidden' ref={bgImgInput} onChange={bgImgFileChange} />
@@ -256,7 +256,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
             </Button>
           </div>
         </>
-      </Modal>
+      </HanaModal>
 
       {/* 裁剪背景图 */}
       <HanaCropper

@@ -1,7 +1,7 @@
 import { FC, useRef, useState } from 'react'
 import Cropper, { ReactCropperElement } from 'react-cropper'
 import 'cropperjs/dist/cropper.css'
-import Modal from '../modal'
+import HanaModal from '../hana-modal'
 import { debounce } from 'lodash'
 
 type HanaCropperProps = {
@@ -33,7 +33,7 @@ const HanaCropper: FC<HanaCropperProps> = ({
   }, 100)
 
   return (
-    <Modal
+    <HanaModal
       zIndex={3000}
       loading={loading}
       title='裁剪图片'
@@ -54,7 +54,7 @@ const HanaCropper: FC<HanaCropperProps> = ({
         aspectRatio={type === 'background' ? 4 / 3 : 1 / 1}
         checkOrientation={false}
       />
-    </Modal>
+    </HanaModal>
   )
 }
 export default HanaCropper

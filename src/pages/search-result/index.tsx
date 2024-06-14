@@ -10,7 +10,7 @@ import WorkList from '@/components/search-result/work-list'
 import UserList from '@/components/search-result/user-list'
 import { getLabelDetailAPI, newLabelAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import Modal from '@/components/common/modal'
+import HanaModal from '@/components/common/hana-modal'
 
 const items: MenuProps['items'] = [
   {
@@ -146,7 +146,7 @@ const SearchResult: FC = () => {
         </div>
       </div>
 
-      <Modal
+      <HanaModal
         title='添加标签'
         visible={showAddLabelModal}
         setVisible={setShowAddLabelModal}
@@ -158,7 +158,7 @@ const SearchResult: FC = () => {
           onChange={(e) => setLabelName(e.target.value)}
           placeholder='请输入新标签名称'
         />
-      </Modal>
+      </HanaModal>
     </>
   )
 }
