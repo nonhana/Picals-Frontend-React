@@ -3,22 +3,24 @@ import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import { Button } from 'antd'
 
-type ModalProps = {
+type HanaModalProps = {
   loading?: boolean
   zIndex?: number
   width?: number
   visible: boolean
   title: string
+  allowActivelyClose?: boolean
   setVisible: (visible: boolean) => void
   children: React.ReactNode
   onOk?: () => void // 触发确定按钮的回调
 }
 
-const Modal: FC<ModalProps> = ({
+const HanaModal: FC<HanaModalProps> = ({
   loading,
   visible,
   width = 648,
   title,
+  allowActivelyClose = true,
   setVisible,
   children,
   onOk,
@@ -34,6 +36,12 @@ const Modal: FC<ModalProps> = ({
     toggleBodyOverflow(visible)
   }, [visible])
 
+  const templateClick = () => {
+    if (allowActivelyClose) {
+      setVisible(false)
+    }
+  }
+
   return (
     <>
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
@@ -42,7 +50,7 @@ const Modal: FC<ModalProps> = ({
             zIndex: zIndex ? zIndex - 1 : 1999,
           }}
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32'
-          onClick={() => setVisible(false)}
+          onClick={templateClick}
         />
       </CSSTransition>
 
@@ -55,13 +63,15 @@ const Modal: FC<ModalProps> = ({
           className='fixed top-1/2 left-1/2 transform -translate-1/2 bg-white rd-6 flex flex-col'>
           <div className='relative w-full h-16 flex justify-center items-center color-#3d3d3d font-size-18px font-bold'>
             <span>{title}</span>
-            <Icon
-              className='absolute top-1/2 transform -translate-y-1/2 right-5 cursor-pointer'
-              color='#858585'
-              width='24px'
-              icon='ant-design:close-outlined'
-              onClick={() => setVisible(false)}
-            />
+            {allowActivelyClose && (
+              <Icon
+                className='absolute top-1/2 transform -translate-y-1/2 right-5 cursor-pointer'
+                color='#858585'
+                width='24px'
+                icon='ant-design:close-outlined'
+                onClick={() => setVisible(false)}
+              />
+            )}
           </div>
           {children}
 
@@ -86,4 +96,4 @@ const Modal: FC<ModalProps> = ({
   )
 }
 
-export default Modal
+export default HanaModal

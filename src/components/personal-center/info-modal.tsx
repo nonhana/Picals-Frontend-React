@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import type { UserDetailInfo } from '@/utils/types'
-import Modal from '../common/modal'
+import HanaModal from '../common/hana-modal'
 import HanaViewer from '../common/hana-viewer'
 import { PhotoView } from 'react-photo-view'
 import { Button } from 'antd'
@@ -25,7 +25,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
   const { id } = useSelector((state: AppState) => state.user.userInfo)
 
   return (
-    <Modal title='个人信息' visible={visible} setVisible={setVisible}>
+    <HanaModal title='个人信息' visible={visible} setVisible={setVisible}>
       <>
         <div className='relative w-full h-63 bg-#f8f8f8 flex justify-center items-center font-size-18px font-bold color-#3d3d3d'>
           <div className='flex flex-col items-center justify-center gap-3'>
@@ -60,7 +60,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
           </div>
         </div>
       </>
-    </Modal>
+    </HanaModal>
   )
 }
 

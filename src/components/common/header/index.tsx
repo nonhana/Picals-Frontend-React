@@ -114,6 +114,9 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
         </div>
 
         <div className='flex items-center gap-5'>
+          <Link to='https://github.com/nonhana/Picals-Frontend-React' target='_blank'>
+            <Icon width={32} color='#858585' icon='ant-design:github-filled' />
+          </Link>
           {isLogin && (
             <Link to='/upload'>
               <Button shape='round' type='default' size='large'>
