@@ -7,9 +7,10 @@ const { confirm } = Modal
 type HanaViewerProps = {
   children: React.ReactNode
   onDelete?: (index: number) => void
+  onDownload?: (index: number) => void
 }
 
-const HanaViewer: FC<HanaViewerProps> = ({ children, onDelete }) => {
+const HanaViewer: FC<HanaViewerProps> = ({ children, onDelete, onDownload }) => {
   const handleDelete = (index: number, onClose: any) => {
     confirm({
       title: '删除图片',
@@ -27,6 +28,7 @@ const HanaViewer: FC<HanaViewerProps> = ({ children, onDelete }) => {
 
   return (
     <PhotoProvider
+      className='select-none'
       maskOpacity={0.7}
       toolbarRender={({ index, onScale, scale, onClose }) => {
         return (
@@ -55,6 +57,20 @@ const HanaViewer: FC<HanaViewerProps> = ({ children, onDelete }) => {
                 d='M637 443H325c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h312c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8m284 424L775 721c122.1-148.9 113.6-369.5-26-509c-148-148.1-388.4-148.1-537 0c-148.1 148.6-148.1 389 0 537c139.5 139.6 360.1 148.1 509 26l146 146c3.2 2.8 8.3 2.8 11 0l43-43c2.8-2.7 2.8-7.8 0-11M696 696c-118.8 118.7-311.2 118.7-430 0c-118.7-118.8-118.7-311.2 0-430c118.8-118.7 311.2-118.7 430 0c118.7 118.8 118.7 311.2 0 430'
               />
             </svg>
+            {onDownload && (
+              <svg
+                className='PhotoView-Slider__toolbarIcon'
+                onClick={() => onDownload(index)}
+                xmlns='http://www.w3.org/2000/svg'
+                width='44'
+                height='44'
+                viewBox='0 0 1024 1024'>
+                <path
+                  fill='currentColor'
+                  d='M505.7 661a8 8 0 0 0 12.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8'
+                />
+              </svg>
+            )}
             {onDelete && (
               <svg
                 className='PhotoView-Slider__toolbarIcon'

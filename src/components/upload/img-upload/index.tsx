@@ -68,7 +68,7 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
     customRequest: async (options) => {
       const file = options.file as File
       const index = orderedList.current.length
-      orderedList.current.push('') // 占位符
+      orderedList.current.push('') // 占位符，用于记录图片上传后的url的位置
       await handleSubmit(file, index)
     },
     showUploadList: false,
@@ -129,7 +129,7 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
         allowActivelyClose={false}>
         <div className='m-10 mt-0'>
           {uploadList.map((item, index) => (
-            <div key={index} className='flex items-center mb-2'>
+            <div key={index} className='flex items-center mb-2 h-8'>
               <span className='w-45 whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
                 {item.fileName}：
               </span>

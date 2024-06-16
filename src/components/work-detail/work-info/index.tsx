@@ -14,7 +14,7 @@ import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/ap
 import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
 import pixiv from '@/assets/svgs/pixiv.svg'
-import { verifyPixivUser, verifyPixivWork } from '@/utils'
+import { verifyPixivUser, verifyPixivWork, download } from '@/utils'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 
 const { confirm } = Modal
@@ -137,6 +137,24 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     })
   }
 
+  // 下载图片函数
+  const downloadImg = async (index: number) => {
+    if (index < 0 || index >= imgList.length) {
+      messageApi.error('无效的图片索引')
+      return
+    }
+    try {
+      const downloadLink = imgList[index]
+      const suffix = downloadLink.split('.').pop()!
+      const filename = `${workInfo.id}${workInfo.imgList.length > 1 ? `-${index}` : ''}.${suffix}`
+      await download(downloadLink, filename)
+      messageApi.success(`图片 ${filename} 下载成功`)
+    } catch (error) {
+      messageApi.error('下载失败，请重试')
+      return
+    }
+  }
+
   return (
     <>
       {contextHolder}
@@ -144,7 +162,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
           {imgListVisible && (
-            <HanaViewer>
+            <HanaViewer onDownload={downloadImg}>
               <div className='w-100% flex flex-col gap-10px'>
                 {imgList.map((img, index) => (
                   <PhotoView key={index} src={img}>
