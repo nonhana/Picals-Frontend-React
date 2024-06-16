@@ -23,7 +23,7 @@ const Upload: FC = () => {
     basicInfo: {
       name: '',
       intro: '',
-      isReprinted: false,
+      reprintType: 1,
       openComment: false,
       isAIGenerated: false,
     },
@@ -57,19 +57,19 @@ const Upload: FC = () => {
             basicInfo: {
               name: data.name,
               intro: data.intro,
-              isReprinted: data.isReprinted,
+              reprintType: data.reprintType,
               openComment: data.openComment,
               isAIGenerated: data.isAIGenerated,
             },
             labels: data.labels.map((label) => label.name),
           }
-          if (data.isReprinted) {
-            originWorkInfo.basicInfo.workUrl = data.workUrl
+          if (data.reprintType !== 0) {
             originWorkInfo.illustratorInfo = {
               name: data.illustrator!.name,
               homeUrl: data.illustrator!.homeUrl,
             }
           }
+          if (data.reprintType === 1) originWorkInfo.basicInfo.workUrl = data.workUrl
           setImgList(data.imgList)
           setFormInfo(originWorkInfo)
         } catch (error) {

@@ -57,12 +57,12 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     }))
   }
 
-  const changeReprinted = (value: boolean) => {
+  const changeReprinted = (value: number) => {
     setFormInfo((prevFormInfo) => ({
       ...prevFormInfo,
       basicInfo: {
         ...prevFormInfo.basicInfo,
-        isReprinted: value,
+        reprintType: value,
       },
     }))
     if (value) {
@@ -144,36 +144,39 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
           <Form.Item<UploadWorkFormInfo>
             label={<Label text='是否转载' />}
-            name={['basicInfo', 'isReprinted']}
+            name={['basicInfo', 'reprintType']}
             rules={[{ required: true, message: '请选择是否转载作品！' }]}>
             <Radio.Group
-              value={formInfo.basicInfo.isReprinted}
+              value={formInfo.basicInfo.reprintType}
               onChange={(event) => changeReprinted(event.target.value)}>
-              <Radio value={true}>转载作品</Radio>
-              <Radio value={false}>原创作品</Radio>
+              <Radio value={2}>合集作品</Radio>
+              <Radio value={1}>转载作品</Radio>
+              <Radio value={0}>原创作品</Radio>
             </Radio.Group>
           </Form.Item>
 
-          {formInfo.basicInfo.isReprinted && (
+          {formInfo.basicInfo.reprintType !== 0 && (
             <>
-              <Form.Item<UploadWorkFormInfo>
-                label={<Label text='作品URL' />}
-                name={['basicInfo', 'workUrl']}
-                rules={[
-                  { required: true, message: '请输入收藏作品的源地址！' },
-                  { type: 'url', message: '请输入正确的URL地址！' },
-                ]}>
-                <Input
-                  placeholder='请输入收藏作品的源地址'
-                  value={formInfo.basicInfo.workUrl}
-                  onChange={(e) =>
-                    setFormInfo({
-                      ...formInfo,
-                      basicInfo: { ...formInfo.basicInfo, workUrl: e.target.value },
-                    })
-                  }
-                />
-              </Form.Item>
+              {formInfo.basicInfo.reprintType === 1 && (
+                <Form.Item<UploadWorkFormInfo>
+                  label={<Label text='作品URL' />}
+                  name={['basicInfo', 'workUrl']}
+                  rules={[
+                    { required: true, message: '请输入收藏作品的源地址！' },
+                    { type: 'url', message: '请输入正确的URL地址！' },
+                  ]}>
+                  <Input
+                    placeholder='请输入收藏作品的源地址'
+                    value={formInfo.basicInfo.workUrl}
+                    onChange={(e) =>
+                      setFormInfo({
+                        ...formInfo,
+                        basicInfo: { ...formInfo.basicInfo, workUrl: e.target.value },
+                      })
+                    }
+                  />
+                </Form.Item>
+              )}
 
               <Form.Item<UploadWorkFormInfo>
                 label={<Label text='原作者名' />}

@@ -62,7 +62,7 @@ export interface WorkDetailInfo {
   isLiked: boolean
   isCollected: boolean
   favoriteIds?: string[]
-  isReprinted: boolean
+  reprintType: number
   openComment: boolean
   isAIGenerated: boolean
   likeNum: number
@@ -148,7 +148,7 @@ export interface UploadWorkFormInfo {
   basicInfo: {
     name: string
     intro: string
-    isReprinted: boolean
+    reprintType: number
     openComment: boolean
     isAIGenerated: boolean
     workUrl?: string

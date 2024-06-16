@@ -31,9 +31,9 @@ export interface IUploadWorkReq {
    */
   isAIGenerated: boolean
   /**
-   * 是否转载
+   * 转载类型。0-原创，1-转载，2-合集
    */
-  isReprinted: boolean
+  reprintType: number
   /**
    * 作品标签列表，单纯的以标签名列表的形式传入
    */
@@ -106,7 +106,7 @@ export interface WorkDetailInfo {
   /**
    * 是否是转载作品
    */
-  isReprinted: boolean
+  reprintType: number
   /**
    * 标签列表
    */

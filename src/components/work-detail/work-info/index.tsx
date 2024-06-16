@@ -238,6 +238,13 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
               <span>{workIntro}</span>
             </div>
             <div className='flex flex-wrap gap-10px font-size-14px'>
+              <span className='font-bold color-#0090F0'>
+                {workInfo.reprintType === 0
+                  ? '原创作品'
+                  : workInfo.reprintType === 1
+                    ? '转载作品'
+                    : '合集作品'}
+              </span>
               {workInfo.labels.map((label, index) => (
                 <Link to={`/search-result?label=${label.label}&type=work&sortType=new`} key={index}>
                   #{label.label}
@@ -307,20 +314,24 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             )}
           </div>
           {/* 原作信息 */}
-          {workInfo.isReprinted && (
+          {workInfo.reprintType !== 0 && (
             <div className='bg-#f5f5f5 relative p-5 w-full'>
-              <div className='flex gap-10px items-center'>
-                <span className='font-size-18px font-bold color-#3d3d3d'>原作品地址</span>
-              </div>
-              <div className='my-10px flex gap-20px items-center flex justify-between'>
-                <Link to={workInfo.workUrl!} target='_blank'>
-                  {workInfo.workUrl}
-                </Link>
-                {verifyPixivWork(workInfo.workUrl!) && (
-                  <img className='w-15' src={pixiv} alt='pixiv' />
-                )}
-              </div>
-              <Divider />
+              {workInfo.reprintType === 1 && (
+                <>
+                  <div className='flex gap-10px items-center'>
+                    <span className='font-size-18px font-bold color-#3d3d3d'>原作品地址</span>
+                  </div>
+                  <div className='my-10px flex gap-20px items-center flex justify-between'>
+                    <Link to={workInfo.workUrl!} target='_blank'>
+                      {workInfo.workUrl}
+                    </Link>
+                    {verifyPixivWork(workInfo.workUrl!) && (
+                      <img className='w-15' src={pixiv} alt='pixiv' />
+                    )}
+                  </div>
+                  <Divider />
+                </>
+              )}
               <div className='flex gap-10px items-center'>
                 <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
                 <span className='font-size-14px color-#6d757a'>
