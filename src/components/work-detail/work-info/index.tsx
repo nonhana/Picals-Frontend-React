@@ -137,21 +137,40 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     })
   }
 
+  const [gettingBlob, setGettingBlob] = useState(false)
+
+  const handleDownload = (index: number) => {
+    confirm({
+      title: '是否要下载该作品？',
+      content: '下载后可在本地查看',
+      okText: '确认',
+      cancelText: '取消',
+      okButtonProps: { loading: gettingBlob },
+      onOk(e) {
+        downloadImg(index, e)
+      },
+    })
+  }
+
   // 下载图片函数
-  const downloadImg = async (index: number) => {
+  const downloadImg = async (index: number, e: any) => {
     if (index < 0 || index >= imgList.length) {
       messageApi.error('无效的图片索引')
       return
     }
     try {
-      const downloadLink = imgList[index]
+      setGettingBlob(true)
+      const downloadLink = imgList[index].replace('images/', 'images%2F')
       const suffix = downloadLink.split('.').pop()!
-      const filename = `${workInfo.id}${workInfo.imgList.length > 1 ? `-${index}` : ''}.${suffix}`
+      const filename = `${workInfo.name}${workInfo.imgList.length > 1 ? `-${index}` : ''}.${suffix}`
       await download(downloadLink, filename)
       messageApi.success(`图片 ${filename} 下载成功`)
     } catch (error) {
       messageApi.error('下载失败，请重试')
       return
+    } finally {
+      setGettingBlob(false)
+      await e()
     }
   }
 
@@ -162,7 +181,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
           {imgListVisible && (
-            <HanaViewer onDownload={downloadImg}>
+            <HanaViewer onDownload={handleDownload}>
               <div className='w-100% flex flex-col gap-10px'>
                 {imgList.map((img, index) => (
                   <PhotoView key={index} src={img}>
