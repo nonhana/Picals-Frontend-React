@@ -5,7 +5,6 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import viteCompression from 'vite-plugin-compression'
 import viteImagemin from 'vite-plugin-imagemin'
-import { visualizer } from 'rollup-plugin-visualizer'
 
 const colors = [
   'white',
@@ -38,14 +37,6 @@ export default defineConfig(({ mode }) => {
         presets: [presetUno(), presetAttributify(), presetIcons()],
       }),
       react(),
-      visualizer({
-        filename: 'stats.html',
-        open: true,
-        gzipSize: true,
-        brotliSize: true,
-        sourcemap: true,
-        projectRoot: path.resolve(__dirname),
-      }),
       viteImagemin({
         gifsicle: {
           optimizationLevel: 7,
