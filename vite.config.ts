@@ -31,7 +31,7 @@ const safelist = [
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname)
   return {
-    base: './',
+    base: '/',
     plugins: [
       UnoCSS({
         safelist,
@@ -71,7 +71,7 @@ export default defineConfig(({ mode }) => {
         threshold: 10240,
         algorithm: 'gzip',
         ext: '.gz',
-        deleteOriginFile: false,
+        deleteOriginFile: true,
       }),
     ],
     build: {
