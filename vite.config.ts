@@ -31,6 +31,7 @@ const safelist = [
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname)
   return {
+    base: './',
     plugins: [
       UnoCSS({
         safelist,
@@ -64,6 +65,14 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
+      viteCompression({
+        verbose: true,
+        disable: false,
+        threshold: 10240,
+        algorithm: 'gzip',
+        ext: '.gz',
+        deleteOriginFile: false,
+      }),
     ],
     build: {
       target: 'es2020',
@@ -74,22 +83,7 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: 'js/[name]-[hash].js',
           entryFileNames: 'js/[name]-[hash].js',
           assetFileNames: '[ext]/[name]-[hash].[ext]',
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1].split('/')[0].toString()
-            }
-          },
         },
-        plugins: [
-          viteCompression({
-            verbose: true,
-            disable: false,
-            threshold: 10240,
-            algorithm: 'gzip',
-            ext: '.gz',
-            deleteOriginFile: true,
-          }),
-        ],
       },
     },
     esbuild: {
