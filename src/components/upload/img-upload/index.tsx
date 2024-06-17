@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { InboxOutlined } from '@ant-design/icons'
 import type { UploadProps } from 'antd'
 import { message, Upload, notification, Progress } from 'antd'
@@ -14,7 +14,10 @@ type ImgUploadProps = {
   setImgList: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
+const ImgUpload: FC<ImgUploadProps> = ({
+  imgList: sourceImgList,
+  setImgList: setSourceImgList,
+}) => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const [uploadList, setUploadList] = useState<{ fileName: string; progress: number }[]>([])
   const orderedList = useRef<string[]>([])
@@ -91,9 +94,22 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
     },
   }
 
+  // 防止图片列表预览组件因图片列表获取不完全而出现显示错误（setXxx是异步的）
+  const [imgList, setImgList] = useState<string[]>([])
+  const [imgListVisible, setImgListVisible] = useState(false)
+
+  useEffect(() => {
+    setImgListVisible(false)
+    setImgList(sourceImgList)
+  }, [sourceImgList])
+
+  useEffect(() => {
+    setImgListVisible(true)
+  }, [imgList])
+
   const onDelete = (index: number) => {
     const newImgList = imgList.filter((_, idx) => idx !== index)
-    setImgList(newImgList)
+    setSourceImgList(newImgList)
   }
 
   return (
@@ -110,15 +126,17 @@ const ImgUpload: FC<ImgUploadProps> = ({ imgList, setImgList }) => {
         </Dragger>
 
         <div className='w-212 flex flex-wrap gap-5'>
-          <HanaViewer onDelete={onDelete}>
-            {imgList.map((url, index) => (
-              <div key={index} className='w-29.5 h-29.5 rd-1 overflow-hidden cursor-pointer'>
-                <PhotoView key={index} src={url}>
-                  <img className='w-full h-full object-cover' src={url} alt={url} />
-                </PhotoView>
-              </div>
-            ))}
-          </HanaViewer>
+          {imgListVisible && (
+            <HanaViewer onDelete={onDelete}>
+              {imgList.map((url, index) => (
+                <div key={index} className='w-29.5 h-29.5 rd-1 overflow-hidden cursor-pointer'>
+                  <PhotoView key={index} src={url}>
+                    <img className='w-full h-full object-cover' src={url} alt={url} />
+                  </PhotoView>
+                </div>
+              ))}
+            </HanaViewer>
+          )}
         </div>
       </div>
 
