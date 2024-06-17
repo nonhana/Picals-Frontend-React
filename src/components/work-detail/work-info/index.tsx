@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '@/store/types'
-import type { WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
+import { verifyPixivUser, verifyPixivWork, download } from '@/utils'
+import type { FavoriteFormInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Button, Divider, Modal, Radio, RadioChangeEvent, message } from 'antd'
 import WorkLittleItem from '@/components/common/work-little-item'
@@ -10,12 +11,12 @@ import Comments from '../comments'
 import { Link, useNavigate } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
-import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI } from '@/apis'
+import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
 import pixiv from '@/assets/svgs/pixiv.svg'
-import { verifyPixivUser, verifyPixivWork, download } from '@/utils'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
+import CreateFolderModal from '@/components/common/create-folder-modal'
 
 const { confirm } = Modal
 
@@ -51,7 +52,8 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   // 刷新收藏夹列表数据
   const refreshFavoriteList = async () => {
     const { data } = await getUserFavoriteListAPI({ id })
-    dispatch(setFavoriteList(data))
+    const list = data.sort((a, b) => a.order - b.order)
+    dispatch(setFavoriteList(list))
   }
 
   // 添加当前作品到收藏夹
@@ -139,21 +141,8 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
 
   const [gettingBlob, setGettingBlob] = useState(false)
 
-  const handleDownload = (index: number) => {
-    confirm({
-      title: '是否要下载该作品？',
-      content: '下载后可在本地查看',
-      okText: '确认',
-      cancelText: '取消',
-      okButtonProps: { loading: gettingBlob },
-      onOk(e) {
-        downloadImg(index, e)
-      },
-    })
-  }
-
   // 下载图片函数
-  const downloadImg = async (index: number, e: any) => {
+  const downloadImg = async (index: number) => {
     if (index < 0 || index >= imgList.length) {
       messageApi.error('无效的图片索引')
       return
@@ -170,9 +159,35 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
       return
     } finally {
       setGettingBlob(false)
-      await e()
     }
   }
+
+  /* ----------新建收藏夹相关---------- */
+  const [createFolderModalStatus, setCreateFolderModalStatus] = useState(false)
+  const [formInfo, setFormInfo] = useState<FavoriteFormInfo>({
+    name: '',
+    intro: '',
+  })
+
+  const confirmAction = async () => {
+    try {
+      await newFavoriteAPI(formInfo)
+      setCreateFolderModalStatus(false)
+      await refreshFavoriteList()
+      messageApi.success('新建成功')
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+  const cancelAction = () => {
+    setCreateFolderModalStatus(false)
+  }
+  useEffect(() => {
+    if (!createFolderModalStatus) {
+      setFormInfo({ name: '', intro: '' })
+    }
+  }, [createFolderModalStatus])
 
   return (
     <>
@@ -181,7 +196,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
           {imgListVisible && (
-            <HanaViewer onDownload={handleDownload}>
+            <HanaViewer onDownload={downloadImg} gettingBlob={gettingBlob}>
               <div className='w-100% flex flex-col gap-10px'>
                 {imgList.map((img, index) => (
                   <PhotoView key={index} src={img}>
@@ -384,7 +399,16 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
         okText='确认'
         cancelText='取消'
         onOk={() => collectConfirm()}
-        onCancel={cancelCollect}>
+        onCancel={cancelCollect}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <Button type='primary' onClick={() => setCreateFolderModalStatus(true)}>
+              新建收藏夹
+            </Button>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        )}>
         {favoriteList.length !== 0 ? (
           <div className='h-110 overflow-y-scroll'>
             <Radio.Group className='w-full' onChange={onChooseFolder} value={folderId}>
@@ -405,6 +429,15 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
           <Empty text='暂无收藏夹，可以先去个人中心创建一个哦！' />
         )}
       </Modal>
+
+      <CreateFolderModal
+        editMode={false}
+        modalStatus={createFolderModalStatus}
+        formInfo={formInfo}
+        setFormInfo={setFormInfo}
+        confirmAction={confirmAction}
+        cancelAction={cancelAction}
+      />
     </>
   )
 }

@@ -146,6 +146,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
     confirm({
       title: '删除评论',
       content: '你确定要删除这条评论吗？',
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
       onOk: async () => {
         try {
           await deleteCommentAPI({ id })

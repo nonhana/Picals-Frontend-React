@@ -51,7 +51,8 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork })
     confirm({
       title: '删除作品',
       content: '确定要删除这个作品吗？',
-      okText: '确定',
+      okText: '删除',
+      okType: 'danger',
       cancelText: '取消',
       onOk() {
         deleteWork && deleteWork(id)

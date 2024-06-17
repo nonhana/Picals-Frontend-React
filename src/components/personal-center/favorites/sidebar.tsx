@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import type { FavoriteItemInfo, FavoriteFormInfo } from '@/utils/types'
 import FavoriteItem from '@/components/common/favorite-item'
@@ -7,11 +8,14 @@ import { DndContext } from '@dnd-kit/core'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { Icon } from '@iconify/react'
-import { Modal, Input, Upload, message, Flex, type UploadProps, notification } from 'antd'
+import { Modal, message } from 'antd'
 import { newFavoriteAPI, deleteFavoriteAPI, editFavoriteAPI, changeFavoriteOrderAPI } from '@/apis'
-import { CSSTransition } from 'react-transition-group'
 import { PersonalContext } from '@/pages/personal-center'
 import Empty from '@/components/common/empty'
+import CreateFolderModal from '@/components/common/create-folder-modal'
+import { setFavoriteList } from '@/store/modules/favorites'
+
+const { confirm } = Modal
 
 // 获取拖动元素的索引
 const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
@@ -40,6 +44,8 @@ type SidebarProps = {
 }
 
 const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteList }) => {
+  const dispatch = useDispatch()
+
   const { isMe, userId } = useContext(PersonalContext)
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -78,6 +84,7 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
         order: index,
       }))
       await changeFavoriteOrderAPI({ orderList })
+      dispatch(setFavoriteList(orderedList))
       messageApi.success('排序成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -94,9 +101,12 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
   }
 
   const onDeleteFolder = (id: string) => {
-    Modal.confirm({
+    confirm({
       title: '删除收藏集',
       content: '确定删除该收藏集吗？',
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
       async onOk() {
         try {
           await deleteFavoriteAPI({ id })
@@ -146,33 +156,6 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
     }
   }, [modalStatus])
 
-  const uploadProps: UploadProps = {
-    name: 'image',
-    multiple: true,
-    action: `${import.meta.env.VITE_BASE_URL}/api/tool/upload-single-img`,
-    showUploadList: false,
-    accept: '.jpg,.png,.gif',
-    onChange(info) {
-      const { status } = info.file
-      if (status === 'done') {
-        setFormInfo({ ...formInfo, cover: info.file.response.data })
-        message.success(`${info.file.name} 上传成功`)
-      } else if (status === 'error') {
-        notification.error({
-          message: '上传失败',
-          description: info.file.response.message || '未知错误',
-        })
-      }
-    },
-  }
-
-  const [imgHovering, setImgHovering] = useState(false)
-
-  const handleRemoveImg = () => {
-    delete formInfo.cover
-    setImgHovering(false)
-  }
-
   return (
     <>
       {contextHolder}
@@ -212,67 +195,14 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
         </SortableContext>
       </DndContext>
 
-      <Modal
-        title={editingFolderId !== '' ? '编辑收藏夹' : '新建收藏夹'}
-        width='420px'
-        open={modalStatus}
-        okText='确认'
-        cancelText='取消'
-        onOk={confirmAction}
-        onCancel={cancelAction}>
-        <Flex vertical gap={20} className='mt-5'>
-          <Flex align='center'>
-            <span className='w-80px'>名称：</span>
-            <Input
-              className='w-250px'
-              placeholder='请输入收藏集名称'
-              value={formInfo.name}
-              onChange={(e) => setFormInfo({ ...formInfo, name: e.target.value })}
-            />
-          </Flex>
-          <Flex align='center'>
-            <span className='w-80px'>简介：</span>
-            <Input
-              className='w-250px'
-              placeholder='请输入收藏集简介'
-              value={formInfo.intro}
-              onChange={(e) => setFormInfo({ ...formInfo, intro: e.target.value })}
-            />
-          </Flex>
-          <Flex align='center'>
-            <span className='w-80px'>封面：</span>
-            {formInfo.cover ? (
-              <div
-                className='relative w-100px h-100px cursor-pointer rd-1 overflow-hidden'
-                onMouseEnter={() => setImgHovering(true)}
-                onMouseLeave={() => setImgHovering(false)}>
-                <CSSTransition
-                  in={imgHovering}
-                  timeout={300}
-                  classNames='opacity-gradient'
-                  unmountOnExit>
-                  <div
-                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-14px z-1'
-                    onClick={handleRemoveImg}>
-                    <span>移除图片</span>
-                  </div>
-                </CSSTransition>
-                <img
-                  className='w-full h-full object-cover'
-                  src={formInfo.cover}
-                  alt={formInfo.cover}
-                />
-              </div>
-            ) : (
-              <Upload {...uploadProps}>
-                <div className='w-100px h-100px flex justify-center items-center bg-#f5f5f5'>
-                  <Icon width='24px' color='#858585' icon='ant-design:upload-outlined' />
-                </div>
-              </Upload>
-            )}
-          </Flex>
-        </Flex>
-      </Modal>
+      <CreateFolderModal
+        editMode={editingFolderId !== ''}
+        modalStatus={modalStatus}
+        formInfo={formInfo}
+        setFormInfo={setFormInfo}
+        confirmAction={confirmAction}
+        cancelAction={cancelAction}
+      />
     </>
   )
 }

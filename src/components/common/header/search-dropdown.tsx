@@ -13,6 +13,8 @@ import { addRecord, clear } from '@/store/modules/searchHistory'
 import { getRecommendLabelListAPI } from '@/apis'
 import type { LabelInfo } from '@/utils/types'
 
+const { confirm } = Modal
+
 const SearchDropdown: FC<{
   visible: boolean
   className?: string
@@ -84,7 +86,7 @@ const SearchDropdown: FC<{
               <span
                 className='font-size-14px color-#6d757a cursor-pointer'
                 onClick={() => {
-                  Modal.confirm({
+                  confirm({
                     title: '确定要清空历史记录吗？',
                     content: '一旦清除，不可恢复！',
                     okText: '确定',

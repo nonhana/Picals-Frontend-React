@@ -72,7 +72,8 @@ const LoginWindow: FC = () => {
       localStorage.setItem('refreshToken', refreshToken)
 
       const { data } = await getUserFavoriteListAPI({ id: userInfo.id })
-      dispatch(setFavoriteList(data))
+      const list = data.sort((a, b) => a.order - b.order)
+      dispatch(setFavoriteList(list))
       notification.success({
         message: '登录成功',
         description: `欢迎回来，${userInfo.username}！`,

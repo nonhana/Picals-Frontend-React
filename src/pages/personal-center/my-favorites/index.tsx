@@ -124,9 +124,9 @@ const MyFavorites: FC = () => {
   const fetchFavoriteList = async () => {
     try {
       const { data } = await getUserFavoriteListAPI({ id: userId! })
-      data.sort((a, b) => a.order - b.order)
-      if (isMe) dispatch(setFavoriteList(data))
-      setFolderList(data)
+      const list = data.sort((a, b) => a.order - b.order)
+      if (isMe) dispatch(setFavoriteList(list))
+      setFolderList(list)
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -138,13 +138,13 @@ const MyFavorites: FC = () => {
   }, [userId])
 
   return (
-    <div className='flex mt-5 border-solid border-1px border-color-#6d757a'>
+    <div className='flex mt-5 border-solid border-1px border-color-#6d757a min-h-150'>
       <Sidebar
         folderList={folderList}
         setFolderList={setFolderList}
         fetchFavoriteList={fetchFavoriteList}
       />
-      <div className='border-l-solid border-1px border-color-#6d757a'>
+      <div className='h-full border-l-solid border-1px border-color-#6d757a'>
         {folderId ? (
           favoriteDetailInfo && (
             <>
@@ -163,7 +163,7 @@ const MyFavorites: FC = () => {
             </>
           )
         ) : (
-          <div className='relative w-954px h-600px'>
+          <div className='w-954px h-full'>
             <Empty text='请选择一个收藏夹' />
           </div>
         )}
