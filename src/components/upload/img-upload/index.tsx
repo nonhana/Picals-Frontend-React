@@ -3,9 +3,13 @@ import { InboxOutlined } from '@ant-design/icons'
 import type { UploadProps } from 'antd'
 import { message, Upload, notification, Progress } from 'antd'
 import HanaViewer from '@/components/common/hana-viewer'
-import { PhotoView } from 'react-photo-view'
 import HanaModal from '@/components/common/hana-modal'
 import axios from 'axios'
+import type { DragEndEvent } from '@dnd-kit/core'
+import { DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
+import { restrictToParentElement } from '@dnd-kit/modifiers'
+import DraggableImg from './draggable-img'
 
 const { Dragger } = Upload
 
@@ -112,6 +116,27 @@ const ImgUpload: FC<ImgUploadProps> = ({
     setSourceImgList(newImgList)
   }
 
+  /* ----------图片列表拖曳排序相关---------- */
+  //拖拽传感器，在移动像素5px范围内，不触发拖拽事件
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+  )
+
+  // 拖拽结束后的操作
+  const dragEndEvent = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (over && active.id !== over.id) {
+      const oldIndex = imgList.findIndex((url) => url === active.id)
+      const newIndex = imgList.findIndex((url) => url === over.id)
+      const newImgList = arrayMove(imgList, oldIndex, newIndex)
+      setSourceImgList(newImgList)
+    }
+  }
+
   return (
     <>
       <div className='relative flex flex-col gap-5 items-center'>
@@ -127,15 +152,18 @@ const ImgUpload: FC<ImgUploadProps> = ({
 
         <div className='w-212 flex flex-wrap gap-5'>
           {imgListVisible && (
-            <HanaViewer onDelete={onDelete}>
-              {imgList.map((url, index) => (
-                <div key={index} className='w-29.5 h-29.5 rd-1 overflow-hidden cursor-pointer'>
-                  <PhotoView key={index} src={url}>
-                    <img className='w-full h-full object-cover' src={url} alt={url} />
-                  </PhotoView>
-                </div>
-              ))}
-            </HanaViewer>
+            <DndContext
+              onDragEnd={dragEndEvent}
+              modifiers={[restrictToParentElement]}
+              sensors={sensors}>
+              <SortableContext items={imgList} strategy={rectSortingStrategy}>
+                <HanaViewer onDelete={onDelete}>
+                  {imgList.map((url) => (
+                    <DraggableImg key={url} id={url} src={url} />
+                  ))}
+                </HanaViewer>
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </div>

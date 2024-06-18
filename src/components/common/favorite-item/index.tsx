@@ -1,7 +1,6 @@
 import { FC, useState, useContext } from 'react'
 import { Icon } from '@iconify/react'
-import { type MenuProps } from 'antd'
-import { Dropdown } from 'antd'
+import { Dropdown, type MenuProps } from 'antd'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { PersonalContext } from '@/pages/personal-center'
