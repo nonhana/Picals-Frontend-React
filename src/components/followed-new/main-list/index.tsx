@@ -7,6 +7,8 @@ import { useMap } from '@/hooks/useMap'
 import { getFollowNewWorksAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { likeActionsAPI } from '@/apis'
+import { CSSTransition } from 'react-transition-group'
+import WorkListSkeleton from '@/components/skeleton/work-list'
 
 type MainListProps = {
   pageSize: number
@@ -52,15 +54,26 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
 
       {isLogin ? (
         <>
-          <div className='relative w-full flex flex-wrap gap-20px'>
-            {Array.from(workList.values()).map((item) => (
-              <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
-            ))}
-          </div>
+          <CSSTransition
+            in={workList.size !== 0 && !loading}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <div className='relative w-full flex flex-wrap gap-20px'>
+              {Array.from(workList.values()).map((item) => (
+                <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
+              ))}
+            </div>
+          </CSSTransition>
 
-          {workList.size === 0 && !loading && (
-            <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
-          )}
+          {workList.size === 0 &&
+            (loading ? (
+              <div className='relative w-full'>
+                <WorkListSkeleton row={1} />
+              </div>
+            ) : (
+              <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
+            ))}
         </>
       ) : (
         <Empty text='还没登录，这里自然是空的' />

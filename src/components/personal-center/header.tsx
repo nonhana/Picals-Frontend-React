@@ -109,7 +109,7 @@ const Header: FC = () => {
     <>
       <div className='relative w-full'>
         {userInfo.background_img ? (
-          <div className='relative w-full h-120 overflow-hidden'>
+          <div className='relative w-full h-130 overflow-hidden'>
             <img
               className='w-full h-full object-cover'
               src={userInfo.background_img}

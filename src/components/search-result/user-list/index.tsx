@@ -13,6 +13,8 @@ import {
 } from '@/apis'
 import Empty from '@/components/common/empty'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
+import UserListSkeleton from '@/components/skeleton/user-list'
+import { CSSTransition } from 'react-transition-group'
 
 type UserListProps = {
   width: number
@@ -68,8 +70,10 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
     }
   }
 
+  const [searchingUser, setSearchingUser] = useState(false)
   const searchUser = async () => {
     try {
+      setSearchingUser(true)
       const { data } = await searchUserAPI({
         keyword: labelName,
         current,
@@ -87,6 +91,8 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setSearchingUser(false)
     }
   }
 
@@ -99,7 +105,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
   }, [labelName, current])
 
   return (
-    <div className='relative p-5 w-full'>
+    <div className='relative p-5 w-full min-h-160'>
       <div className='w-100% flex justify-between items-center mb-10px'>
         <div className='flex gap-10px items-center'>
           <div className='title font-size-24px'>
@@ -111,25 +117,41 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
         </div>
       </div>
 
-      <div className='relative w-full flex flex-col gap-20px'>
-        {userList.size === 0 ? (
-          <Empty text='暂无数据' />
-        ) : (
-          <>
-            {Array.from(userList.values()).map((item) => (
-              <UserItem
-                key={item.id}
-                {...item}
-                width={width}
-                follow={handleFollow}
-                likeWork={handleLikeWork}
-              />
-            ))}
-          </>
-        )}
-      </div>
+      <CSSTransition
+        in={userList.size !== 0 && !searchingUser}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <div className='relative w-full flex flex-col gap-20px'>
+          {Array.from(userList.values()).map((item) => (
+            <UserItem
+              key={item.id}
+              {...item}
+              width={width}
+              follow={handleFollow}
+              likeWork={handleLikeWork}
+            />
+          ))}
+        </div>
+      </CSSTransition>
 
-      <div className='flex justify-center'>
+      <CSSTransition
+        in={userList.size === 0 && !searchingUser}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <Empty />
+      </CSSTransition>
+
+      <CSSTransition
+        in={userList.size === 0 && searchingUser}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <UserListSkeleton className='absolute top-14' />
+      </CSSTransition>
+
+      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
         <Pagination total={total} pageSize={pageSize} current={current} onChange={pageChange} />
       </div>
     </div>

@@ -12,12 +12,12 @@ Object.keys(images).forEach(async (key) => {
 })
 
 type EmptyProps = {
-  className?: string
   width?: number | string
   height?: number | string
   text?: string
   showImg?: boolean
   children?: React.ReactNode
+  [key: string]: any
 }
 
 const Empty: FC<EmptyProps> = ({
@@ -25,8 +25,8 @@ const Empty: FC<EmptyProps> = ({
   height = '100%',
   text = '暂无数据',
   showImg = true,
-  className = '',
   children,
+  ...props
 }) => {
   const [randomImg, setRandomImg] = useState<string | undefined>(undefined)
 
@@ -37,8 +37,9 @@ const Empty: FC<EmptyProps> = ({
 
   return (
     <div
+      {...props}
       style={{ width, height }}
-      className={`select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-#f8f8f8 rd-1 ${className}`}>
+      className={`z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-#f8f8f8 rd-1`}>
       {showImg && randomImg && (
         <LazyLoad height={200}>
           <img className='w-50 rd-1' src={randomImg} alt='empty' />

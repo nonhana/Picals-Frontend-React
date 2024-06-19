@@ -14,8 +14,8 @@ import {
   likeActionsAPI,
   getUserFavoriteListAPI,
 } from '@/apis'
-import Empty from '@/components/common/empty'
 import { PersonalContext } from '..'
+import Empty from '@/components/common/empty'
 
 const MyFavorites: FC = () => {
   const { isMe, userId } = useContext(PersonalContext)
@@ -45,14 +45,18 @@ const MyFavorites: FC = () => {
 
   const [current, setCurrent] = useState(1)
   const [workList, setWorkList] = useState<WorkNormalItemInfo[]>([])
+  const [gettingWorkList, setGettingWorkList] = useState(true)
 
   const getFavoriteWorkList = async () => {
+    setGettingWorkList(true)
     try {
       const { data } = await getFavoriteWorkListAPI({ id: folderId!, current, pageSize: 12 })
       setWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setGettingWorkList(false)
     }
   }
 
@@ -120,8 +124,10 @@ const MyFavorites: FC = () => {
 
   /* ----------收藏夹列表相关---------- */
   const [folderList, setFolderList] = useState<FavoriteItemInfo[]>([])
+  const [gettingFolderList, setGettingFolderList] = useState(true)
 
   const fetchFavoriteList = async () => {
+    setGettingFolderList(true)
     try {
       const { data } = await getUserFavoriteListAPI({ id: userId! })
       const list = data.sort((a, b) => a.order - b.order)
@@ -130,6 +136,8 @@ const MyFavorites: FC = () => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setGettingFolderList(false)
     }
   }
 
@@ -140,11 +148,12 @@ const MyFavorites: FC = () => {
   return (
     <div className='flex mt-5 border-solid border-1px border-color-#6d757a min-h-150'>
       <Sidebar
+        loading={gettingFolderList}
         folderList={folderList}
         setFolderList={setFolderList}
         fetchFavoriteList={fetchFavoriteList}
       />
-      <div className='h-full border-l-solid border-1px border-color-#6d757a'>
+      <div className='w-954px h-full border-l-solid border-1px border-color-#6d757a'>
         {folderId ? (
           favoriteDetailInfo && (
             <>
@@ -153,6 +162,7 @@ const MyFavorites: FC = () => {
                 total={searchStatus ? searchTotal : favoriteDetailInfo.workNum}
                 current={searchStatus ? searchCurrent : current}
                 setCurrent={searchStatus ? setSearchCurrent : setCurrent}
+                loading={gettingWorkList}
                 workList={workList}
                 searchStatus={searchStatus}
                 setSearchStatus={setSearchStatus}
@@ -163,7 +173,7 @@ const MyFavorites: FC = () => {
             </>
           )
         ) : (
-          <div className='w-954px h-full'>
+          <div className='w-full h-full'>
             <Empty text='请选择一个收藏夹' />
           </div>
         )}

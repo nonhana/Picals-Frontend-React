@@ -7,6 +7,8 @@ import Empty from '@/components/common/empty'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
 import { message } from 'antd'
+import { CSSTransition } from 'react-transition-group'
+import WorkListSkeleton from '@/components/skeleton/work-list'
 
 type WorkListProps = {
   workCount: number
@@ -39,20 +41,24 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     }
   }
 
+  const [gettingWorkList, setGettingWorkList] = useState(true)
+
   const getUserWorks = async () => {
+    setGettingWorkList(true)
     try {
-      setWorkList([])
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
       setWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setGettingWorkList(false)
     }
   }
 
   const getUserLikeWorks = async () => {
+    setGettingWorkList(true)
     try {
-      setWorkList([])
       const { data } = await getUserLikeWorksAPI({
         id: userId!,
         current,
@@ -62,6 +68,8 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setGettingWorkList(false)
     }
   }
 
@@ -71,18 +79,36 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   }, [userId, current, currentPath])
 
   return (
-    <div className='relative w-100% flex gap-10px flex-wrap'>
-      {workList.size === 0 ? (
-        <Empty />
-      ) : (
+    <div className='relative w-full min-h-160'>
+      <CSSTransition
+        in={workList.size !== 0 && !gettingWorkList}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
         <div className='relative w-full flex flex-wrap gap-5'>
           {Array.from(workList.values()).map((work) => (
             <WorkNormalItem key={work.id} itemInfo={work} like={likeWork} deleteWork={deleteWork} />
           ))}
         </div>
-      )}
+      </CSSTransition>
 
-      <div className='relative mx-auto'>
+      <CSSTransition
+        in={workList.size === 0 && !gettingWorkList}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <Empty />
+      </CSSTransition>
+
+      <CSSTransition
+        in={workList.size === 0 && gettingWorkList}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <WorkListSkeleton className='absolute top-14' />
+      </CSSTransition>
+
+      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
         <Pagination total={workCount} pageSize={30} onChange={setCurrent} current={current} />
       </div>
     </div>

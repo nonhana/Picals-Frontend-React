@@ -14,6 +14,8 @@ import { PersonalContext } from '@/pages/personal-center'
 import Empty from '@/components/common/empty'
 import CreateFolderModal from '@/components/common/create-folder-modal'
 import { setFavoriteList } from '@/store/modules/favorites'
+import { CSSTransition } from 'react-transition-group'
+import FavoriteListSkeleton from '@/components/skeleton/favorite-list'
 
 const { confirm } = Modal
 
@@ -38,12 +40,13 @@ const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
 }
 
 type SidebarProps = {
+  loading: boolean
   folderList: FavoriteItemInfo[]
   setFolderList: (folderList: FavoriteItemInfo[]) => void
   fetchFavoriteList: () => Promise<void>
 }
 
-const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteList }) => {
+const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFavoriteList }) => {
   const dispatch = useDispatch()
 
   const { isMe, userId } = useContext(PersonalContext)
@@ -174,23 +177,44 @@ const Sidebar: FC<SidebarProps> = ({ folderList, setFolderList, fetchFavoriteLis
                 </div>
               </div>
             )}
-            {folderList.length === 0 ? (
+
+            <CSSTransition
+              in={folderList.length !== 0 && !loading}
+              timeout={300}
+              classNames='opacity-gradient'
+              unmountOnExit>
+              <>
+                {folderList.map((item, index) => (
+                  <FavoriteItem
+                    key={item.id}
+                    id={item.id}
+                    name={item.name}
+                    folderStatus={folderStatusList[index]}
+                    onChooseFolder={onChooseFolder}
+                    onDeleteFolder={onDeleteFolder}
+                    onEditFolder={onEditFolder}
+                  />
+                ))}
+              </>
+            </CSSTransition>
+
+            <CSSTransition
+              in={folderList.length === 0 && !loading}
+              timeout={300}
+              classNames='opacity-gradient'
+              unmountOnExit>
               <div className='w-250px bg-#fff'>
                 <Empty showImg={false} text='暂无收藏集' />
               </div>
-            ) : (
-              folderList.map((item, index) => (
-                <FavoriteItem
-                  key={item.id}
-                  id={item.id}
-                  name={item.name}
-                  folderStatus={folderStatusList[index]}
-                  onChooseFolder={onChooseFolder}
-                  onDeleteFolder={onDeleteFolder}
-                  onEditFolder={onEditFolder}
-                />
-              ))
-            )}
+            </CSSTransition>
+
+            <CSSTransition
+              in={folderList.length === 0 && loading}
+              timeout={300}
+              classNames='opacity-gradient'
+              unmountOnExit>
+              <FavoriteListSkeleton className='absolute' />
+            </CSSTransition>
           </div>
         </SortableContext>
       </DndContext>

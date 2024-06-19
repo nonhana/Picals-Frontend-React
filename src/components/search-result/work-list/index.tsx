@@ -6,6 +6,8 @@ import Pagination from '@/components/common/pagination'
 import { Radio, RadioChangeEvent } from 'antd'
 import { likeActionsAPI, searchWorksByLabelAPI } from '@/apis'
 import Empty from '@/components/common/empty'
+import { CSSTransition } from 'react-transition-group'
+import WorkListSkeleton from '@/components/skeleton/work-list'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -36,9 +38,11 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
 
   /* ----------作品列表相关--------- */
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
+  const [gettingWorkList, setGettingWorkList] = useState(false)
 
   const searchWorksByLabel = async () => {
     try {
+      setGettingWorkList(true)
       const { data } = await searchWorksByLabelAPI({
         labelName,
         sortType,
@@ -49,6 +53,8 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setGettingWorkList(false)
     }
   }
 
@@ -69,7 +75,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
   const changeType = ({ target: { value } }: RadioChangeEvent) => setSortType(value)
 
   return (
-    <div className='relative p-5 w-full'>
+    <div className='relative p-5 w-full min-h-180'>
       <div className='w-100% flex justify-between items-center mb-10px'>
         <div className='flex gap-10px items-center'>
           <div className='title font-size-24px'>
@@ -88,19 +94,35 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
         />
       </div>
 
-      <div className='relative w-full flex flex-wrap gap-20px'>
-        {workList.size === 0 ? (
-          <Empty text='暂无数据' />
-        ) : (
-          <>
-            {Array.from(workList.values()).map((item) => (
-              <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
-            ))}
-          </>
-        )}
-      </div>
+      <CSSTransition
+        in={workList.size !== 0 && !gettingWorkList}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <div className='relative w-full flex flex-wrap gap-20px'>
+          {Array.from(workList.values()).map((item) => (
+            <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
+          ))}
+        </div>
+      </CSSTransition>
 
-      <div className='flex justify-center'>
+      <CSSTransition
+        in={workList.size === 0 && !gettingWorkList}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <Empty />
+      </CSSTransition>
+
+      <CSSTransition
+        in={workList.size === 0 && gettingWorkList}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <WorkListSkeleton className='absolute top-14' />
+      </CSSTransition>
+
+      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
         <Pagination total={workCount} pageSize={30} current={current} onChange={pageChange} />
       </div>
     </div>

@@ -10,12 +10,15 @@ import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import Empty from '@/components/common/empty'
 import { favoriteActionsAPI, moveFavoriteWorksAPI, copyFavoriteWorksAPI } from '@/apis'
 import { PersonalContext } from '@/pages/personal-center'
+import { CSSTransition } from 'react-transition-group'
+import FavoriteWorkListSkeleton from '@/components/skeleton/favorite-work-list'
 
 const { Search } = Input
 const { confirm } = Modal
 
 type WorkListProps = {
   total: number
+  loading: boolean
   workList: WorkNormalItemInfo[]
   current: number
   setCurrent: (current: number) => void
@@ -28,6 +31,7 @@ type WorkListProps = {
 
 const WorkList: FC<WorkListProps> = ({
   total,
+  loading,
   workList,
   current,
   setCurrent,
@@ -202,7 +206,7 @@ const WorkList: FC<WorkListProps> = ({
   return (
     <>
       {contextHolder}
-      <div className='relative w-954px flex flex-col items-center'>
+      <div className='relative w-954px flex flex-col items-center min-h-150'>
         {settingStatus && (
           <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#6d757a'>
             <Button type='default' onClick={() => setSettingStatus(false)}>
@@ -244,7 +248,10 @@ const WorkList: FC<WorkListProps> = ({
           <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#6d757a'>
             <div className='flex gap-5 items-center'>
               {isLogin && isMe && (
-                <Button type='link' onClick={() => setSettingStatus(true)}>
+                <Button
+                  type='link'
+                  onClick={() => setSettingStatus(true)}
+                  disabled={workList.length === 0}>
                   批量操作
                 </Button>
               )}
@@ -263,10 +270,12 @@ const WorkList: FC<WorkListProps> = ({
           </div>
         )}
 
-        {workList.length === 0 ? (
-          <Empty text={searchStatus ? '没有找到相关作品' : '暂无作品，快去收藏一些吧~'} />
-        ) : (
-          <div className='mt-5 w-826px flex flex-wrap gap-30px'>
+        <CSSTransition
+          in={workList.length !== 0 && !loading}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <div className='relative w-full flex flex-wrap gap-5 p-5'>
             {workList.map((item, index) => (
               <WorkFavoriteItem
                 key={item.id}
@@ -281,9 +290,29 @@ const WorkList: FC<WorkListProps> = ({
               />
             ))}
           </div>
-        )}
+        </CSSTransition>
 
-        <Pagination total={total} pageSize={12} current={current} onChange={onPageChange} />
+        <CSSTransition
+          in={workList.length === 0 && !loading}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <div className='absolute w-952px top-16'>
+            <Empty text={searchStatus ? '没有找到相关作品' : '暂无作品，快去收藏一些吧~'} />
+          </div>
+        </CSSTransition>
+
+        <CSSTransition
+          in={workList.length === 0 && loading}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <FavoriteWorkListSkeleton className='absolute top-20 left-5' />
+        </CSSTransition>
+
+        <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+          <Pagination total={total} pageSize={12} current={current} onChange={onPageChange} />
+        </div>
       </div>
 
       <Modal

@@ -6,6 +6,8 @@ import { getRecommendWorksAPI } from '@/apis'
 import { message } from 'antd'
 import Empty from '@/components/common/empty'
 import { likeActionsAPI } from '@/apis'
+import WorkListSkeleton from '@/components/skeleton/work-list'
+import { CSSTransition } from 'react-transition-group'
 
 const WorkList: FC = () => {
   const [loading, setLoading] = useState(false)
@@ -50,13 +52,26 @@ const WorkList: FC = () => {
         <span>推荐作品</span>
       </div>
 
-      <div className='relative w-full flex flex-wrap gap-20px'>
-        {Array.from(workList.values()).map((item) => (
-          <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
-        ))}
-      </div>
+      <CSSTransition
+        in={workList.size !== 0 && !loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <div className='relative w-full flex flex-wrap gap-20px'>
+          {Array.from(workList.values()).map((item) => (
+            <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
+          ))}
+        </div>
+      </CSSTransition>
 
-      {workList.size === 0 && !loading && <Empty />}
+      {workList.size === 0 &&
+        (loading ? (
+          <div className='relative w-full'>
+            <WorkListSkeleton />
+          </div>
+        ) : (
+          <Empty />
+        ))}
     </div>
   )
 }

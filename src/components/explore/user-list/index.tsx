@@ -8,6 +8,8 @@ import { getRecommendUserListAPI, getWorkSimpleAPI, likeActionsAPI, userActionsA
 import Empty from '@/components/common/empty'
 import { message } from 'antd'
 import { increaseFollowNum, decreaseFollowNum } from '@/store/modules/user'
+import UserListSkeleton from '@/components/skeleton/user-list'
+import { CSSTransition } from 'react-transition-group'
 
 type UserListProps = {
   width: number
@@ -91,7 +93,11 @@ const UserList: FC<UserListProps> = ({ width }) => {
 
   return (
     <>
-      <div className='relative w-full p-5'>
+      <CSSTransition
+        in={userList.size !== 0 && !loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
         <div className='relative w-full flex flex-col gap-20px'>
           {Array.from(userList.values()).map((item) => (
             <UserItem
@@ -103,9 +109,9 @@ const UserList: FC<UserListProps> = ({ width }) => {
             />
           ))}
         </div>
-      </div>
+      </CSSTransition>
 
-      {userList.size === 0 && !loading && <Empty />}
+      {userList.size === 0 && (loading ? <UserListSkeleton /> : <Empty />)}
     </>
   )
 }

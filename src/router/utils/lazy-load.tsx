@@ -6,16 +6,9 @@ const LazyLoad = (Component: LazyExoticComponent<ComponentType>): ReactNode => {
   return (
     <Suspense
       fallback={
-        <Spin
-          size='large'
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-          }}
-        />
+        <div className='relative w-full h-50 flex justify-center items-center'>
+          <Spin size='large' />
+        </div>
       }>
       <Component />
     </Suspense>
