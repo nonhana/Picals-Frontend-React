@@ -54,7 +54,7 @@ const ImgUpload: FC<ImgUploadProps> = ({
 
       orderedList.current[index] = data.data
       if (orderedList.current.every((item) => item)) {
-        setImgList([...imgList, ...orderedList.current])
+        setSourceImgList([...imgList, ...orderedList.current])
         orderedList.current = [] // 清空临时数组
       }
       setUploadList((prevList) => prevList.filter((item) => item.fileName !== file.name))
