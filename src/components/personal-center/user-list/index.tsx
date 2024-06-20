@@ -135,7 +135,7 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
         timeout={300}
         classNames='opacity-gradient'
         unmountOnExit>
-        <UserListSkeleton className='absolute top-14' />
+        <UserListSkeleton className='absolute top-5' />
       </CSSTransition>
 
       <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>

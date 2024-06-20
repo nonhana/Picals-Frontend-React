@@ -31,7 +31,9 @@ const MyWorks: FC = () => {
           <span>{workCount}</span>
         </div>
       </div>
-      <LabelList />
+      <div className='mb-5'>
+        <LabelList />
+      </div>
       <WorkList workCount={workCount} />
     </div>
   )

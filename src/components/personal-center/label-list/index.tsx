@@ -31,7 +31,7 @@ const LabelList: FC = () => {
   }, [userId])
 
   return (
-    <div className='relative w-full min-h-15'>
+    <div className='relative w-full min-h-10'>
       <CSSTransition
         in={labels.length !== 0 && !gettingLabels}
         timeout={300}
