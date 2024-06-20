@@ -13,30 +13,35 @@ type LabelListProps = {
 
 const LabelList: FC<LabelListProps> = ({ labelList, loading }) => {
   return (
-    <>
+    <div className='relative w-full min-h-10'>
       <CSSTransition
         in={labelList.length !== 0 && !loading}
         timeout={300}
         classNames='opacity-gradient'
         unmountOnExit>
-        <div className='relative w-full flex flex-wrap gap-20px'>
-          <LayoutList scrollType='label'>
-            {labelList.map((item) => (
-              <LabelItem key={item.id} {...item} />
-            ))}
-          </LayoutList>
-        </div>
+        <LayoutList scrollType='label'>
+          {labelList.map((item) => (
+            <LabelItem key={item.id} {...item} />
+          ))}
+        </LayoutList>
       </CSSTransition>
 
-      {labelList.length === 0 &&
-        (loading ? (
-          <div className='relative w-full'>
-            <LabelListSkeleton />
-          </div>
-        ) : (
-          <Empty showImg={false} />
-        ))}
-    </>
+      <CSSTransition
+        in={labelList.length === 0 && !loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <Empty showImg={false} />
+      </CSSTransition>
+
+      <CSSTransition
+        in={labelList.length === 0 && loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <LabelListSkeleton className='absolute top-0' />
+      </CSSTransition>
+    </div>
   )
 }
 

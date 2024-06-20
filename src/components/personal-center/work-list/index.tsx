@@ -79,7 +79,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   }, [userId, current, currentPath])
 
   return (
-    <div className='relative w-full min-h-160'>
+    <div className='relative w-full min-h-160 pb-15'>
       <CSSTransition
         in={workList.size !== 0 && !gettingWorkList}
         timeout={300}

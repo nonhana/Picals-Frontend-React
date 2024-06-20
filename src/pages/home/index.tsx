@@ -25,47 +25,55 @@ const Home: FC = () => {
   }, [currentWidth])
 
   /* ----------获取数据相关---------- */
-  const [loading, setLoading] = useState<boolean>(false)
 
   // 标签列表相关
   const [labelList, setLabelList] = useState<LabelInfo[]>([])
+  const [gettingLabelList, setGettingLabelList] = useState(true)
+
   const getLabelList = async () => {
+    setGettingLabelList(true)
     try {
-      setLoading(true)
       const { data } = await getRecommendLabelListAPI()
       setLabelList(data)
     } catch (error) {
-      console.log('获取标签列表失败', error)
+      console.log('出现错误了喵！！', error)
+      return
     } finally {
-      setLoading(false)
+      setGettingLabelList(false)
     }
   }
 
   // 最新关注作品相关
   const [followWorkList, setFollowWorkList] = useState<WorkNormalItemInfo[]>([])
+  const [gettingFollowWorkList, setGettingFollowWorkList] = useState(true)
+
   const getFollowNewWorks = async () => {
+    setGettingFollowWorkList(true)
     try {
-      setLoading(true)
       const { data } = await getFollowNewWorksAPI({ pageSize: 30, current: 1 })
       setFollowWorkList(data)
     } catch (error) {
-      console.log('获取最新关注作品失败', error)
+      console.log('出现错误了喵！！', error)
+      return
     } finally {
-      setLoading(false)
+      setGettingFollowWorkList(false)
     }
   }
 
   // 获取推荐作品相关
   const [recommendWorkList, setRecommendWorkList] = useState<WorkNormalItemInfo[]>([])
+  const [gettingRecommendWorkList, setGettingRecommendWorkList] = useState(true)
+
   const getRecommendWorks = async () => {
+    setGettingRecommendWorkList(true)
     try {
-      setLoading(true)
       const { data } = await getRecommendWorksAPI({ pageSize: 30, current: 1 })
       setRecommendWorkList(data)
     } catch (error) {
-      console.log('获取推荐作品失败', error)
+      console.log('出现错误了喵！！', error)
+      return
     } finally {
-      setLoading(false)
+      setGettingRecommendWorkList(false)
     }
   }
 
@@ -78,9 +86,9 @@ const Home: FC = () => {
   return (
     <div ref={homeRef} className='relative w-100% my-30px'>
       <div style={{ width: `${width}px` }} className='flex flex-col mx-auto'>
-        <LabelList loading={loading} labelList={labelList} />
-        {isLogin && <FollowedWorks loading={loading} workList={followWorkList} />}
-        <RecommendedWorks loading={loading} workList={recommendWorkList} />
+        <LabelList loading={gettingLabelList} labelList={labelList} />
+        {isLogin && <FollowedWorks loading={gettingFollowWorkList} workList={followWorkList} />}
+        <RecommendedWorks loading={gettingRecommendWorkList} workList={recommendWorkList} />
         {/* TODO: 暂时没写好排行榜接口 */}
         {/* <RankingList loading={loading} workList={rankWorkList} /> */}
       </div>

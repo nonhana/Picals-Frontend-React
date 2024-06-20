@@ -70,10 +70,10 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
     }
   }
 
-  const [searchingUser, setSearchingUser] = useState(false)
+  const [searchingUser, setSearchingUser] = useState(true)
   const searchUser = async () => {
+    setSearchingUser(true)
     try {
-      setSearchingUser(true)
       const { data } = await searchUserAPI({
         keyword: labelName,
         current,

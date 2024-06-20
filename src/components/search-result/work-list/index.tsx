@@ -38,11 +38,11 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
 
   /* ----------作品列表相关--------- */
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
-  const [gettingWorkList, setGettingWorkList] = useState(false)
+  const [gettingWorkList, setGettingWorkList] = useState(true)
 
   const searchWorksByLabel = async () => {
+    setGettingWorkList(true)
     try {
-      setGettingWorkList(true)
       const { data } = await searchWorksByLabelAPI({
         labelName,
         sortType,

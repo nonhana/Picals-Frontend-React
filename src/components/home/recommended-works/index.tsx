@@ -24,30 +24,38 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
   }
 
   return (
-    <div className='relative p-5'>
+    <div className='relative p-5 min-h-160'>
       <div className='title m-b-10px'>
         <span>推荐作品</span>
       </div>
+
       <CSSTransition
         in={workList.size !== 0 && !loading}
         timeout={300}
         classNames='opacity-gradient'
         unmountOnExit>
-        <div className='relative w-full flex flex-wrap gap-20px'>
+        <div className='relative w-full flex flex-wrap gap-5'>
           {Array.from(workList.values()).map((item) => (
             <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
           ))}
         </div>
       </CSSTransition>
 
-      {workList.size === 0 &&
-        (loading ? (
-          <div className='relative w-full'>
-            <WorkListSkeleton />
-          </div>
-        ) : (
-          <Empty />
-        ))}
+      <CSSTransition
+        in={workList.size === 0 && !loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <Empty />
+      </CSSTransition>
+
+      <CSSTransition
+        in={workList.size === 0 && loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <WorkListSkeleton className='absolute top-14' />
+      </CSSTransition>
     </div>
   )
 }

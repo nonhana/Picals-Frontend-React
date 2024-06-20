@@ -19,14 +19,14 @@ const UserList: FC<UserListProps> = ({ width }) => {
   const dispatch = useDispatch()
 
   const { id: storeId } = useSelector((state: AppState) => state.user.userInfo)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
   const [current, setCurrent] = useState(1)
 
   // 获取推荐用户列表
   const getRecommendUserList = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
       const { data } = await getRecommendUserListAPI({ current, pageSize: 6 })
       const userSource = await Promise.all(
         data.map(async (user) => {
@@ -36,7 +36,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
           return { ...user, works }
         }),
       )
-      setUserList(userSource)
+      setUserList([...Array.from(userList.values()), ...userSource])
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -92,7 +92,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
   }, [isBottom])
 
   return (
-    <>
+    <div className='relative w-full p-5 min-h-125'>
       <CSSTransition
         in={userList.size !== 0 && !loading}
         timeout={300}
@@ -111,8 +111,22 @@ const UserList: FC<UserListProps> = ({ width }) => {
         </div>
       </CSSTransition>
 
-      {userList.size === 0 && (loading ? <UserListSkeleton /> : <Empty />)}
-    </>
+      <CSSTransition
+        in={userList.size === 0 && !loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <Empty />
+      </CSSTransition>
+
+      <CSSTransition
+        in={userList.size === 0 && loading}
+        timeout={300}
+        classNames='opacity-gradient'
+        unmountOnExit>
+        <UserListSkeleton className='absolute top-5' />
+      </CSSTransition>
+    </div>
   )
 }
 

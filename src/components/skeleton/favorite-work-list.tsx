@@ -16,14 +16,14 @@ const FavoriteWorkListSkeleton: FC<FavoriteWorkListSkeletonProps> = ({
   borderRadius = 4,
   ...props
 }) => {
-  const width = 954
+  const width = 796
   const list = []
 
   let height
 
   for (let i = 1; i <= row; i++) {
     for (let j = 0; j < column; j++) {
-      const itemWidth = (width - padding * (column + 1)) / column
+      const itemWidth = (width - padding * (column - 1)) / column
       const x = j * (itemWidth + padding)
       const height1 = itemWidth
       const height2 = 20

@@ -206,7 +206,7 @@ const WorkList: FC<WorkListProps> = ({
   return (
     <>
       {contextHolder}
-      <div className='relative w-954px flex flex-col items-center min-h-150'>
+      <div className='relative w-954px flex flex-col items-center min-h-150 pb-10'>
         {settingStatus && (
           <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#6d757a'>
             <Button type='default' onClick={() => setSettingStatus(false)}>
@@ -265,6 +265,7 @@ const WorkList: FC<WorkListProps> = ({
                 placeholder='输入作品名称'
                 onChange={(e) => setKeyword(e.target.value)}
                 onSearch={onSearch}
+                disabled={workList.length === 0}
               />
             </div>
           </div>
@@ -275,7 +276,7 @@ const WorkList: FC<WorkListProps> = ({
           timeout={300}
           classNames='opacity-gradient'
           unmountOnExit>
-          <div className='relative w-full flex flex-wrap gap-5 p-5'>
+          <div className='w-199 relative flex flex-wrap gap-5 py-5'>
             {workList.map((item, index) => (
               <WorkFavoriteItem
                 key={item.id}
@@ -307,7 +308,7 @@ const WorkList: FC<WorkListProps> = ({
           timeout={300}
           classNames='opacity-gradient'
           unmountOnExit>
-          <FavoriteWorkListSkeleton className='absolute top-20 left-5' />
+          <FavoriteWorkListSkeleton className='absolute w-full  top-20' />
         </CSSTransition>
 
         <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>

@@ -25,7 +25,6 @@ const WorkListSkeleton: FC<WorkListSkeletonProps> = ({
   const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
-    console.log('currentWidth', currentWidth)
     if (currentWidth < 1305) {
       setWidth(1040)
       setColumn(5)

@@ -17,12 +17,12 @@ type MainListProps = {
 
 const MainList: FC<MainListProps> = ({ pageSize, current }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
-  const [workList, setWorkList, setWorkMapList] = useMap<WorkNormalItemInfo>([])
-  const [loading, setLoading] = useState(false)
+  const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
+  const [loading, setLoading] = useState(true)
 
   const getFollowNewWorks = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
       const { data } = await getFollowNewWorksAPI({ pageSize, current })
       setWorkList(data)
     } catch (error) {
@@ -39,16 +39,12 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
 
   const handleLike = async (id: string) => {
     await likeActionsAPI({ id })
-    setWorkMapList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
+    updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
-  useEffect(() => {
-    console.log('current:', current)
-  }, [current])
-
   return (
-    <div className='relative w-full p-5'>
-      <div className='title m-b-10px'>
+    <div className='relative w-full p-5 min-h-160'>
+      <div className='title mb-10px'>
         <span>已关注用户新作</span>
       </div>
 
@@ -59,21 +55,28 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>
-            <div className='relative w-full flex flex-wrap gap-20px'>
+            <div className='relative w-full flex flex-wrap gap-5'>
               {Array.from(workList.values()).map((item) => (
                 <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
               ))}
             </div>
           </CSSTransition>
 
-          {workList.size === 0 &&
-            (loading ? (
-              <div className='relative w-full'>
-                <WorkListSkeleton row={1} />
-              </div>
-            ) : (
-              <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
-            ))}
+          <CSSTransition
+            in={workList.size === 0 && !loading}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
+          </CSSTransition>
+
+          <CSSTransition
+            in={workList.size === 0 && loading}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <WorkListSkeleton className='absolute top-14' />
+          </CSSTransition>
         </>
       ) : (
         <Empty text='还没登录，这里自然是空的' />
