@@ -37,7 +37,7 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
       {isLogin ? (
         <>
           <CSSTransition
-            in={workList.size !== 0 && !loading}
+            in={sourceData.length !== 0 && !loading}
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>
@@ -49,7 +49,7 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
           </CSSTransition>
 
           <CSSTransition
-            in={workList.size === 0 && !loading}
+            in={sourceData.length === 0 && !loading}
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>
@@ -57,7 +57,7 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
           </CSSTransition>
 
           <CSSTransition
-            in={workList.size === 0 && loading}
+            in={sourceData.length === 0 && loading}
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>

@@ -105,7 +105,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
         timeout={300}
         classNames='opacity-gradient'
         unmountOnExit>
-        <WorkListSkeleton className='absolute top-14' />
+        <WorkListSkeleton className='absolute top-0' />
       </CSSTransition>
 
       <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>

@@ -40,9 +40,7 @@ const WorkList: FC = () => {
   const isBottom = useAtBottom()
 
   useEffect(() => {
-    console.log('isBottom', isBottom)
     if (isBottom) {
-      console.log('到达底部')
       setCurrent((prev) => prev + 1)
     }
   }, [isBottom])
