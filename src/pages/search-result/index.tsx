@@ -101,7 +101,7 @@ const SearchResult: FC = () => {
         <div
           style={{
             width: `${width}px`,
-            marginTop: current === 'work' ? '0' : '-180px',
+            marginTop: current === 'work' ? '0' : '-210px',
           }}
           className='flex flex-col items-center mx-auto transition-all duration-300 ease-in-out'>
           {labelDetail ? (

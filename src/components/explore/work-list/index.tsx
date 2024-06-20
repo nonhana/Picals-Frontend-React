@@ -3,7 +3,6 @@ import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap, useAtBottom } from '@/hooks'
 import { getRecommendWorksAPI } from '@/apis'
-import { message } from 'antd'
 import Empty from '@/components/common/empty'
 import { likeActionsAPI } from '@/apis'
 import WorkListSkeleton from '@/components/skeleton/work-list'
@@ -13,12 +12,14 @@ const WorkList: FC = () => {
   const [loading, setLoading] = useState(true)
   const [workList, setWorkList, updateItem] = useMap<WorkNormalItemInfo>([])
   const [current, setCurrent] = useState(1)
+  const atBottom = useAtBottom()
+  const [isFinal, setIsFinal] = useState(false)
 
   const getRecommendWorks = async () => {
     setLoading(true)
     try {
       const { data } = await getRecommendWorksAPI({ pageSize: 30, current })
-      if (data.length === 0) return message.info('暂时没有更多了...')
+      if (data.length < 30) setIsFinal(true)
       setWorkList([...Array.from(workList.values()), ...data])
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -29,6 +30,10 @@ const WorkList: FC = () => {
   }
 
   useEffect(() => {
+    if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
+  }, [atBottom])
+
+  useEffect(() => {
     getRecommendWorks()
   }, [current])
 
@@ -36,14 +41,6 @@ const WorkList: FC = () => {
     await likeActionsAPI({ id })
     updateItem(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
-
-  const isBottom = useAtBottom()
-
-  useEffect(() => {
-    if (isBottom) {
-      setCurrent((prev) => prev + 1)
-    }
-  }, [isBottom])
 
   return (
     <div className='relative w-full p-5 min-h-160'>

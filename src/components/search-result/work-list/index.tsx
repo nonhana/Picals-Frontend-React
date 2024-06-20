@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { WorkNormalItemInfo } from '@/utils/types'
-import { useMap } from '@/hooks/useMap'
+import { useMap } from '@/hooks'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { Radio, RadioChangeEvent } from 'antd'
@@ -23,7 +24,13 @@ type WorkListProps = {
 }
 
 const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCount }) => {
+  const navigate = useNavigate()
+
   const [sortType, setSortType] = useState(URLSortType)
+
+  useEffect(() => {
+    setSortType(URLSortType)
+  }, [URLSortType])
 
   /* ----------分页相关--------- */
   const [current, setCurrent] = useState(1)
@@ -31,10 +38,6 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
   const pageChange = (page: number) => {
     current !== page && setCurrent(page)
   }
-
-  useEffect(() => {
-    console.log('current:', current)
-  }, [current])
 
   /* ----------作品列表相关--------- */
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
@@ -72,10 +75,14 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     }
   }
 
-  const changeType = ({ target: { value } }: RadioChangeEvent) => setSortType(value)
+  const changeType = ({ target: { value } }: RadioChangeEvent) => {
+    navigate({
+      search: `?type=work&label=${labelName}&sortType=${value}`,
+    })
+  }
 
   return (
-    <div className='relative p-5 w-full min-h-180'>
+    <div className='relative p-5 w-full min-h-180 pb-15'>
       <div className='w-100% flex justify-between items-center mb-10px'>
         <div className='flex gap-10px items-center'>
           <div className='title font-size-24px'>

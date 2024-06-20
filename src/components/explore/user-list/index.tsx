@@ -22,12 +22,15 @@ const UserList: FC<UserListProps> = ({ width }) => {
   const [loading, setLoading] = useState(true)
   const [userList, setUserList, updateItem] = useMap<UserItemInfo>([])
   const [current, setCurrent] = useState(1)
+  const atBottom = useAtBottom()
+  const [isFinal, setIsFinal] = useState(false)
 
   // 获取推荐用户列表
   const getRecommendUserList = async () => {
     setLoading(true)
     try {
       const { data } = await getRecommendUserListAPI({ current, pageSize: 6 })
+      if (data.length < 6) setIsFinal(true)
       const userSource = await Promise.all(
         data.map(async (user) => {
           const works = await Promise.all(
@@ -46,10 +49,12 @@ const UserList: FC<UserListProps> = ({ width }) => {
   }
 
   useEffect(() => {
+    if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
+  }, [atBottom])
+
+  useEffect(() => {
     getRecommendUserList()
   }, [current])
-
-  const isBottom = useAtBottom()
 
   const handleFollow = async (id: string) => {
     if (id === storeId) {
@@ -84,12 +89,6 @@ const UserList: FC<UserListProps> = ({ width }) => {
       return
     }
   }
-
-  useEffect(() => {
-    if (isBottom) {
-      setCurrent((prev) => prev + 1)
-    }
-  }, [isBottom])
 
   return (
     <div className='relative w-full p-5 min-h-125'>

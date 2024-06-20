@@ -8,6 +8,7 @@ import RecommendedWorks from '@/components/home/recommended-works'
 // import RankingList from '@/components/home/ranking-list'
 import { getRecommendLabelListAPI, getFollowNewWorksAPI, getRecommendWorksAPI } from '@/apis'
 import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
+import { useAtBottom } from '@/hooks'
 
 const Home: FC = () => {
   const { isLogin } = useSelector((state: AppState) => state.user)
@@ -63,12 +64,16 @@ const Home: FC = () => {
   // 获取推荐作品相关
   const [recommendWorkList, setRecommendWorkList] = useState<WorkNormalItemInfo[]>([])
   const [gettingRecommendWorkList, setGettingRecommendWorkList] = useState(true)
+  const [current, setCurrent] = useState(1)
+  const atBottom = useAtBottom()
+  const [isFinal, setIsFinal] = useState(false)
 
   const getRecommendWorks = async () => {
     setGettingRecommendWorkList(true)
     try {
-      const { data } = await getRecommendWorksAPI({ pageSize: 30, current: 1 })
-      setRecommendWorkList(data)
+      const { data } = await getRecommendWorksAPI({ pageSize: 30, current })
+      if (data.length < 30) setIsFinal(true)
+      setRecommendWorkList([...recommendWorkList, ...data])
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -76,6 +81,14 @@ const Home: FC = () => {
       setGettingRecommendWorkList(false)
     }
   }
+
+  useEffect(() => {
+    if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
+  }, [atBottom])
+
+  useEffect(() => {
+    getRecommendWorks()
+  }, [current])
 
   useEffect(() => {
     getLabelList()
