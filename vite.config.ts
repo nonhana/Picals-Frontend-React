@@ -70,7 +70,7 @@ export default defineConfig(({ mode }) => {
         disable: false,
         threshold: 10240,
         algorithm: 'brotliCompress',
-        deleteOriginFile: true,
+        deleteOriginFile: false,
       }),
     ],
     build: {
