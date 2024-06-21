@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import type { LabelDetailInfo } from '@/utils/types'
 import { Button } from 'antd'
 import LabelItem from '@/components/common/label-item'
@@ -15,6 +16,7 @@ type LabelInfoProps = LabelDetailInfo & {
 
 const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workCount, like }) => {
   const dispatch = useDispatch()
+  const { isLogin } = useSelector((state: AppState) => state.user)
 
   const handleLike = async () => {
     try {
@@ -70,15 +72,16 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
             </div>
           </div>
         </div>
-        {isMyLike ? (
-          <Button type='default' size='large' shape='round' onClick={handleLike}>
-            移除喜欢的标签
-          </Button>
-        ) : (
-          <Button type='primary' size='large' shape='round' onClick={handleLike}>
-            添加喜欢的标签
-          </Button>
-        )}
+        {isLogin &&
+          (isMyLike ? (
+            <Button type='default' size='large' shape='round' onClick={handleLike}>
+              移除喜欢的标签
+            </Button>
+          ) : (
+            <Button type='primary' size='large' shape='round' onClick={handleLike}>
+              添加喜欢的标签
+            </Button>
+          ))}
       </div>
       <LayoutList scrollType='label'>
         {labelList.map((item) => (

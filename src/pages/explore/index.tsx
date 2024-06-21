@@ -38,7 +38,7 @@ const Explore: FC = () => {
   }
 
   return (
-    <div ref={exploreRef} className='relative w-100% my-30px'>
+    <div ref={exploreRef} className='relative w-100% my-30px select-none'>
       <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
         <Menu
           className='w-100%'

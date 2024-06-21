@@ -41,7 +41,7 @@ const FollowedNew: FC = () => {
   }, [currentWidth])
 
   return (
-    <div ref={newRef} className='relative w-100% my-30px'>
+    <div ref={newRef} className='relative w-100% my-30px select-none'>
       <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
         <MainList pageSize={pageSize} current={current} />
         <Pagination total={total} pageSize={pageSize} current={current} onChange={onChange} />

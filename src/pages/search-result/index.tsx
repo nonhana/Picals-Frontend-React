@@ -48,7 +48,7 @@ const SearchResult: FC = () => {
 
   const checkoutMenu: MenuProps['onClick'] = (e) => {
     navigate({
-      search: `?type=${e.key}&label=${searchFilter.label}&sortType=${searchFilter.sortType}`,
+      search: `?label=${searchFilter.label}&type=${e.key}&sortType=${searchFilter.sortType}`,
     })
   }
 

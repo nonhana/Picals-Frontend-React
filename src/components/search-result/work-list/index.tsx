@@ -77,7 +77,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
 
   const changeType = ({ target: { value } }: RadioChangeEvent) => {
     navigate({
-      search: `?type=work&label=${labelName}&sortType=${value}`,
+      search: `?label=${labelName}&type=work&sortType=${value}`,
     })
   }
 

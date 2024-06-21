@@ -97,7 +97,7 @@ const Home: FC = () => {
   }, [])
 
   return (
-    <div ref={homeRef} className='relative w-100% my-30px'>
+    <div ref={homeRef} className='relative w-100% my-30px select-none'>
       <div style={{ width: `${width}px` }} className='flex flex-col mx-auto'>
         <LabelList loading={gettingLabelList} labelList={labelList} />
         {isLogin && <FollowedWorks loading={gettingFollowWorkList} workList={followWorkList} />}

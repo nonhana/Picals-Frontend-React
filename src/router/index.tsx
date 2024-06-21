@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from '@/app'
 import AutoTop from './utils/auto-top'
 import LazyLoad from './utils/lazy-load'
+import AuthRouter from './utils/auth-router'
 
 const routeList: RouteObject[] = [
   {
@@ -28,7 +29,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'followed-new',
-        element: LazyLoad(lazy(() => import('@/pages/followed-new'))),
+        element: <AuthRouter>{LazyLoad(lazy(() => import('@/pages/followed-new')))}</AuthRouter>,
       },
       {
         path: 'explore',
@@ -44,7 +45,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'upload',
-        element: LazyLoad(lazy(() => import('@/pages/upload'))),
+        element: <AuthRouter>{LazyLoad(lazy(() => import('@/pages/upload')))}</AuthRouter>,
       },
       {
         path: 'personal-center/:userId',
