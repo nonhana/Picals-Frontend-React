@@ -70,29 +70,31 @@ const WorkList: FC<WorkListProps> = ({
   /* ----------作品编辑相关---------- */
   //#region
   const [settingStatus, setSettingStatus] = useState(false) // 是否处于批量编辑状态
-  const [chooseStatusList, setChooseStatusList] = useState<boolean[]>([]) // 每个作品的选中状态
   const [chosenWorkList, setChosenWorkList] = useState<string[]>([]) // 选中的作品id列表
   const [allChosen, setAllChosen] = useState(false) // 是否全选
 
   // 重置编辑状态
   const resetSettingStatus = () => {
     setSettingStatus(false)
-    setChooseStatusList(new Array(workList.length).fill(false))
     setAllChosen(false)
     setChosenWorkList([])
   }
 
-  // 选中作品，将对应的作品选中状态取反
+  // 选中作品。如果选中列表中已经有该作品，则将其移除；否则添加
   const choose = (id: string) => {
-    setChooseStatusList((prev) => {
-      const targetIndex = workList.findIndex((item) => item.id === id)
-      return prev.map((item, index) => (index === targetIndex ? !item : item))
+    setChosenWorkList((prev) => {
+      if (prev.includes(id)) return prev.filter((item) => item !== id)
+      return [...prev, id]
     })
   }
   // 全选或取消全选
   const chooseAllWorks = (e: RadioChangeEvent) => {
     setAllChosen(e.target.value)
-    setChooseStatusList(new Array(workList.length).fill(e.target.value))
+    if (e.target.value) {
+      setChosenWorkList(workList.map((item) => item.id))
+    } else {
+      setChosenWorkList([])
+    }
   }
   // 单个作品取消收藏
   const cancelSingleWork = (id: string) => {
@@ -111,22 +113,10 @@ const WorkList: FC<WorkListProps> = ({
   }
 
   useEffect(() => {
-    if (settingStatus) return
-    setChooseStatusList(new Array(workList.length).fill(false))
+    if (settingStatus) return // 如果处于编辑状态，不重置
     setAllChosen(false)
     setChosenWorkList([])
   }, [settingStatus, workList])
-
-  useEffect(() => {
-    setChosenWorkList(
-      workList.reduce((acc, item, index) => {
-        if (chooseStatusList[index]) {
-          acc.push(item.id)
-        }
-        return acc
-      }, [] as string[]),
-    )
-  }, [chooseStatusList])
   //#endregion
 
   /* ----------Modal相关---------- */
@@ -241,7 +231,7 @@ const WorkList: FC<WorkListProps> = ({
               </Button>
             </div>
             <span className='font-size-14px color-#6d757a'>
-              已选择{chooseStatusList.filter((item) => item).length}个作品
+              已选择{chosenWorkList.length}个作品
             </span>
           </div>
         ) : (
@@ -277,12 +267,12 @@ const WorkList: FC<WorkListProps> = ({
           classNames='opacity-gradient'
           unmountOnExit>
           <div className='w-199 relative flex flex-wrap gap-5 py-5'>
-            {workList.map((item, index) => (
+            {workList.map((item) => (
               <WorkFavoriteItem
                 key={item.id}
                 itemInfo={item}
                 settingStatus={settingStatus}
-                chooseStatus={chooseStatusList[index]}
+                chooseStatus={chosenWorkList.includes(item.id)}
                 choose={choose}
                 like={like}
                 cancel={cancelSingleWork}
