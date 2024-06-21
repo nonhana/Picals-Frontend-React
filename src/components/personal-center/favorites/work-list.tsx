@@ -150,6 +150,7 @@ const WorkList: FC<WorkListProps> = ({
       resetSettingStatus()
     } catch (error) {
       console.log('出现错误了喵！！', error)
+      return
     }
   }
 

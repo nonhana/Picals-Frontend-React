@@ -194,6 +194,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       case 'up':
         if (upContent === '') {
           messageApi.error('评论内容不能为空')
+          return
         } else {
           reqData.content = upContent
           messageApi.success('评论成功')
@@ -203,6 +204,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       case 'down':
         if (downContent === '') {
           messageApi.error('评论内容不能为空')
+          return
         } else {
           reqData.content = downContent
           messageApi.success('评论成功')
