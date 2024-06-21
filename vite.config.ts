@@ -69,9 +69,8 @@ export default defineConfig(({ mode }) => {
         verbose: true,
         disable: false,
         threshold: 10240,
-        algorithm: 'gzip',
-        ext: '.gz',
-        deleteOriginFile: false,
+        algorithm: 'brotliCompress',
+        deleteOriginFile: true,
       }),
     ],
     build: {
