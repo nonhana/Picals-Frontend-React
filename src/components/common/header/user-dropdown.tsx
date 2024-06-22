@@ -38,7 +38,7 @@ const UserDropdown: FC<{
         navigate(`/personal-center/${userInfo.id}/fans`)
         break
       case 'history':
-        message.info('该功能暂未开放，敬请期待~！')
+        navigate(`/personal-center/${userInfo.id}/history`)
         break
       case 'profile':
         navigate(`/personal-center/${userInfo.id}/works?type=profile`)

@@ -1,11 +1,20 @@
 import request from '@/service'
-import { Id, Pagination, ViewHistoryItem } from '../types'
-import { ISearchViewHistoryReq } from './types'
+import { Id, Pagination, HistoryItem } from '../types'
+import { IGetViewHistoryTotalReq, ISearchViewHistoryReq } from './types'
 
-// 分页获取用户浏览历史记录
+// 分页获取用户某天的浏览历史记录
 export const getViewHistoryAPI = (params: Pagination) => {
-  return request<Pagination, ViewHistoryItem[]>({
+  return request<Pagination, HistoryItem[]>({
     url: '/api/history/list',
+    method: 'GET',
+    params,
+  })
+}
+
+// 获取用户某天的浏览历史记录总数
+export const getViewHistoryTotalAPI = (params: IGetViewHistoryTotalReq) => {
+  return request<IGetViewHistoryTotalReq, number>({
+    url: '/api/history/count',
     method: 'GET',
     params,
   })
@@ -39,7 +48,7 @@ export const clearViewHistoryAPI = () => {
 
 // 搜索历史记录
 export const searchViewHistoryAPI = (params: ISearchViewHistoryReq) => {
-  return request<ISearchViewHistoryReq, ViewHistoryItem[]>({
+  return request<ISearchViewHistoryReq, HistoryItem[]>({
     url: '/api/history/search',
     method: 'GET',
     params,

@@ -1,7 +1,7 @@
 import { FC, useState, createContext, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
-import { Outlet, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useOutletContext, Outlet, useNavigate, useLocation, useParams } from 'react-router-dom'
 import Header from '@/components/personal-center/header'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
@@ -11,6 +11,7 @@ import {
   StarOutlined,
   UserOutlined,
   TeamOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons'
 
 const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '' })
@@ -41,6 +42,11 @@ const items: MenuProps['items'] = [
     key: 'fans',
     icon: <TeamOutlined />,
   },
+  {
+    label: '浏览记录',
+    key: 'history',
+    icon: <HistoryOutlined />,
+  },
 ]
 
 const PersonalCenter: FC = () => {
@@ -61,6 +67,17 @@ const PersonalCenter: FC = () => {
     setCurrentPath(location.pathname.split('/')[3])
   }, [location.pathname])
 
+  const [width, setWidth] = useState<number>(1245)
+  const currentWidth = useOutletContext<number>()
+
+  useEffect(() => {
+    if (currentWidth < 1305) {
+      setWidth(1040)
+    } else {
+      setWidth(1245)
+    }
+  }, [currentWidth])
+
   return (
     <PersonalContext.Provider value={{ isMe, currentPath, userId: userId! }}>
       <div className='relative w-full flex flex-col items-center'>
@@ -72,7 +89,9 @@ const PersonalCenter: FC = () => {
           mode='horizontal'
           items={items}
         />
-        <div className='relative w-full max-w-350 mb-5 px-15 flex justify-center'>
+        <div
+          style={{ width: `${width}px` }}
+          className='relative max-w-350 mb-5 flex justify-center'>
           <Outlet />
         </div>
       </div>

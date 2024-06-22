@@ -11,6 +11,7 @@ import {
   getUserSimpleAPI,
   addWorkViewAPI,
   likeActionsAPI,
+  postViewHistoryAPI,
 } from '@/apis'
 import { useMap } from '@/hooks'
 import { notification } from 'antd'
@@ -25,8 +26,9 @@ const WorkDetail: FC = () => {
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
   const [authorWorkList, setAuthorWorkList, updateAuthorWorkList] = useMap<WorkNormalItemInfo>([])
 
-  const addWorkView = async () => {
+  const addViewData = async () => {
     try {
+      await postViewHistoryAPI({ id: workId! })
       await addWorkViewAPI({ id: workId! })
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -85,7 +87,7 @@ const WorkDetail: FC = () => {
 
   useEffect(() => {
     fetchWorkDetail()
-    addWorkView()
+    addViewData()
   }, [workId])
 
   useEffect(() => {

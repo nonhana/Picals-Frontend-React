@@ -23,6 +23,7 @@ export interface Pagination {
   keyword?: string
   labelName?: string
   sortType?: string
+  date?: string
   current: number
   pageSize: number
 }
@@ -93,6 +94,13 @@ export interface WorkNormalItem {
   name: string
 }
 
+export type HistoryItem = Omit<WorkNormalItem, 'isLiked'> & {
+  /**
+   * 最后浏览时间
+   */
+  lastTime: string
+}
+
 export interface FavoriteItem {
   /**
    * 收藏夹封面
@@ -118,37 +126,6 @@ export interface FavoriteItem {
    * 收藏夹作品总数
    */
   workNum: number
-}
-
-export interface ViewHistoryItem {
-  /**
-   * 发布者头像
-   */
-  authorAvatar: string
-  /**
-   * 发布者id
-   */
-  authorId: string
-  /**
-   * 发布者名称
-   */
-  authorName: string
-  /**
-   * 什么时候浏览的作品
-   */
-  createdAt: string
-  /**
-   * 插画id
-   */
-  id: string
-  /**
-   * 插画列表
-   */
-  imgList: string[]
-  /**
-   * 插画名称，名称
-   */
-  name: string
 }
 
 export interface LabelItem {

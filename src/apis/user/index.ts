@@ -18,7 +18,6 @@ import {
   LabelItem,
   Pagination,
   UserItem,
-  ViewHistoryItem,
   WorkNormalItem,
   Email,
 } from '../types'
@@ -108,15 +107,6 @@ export const changeEmailAPI = (data: IChangeEmailReq) => {
 export const getUserFavoriteListAPI = (params: Id) => {
   return request<Id, FavoriteItem[]>({
     url: '/api/user/favorites',
-    method: 'GET',
-    params,
-  })
-}
-
-// 获取用户的历史记录列表
-export const getUserHistoryListAPI = (params: Pagination) => {
-  return request<Pagination, ViewHistoryItem[]>({
-    url: '/api/user/history-list',
     method: 'GET',
     params,
   })

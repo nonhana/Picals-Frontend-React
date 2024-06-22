@@ -75,6 +75,10 @@ const routeList: RouteObject[] = [
             path: 'fans',
             element: LazyLoad(lazy(() => import('@/pages/personal-center/my-fans'))),
           },
+          {
+            path: 'history',
+            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-history'))),
+          },
         ],
       },
     ],
