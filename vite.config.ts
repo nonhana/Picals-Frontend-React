@@ -31,7 +31,7 @@ const safelist = [
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname)
   return {
-    base: '/',
+    base: env.VITE_BASE,
     plugins: [
       UnoCSS({
         safelist,
