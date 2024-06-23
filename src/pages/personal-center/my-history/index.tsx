@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { Input, Button } from 'antd'
+import { Input, Button, message } from 'antd'
 import HistoryList from '@/components/personal-center/history/history-list'
 import SearchResult from '@/components/personal-center/history/search-result'
 
@@ -13,6 +13,10 @@ const MyHistory: FC = () => {
 
   // 触发搜索
   const onSearch = async () => {
+    if (keyword === '') {
+      message.warning('搜索内容不能为空')
+      return
+    }
     setSearching(true)
     setSearchTrigger((prev) => prev + 1)
   }

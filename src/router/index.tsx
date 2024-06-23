@@ -5,6 +5,7 @@ import App from '@/app'
 import AutoTop from './utils/auto-top'
 import LazyLoad from './utils/lazy-load'
 import AuthRouter from './utils/auth-router'
+import PersonalPage from './utils/personal-page'
 
 const routeList: RouteObject[] = [
   {
@@ -77,7 +78,11 @@ const routeList: RouteObject[] = [
           },
           {
             path: 'history',
-            element: LazyLoad(lazy(() => import('@/pages/personal-center/my-history'))),
+            element: (
+              <PersonalPage>
+                {LazyLoad(lazy(() => import('@/pages/personal-center/my-history')))}
+              </PersonalPage>
+            ),
           },
         ],
       },
