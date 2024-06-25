@@ -5,11 +5,13 @@ import storage from 'redux-persist/lib/storage'
 import userReducer from './modules/user'
 import favoriteReducer from './modules/favorites'
 import searchHistoryReducer from './modules/searchHistory'
+import uploadFormReducer from './modules/uploadForm'
 
 const rootReducer = combineReducers({
   user: userReducer,
   favorite: favoriteReducer,
   searchHistory: searchHistoryReducer,
+  uploadForm: uploadFormReducer,
 })
 
 // 持久化配置

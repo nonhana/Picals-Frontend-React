@@ -30,6 +30,7 @@
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
+    "react-activation": "^0.12.4",
     "react-content-loader": "^7.0.2",
     "react-cropper": "^2.3.3",
     "react-dom": "^18.2.0",

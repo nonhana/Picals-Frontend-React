@@ -68,6 +68,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-activation:
+        specifier: ^0.12.4
+        version: 0.12.4(prop-types@15.8.1)(react@18.2.0)
       react-content-loader:
         specifier: ^7.0.2
         version: 7.0.2(react@18.2.0)
@@ -1464,6 +1467,12 @@ packages:
       typescript:
         optional: true
 
+  create-react-context@0.3.0:
+    resolution: {integrity: sha512-dNldIoSuNSvlTJ7slIKC/ZFGKexBMBrrcc+TTe1NdmROnaASuLPvqpwj9v4XS4uXZ8+YPu0sNmShX2rXI5LNsw==}
+    peerDependencies:
+      prop-types: ^15.0.0
+      react: ^0.14.0 || ^15.0.0 || ^16.0.0
+
   cropperjs@1.6.2:
     resolution: {integrity: sha512-nhymn9GdnV3CqiEHJVai54TULFAE3VshJTXSqSJKa8yXAKyBKDWdhHarnlIPrshJ0WMFTGuFvG02YjLXfPiuOA==}
 
@@ -2231,6 +2240,9 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
+  gud@1.0.0:
+    resolution: {integrity: sha512-zGEOVKFM5sVPPrYs7J5/hYEw2Pof8KCyOwyhG8sAF26mCAeUFAcYPu1mwB7hhpIP29zOIBaDqwuHdLp0jvZXjw==}
+
   gzip-size@6.0.0:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
     engines: {node: '>=10'}
@@ -2274,6 +2286,9 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
   hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -2635,6 +2650,10 @@ packages:
 
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+
+  jsx-ast-utils@2.4.1:
+    resolution: {integrity: sha512-z1xSldJ6imESSzOjd3NNkieVJKRlKYSOtMG8SFyCj2FIrvSaSuli/WjpBkEzCBoR9bYYYFgqJw61Xhu7Lcgk+w==}
+    engines: {node: '>=4.0'}
 
   jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
@@ -3442,6 +3461,11 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
+  react-activation@0.12.4:
+    resolution: {integrity: sha512-6jJtnUnQBKCrWgvHkzCJP3QZAtthnhDuoPa5LJnj1+1TxS5qkh3Z74zdNZY40wMbkTsLbo6CYoS51Fx/bTM3/w==}
+    peerDependencies:
+      react: '>=16'
+
   react-content-loader@7.0.2:
     resolution: {integrity: sha512-773S98JTyC8VB2nu7LXUhpHx8tZMieGxMcx3qTe7IkohT6Br7d9AXnIXs/wQ6IhlUdKQcw6JLKk1QKigYCWDRA==}
     engines: {node: '>=10'}
@@ -3476,6 +3500,11 @@ packages:
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+
+  react-node-key@0.4.0:
+    resolution: {integrity: sha512-puiuP2QYEuNBVVvcjpUE8d8/jdAhiXHBHMmjZzQT4+fe276RMYea/tY7JoZoYlrhAX8DORLPvjySjXYJZ1m6/A==}
+    peerDependencies:
+      react: '>=16'
 
   react-photo-view@1.2.4:
     resolution: {integrity: sha512-8G7yb0YgQuVgEMT3DopiROZyY8cgCDpba+G5MoxDkHNFOyqtw3r5T5tazYeifybPrvHWuKXj/bnAlBtQcpxyzQ==}
@@ -3985,6 +4014,9 @@ packages:
     resolution: {integrity: sha512-HwOKAP7Wc5aRGYdKH+dw0PRRpbO841v2DENBtjnR5HFWoiNByAl7vrx3p0G/rCyYXQsrxqtX48TImFtPcIHSpQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
+  szfe-tools@0.0.0-beta.7:
+    resolution: {integrity: sha512-/M7+Tel2G8zapfDYZlz17hf9ViqAi/loZMfM81b5iZMyaWL/t5dajBszEBI2kyIDFzlLT4btBcq+BimFgmAHug==}
+
   table@6.8.2:
     resolution: {integrity: sha512-w2sfv80nrAh2VCbqR5AK27wswXhqcck2AhfnNW76beQXskGZ1V12GwS//yYVa3d3fcvAip2OUnbDAjW2k3v9fA==}
     engines: {node: '>=10.0.0'}
@@ -4202,6 +4234,9 @@ packages:
         optional: true
       terser:
         optional: true
+
+  warning@4.0.3:
+    resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
 
   which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
@@ -5741,6 +5776,13 @@ snapshots:
     optionalDependencies:
       typescript: 5.4.4
 
+  create-react-context@0.3.0(prop-types@15.8.1)(react@18.2.0):
+    dependencies:
+      gud: 1.0.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      warning: 4.0.3
+
   cropperjs@1.6.2: {}
 
   cross-spawn@5.1.0:
@@ -6686,6 +6728,8 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  gud@1.0.0: {}
+
   gzip-size@6.0.0:
     dependencies:
       duplexer: 0.1.2
@@ -6721,6 +6765,10 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  hoist-non-react-statics@3.3.2:
+    dependencies:
+      react-is: 16.13.1
 
   hosted-git-info@2.8.9: {}
 
@@ -7047,6 +7095,11 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+
+  jsx-ast-utils@2.4.1:
+    dependencies:
+      array-includes: 3.1.8
+      object.assign: 4.1.5
 
   jsx-ast-utils@3.3.5:
     dependencies:
@@ -7912,6 +7965,16 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
+  react-activation@0.12.4(prop-types@15.8.1)(react@18.2.0):
+    dependencies:
+      create-react-context: 0.3.0(prop-types@15.8.1)(react@18.2.0)
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      react-node-key: 0.4.0(react@18.2.0)
+      szfe-tools: 0.0.0-beta.7
+    transitivePeerDependencies:
+      - prop-types
+
   react-content-loader@7.0.2(react@18.2.0):
     dependencies:
       react: 18.2.0
@@ -7942,6 +8005,12 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-is: 18.2.0
       styled-components: 6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+
+  react-node-key@0.4.0(react@18.2.0):
+    dependencies:
+      jsx-ast-utils: 2.4.1
+      react: 18.2.0
+      szfe-tools: 0.0.0-beta.7
 
   react-photo-view@1.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
@@ -8542,6 +8611,10 @@ snapshots:
       '@pkgr/core': 0.1.1
       tslib: 2.6.2
 
+  szfe-tools@0.0.0-beta.7:
+    dependencies:
+      '@babel/runtime': 7.24.4
+
   table@6.8.2:
     dependencies:
       ajv: 8.12.0
@@ -8789,6 +8862,10 @@ snapshots:
       fsevents: 2.3.3
       less: 4.2.0
       sass: 1.74.1
+
+  warning@4.0.3:
+    dependencies:
+      loose-envify: 1.4.0
 
   which-boxed-primitive@1.0.2:
     dependencies:

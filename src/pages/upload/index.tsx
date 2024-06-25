@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import ImgUpload from '@/components/upload/img-upload'
@@ -9,26 +9,30 @@ import { Button, notification } from 'antd'
 import type { UploadWorkFormInfo } from '@/utils/types'
 import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
 import Empty from '@/components/common/empty'
+import { reset, saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
 
 const Upload: FC = () => {
+  const dispatch = useDispatch()
+
   const { id: localUserId } = useSelector((state: AppState) => state.user.userInfo)
+  const { imgList: storedImgList, formInfo: storedFormInfo } = useSelector(
+    (state: AppState) => state.uploadForm,
+  )
 
   const navigate = useNavigate()
   const workStatus = useSearchParams()[0].get('type')
   const workId = useSearchParams()[0].get('workId')
   const editMode = workStatus && workId && workStatus === 'edit'
 
-  const [imgList, setImgList] = useState<string[]>([])
-  const [formInfo, setFormInfo] = useState<UploadWorkFormInfo>({
-    basicInfo: {
-      name: '',
-      intro: '',
-      reprintType: 1,
-      openComment: false,
-      isAIGenerated: false,
-    },
-    labels: [],
-  })
+  const [imgList, setImgList] = useState<string[]>(storedImgList)
+  const [formInfo, setFormInfo] = useState<UploadWorkFormInfo>(storedFormInfo)
+
+  useEffect(() => {
+    return () => {
+      dispatch(saveImgList(imgList))
+      dispatch(saveFormInfo(formInfo))
+    }
+  }, [imgList, formInfo])
 
   const [showEditForm, setShowEditForm] = useState<boolean>(false)
 
@@ -104,6 +108,7 @@ const Upload: FC = () => {
         await uploadWorkAPI(uploadWorkInfo)
       }
       setUploadSuccess(true)
+      dispatch(reset())
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
