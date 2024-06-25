@@ -16,6 +16,10 @@ import {
 import { useMap } from '@/hooks'
 import { notification } from 'antd'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
+import GreyButton from '@/components/common/grey-button'
+import { Icon } from '@iconify/react'
+import { useAtBottom, useAtTop } from '@/hooks'
+import { CSSTransition } from 'react-transition-group'
 
 const WorkDetail: FC = () => {
   const dispatch = useDispatch()
@@ -140,34 +144,70 @@ const WorkDetail: FC = () => {
     }
   }
 
+  /* ----------页面滚动相关---------- */
+
+  const isBottom = useAtBottom()
+  const isTop = useAtTop()
+
+  const scrollTo = (type: 'top' | 'bottom') => {
+    if (type === 'top') {
+      document.body.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      document.body.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    }
+  }
+
   return (
-    <div className='bg-#f5f5f5 w-100% flex justify-center'>
-      <div className='flex gap-5 my-5'>
-        <div>
-          {workInfo ? (
-            <WorkInfo
-              workInfo={workInfo}
-              setWorkInfo={setWorkInfo}
-              likeWork={likeWork}
-              authorWorkList={Array.from(authorWorkList.values())}
-            />
-          ) : (
-            <div>Loading...</div>
-          )}
-        </div>
-        <div>
-          {userInfo ? (
-            <UserInfo
-              onFollow={follow}
-              userInfo={userInfo}
-              authorWorkList={Array.from(authorWorkList.values())}
-            />
-          ) : (
-            <div>Loading...</div>
-          )}
+    <>
+      <div className='bg-#f5f5f5 w-100% flex justify-center'>
+        <div className='flex gap-5 my-5'>
+          <div>
+            {workInfo ? (
+              <WorkInfo
+                workInfo={workInfo}
+                setWorkInfo={setWorkInfo}
+                likeWork={likeWork}
+                authorWorkList={Array.from(authorWorkList.values())}
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
+          </div>
+          <div>
+            {userInfo ? (
+              <UserInfo
+                onFollow={follow}
+                userInfo={userInfo}
+                authorWorkList={Array.from(authorWorkList.values())}
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      <CSSTransition in={!isTop} timeout={300} classNames='opacity-gradient' unmountOnExit>
+        <div className='fixed bottom-25 right-10'>
+          <GreyButton
+            onClick={() => {
+              scrollTo('top')
+            }}>
+            <Icon color='#fff' icon='ant-design:arrow-up-outlined' />
+          </GreyButton>
+        </div>
+      </CSSTransition>
+      <CSSTransition in={!isBottom} timeout={300} classNames='opacity-gradient' unmountOnExit>
+        <div className='fixed bottom-10 right-10'>
+          <GreyButton
+            onClick={() => {
+              scrollTo('bottom')
+            }}>
+            <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
+          </GreyButton>
+        </div>
+      </CSSTransition>
+    </>
   )
 }
 

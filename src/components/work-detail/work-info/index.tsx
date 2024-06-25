@@ -333,29 +333,34 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             <div className='bg-#f5f5f5 relative p-5 w-full'>
               {workInfo.reprintType === 1 && (
                 <>
-                  <div className='flex gap-10px items-center'>
+                  <div className='flex justify-between items-center'>
                     <span className='font-size-18px font-bold color-#3d3d3d'>原作品地址</span>
-                  </div>
-                  <div className='my-10px flex gap-20px items-center flex justify-between'>
-                    <Link to={workInfo.workUrl!} target='_blank'>
-                      {workInfo.workUrl}
-                    </Link>
                     {verifyPixivWork(workInfo.workUrl!) && (
                       <img className='w-15' src={pixiv} alt='pixiv' />
                     )}
                   </div>
+                  <div className='my-10px flex gap-20px items-center'>
+                    <Link to={workInfo.workUrl!} target='_blank'>
+                      {workInfo.workUrl}
+                    </Link>
+                  </div>
                   <Divider />
                 </>
               )}
-              <div className='flex gap-10px items-center'>
-                <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
-                <span className='font-size-14px color-#6d757a'>
-                  目前共有{workInfo.illustrator!.workCount}个作品
-                </span>
+              <div className='flex justify-between items-center'>
+                <div className='flex items-center gap-10px'>
+                  <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
+                  <span className='font-size-14px color-#6d757a'>
+                    目前收录 {workInfo.illustrator!.workCount} 个作品
+                  </span>
+                </div>
+                {verifyPixivUser(workInfo.illustrator!.homeUrl) && (
+                  <img className='w-15' src={pixiv} alt='pixiv' />
+                )}
               </div>
               <div className='mt-10px flex items-center justify-between'>
                 <div className='flex gap-20px items-center'>
-                  <Link
+                  {/* <Link
                     to={workInfo.illustrator!.homeUrl}
                     target='_blank'
                     className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
@@ -364,17 +369,11 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                       src={workInfo.illustrator!.avatar}
                       alt={workInfo.illustrator!.name}
                     />
-                  </Link>
-                  <Link
-                    className='color-#3d3d3d'
-                    to={workInfo.illustrator!.homeUrl}
-                    target='_blank'>
-                    {workInfo.illustrator!.name}（点击前往个人主页）
+                  </Link> */}
+                  <Link to={workInfo.illustrator!.homeUrl} target='_blank'>
+                    {workInfo.illustrator!.name}
                   </Link>
                 </div>
-                {verifyPixivUser(workInfo.illustrator!.homeUrl) && (
-                  <img className='w-15' src={pixiv} alt='pixiv' />
-                )}
               </div>
             </div>
           )}
