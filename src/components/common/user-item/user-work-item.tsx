@@ -4,6 +4,7 @@ import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { Link } from 'react-router-dom'
+import LazyImg from '../lazy-img'
 
 type UserWorkItemProps = {
   itemInfo: WorkNormalItemInfo
@@ -12,6 +13,7 @@ type UserWorkItemProps = {
 
 const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
+
   return (
     <div className='shrink-0 relative h-51 w-184px flex flex-col justify-between rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
@@ -40,7 +42,7 @@ const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
       </div>
 
       <div className='relative w-184px h-184px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
+        <LazyImg src={itemInfo.cover} alt={itemInfo.name} />
       </div>
 
       <Link

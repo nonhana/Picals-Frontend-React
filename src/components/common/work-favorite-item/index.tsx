@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
+import LazyImg from '../lazy-img'
 
 const dropdownList: MenuProps['items'] = [
   {
@@ -106,7 +107,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
       </div>
 
       <div className='relative w-184px h-184px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
+        <LazyImg src={itemInfo.cover} alt={itemInfo.name} />
       </div>
 
       <div className='relative p-10px flex flex-col gap-5px'>

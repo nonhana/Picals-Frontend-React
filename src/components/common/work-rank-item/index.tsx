@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { Icon } from '@iconify/react'
 import type { WorkRankItemInfo } from '@/utils/types'
+import LazyImg from '../lazy-img'
 
 type WorkRankItemProps = {
   itemInfo: WorkRankItemInfo
@@ -12,6 +13,7 @@ type WorkRankItemProps = {
 
 const WorkRankItem: FC<WorkRankItemProps> = ({ itemInfo, like }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
+
   return (
     <div className='shrink-0 relative w-288px rd-1 bg-white overflow-hidden'>
       <div className='absolute top-0 left-0 w-288px h-288px z-99'>
@@ -43,7 +45,7 @@ const WorkRankItem: FC<WorkRankItemProps> = ({ itemInfo, like }) => {
       </div>
 
       <div className='relative w-288px h-288px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
+        <LazyImg src={itemInfo.cover} alt={itemInfo.name} />
       </div>
 
       <div className='relative p-10px flex flex-col gap-5px'>

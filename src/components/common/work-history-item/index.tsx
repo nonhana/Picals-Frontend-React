@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import type { HistoryItem } from '@/apis/types'
+import LazyImg from '../lazy-img'
 
 type WorkHistoryItemProps = {
   itemInfo: HistoryItem
@@ -27,7 +28,7 @@ const WorkHistoryItem: FC<WorkHistoryItemProps> = ({ itemInfo }) => {
       </div>
 
       <div className='relative w-184px h-184px rd-1 flex items-center justify-center overflow-hidden'>
-        <img className='w-full h-full object-cover' src={itemInfo.cover} alt={itemInfo.name} />
+        <LazyImg src={itemInfo.cover} alt={itemInfo.name} />
       </div>
 
       <div className='relative p-10px flex flex-col gap-5px'>
