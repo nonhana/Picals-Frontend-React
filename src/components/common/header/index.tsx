@@ -11,6 +11,7 @@ import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
 import { addRecord } from '@/store/modules/searchHistory'
+import LazyImg from '../lazy-img'
 
 const { Search } = Input
 
@@ -77,7 +78,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
   }
 
   return (
-    <>
+    <div className='relative w-full'>
       <Icon
         className='fixed cursor-pointer z-1 left-10 h-16'
         width={24}
@@ -128,7 +129,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
             <div
               className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
               onClick={() => setShowUserDropdown(!showUserDropdown)}>
-              <img className='w-10' src={userInfo.avatar} alt='avatar' />
+              <LazyImg src={userInfo.avatar} alt='avatar' />
             </div>
           ) : (
             <Link
@@ -161,7 +162,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           setVisible={setShowUserDropdown}
         />
       )}
-    </>
+    </div>
   )
 }
 

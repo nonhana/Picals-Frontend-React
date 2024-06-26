@@ -42,11 +42,7 @@ const WorkHistoryItem: FC<WorkHistoryItemProps> = ({ itemInfo }) => {
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}
               className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
-              <img
-                className='w-full h-full object-cover'
-                src={itemInfo.authorAvatar}
-                alt={itemInfo.authorName}
-              />
+              <LazyImg src={itemInfo.authorAvatar} alt={itemInfo.authorName} />
             </Link>
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}

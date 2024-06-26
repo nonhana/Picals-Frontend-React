@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { isWarmHue } from '@/utils'
+import LazyImg from '../lazy-img'
 
 type LabelImgItemProps = {
   id: string
@@ -14,8 +15,7 @@ const LabelImgItem: FC<LabelImgItemProps> = ({ name, color, cover }) => {
     <Link
       to={`/search-result?label=${name}&type=work&sortType=new`}
       className='relative flex-shrink-0 w-118px h-118px rd-6px overflow-hidden flex items-center justify-center cursor-pointer hover:opacity-80'>
-      <img
-        className='w-118px'
+      <LazyImg
         src={
           cover ||
           `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
@@ -23,9 +23,9 @@ const LabelImgItem: FC<LabelImgItemProps> = ({ name, color, cover }) => {
         alt={name}
       />
       <div className='absolute w-118px h-118px top-0 left-0 bg-black opacity-32' />
-      <span className='absolute bottom-20px left-1/2 -translate-x-50% color-white font-size-14px font-bold'>
-        #{name}
-      </span>
+      <div className='absolute w-full px-1 bottom-20px flex justify-center color-white font-size-14px font-bold'>
+        <span className='break-all'>#{name}</span>
+      </div>
     </Link>
   )
 }

@@ -7,17 +7,18 @@ type LazyImgProps = {
   height?: number | string
 } & React.ImgHTMLAttributes<HTMLImageElement>
 
-const LazyImg: FC<LazyImgProps> = ({ width = '100%', height = '100%', src, alt }) => {
+const LazyImg: FC<LazyImgProps> = ({ width = '100%', height = '100%', className, src, alt }) => {
   const [imgLoading, setImgLoading] = useState(true)
 
   return (
-    <>
+    <div
+      style={{
+        width: typeof width === 'number' ? `${width}px` : width,
+        height: typeof height === 'number' ? `${height}px` : height,
+      }}
+      className={`relative overflow-hidden ${className}`}>
       <img
-        style={{
-          width: typeof width === 'number' ? `${width}px` : width,
-          height: typeof height === 'number' ? `${height}px` : height,
-        }}
-        className='object-cover'
+        className='object-cover w-full h-full'
         src={src}
         alt={alt}
         loading='lazy'
@@ -28,7 +29,7 @@ const LazyImg: FC<LazyImgProps> = ({ width = '100%', height = '100%', src, alt }
       <CSSTransition in={imgLoading} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <ImgLoadingSkeleton className='absolute top-0 left-0' />
       </CSSTransition>
-    </>
+    </div>
   )
 }
 

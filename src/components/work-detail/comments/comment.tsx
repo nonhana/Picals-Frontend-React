@@ -4,6 +4,7 @@ import type { AppState } from '@/store/types'
 import type { CommentItem } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Button } from 'antd'
+import LazyImg from '@/components/common/lazy-img'
 
 interface Replying {
   id: string
@@ -40,11 +41,7 @@ const Comment: FC<CommentProps> = ({ comment, style, reply, deleteComment }) => 
     <>
       <div style={style} className='relative w-150 flex gap-10px mb-20px'>
         <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
-          <img
-            className='w-full h-full object-cover'
-            src={comment.authorInfo.avatar}
-            alt={comment.authorInfo.username}
-          />
+          <LazyImg src={comment.authorInfo.avatar} alt={comment.authorInfo.username} />
         </div>
         <div className='w-full flex flex-col gap-10px'>
           <div className='flex items-center font-bold font-size-14px'>

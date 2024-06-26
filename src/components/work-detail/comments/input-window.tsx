@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { CSSTransition } from 'react-transition-group'
 import { Button, Input } from 'antd'
+import LazyImg from '@/components/common/lazy-img'
 
 interface Replying {
   id: string
@@ -44,11 +45,7 @@ const InputWindow: FC<InputWindowProps> = ({
       <div className='z-1000 rd-10px box-content m-l--5 fixed bottom-5 bg-#fff b-solid b-1px p-5 w-150 flex justify-between items-center'>
         <div className='flex gap-10px items-center'>
           <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
-            <img
-              className='w-full h-full object-cover'
-              src={userInfo.avatar}
-              alt={userInfo.username}
-            />
+            <LazyImg src={userInfo.avatar} alt={userInfo.username} />
           </div>
           <Input
             className={replyTo ? 'w-80' : 'w-90'}

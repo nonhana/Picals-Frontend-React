@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { random } from 'lodash'
-import LazyLoad from 'react-lazyload'
+import LazyImg from '../lazy-img'
 
 // 动态导入所有图片
 const images = import.meta.glob('@/assets/imgs/empty/*.(png|jpg|jpeg|svg)')
@@ -41,9 +41,7 @@ const Empty: FC<EmptyProps> = ({
       style={{ width, height }}
       className={`z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-#f8f8f8 rd-1`}>
       {showImg && randomImg && (
-        <LazyLoad height={200}>
-          <img className='w-50 rd-1' src={randomImg} alt='empty' />
-        </LazyLoad>
+        <LazyImg className='rd-1' width={200} height={200} src={randomImg} alt='empty' />
       )}
       <span className='color-#6d757a font-size-14px font-bold'>{text}</span>
       {children}

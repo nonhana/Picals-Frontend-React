@@ -16,6 +16,7 @@ import { PhotoView } from 'react-photo-view'
 import HanaViewer from '../common/hana-viewer'
 import { PersonalContext } from '@/pages/personal-center'
 import { Icon } from '@iconify/react'
+import LazyImg from '../common/lazy-img'
 
 const Header: FC = () => {
   const navigate = useNavigate()
@@ -110,11 +111,7 @@ const Header: FC = () => {
       <div className='relative w-full'>
         {userInfo.background_img ? (
           <div className='relative w-full h-130 overflow-hidden'>
-            <img
-              className='w-full h-full object-cover'
-              src={userInfo.background_img}
-              alt={userInfo.background_img}
-            />
+            <LazyImg src={userInfo.background_img} alt={userInfo.background_img} />
           </div>
         ) : (
           <div className='relative w-full h-80'>

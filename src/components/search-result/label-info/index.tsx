@@ -9,6 +9,7 @@ import { isWarmHue } from '@/utils'
 import { labelActionsAPI, getRecommendLabelListAPI } from '@/apis'
 import type { LabelInfo } from '@/utils/types'
 import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
+import LazyImg from '@/components/common/lazy-img'
 
 type LabelInfoProps = LabelDetailInfo & {
   like: () => void
@@ -53,8 +54,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
       <div className='w-100% flex justify-between mb-20px items-center'>
         <div className='flex gap-5'>
           <div className='w-30 h-30 rd-2 border-solid border-2px border-#fff overflow-hidden'>
-            <img
-              className='w-full h-full object-cover'
+            <LazyImg
               src={
                 cover ||
                 `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`

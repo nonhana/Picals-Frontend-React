@@ -7,6 +7,7 @@ import WorkLeastItem from '@/components/common/work-least-item'
 import LayoutList from '@/components/common/layout-list'
 import { Button } from 'antd'
 import Empty from '@/components/common/empty'
+import LazyImg from '@/components/common/lazy-img'
 
 type UserInfoProps = {
   userInfo: UserItemInfo
@@ -24,11 +25,7 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => 
         <Link
           to={`/personal-center/${userInfo.id}`}
           className='shrink-0 w-10 h-10 rd-full cursor-pointer overflow-hidden'>
-          <img
-            className='w-full h-full object-cover'
-            src={userInfo.avatar}
-            alt={userInfo.username}
-          />
+          <LazyImg src={userInfo.avatar} alt={userInfo.username} />
         </Link>
         <Link className='color-#3d3d3d' to={`/personal-center/${userInfo.id}`}>
           {userInfo.username}

@@ -6,6 +6,7 @@ import AutoTop from './utils/auto-top'
 import LazyLoad from './utils/lazy-load'
 import AuthRouter from './utils/auth-router'
 import PersonalPage from './utils/personal-page'
+import PersonalCenter from '@/pages/personal-center'
 
 const routeList: RouteObject[] = [
   {
@@ -54,7 +55,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'personal-center/:userId',
-        element: LazyLoad(lazy(() => import('@/pages/personal-center'))),
+        element: <PersonalCenter />,
         children: [
           {
             path: 'works',

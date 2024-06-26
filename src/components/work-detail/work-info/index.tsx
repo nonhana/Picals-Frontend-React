@@ -17,6 +17,7 @@ import { setFavoriteList } from '@/store/modules/favorites'
 import pixiv from '@/assets/svgs/pixiv.svg'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import CreateFolderModal from '@/components/common/create-folder-modal'
+import LazyImg from '@/components/common/lazy-img'
 
 const { confirm } = Modal
 
@@ -292,11 +293,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                 <Link
                   to={`/personal-center/${workInfo.authorInfo.id}`}
                   className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
-                  <img
-                    className='w-full h-full object-cover'
-                    src={workInfo.authorInfo.avatar}
-                    alt={workInfo.authorInfo.username}
-                  />
+                  <LazyImg src={workInfo.authorInfo.avatar} alt={workInfo.authorInfo.username} />
                 </Link>
                 <Link className='color-#3d3d3d' to={`/personal-center/${workInfo.authorInfo.id}`}>
                   {workInfo.authorInfo.username}

@@ -8,6 +8,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Input, Button, message, Radio } from 'antd'
 import HanaModal from '../common/hana-modal'
 import HanaCropper from '../common/hana-cropper'
+import LazyImg from '../common/lazy-img'
 
 const { TextArea } = Input
 
@@ -156,11 +157,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                     <span>重新更改背景图片</span>
                   </div>
                 </CSSTransition>
-                <img
-                  src={editUserInfo.backgroundImg}
-                  alt='background'
-                  className='w-full h-full object-cover'
-                />
+                <LazyImg src={editUserInfo.backgroundImg} alt='background' />
               </div>
             ) : (
               <div
@@ -197,11 +194,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                     <span>选择文件</span>
                   </div>
                 </CSSTransition>
-                <img
-                  className='w-full h-full object-cover'
-                  src={editUserInfo.avatar}
-                  alt='avatar'
-                />
+                <LazyImg src={editUserInfo.avatar} alt='avatar' />
               </div>
             </div>
             <div className='flex items-center gap-5'>

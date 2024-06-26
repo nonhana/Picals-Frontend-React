@@ -3,6 +3,7 @@ import { Flex, Input, Modal, Upload, message, notification, type UploadProps } f
 import { CSSTransition } from 'react-transition-group'
 import { Icon } from '@iconify/react'
 import type { FavoriteFormInfo } from '@/utils/types'
+import LazyImg from '../lazy-img'
 
 type CreateFolderModalProps = {
   editMode: boolean
@@ -98,11 +99,7 @@ const CreateFolderModal: FC<CreateFolderModalProps> = ({
                   <span>移除图片</span>
                 </div>
               </CSSTransition>
-              <img
-                className='w-full h-full object-cover'
-                src={formInfo.cover}
-                alt={formInfo.cover}
-              />
+              <LazyImg src={formInfo.cover} alt={formInfo.cover} />
             </div>
           ) : (
             <Upload {...uploadProps}>

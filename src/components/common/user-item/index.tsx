@@ -6,6 +6,7 @@ import type { UserItemInfo } from '@/utils/types'
 import UserWorkItem from './user-work-item'
 import { Button } from 'antd'
 import Empty from '../empty'
+import LazyImg from '../lazy-img'
 
 type UserItemProps = UserItemInfo & {
   width: number
@@ -31,7 +32,7 @@ const UserItem: FC<UserItemProps> = ({
       <Link
         to={`/personal-center/${id}/works`}
         className='shrink-0 w-20 h-20 rd-full overflow-hidden cursor-pointer'>
-        <img className='w-full h-full object-cover' src={avatar} alt={username} />
+        <LazyImg src={avatar} alt={username} />
       </Link>
 
       <div className='flex flex-col gap-5'>
