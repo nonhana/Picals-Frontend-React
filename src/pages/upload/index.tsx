@@ -27,14 +27,41 @@ const Upload: FC = () => {
   const [imgList, setImgList] = useState<string[]>(storedImgList)
   const [formInfo, setFormInfo] = useState<UploadWorkFormInfo>(storedFormInfo)
 
+  const resetForm = () => {
+    setImgList([])
+    setFormInfo({
+      basicInfo: {
+        name: '',
+        intro: '',
+        reprintType: 1,
+        openComment: true,
+        isAIGenerated: false,
+      },
+      labels: [],
+    })
+    dispatch(saveImgList([]))
+    dispatch(
+      saveFormInfo({
+        basicInfo: {
+          name: '',
+          intro: '',
+          reprintType: 1,
+          openComment: true,
+          isAIGenerated: false,
+        },
+        labels: [],
+      }),
+    )
+  }
+
   useEffect(() => {
-    return () => {
-      dispatch(saveImgList(imgList))
-      dispatch(saveFormInfo(formInfo))
-    }
+    dispatch(saveImgList(imgList))
+    dispatch(saveFormInfo(formInfo))
   }, [imgList, formInfo])
 
   const [showEditForm, setShowEditForm] = useState<boolean>(false)
+  const [editFormLoaded, setEditFormLoaded] = useState<boolean>(false)
+  const [originInfo, setOriginInfo] = useState<UploadWorkFormInfo>()
 
   useEffect(() => {
     if (editMode) {
@@ -74,6 +101,7 @@ const Upload: FC = () => {
             }
           }
           if (data.reprintType === 1) originWorkInfo.basicInfo.workUrl = data.workUrl
+          setOriginInfo(originWorkInfo)
           setImgList(data.imgList)
           setFormInfo(originWorkInfo)
         } catch (error) {
@@ -82,12 +110,24 @@ const Upload: FC = () => {
         }
       }
       fetchWorkDetail()
+
+      return () => resetForm()
     }
   }, [editMode])
 
   useEffect(() => {
-    if (editMode && formInfo.basicInfo.name) setShowEditForm(true)
-  }, [workStatus, formInfo.basicInfo.name])
+    if (
+      editMode &&
+      originInfo &&
+      !editFormLoaded &&
+      formInfo.basicInfo.name === originInfo.basicInfo.name
+    )
+      setEditFormLoaded(true)
+  }, [editMode, formInfo, originInfo, editFormLoaded])
+
+  useEffect(() => {
+    if (editMode && editFormLoaded) setShowEditForm(true)
+  }, [editMode, editFormLoaded])
 
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
   const [submitTrigger, setSubmitTrigger] = useState(0)
@@ -108,17 +148,7 @@ const Upload: FC = () => {
         await uploadWorkAPI(uploadWorkInfo)
       }
       setUploadSuccess(true)
-      setImgList([])
-      setFormInfo({
-        basicInfo: {
-          name: '',
-          intro: '',
-          reprintType: 1,
-          openComment: true,
-          isAIGenerated: false,
-        },
-        labels: [],
-      })
+      resetForm()
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -153,7 +183,7 @@ const Upload: FC = () => {
               size='large'
               type='default'
               onClick={() => navigate('/home')}>
-              取消投稿
+              取消{editMode ? '编辑' : '投稿'}
             </Button>
             <Button
               className='w-50'
@@ -162,7 +192,7 @@ const Upload: FC = () => {
               type='primary'
               loading={uploading}
               onClick={() => setSubmitTrigger((prev) => prev + 1)}>
-              投稿作品
+              {editMode ? '编辑' : '投稿'}作品
             </Button>
           </div>
         </>

@@ -77,6 +77,11 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
     searchRef.current?.input?.blur()
   }
 
+  const toUpload = () => {
+    if (location.pathname === '/upload') return
+    navigate('/upload')
+  }
+
   return (
     <div className='relative w-full'>
       <Icon
@@ -119,11 +124,9 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
             <Icon width={32} color='#858585' icon='ant-design:github-filled' />
           </Link>
           {isLogin && (
-            <Link to='/upload'>
-              <Button shape='round' type='default' size='large'>
-                <span className='color-#6d757a'>投稿作品</span>
-              </Button>
-            </Link>
+            <Button shape='round' type='default' size='large' onClick={toUpload}>
+              <span className='color-#6d757a'>投稿作品</span>
+            </Button>
           )}
           {isLogin ? (
             <div
