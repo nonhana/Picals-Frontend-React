@@ -1,15 +1,28 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import ImgUpload from '@/components/upload/img-upload'
 import UploadForm from '@/components/upload/form'
 import UploadSuccess from '@/components/upload/success'
-import { Button, notification } from 'antd'
+import { Button, notification, Modal, message } from 'antd'
 import type { UploadWorkFormInfo } from '@/utils/types'
 import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
+
+const { confirm } = Modal
+
+const initialFormInfo: UploadWorkFormInfo = {
+  basicInfo: {
+    name: '',
+    intro: '',
+    reprintType: 1,
+    openComment: true,
+    isAIGenerated: false,
+  },
+  labels: [],
+}
 
 const Upload: FC = () => {
   const dispatch = useDispatch()
@@ -20,51 +33,46 @@ const Upload: FC = () => {
   )
 
   const navigate = useNavigate()
-  const workStatus = useSearchParams()[0].get('type')
-  const workId = useSearchParams()[0].get('workId')
-  const editMode = workStatus && workId && workStatus === 'edit'
+  const [searchParams] = useSearchParams()
+  const workStatus = searchParams.get('type')
+  const workId = searchParams.get('workId')
+  const editMode = useMemo(
+    () => workStatus && workId && workStatus === 'edit',
+    [workStatus, workId],
+  )
 
   const [imgList, setImgList] = useState<string[]>(storedImgList)
   const [formInfo, setFormInfo] = useState<UploadWorkFormInfo>(storedFormInfo)
+  const [formResetTrigger, setFormResetTrigger] = useState<boolean>(false)
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
+    setFormResetTrigger((prev) => !prev)
+    setShowEditForm(false)
     setImgList([])
-    setFormInfo({
-      basicInfo: {
-        name: '',
-        intro: '',
-        reprintType: 1,
-        openComment: true,
-        isAIGenerated: false,
-      },
-      labels: [],
-    })
+    setFormInfo(initialFormInfo)
     dispatch(saveImgList([]))
-    dispatch(
-      saveFormInfo({
-        basicInfo: {
-          name: '',
-          intro: '',
-          reprintType: 1,
-          openComment: true,
-          isAIGenerated: false,
-        },
-        labels: [],
-      }),
-    )
-  }
+    dispatch(saveFormInfo(initialFormInfo))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (formResetTrigger && imgList.length === 0 && formInfo.basicInfo.name === '') {
+      setFormResetTrigger(false)
+      setShowEditForm(true)
+    }
+  }, [formResetTrigger, imgList, formInfo])
 
   useEffect(() => {
     dispatch(saveImgList(imgList))
     dispatch(saveFormInfo(formInfo))
-  }, [imgList, formInfo])
+  }, [imgList, formInfo, dispatch])
 
-  const [showEditForm, setShowEditForm] = useState<boolean>(false)
+  const [showEditForm, setShowEditForm] = useState<boolean>(true)
   const [editFormLoaded, setEditFormLoaded] = useState<boolean>(false)
   const [originInfo, setOriginInfo] = useState<UploadWorkFormInfo>()
 
   useEffect(() => {
     if (editMode) {
+      setShowEditForm(false)
       const fetchWorkDetail = async () => {
         try {
           const { data } = await getWorkDetailAPI({ id: workId! })
@@ -105,15 +113,18 @@ const Upload: FC = () => {
           setImgList(data.imgList)
           setFormInfo(originWorkInfo)
         } catch (error) {
-          console.log('出现错误了喵！！', error)
-          return
+          console.error('获取作品详情时发生错误:', error)
+          notification.error({
+            message: '获取作品详情失败',
+            description: '请稍后重试或联系管理员。',
+          })
         }
       }
       fetchWorkDetail()
 
       return () => resetForm()
     }
-  }, [editMode])
+  }, [editMode, workId, localUserId, resetForm])
 
   useEffect(() => {
     if (
@@ -133,7 +144,7 @@ const Upload: FC = () => {
   const [submitTrigger, setSubmitTrigger] = useState(0)
   const [uploading, setUploading] = useState(false)
 
-  const uploadWork = async () => {
+  const uploadWork = useCallback(async () => {
     try {
       setUploading(true)
       const uploadWorkInfo = {
@@ -142,7 +153,7 @@ const Upload: FC = () => {
         imgList,
         illustratorInfo: formInfo.illustratorInfo,
       }
-      if (workStatus && workId && workStatus === 'edit') {
+      if (editMode) {
         await editWorkAPI({ id: workId!, ...uploadWorkInfo })
       } else {
         await uploadWorkAPI(uploadWorkInfo)
@@ -150,11 +161,27 @@ const Upload: FC = () => {
       setUploadSuccess(true)
       resetForm()
     } catch (error) {
-      console.log('出现错误了喵！！', error)
-      return
+      console.error('上传作品时发生错误:', error)
+      notification.error({
+        message: '上传作品失败',
+        description: '请稍后重试或联系管理员。',
+      })
     } finally {
       setUploading(false)
     }
+  }, [formInfo, imgList, editMode, workId, resetForm])
+
+  const handleResetForm = () => {
+    confirm({
+      title: '确定要重置表单吗？',
+      content: '重置后，当前表单内容将会被清空。',
+      okText: '确定',
+      cancelText: '取消',
+      onOk() {
+        resetForm()
+        message.success('表单已重置！')
+      },
+    })
   }
 
   return (
@@ -164,7 +191,7 @@ const Upload: FC = () => {
       ) : (
         <>
           <ImgUpload imgList={imgList} setImgList={setImgList} />
-          {showEditForm || !editMode ? (
+          {showEditForm ? (
             <UploadForm
               formInfo={formInfo}
               setFormInfo={setFormInfo}
@@ -177,8 +204,11 @@ const Upload: FC = () => {
             </div>
           )}
           <div className='flex gap-5'>
+            <Button className='w-40' shape='round' size='large' danger onClick={handleResetForm}>
+              重置表单
+            </Button>
             <Button
-              className='w-50'
+              className='w-40'
               shape='round'
               size='large'
               type='default'
@@ -186,7 +216,7 @@ const Upload: FC = () => {
               取消{editMode ? '编辑' : '投稿'}
             </Button>
             <Button
-              className='w-50'
+              className='w-40'
               shape='round'
               size='large'
               type='primary'
