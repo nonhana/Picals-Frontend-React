@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
@@ -8,12 +8,13 @@ import RecommendedWorks from '@/components/home/recommended-works'
 // import RankingList from '@/components/home/ranking-list'
 import { getRecommendLabelListAPI, getFollowNewWorksAPI, getRecommendWorksAPI } from '@/apis'
 import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
+import GreyButton from '@/components/common/grey-button'
+import { Icon } from '@iconify/react'
 
 const Home: FC = () => {
   const { isLogin } = useSelector((state: AppState) => state.user)
 
   const [width, setWidth] = useState<number>(1245)
-  const homeRef = useRef<HTMLDivElement>(null)
   const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
@@ -66,6 +67,7 @@ const Home: FC = () => {
 
   const getRecommendWorks = async () => {
     setGettingRecommendWorkList(true)
+    setRecommendWorkList([])
     try {
       const { data } = await getRecommendWorksAPI({ pageSize: 30, current: 1 }) // 只获取一页
       setRecommendWorkList(data)
@@ -84,13 +86,19 @@ const Home: FC = () => {
   }, [])
 
   return (
-    <div ref={homeRef} className='relative w-100% my-30px select-none'>
+    <div className='relative w-full my-30px select-none'>
       <div style={{ width: `${width}px` }} className='flex flex-col mx-auto'>
         <LabelList loading={gettingLabelList} labelList={labelList} />
         {isLogin && <FollowedWorks loading={gettingFollowWorkList} workList={followWorkList} />}
         <RecommendedWorks loading={gettingRecommendWorkList} workList={recommendWorkList} />
         {/* TODO: 暂时没写好排行榜接口 */}
         {/* <RankingList loading={loading} workList={rankWorkList} /> */}
+      </div>
+
+      <div className='fixed bottom-10 right-10'>
+        <GreyButton onClick={getRecommendWorks}>
+          <Icon color='#fff' icon='ant-design:reload-outlined' />
+        </GreyButton>
       </div>
     </div>
   )
