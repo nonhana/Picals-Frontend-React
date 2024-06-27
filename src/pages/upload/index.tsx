@@ -9,7 +9,7 @@ import { Button, notification } from 'antd'
 import type { UploadWorkFormInfo } from '@/utils/types'
 import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import { reset, saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
+import { saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
 
 const Upload: FC = () => {
   const dispatch = useDispatch()
@@ -108,7 +108,17 @@ const Upload: FC = () => {
         await uploadWorkAPI(uploadWorkInfo)
       }
       setUploadSuccess(true)
-      dispatch(reset())
+      setImgList([])
+      setFormInfo({
+        basicInfo: {
+          name: '',
+          intro: '',
+          reprintType: 1,
+          openComment: true,
+          isAIGenerated: false,
+        },
+        labels: [],
+      })
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
