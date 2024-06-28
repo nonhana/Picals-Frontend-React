@@ -4,7 +4,8 @@ import { AppState } from '@/store/types'
 import { verifyPixivUser, verifyPixivWork, download } from '@/utils'
 import type { FavoriteFormInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
-import { Button, Divider, Modal, Radio, RadioChangeEvent, message } from 'antd'
+import { Button, Divider, Modal, message, Checkbox } from 'antd'
+import type { GetProp } from 'antd'
 import WorkLittleItem from '@/components/common/work-little-item'
 import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
@@ -20,6 +21,7 @@ import CreateFolderModal from '@/components/common/create-folder-modal'
 import LazyImg from '@/components/common/lazy-img'
 
 const { confirm } = Modal
+const CheckboxGroup = Checkbox.Group
 
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
@@ -48,7 +50,13 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
 
   const [loading, setLoading] = useState(true)
   const [collecting, setCollecting] = useState(false)
-  const [folderId, setFolderId] = useState<string>('')
+  const [folderIds, setFolderIds] = useState<string[]>([])
+
+  useEffect(() => {
+    if (!collecting) {
+      setFolderIds(workInfo.favoriteIds || [])
+    }
+  }, [collecting])
 
   // 刷新收藏夹列表数据
   const refreshFavoriteList = async () => {
@@ -57,36 +65,23 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     dispatch(setFavoriteList(list))
   }
 
-  // 添加当前作品到收藏夹
-  const handleCollectWork = async () => {
-    if (workInfo.isCollected) {
-      await favoriteActionsAPI({ id: workInfo.id, favoriteIds: workInfo.favoriteIds! })
-      await refreshFavoriteList()
-      setWorkInfo({ ...workInfo, isCollected: false })
-    } else {
-      setCollecting(true)
-    }
-  }
   const collectConfirm = async () => {
-    if (!folderId) {
+    if (folderIds.length === 0) {
       setCollecting(false)
       return
     }
-    await favoriteActionsAPI({ id: workInfo.id, favoriteIds: [folderId] })
+    await favoriteActionsAPI({ id: workInfo.id, favoriteIds: folderIds })
     await refreshFavoriteList()
     setCollecting(false)
-    setWorkInfo({ ...workInfo, isCollected: true, favoriteIds: [folderId] })
+    setWorkInfo({ ...workInfo, isCollected: true, favoriteIds: folderIds })
     messageApi.success('收藏成功')
   }
   const cancelCollect = () => {
     setCollecting(false)
   }
-  const onChooseFolder = (e: RadioChangeEvent) => {
-    setFolderId(e.target.value)
+  const onChooseFolder: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
+    setFolderIds(checkedValues as string[])
   }
-  useEffect(() => {
-    if (!collecting) setFolderId('')
-  }, [collecting])
 
   // 关注用户
   const handleFollow = async () => {
@@ -225,7 +220,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                   icon={
                     workInfo.isCollected ? 'ant-design:star-filled' : 'ant-design:star-outlined'
                   }
-                  onClick={handleCollectWork}
+                  onClick={() => setCollecting(true)}
                 />
                 <Icon
                   className='cursor-pointer hidden'
@@ -407,9 +402,9 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
         )}>
         {favoriteList.length !== 0 ? (
           <div className='h-110 overflow-y-scroll'>
-            <Radio.Group className='w-full' onChange={onChooseFolder} value={folderId}>
+            <CheckboxGroup className='w-full' onChange={onChooseFolder} value={folderIds}>
               {favoriteList.map((item) => (
-                <Radio
+                <Checkbox
                   key={item.id}
                   value={item.id}
                   className='w-full h-15 px-5 flex justify-between items-center'>
@@ -417,9 +412,9 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                     <span>{item.name}</span>
                     <span>作品数：{item.workNum}</span>
                   </div>
-                </Radio>
+                </Checkbox>
               ))}
-            </Radio.Group>
+            </CheckboxGroup>
           </div>
         ) : (
           <Empty text='暂无收藏夹' />
