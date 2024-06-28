@@ -64,7 +64,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
 
   return (
     <div
-      className={`shrink-0 relative w-184px rd-1 overflow-hidden ${chooseStatus ? 'bg-#f5f5f5' : 'bg-white'} ${settingStatus ? 'hover:bg-#f5f5f5' : ''}`}>
+      className={`shrink-0 relative w-184px rd-1 overflow-hidden ${settingStatus && chooseStatus ? 'bg-#f5f5f5' : 'bg-white'} ${settingStatus ? 'hover:bg-#f5f5f5' : ''}`}>
       {settingStatus && (
         <div
           className='absolute top-0 left-0 w-184px h-full z-100'
