@@ -30,7 +30,7 @@ const MyHistory: FC = () => {
   return (
     <div className='relative w-full'>
       <div className='py-5 w-full flex justify-between items-center'>
-        <span className='title'>浏览记录</span>
+        <span className='select-none title'>浏览记录</span>
         <div className='flex items-center gap-5'>
           {searching && (
             <Button type='link' onClick={() => setSearching(false)}>

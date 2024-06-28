@@ -25,7 +25,7 @@ const MyLikes: FC = () => {
   return (
     <div className='relative w-full'>
       <div className='flex gap-10px py-5 items-center'>
-        <span className='title'>最近喜欢</span>
+        <span className='select-none title'>最近喜欢</span>
         <div className='bg-#858585 rd-full py-3px px-6px font-size-14px color-white font-bold'>
           <span>{workCount}</span>
         </div>

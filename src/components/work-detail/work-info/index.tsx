@@ -422,7 +422,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             </Radio.Group>
           </div>
         ) : (
-          <Empty text='暂无收藏夹，可以先去个人中心创建一个哦！' />
+          <Empty text='暂无收藏夹' />
         )}
       </Modal>
 
