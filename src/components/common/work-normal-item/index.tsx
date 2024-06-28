@@ -43,8 +43,6 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork })
       case 'edit':
         handleEdit(itemInfo.id)
         break
-      default:
-        break
     }
   }
 

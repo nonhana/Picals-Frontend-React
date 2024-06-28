@@ -12,13 +12,14 @@ import WorkListSkeleton from '@/components/skeleton/work-list'
 
 type WorkListProps = {
   workCount: number
+  getWorkCount: () => Promise<void>
 }
 
-const WorkList: FC<WorkListProps> = ({ workCount }) => {
+const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
   const { userId, currentPath } = useContext(PersonalContext)
 
   const [current, setCurrent] = useState<number>(1)
-  const [workList, setWorkList, setWorkMap, removeWork] = useMap<WorkNormalItemInfo>([])
+  const [workList, setWorkList, setWorkMap] = useMap<WorkNormalItemInfo>([])
 
   const likeWork = async (workId: string) => {
     try {
@@ -33,7 +34,7 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
   const deleteWork = async (workId: string) => {
     try {
       await deleteWorkAPI({ id: workId })
-      removeWork(workId)
+      await refreshWorkList()
       message.success('删除成功')
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -47,6 +48,10 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     setGettingWorkList(true)
     try {
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
+      if (data.length === 0) {
+        setCurrent((prev) => prev - 1)
+        return
+      }
       setWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -64,6 +69,10 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
         current,
         pageSize: 30,
       })
+      if (data.length === 0) {
+        setCurrent((prev) => prev - 1)
+        return
+      }
       setWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -73,9 +82,14 @@ const WorkList: FC<WorkListProps> = ({ workCount }) => {
     }
   }
 
+  const refreshWorkList = async () => {
+    await getWorkCount()
+    if (currentPath === 'works') await getUserWorks()
+    if (currentPath === 'likes') await getUserLikeWorks()
+  }
+
   useEffect(() => {
-    if (currentPath === 'works') getUserWorks()
-    if (currentPath === 'likes') getUserLikeWorks()
+    refreshWorkList()
   }, [userId, current, currentPath])
 
   return (

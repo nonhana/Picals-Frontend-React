@@ -34,7 +34,7 @@ const MyWorks: FC = () => {
       <div className='mb-5'>
         <LabelList />
       </div>
-      <WorkList workCount={workCount} />
+      <WorkList workCount={workCount} getWorkCount={getWorkCount} />
     </div>
   )
 }

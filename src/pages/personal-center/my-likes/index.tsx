@@ -30,7 +30,7 @@ const MyLikes: FC = () => {
           <span>{workCount}</span>
         </div>
       </div>
-      <WorkList workCount={workCount} />
+      <WorkList workCount={workCount} getWorkCount={getLikeWorkCount} />
     </div>
   )
 }
