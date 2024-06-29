@@ -199,14 +199,14 @@ const WorkList: FC<WorkListProps> = ({
       {contextHolder}
       <div className='relative w-954px flex flex-col items-center min-h-150 pb-10'>
         {settingStatus && (
-          <div className='w-100% h-16 px-5 flex items-center border-1px border-b-solid border-color-#6d757a'>
+          <div className='w-full h-16 px-5 flex items-center border-1px border-b-solid border-color-#6d757a'>
             <Button type='default' onClick={() => setSettingStatus(false)}>
               取消批量编辑
             </Button>
           </div>
         )}
         {settingStatus ? (
-          <div className='w-100% h-16 px-5 flex justify-between items-center border-1px border-b-solid border-color-#6d757a'>
+          <div className='w-full h-16 px-5 flex justify-between items-center border-1px border-b-solid border-color-#6d757a'>
             <div className='flex gap-10px items-center'>
               <Radio.Group value={allChosen} onChange={chooseAllWorks}>
                 <Radio value={true}>全选</Radio>
@@ -236,7 +236,7 @@ const WorkList: FC<WorkListProps> = ({
             </span>
           </div>
         ) : (
-          <div className='w-100% h-16 px-5 flex justify-end border-1px border-b-solid border-color-#6d757a'>
+          <div className='w-full h-16 px-5 flex justify-end border-1px border-b-solid border-color-#6d757a'>
             <div className='flex gap-5 items-center'>
               {isLogin && isMe && (
                 <Button

@@ -97,7 +97,7 @@ const SearchResult: FC = () => {
 
   return (
     <>
-      <div ref={exploreRef} className='relative overflow-hidden w-100% my-30px'>
+      <div ref={exploreRef} className='relative overflow-hidden w-full my-30px'>
         <div
           style={{
             width: `${width}px`,
@@ -122,7 +122,7 @@ const SearchResult: FC = () => {
             </div>
           )}
           <Menu
-            className='w-100%'
+            className='w-full'
             onClick={checkoutMenu}
             selectedKeys={[current]}
             mode='horizontal'

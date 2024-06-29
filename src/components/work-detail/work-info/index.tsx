@@ -189,7 +189,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     <>
       {contextHolder}
       <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center overflow-hidden'>
-        <div id='work-info' className='w-100%'>
+        <div id='work-info' className='w-full'>
           {/* 图片列表 */}
           {imgListVisible && (
             <HanaViewer onDownload={downloadImg} gettingBlob={gettingBlob}>
@@ -212,7 +212,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
           )}
           {/* 操作栏 */}
           {isLogin && (
-            <div className='w-100% mt-10px flex justify-end'>
+            <div className='w-full mt-10px flex justify-end'>
               <div className='flex gap-40px'>
                 <Icon
                   className='cursor-pointer'
@@ -290,7 +290,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             </div>
           </div>
           {/* 用户信息 */}
-          <div className='w-100% my-5 flex flex-col gap-10px items-center'>
+          <div className='w-full my-5 flex flex-col gap-10px items-center'>
             <div className='w-150 mb-3 flex justify-between'>
               <div className='flex gap-20px items-center'>
                 <Link

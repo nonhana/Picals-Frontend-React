@@ -159,7 +159,7 @@ const WorkDetail: FC = () => {
 
   return (
     <>
-      <div className='bg-#f5f5f5 w-100% flex justify-center'>
+      <div className='bg-#f5f5f5 w-full flex justify-center'>
         <div className='flex gap-5 my-5'>
           <div>
             {workInfo ? (

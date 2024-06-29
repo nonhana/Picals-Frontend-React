@@ -50,8 +50,8 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
   }, [id])
 
   return (
-    <div className='relative w-100% flex flex-col mb-30px'>
-      <div className='w-100% flex justify-between mb-20px items-center'>
+    <div className='relative w-full flex flex-col mb-30px'>
+      <div className='w-full flex justify-between mb-20px items-center'>
         <div className='flex gap-5'>
           <div className='w-30 h-30 rd-2 border-solid border-2px border-#fff overflow-hidden'>
             <LazyImg

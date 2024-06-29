@@ -83,7 +83,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
 
   return (
     <div className='relative p-5 w-full min-h-180 pb-15'>
-      <div className='w-100% flex justify-between items-center mb-10px'>
+      <div className='w-full flex justify-between items-center mb-10px'>
         <div className='flex gap-10px items-center'>
           <div className='title font-size-24px'>
             <span>插画</span>

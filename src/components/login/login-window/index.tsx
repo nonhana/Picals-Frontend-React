@@ -186,7 +186,7 @@ const LoginWindow: FC = () => {
           {!isLogin && !isRegister && (
             <div
               className='
-            w-100%
+            w-full
             flex
             flex-col
             gap-10
@@ -194,7 +194,7 @@ const LoginWindow: FC = () => {
               <Button
                 size='large'
                 shape='round'
-                className='w-100%'
+                className='w-full'
                 type='primary'
                 onClick={() => setIsRegister(true)}>
                 注册账号
@@ -203,7 +203,7 @@ const LoginWindow: FC = () => {
               <Button
                 size='large'
                 shape='round'
-                className='w-100%'
+                className='w-full'
                 type='default'
                 onClick={() => setIsLogin(true)}>
                 登录
@@ -233,7 +233,7 @@ const LoginWindow: FC = () => {
                 rules={[{ required: true, message: '登录需要输入密码！' }]}>
                 <Input.Password size='large' placeholder='请输入密码' />
               </Form.Item>
-              <Form.Item className='w-100% flex justify-center'>
+              <Form.Item className='w-full flex justify-center'>
                 <Button
                   className='w-50'
                   type='default'
@@ -302,7 +302,7 @@ const LoginWindow: FC = () => {
                 ]}>
                 <Input.Password size='large' placeholder='请再输入一遍密码' />
               </Form.Item>
-              <Form.Item className='w-100% flex justify-center'>
+              <Form.Item className='w-full flex justify-center'>
                 <Button
                   className='w-50'
                   type='default'

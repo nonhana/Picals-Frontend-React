@@ -43,7 +43,7 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap 
 
   return (
     <div
-      className={`relative not-show-scrollbar w-100% ${className}`}
+      className={`relative not-show-scrollbar w-full ${className}`}
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}>
       <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
