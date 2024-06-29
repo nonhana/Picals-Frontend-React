@@ -48,10 +48,6 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     setGettingWorkList(true)
     try {
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
-      if (data.length === 0) {
-        setCurrent((prev) => prev - 1)
-        return
-      }
       setWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -69,10 +65,6 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
         current,
         pageSize: 30,
       })
-      if (data.length === 0) {
-        setCurrent((prev) => prev - 1)
-        return
-      }
       setWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -90,7 +82,11 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
 
   useEffect(() => {
     refreshWorkList()
-  }, [userId, current, currentPath])
+  }, [current, currentPath])
+
+  useEffect(() => {
+    if (userId) setCurrent(1)
+  }, [userId])
 
   return (
     <div className='relative w-full min-h-160 pb-15'>
