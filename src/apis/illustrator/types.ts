@@ -6,7 +6,7 @@ export interface INewIllustratorReq {
   /**
    * 插画家头像
    */
-  avatar: string
+  avatar?: string
   /**
    * 插画家个人主页，如转载 pixiv 的插画家，需要填写作者的个人主页url
    */
@@ -14,7 +14,7 @@ export interface INewIllustratorReq {
   /**
    * 插画家介绍
    */
-  intro: string
+  intro?: string
   /**
    * 插画家名称
    */
@@ -56,5 +56,9 @@ export interface IllustratorInfo {
    * 作品总数
    */
   workNum: number
+  /**
+   * 插画家个人主页
+   */
+  homeUrl: string
 }
 // #endregion

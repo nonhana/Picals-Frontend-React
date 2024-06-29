@@ -1,7 +1,110 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useMemo, useRef } from 'react'
 import type { UploadWorkFormInfo } from '@/utils/types'
-import { Form, FormProps, Input, Radio, Select, message } from 'antd'
-import { getLabelsInPagesAPI } from '@/apis'
+import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex } from 'antd'
+import type { SelectProps } from 'antd'
+import {
+  searchIllustratorsAPI,
+  getIllustratorDetailAPI,
+  getIllustratorListInPagesAPI,
+  searchLabelsAPI,
+  getLabelsInPagesAPI,
+  newIllustratorAPI,
+} from '@/apis'
+import type { INewIllustratorReq } from '@/apis/illustrator/types'
+import Empty from '@/components/common/empty'
+import { debounce } from 'lodash'
+import CreateIllustratorModal from '@/components/common/create-illustrator-modal'
+
+type SelectableItemInfo = {
+  value: string
+  label: string
+}
+
+export interface DebounceSelectProps<ValueType = any>
+  extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
+  fetchOptions: (search: string) => Promise<ValueType[]>
+  debounceTimeout?: number
+}
+
+const DebounceSelect = <ValueType extends SelectableItemInfo>({
+  fetchOptions,
+  debounceTimeout = 500,
+  ...props
+}: DebounceSelectProps<ValueType>) => {
+  const [fetching, setFetching] = useState(false)
+  const [options, setOptions] = useState<ValueType[]>([])
+  const [current, setCurrent] = useState(1)
+  const [isFinal, setIsFinal] = useState(false)
+  const pageSize = 20
+  const fetchRef = useRef(0)
+
+  const getIllustratorList = async () => {
+    try {
+      const { data } = await getIllustratorListInPagesAPI({ current, pageSize })
+      if (data.length < pageSize) setIsFinal(true)
+      const result = data.map((item) => ({ value: item.id, label: item.name }))
+      setOptions(options.concat(result as ValueType[]))
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if (isFinal) return
+    getIllustratorList()
+  }, [current, isFinal])
+
+  const onPopupScroll = (e: any) => {
+    e.persist()
+    const { scrollTop, offsetHeight, scrollHeight } = e.target
+    if (scrollTop + offsetHeight > scrollHeight - 10) {
+      setCurrent((prev) => prev + 1)
+    }
+  }
+
+  const debounceFetcher = useMemo(() => {
+    const loadOptions = (value: string) => {
+      if (value === '') {
+        setCurrent(1)
+        return
+      }
+
+      fetchRef.current += 1
+      const fetchId = fetchRef.current
+      setOptions([])
+      setFetching(true)
+
+      fetchOptions(value).then((newOptions) => {
+        if (fetchId !== fetchRef.current) return
+        setOptions(newOptions)
+        setFetching(false)
+      })
+    }
+
+    return debounce(loadOptions, debounceTimeout)
+  }, [fetchOptions, debounceTimeout])
+
+  const initialIllustratorList = () => {
+    setOptions([])
+    setCurrent(1)
+    setIsFinal(false)
+  }
+
+  return (
+    <Select
+      filterOption={false}
+      onSearch={debounceFetcher}
+      onPopupScroll={onPopupScroll}
+      notFoundContent={fetching ? <Spin size='small' /> : <Empty showImg={false} />}
+      onDropdownVisibleChange={(open) => {
+        if (!open) initialIllustratorList()
+      }}
+      {...props}
+      options={options}
+    />
+  )
+}
 
 type UploadFormProps = {
   formInfo: UploadWorkFormInfo
@@ -25,22 +128,7 @@ const Label: FC<{ text: string }> = ({ text }) => {
 }
 
 const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger, uploadWork }) => {
-  const [labels, setLabels] = useState<{ value: string; label: string }[]>([])
-
-  const getLabels = async () => {
-    try {
-      const { data } = await getLabelsInPagesAPI({ pageSize: 100, current: 1 })
-      setLabels(data.map((item) => ({ value: item.name, label: item.name })))
-    } catch (error) {
-      console.log('出现错误了喵！！', error)
-      return
-    }
-  }
-
-  useEffect(() => {
-    getLabels()
-  }, [])
-
+  /* ----------表单本身逻辑相关---------- */
   const [messageApi, contextHolder] = message.useMessage()
   const [workForm] = Form.useForm()
 
@@ -48,13 +136,6 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
   const handleFailed: FormProps<UploadWorkFormInfo>['onFinishFailed'] = () => {
     messageApi.error('检查一下表单是否填写完整！')
-  }
-
-  const handleSelectLabel = (value: string[]) => {
-    setFormInfo((prevFormInfo) => ({
-      ...prevFormInfo,
-      labels: value,
-    }))
   }
 
   const changeReprinted = (value: number) => {
@@ -85,6 +166,138 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     if (submitTrigger === 0) return
     workForm.submit()
   }, [submitTrigger])
+
+  /* ----------标签选择相关---------- */
+  const [labels, setLabels] = useState<SelectableItemInfo[]>([])
+  const [current, setCurrent] = useState(1)
+  const [isFinal, setIsFinal] = useState(false)
+  const pageSize = 20
+
+  const getLabels = async () => {
+    try {
+      const { data } = await getLabelsInPagesAPI({ current, pageSize })
+      if (data.length < pageSize) setIsFinal(true)
+      const result = data.map((item) => ({ value: item.name, label: item.name }))
+      setLabels(labels.concat(result))
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if (isFinal) return
+    getLabels()
+  }, [current, isFinal])
+
+  const onPopupScroll = (e: any) => {
+    e.persist()
+    const { scrollTop, offsetHeight, scrollHeight } = e.target
+    if (scrollTop + offsetHeight > scrollHeight - 10) {
+      setCurrent((prev) => prev + 1)
+    }
+  }
+
+  let timeout: ReturnType<typeof setTimeout> | null
+  let currentValue: string
+
+  const searchLabels = async (value: string) => {
+    fetchLabels(value, setLabels)
+  }
+
+  const fetchLabels = (value: string, callback: (data: SelectableItemInfo[]) => void) => {
+    if (timeout) {
+      clearTimeout(timeout)
+      timeout = null
+    }
+    currentValue = value
+
+    const fake = () => {
+      searchLabelsAPI({ keyword: value }).then((result) => {
+        if (currentValue === value) {
+          const data = result.data.map((item) => ({
+            value: item.name,
+            label: item.name,
+          }))
+          callback(data)
+        }
+      })
+    }
+    if (value) {
+      timeout = setTimeout(fake, 300)
+    } else {
+      setCurrent(1)
+    }
+  }
+
+  const initialLabelList = () => {
+    setLabels([])
+    setCurrent(1)
+    setIsFinal(false)
+  }
+
+  /* ----------插画家选择相关---------- */
+  const fetchIllustratorList = async (keyword: string): Promise<SelectableItemInfo[]> => {
+    try {
+      const { data } = await searchIllustratorsAPI({ keyword })
+      const result = data.map((item) => ({ value: item.id, label: item.name }))
+      return result
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return []
+    }
+  }
+
+  const selectIllustrator = async (value: any) => {
+    const { data } = await getIllustratorDetailAPI({ id: value })
+    setFormInfo((prevFormInfo) => ({
+      ...prevFormInfo,
+      illustratorInfo: {
+        name: data.name,
+        homeUrl: data.homeUrl,
+      },
+    }))
+    workForm.setFieldsValue({ illustratorInfo: { name: data.name, homeUrl: data.homeUrl } })
+  }
+
+  /* ----------新增插画家相关---------- */
+  const [modalStatus, setModalStatus] = useState(false)
+  const [newIllustratorInfo, setNewIllustratorInfo] = useState<INewIllustratorReq>({
+    name: '',
+    homeUrl: '',
+  })
+  const [homeUrlPrefix, setHomeUrlPrefix] = useState('https://www.pixiv.net/users/')
+  const [illustratorId, setIllustratorId] = useState('')
+
+  useEffect(() => {
+    setNewIllustratorInfo({
+      ...newIllustratorInfo,
+      homeUrl: homeUrlPrefix + illustratorId,
+    })
+  }, [homeUrlPrefix, illustratorId])
+
+  const confirmAction = async () => {
+    try {
+      if (illustratorId === '') {
+        messageApi.error('请填写插画家ID！')
+        return
+      }
+      await newIllustratorAPI(newIllustratorInfo)
+      setModalStatus(false)
+      messageApi.success('新建插画家成功，现在可以通过搜索框选择啦！')
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if (!modalStatus) {
+      setNewIllustratorInfo({ name: '', homeUrl: '' })
+      setHomeUrlPrefix('https://www.pixiv.net/users/')
+      setIllustratorId('')
+    }
+  }, [modalStatus])
 
   return (
     <>
@@ -182,16 +395,18 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
                 label={<Label text='原作者名' />}
                 name={['illustratorInfo', 'name']}
                 rules={[{ required: true, message: '请输入原作者的名称！' }]}>
-                <Input
-                  placeholder='请输入您收藏原作品的原作者名称'
-                  value={formInfo.basicInfo.name}
-                  onChange={(e) =>
-                    setFormInfo({
-                      ...formInfo,
-                      illustratorInfo: { ...formInfo.illustratorInfo!, name: e.target.value },
-                    })
-                  }
-                />
+                <Flex gap={20}>
+                  <DebounceSelect
+                    showSearch
+                    value={formInfo.illustratorInfo?.name}
+                    placeholder='输入插画家的名字进行搜索~'
+                    fetchOptions={fetchIllustratorList}
+                    onChange={selectIllustrator}
+                  />
+                  <Button type='primary' onClick={() => setModalStatus(true)}>
+                    新增插画家
+                  </Button>
+                </Flex>
               </Form.Item>
 
               <Form.Item<UploadWorkFormInfo>
@@ -203,7 +418,8 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
                 ]}>
                 <Input
                   placeholder='原作者主页，如Pixiv作者的主页'
-                  value={formInfo.basicInfo.name}
+                  value={formInfo.illustratorInfo?.homeUrl}
+                  disabled
                   onChange={(e) =>
                     setFormInfo({
                       ...formInfo,
@@ -229,8 +445,19 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
               style={{ width: '100%' }}
               placeholder='选择不超过10个标签，或者自己输入'
               maxCount={10}
-              onChange={handleSelectLabel}
+              onSearch={searchLabels}
+              onChange={(value) => {
+                setFormInfo((prevFormInfo) => ({
+                  ...prevFormInfo,
+                  labels: value,
+                }))
+              }}
+              onDropdownVisibleChange={(open) => {
+                if (!open) initialLabelList()
+              }}
               options={labels}
+              onPopupScroll={onPopupScroll}
+              notFoundContent={<Empty showImg={false} />}
             />
           </Form.Item>
         </div>
@@ -298,6 +525,18 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           </div>
         </div>
       </Form>
+
+      <CreateIllustratorModal
+        modalStatus={modalStatus}
+        confirmAction={confirmAction}
+        cancelAction={() => setModalStatus(false)}
+        formInfo={newIllustratorInfo}
+        setFormInfo={setNewIllustratorInfo}
+        homeUrlPrefix={homeUrlPrefix}
+        setHomeUrlPrefix={setHomeUrlPrefix}
+        illustratorId={illustratorId}
+        setIllustratorId={setIllustratorId}
+      />
     </>
   )
 }

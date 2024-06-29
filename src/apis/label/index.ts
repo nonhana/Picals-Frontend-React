@@ -1,6 +1,6 @@
 import request from '@/service'
 import { LabelDetailInfo, INewLabelReq } from './types'
-import { LabelItem, Name, Pagination } from '../types'
+import { Keyword, LabelItem, Name, Pagination } from '../types'
 
 // 新建标签
 export const newLabelAPI = (data: INewLabelReq[]) => {
@@ -8,6 +8,15 @@ export const newLabelAPI = (data: INewLabelReq[]) => {
     url: '/api/label/new',
     method: 'POST',
     data,
+  })
+}
+
+// 搜索标签
+export const searchLabelsAPI = (params: Keyword) => {
+  return request<Keyword, LabelItem[]>({
+    url: '/api/label/search',
+    method: 'GET',
+    params,
   })
 }
 

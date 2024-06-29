@@ -29,6 +29,7 @@
     "iconify-icon": "^2.0.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
+    "qs": "^6.12.1",
     "react": "^18.2.0",
     "react-activation": "^0.12.4",
     "react-content-loader": "^7.0.2",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@iconify-json/mdi": "^1.1.64",
     "@types/lodash": "^4.17.0",
+    "@types/qs": "^6.9.15",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@types/react-lazyload": "^3.2.3",
