@@ -3,18 +3,28 @@ import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { CSSTransition } from 'react-transition-group'
 
+type ScrollType =
+  | 'label'
+  | 'label-img'
+  | 'work-normal'
+  | 'work-rank'
+  | 'work-detail'
+  | 'work-little'
+
 type LayoutListProps = {
   className?: string
   gap?: number
-  scrollType: 'label' | 'label-img' | 'work-normal' | 'work-rank'
+  scrollType: ScrollType
   children: React.ReactNode
 }
 
-const scrollMap: Map<'label' | 'label-img' | 'work-normal' | 'work-rank', number> = new Map([
+const scrollMap: Map<ScrollType, number> = new Map([
   ['label', 400],
   ['label-img', 512],
   ['work-normal', 1020],
   ['work-rank', 924],
+  ['work-detail', 640],
+  ['work-little', 300],
 ])
 
 const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap = 10 }) => {

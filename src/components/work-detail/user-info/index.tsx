@@ -35,7 +35,7 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => 
         <span>{userInfo.intro}</span>
       </div>
       {authorWorkList.length !== 0 ? (
-        <LayoutList scrollType='work-normal'>
+        <LayoutList scrollType='work-little'>
           {authorWorkList.map((work) => (
             <WorkLeastItem key={work.id} itemInfo={work} />
           ))}

@@ -188,15 +188,23 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   return (
     <>
       {contextHolder}
-      <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center'>
+      <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center overflow-hidden'>
         <div id='work-info' className='w-100%'>
           {/* 图片列表 */}
           {imgListVisible && (
             <HanaViewer onDownload={downloadImg} gettingBlob={gettingBlob}>
-              <div className='w-100% flex flex-col gap-10px'>
+              <div
+                style={{
+                  width: 'calc(100% + 40px)',
+                }}
+                className='flex m--5 mb-0 flex-col gap-10px'>
                 {imgList.map((img, index) => (
                   <PhotoView key={index} src={img}>
-                    <img src={img} alt={`${workInfo.name}-${index}`} />
+                    <img
+                      className='object-contain max-h-200 cursor-pointer'
+                      src={img}
+                      alt={`${workInfo.name}-${index}`}
+                    />
                   </PhotoView>
                 ))}
               </div>
@@ -313,7 +321,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             {authorWorkList.length === 0 ? (
               <Empty showImg={false} text='暂无其他作品' />
             ) : (
-              <LayoutList scrollType='work-normal'>
+              <LayoutList scrollType='work-detail'>
                 {Array.from(authorWorkList.values()).map((work, index) => (
                   <WorkLittleItem key={index} itemInfo={work} like={likeWork} />
                 ))}
