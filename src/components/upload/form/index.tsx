@@ -35,15 +35,21 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
   const [options, setOptions] = useState<ValueType[]>([])
   const [current, setCurrent] = useState(1)
   const [isFinal, setIsFinal] = useState(false)
+  const [searching, setSearching] = useState(false)
+  const dropdownList = useRef<any>()
   const pageSize = 20
   const fetchRef = useRef(0)
 
-  const getIllustratorList = async () => {
+  const getIllustratorList = async (reset?: boolean) => {
     try {
       const { data } = await getIllustratorListInPagesAPI({ current, pageSize })
       if (data.length < pageSize) setIsFinal(true)
       const result = data.map((item) => ({ value: item.id, label: item.name }))
-      setOptions(options.concat(result as ValueType[]))
+      if (reset) {
+        setOptions(result as ValueType[])
+      } else {
+        setOptions(options.concat(result as ValueType[]))
+      }
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -56,9 +62,11 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
   }, [current, isFinal])
 
   const onPopupScroll = (e: any) => {
+    dropdownList.current = e.target
+    if (searching) return
     e.persist()
     const { scrollTop, offsetHeight, scrollHeight } = e.target
-    if (scrollTop + offsetHeight > scrollHeight - 10) {
+    if (scrollTop + offsetHeight === scrollHeight) {
       setCurrent((prev) => prev + 1)
     }
   }
@@ -69,7 +77,7 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
         setCurrent(1)
         return
       }
-
+      setSearching(true)
       fetchRef.current += 1
       const fetchId = fetchRef.current
       setOptions([])
@@ -87,8 +95,20 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
 
   const initialIllustratorList = () => {
     setOptions([])
-    setCurrent(1)
-    setIsFinal(false)
+    if (current === 1) {
+      getIllustratorList(true)
+    } else {
+      setCurrent(1)
+      setIsFinal(false)
+    }
+  }
+
+  const onDropdownVisibleChange = (open: boolean) => {
+    if (!open) {
+      initialIllustratorList()
+      setSearching(false)
+      dropdownList.current.scrollTop = 0
+    }
   }
 
   return (
@@ -97,9 +117,7 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
       onSearch={debounceFetcher}
       onPopupScroll={onPopupScroll}
       notFoundContent={fetching ? <Spin size='small' /> : <Empty showImg={false} />}
-      onDropdownVisibleChange={(open) => {
-        if (!open) initialIllustratorList()
-      }}
+      onDropdownVisibleChange={onDropdownVisibleChange}
       {...props}
       options={options}
     />
@@ -171,14 +189,20 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   const [labels, setLabels] = useState<SelectableItemInfo[]>([])
   const [current, setCurrent] = useState(1)
   const [isFinal, setIsFinal] = useState(false)
+  const [searching, setSearching] = useState(false)
+  const dropdownList = useRef<any>()
   const pageSize = 20
 
-  const getLabels = async () => {
+  const getLabels = async (reset?: boolean) => {
     try {
       const { data } = await getLabelsInPagesAPI({ current, pageSize })
       if (data.length < pageSize) setIsFinal(true)
       const result = data.map((item) => ({ value: item.name, label: item.name }))
-      setLabels(labels.concat(result))
+      if (reset) {
+        setLabels(result)
+      } else {
+        setLabels(labels.concat(result))
+      }
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
@@ -191,9 +215,11 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   }, [current, isFinal])
 
   const onPopupScroll = (e: any) => {
+    dropdownList.current = e.target
+    if (searching) return
     e.persist()
     const { scrollTop, offsetHeight, scrollHeight } = e.target
-    if (scrollTop + offsetHeight > scrollHeight - 10) {
+    if (scrollTop + offsetHeight === scrollHeight) {
       setCurrent((prev) => prev + 1)
     }
   }
@@ -202,6 +228,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   let currentValue: string
 
   const searchLabels = async (value: string) => {
+    setSearching(true)
     fetchLabels(value, setLabels)
   }
 
@@ -232,8 +259,20 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
   const initialLabelList = () => {
     setLabels([])
-    setCurrent(1)
-    setIsFinal(false)
+    if (current === 1) {
+      getLabels(true)
+    } else {
+      setCurrent(1)
+      setIsFinal(false)
+    }
+  }
+
+  const onDropdownVisibleChange = (open: boolean) => {
+    if (!open) {
+      initialLabelList()
+      setSearching(false)
+      dropdownList.current.scrollTop = 0
+    }
   }
 
   /* ----------插画家选择相关---------- */
@@ -417,7 +456,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
                   { type: 'url', message: '请输入正确的URL地址！' },
                 ]}>
                 <Input
-                  placeholder='原作者主页，如Pixiv作者的主页'
+                  placeholder='原作者主页，选中插画家后自动填充'
                   value={formInfo.illustratorInfo?.homeUrl}
                   disabled
                   onChange={(e) =>
@@ -452,9 +491,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
                   labels: value,
                 }))
               }}
-              onDropdownVisibleChange={(open) => {
-                if (!open) initialLabelList()
-              }}
+              onDropdownVisibleChange={onDropdownVisibleChange}
               options={labels}
               onPopupScroll={onPopupScroll}
               notFoundContent={<Empty showImg={false} />}
