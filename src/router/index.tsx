@@ -46,6 +46,10 @@ const routeList: RouteObject[] = [
         element: LazyLoad(lazy(() => import('@/pages/work-detail'))),
       },
       {
+        path: 'illustrator/:illustratorId',
+        element: LazyLoad(lazy(() => import('@/pages/illustrator'))),
+      },
+      {
         path: 'upload',
         element: <AuthRouter>{LazyLoad(lazy(() => import('@/pages/upload')))}</AuthRouter>,
       },

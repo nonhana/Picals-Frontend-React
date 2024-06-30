@@ -31,7 +31,7 @@ export interface IllustratorInfo {
   /**
    * 插画家头像
    */
-  avatar: string
+  avatar: string | null
   /**
    * 创建日期
    */
