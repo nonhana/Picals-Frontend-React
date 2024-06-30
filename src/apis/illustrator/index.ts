@@ -48,7 +48,7 @@ export const searchIllustratorsAPI = (params: Keyword) => {
 }
 
 // 分页获取某插画家的作品列表
-export const getIllustratorWorksAPI = (params: Pagination) => {
+export const getIllustratorWorksInPagesAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/illustrator/works',
     method: 'GET',

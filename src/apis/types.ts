@@ -92,6 +92,10 @@ export interface WorkNormalItem {
    * 作品名称
    */
   name: string
+  /**
+   * 创建时间
+   */
+  createdAt: string
 }
 
 export type HistoryItem = Omit<WorkNormalItem, 'isLiked'> & {

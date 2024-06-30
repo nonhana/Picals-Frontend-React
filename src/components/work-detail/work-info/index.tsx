@@ -370,7 +370,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                       alt={workInfo.illustrator!.name}
                     />
                   </Link> */}
-                  <Link to={`/illustrator/${workInfo.illustrator!.id}`} target='_blank'>
+                  <Link to={`/illustrator/${workInfo.illustrator!.id}`}>
                     {workInfo.illustrator!.name}
                   </Link>
                 </div>
