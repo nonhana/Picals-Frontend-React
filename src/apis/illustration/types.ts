@@ -160,7 +160,7 @@ export interface WorkDetailInfo {
 }
 
 export interface IGetRandomBackgroundsRes {
-  result: string
+  result: string[]
   chosenIdList: number[]
 }
 // #endregion

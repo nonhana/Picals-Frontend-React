@@ -5,6 +5,7 @@ import { debounce } from 'lodash'
 
 const BgSlide: FC = () => {
   const slideWindow = useRef<HTMLDivElement>(null)
+  const bgImgListRef = useRef<string[]>([])
 
   const [bgImgList, setBgImgList] = useState<string[]>([])
   const [chosenIdList, setChosenIdList] = useState<number[]>([])
@@ -15,7 +16,11 @@ const BgSlide: FC = () => {
     setIsFetching(true)
     try {
       const { data } = await getRandomBackgroundsAPI({ chosenIdList })
-      setBgImgList((prev) => prev.concat(data.result))
+      setBgImgList((prev) => {
+        const newBgImgList = prev.concat(data.result)
+        bgImgListRef.current = newBgImgList
+        return newBgImgList
+      })
       setChosenIdList(data.chosenIdList)
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -43,9 +48,11 @@ const BgSlide: FC = () => {
   useEffect(() => {
     let index = 0
     const interval = setInterval(() => {
-      index = index === bgImgList.length - 1 ? 0 : index + 1
-      if (slideWindow.current) {
-        slideWindow.current.style.transform = `translateX(-${index * 100}vw)`
+      if (bgImgListRef.current.length > 0 && index < bgImgListRef.current.length) {
+        index = index === bgImgListRef.current.length - 1 ? 0 : index + 1
+        if (slideWindow.current) {
+          slideWindow.current.style.transform = `translateX(-${index * 100}vw)`
+        }
       }
     }, 5000)
     return () => clearInterval(interval)
