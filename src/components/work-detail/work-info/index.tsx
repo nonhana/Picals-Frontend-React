@@ -13,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
 import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
+import type { ImageItem } from '@/apis/types'
 import Empty from '@/components/common/empty'
 import { setFavoriteList } from '@/store/modules/favorites'
 import pixiv from '@/assets/svgs/pixiv.svg'
@@ -111,13 +112,13 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   }, [])
 
   // 防止图片列表预览组件因图片列表获取不完全而出现显示错误（setXxx是异步的）
-  const [imgList, setImgList] = useState<string[]>([])
+  const [imgList, setImgList] = useState<ImageItem[]>([])
   const [imgListVisible, setImgListVisible] = useState(false)
 
   useEffect(() => {
     setImgListVisible(false)
-    setImgList(workInfo.imgList)
-  }, [workInfo.imgList])
+    setImgList(workInfo.images)
+  }, [workInfo.images])
 
   useEffect(() => {
     setImgListVisible(true)
@@ -145,7 +146,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     }
     try {
       setGettingBlob(true)
-      const downloadLink = imgList[index].replace('images/', 'images%2F')
+      const downloadLink = imgList[index].originUrl.replace('images/', 'images%2F')
       const suffix = downloadLink.split('.').pop()!
       const filename = `${workInfo.name}${workInfo.imgList.length > 1 ? `-${index}` : ''}.${suffix}`
       await download(downloadLink, filename)
@@ -197,13 +198,16 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                 style={{
                   width: 'calc(100% + 40px)',
                 }}
-                className='flex m--5 mb-0 flex-col gap-10px'>
-                {imgList.map((img, index) => (
-                  <PhotoView key={index} src={img}>
+                className='w-full flex m--5 mb-0 flex-col gap-10px items-center'>
+                {imgList.map((img) => (
+                  <PhotoView key={img.id} src={img.originUrl}>
                     <img
-                      className='object-contain max-h-200 cursor-pointer'
-                      src={img}
-                      alt={`${workInfo.name}-${index}`}
+                      className='max-w-full max-h-200 object-contain cursor-pointer'
+                      style={{
+                        width: img.thumbnailWidth,
+                      }}
+                      src={img.thumbnailUrl}
+                      alt={`work-${img.id}`}
                     />
                   </PhotoView>
                 ))}

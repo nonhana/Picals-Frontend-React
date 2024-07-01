@@ -16,6 +16,7 @@ const userStore = createSlice({
     } as UserInfo,
     likedLabels: [] as LabelItem[],
     isLogin: false,
+    loginBgs: [],
   },
   reducers: {
     setUserInfo(state, action) {

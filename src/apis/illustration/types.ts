@@ -1,7 +1,7 @@
 // src/apis/illustration/types.ts
 // 定义 illustration 模块的 API 类型
 
-import { LabelItem } from '../types'
+import { ImageItem, LabelItem } from '../types'
 
 // #region 请求体类型
 export interface IUploadWorkReq {
@@ -83,6 +83,10 @@ export interface WorkDetailInfo {
    * 作品图片url列表
    */
   imgList: string[]
+  /**
+   * 图片详细信息列表
+   */
+  images: ImageItem[]
   /**
    * 作品简介
    */

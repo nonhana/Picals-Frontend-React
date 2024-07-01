@@ -37,7 +37,6 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
             <span>{info.name}</span>
           </div>
         </div>
-        {/* <span>现收录作品数：{}</span> */}
 
         <div className='p-5 flex flex-col gap-5 font-bold font-size-14px color-#3d3d3d'>
           <div className='flex gap-5 line-height-normal text-wrap'>

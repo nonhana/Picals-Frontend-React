@@ -101,3 +101,11 @@ export const addWorkViewAPI = (params: Id) => {
     params,
   })
 }
+
+// 获取随机背景图片列表
+export const getRandomBackgroundsAPI = () => {
+  return request<undefined, string[]>({
+    url: '/api/illustration/background',
+    method: 'GET',
+  })
+}

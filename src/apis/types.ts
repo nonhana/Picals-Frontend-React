@@ -151,4 +151,13 @@ export interface LabelItem {
   name: string
 }
 
+export interface ImageItem {
+  id: string
+  originUrl: string
+  originWidth: number
+  originHeight: number
+  thumbnailUrl: string
+  thumbnailWidth: number
+  thumbnailHeight: number
+}
 // #endregion

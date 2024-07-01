@@ -1,3 +1,5 @@
+import { ImageItem } from '@/apis/types'
+
 export type Option = { label: string; value: string }
 
 // 用户登录时获取的基本个人信息
@@ -56,6 +58,7 @@ export interface WorkNormalItemInfo {
 export interface WorkDetailInfo {
   id: string
   imgList: string[]
+  images: ImageItem[]
   name: string
   intro: string
   labels: Option[]
