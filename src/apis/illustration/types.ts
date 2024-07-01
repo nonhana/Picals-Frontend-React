@@ -55,6 +55,13 @@ export interface IUploadWorkReq {
 export interface IEditWorkReq extends Partial<IUploadWorkReq> {
   id: string
 }
+
+export interface IGetRandomBackgroundsReq {
+  /**
+   * 选取过的背景图片的所属作品的index列表，以确保每一次请求的背景图片不会重复
+   */
+  chosenIdList: number[]
+}
 // #endregion
 
 // #region 响应体类型
@@ -150,5 +157,10 @@ export interface WorkDetailInfo {
     homeUrl: string
     workCount: number
   }
+}
+
+export interface IGetRandomBackgroundsRes {
+  result: string
+  chosenIdList: number[]
 }
 // #endregion

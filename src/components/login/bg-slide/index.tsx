@@ -1,15 +1,44 @@
-import { FC, useEffect, useRef } from 'react'
-import Bg1 from '@/assets/imgs/bg-1.jpg'
-import Bg2 from '@/assets/imgs/bg-2.jpg'
-import Bg3 from '@/assets/imgs/bg-3.jpg'
-import Bg4 from '@/assets/imgs/bg-4.jpg'
-import Bg5 from '@/assets/imgs/bg-5.jpg'
+import { FC, useEffect, useRef, useState } from 'react'
+import { getRandomBackgroundsAPI } from '@/apis'
 import LazyImg from '@/components/common/lazy-img'
-
-const bgImgList: string[] = [Bg1, Bg2, Bg3, Bg4, Bg5]
+import { debounce } from 'lodash'
 
 const BgSlide: FC = () => {
   const slideWindow = useRef<HTMLDivElement>(null)
+
+  const [bgImgList, setBgImgList] = useState<string[]>([])
+  const [chosenIdList, setChosenIdList] = useState<number[]>([])
+  const [isFetching, setIsFetching] = useState(false)
+
+  const getRandomBackgrounds = async () => {
+    if (isFetching) return
+    setIsFetching(true)
+    try {
+      const { data } = await getRandomBackgroundsAPI({ chosenIdList })
+      setBgImgList((prev) => prev.concat(data.result))
+      setChosenIdList(data.chosenIdList)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  useEffect(() => {
+    getRandomBackgrounds()
+  }, [])
+
+  useEffect(() => {
+    const debouncedGetRandomBackgrounds = debounce(getRandomBackgrounds, 1000)
+    debouncedGetRandomBackgrounds()
+    if (chosenIdList.length === 10) {
+      debouncedGetRandomBackgrounds.cancel()
+    }
+    return () => {
+      debouncedGetRandomBackgrounds.cancel()
+    }
+  }, [chosenIdList])
 
   useEffect(() => {
     let index = 0

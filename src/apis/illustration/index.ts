@@ -1,6 +1,12 @@
 import request from '@/service'
 import { Id, Pagination, WorkNormalItem } from '../types'
-import { IEditWorkReq, IUploadWorkReq, WorkDetailInfo } from './types'
+import {
+  IEditWorkReq,
+  IGetRandomBackgroundsReq,
+  IGetRandomBackgroundsRes,
+  IUploadWorkReq,
+  WorkDetailInfo,
+} from './types'
 
 // 分页获取推荐作品列表
 export const getRecommendWorksAPI = (params: Pagination) => {
@@ -103,9 +109,10 @@ export const addWorkViewAPI = (params: Id) => {
 }
 
 // 获取随机背景图片列表
-export const getRandomBackgroundsAPI = () => {
-  return request<undefined, string[]>({
+export const getRandomBackgroundsAPI = (data: IGetRandomBackgroundsReq) => {
+  return request<IGetRandomBackgroundsReq, IGetRandomBackgroundsRes>({
     url: '/api/illustration/background',
-    method: 'GET',
+    method: 'POST',
+    data,
   })
 }
