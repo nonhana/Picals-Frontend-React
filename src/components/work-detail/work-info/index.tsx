@@ -117,7 +117,12 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
 
   useEffect(() => {
     setImgListVisible(false)
-    setImgList(workInfo.images)
+    const result: ImageItem[] = []
+    workInfo.imgList.forEach((imgUrl) => {
+      const img = workInfo.images.find((item) => item.originUrl === imgUrl)
+      if (img) result.push(img)
+    })
+    setImgList(result)
   }, [workInfo.images])
 
   useEffect(() => {
@@ -205,6 +210,10 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                       className='max-w-full max-h-200 object-contain cursor-pointer'
                       style={{
                         width: img.thumbnailWidth,
+                        height:
+                          img.thumbnailWidth > 720
+                            ? (img.thumbnailHeight * 720) / img.thumbnailWidth
+                            : img.thumbnailHeight,
                       }}
                       src={img.thumbnailUrl}
                       alt={`work-${img.id}`}
