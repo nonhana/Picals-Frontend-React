@@ -108,7 +108,13 @@ const WorkDetail: FC = () => {
         } else {
           dispatch(decreaseFollowNum())
         }
-        setUserInfo((prev) => prev && { ...prev, isFollowing: !prev.isFollowing })
+        setWorkInfo((prev) => {
+          if (!prev) return prev
+          return {
+            ...prev,
+            authorInfo: { ...prev.authorInfo, isFollowing: !prev.authorInfo.isFollowing },
+          }
+        })
       } catch (error) {
         console.log('出现错误了喵！！', error)
         return
@@ -116,6 +122,12 @@ const WorkDetail: FC = () => {
     },
     [userInfo],
   )
+
+  useEffect(() => {
+    if (workInfo?.authorInfo) {
+      setUserInfo((prev) => prev && { ...prev, isFollowing: workInfo.authorInfo.isFollowing })
+    }
+  }, [workInfo?.authorInfo.isFollowing])
 
   const likeWork = async (id: string) => {
     if (workId === id) {
