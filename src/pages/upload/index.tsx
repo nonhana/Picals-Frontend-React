@@ -10,6 +10,7 @@ import type { UploadWorkFormInfo } from '@/utils/types'
 import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
+import HanaModal from '@/components/common/hana-modal'
 
 const { confirm } = Modal
 
@@ -185,49 +186,62 @@ const Upload: FC = () => {
   }
 
   return (
-    <div className='relative w-full min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
-      {uploadSuccess ? (
-        <UploadSuccess workName={formInfo.basicInfo.name} />
-      ) : (
-        <>
-          <ImgUpload imgList={imgList} setImgList={setImgList} />
-          {showEditForm ? (
-            <UploadForm
-              formInfo={formInfo}
-              setFormInfo={setFormInfo}
-              submitTrigger={submitTrigger}
-              uploadWork={uploadWork}
-            />
-          ) : (
-            <div className='relative h-100'>
-              <Empty text='看到这个，你肯定是做了一些不好的事情，对吗？' />
+    <>
+      <div className='relative w-full min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
+        {uploadSuccess ? (
+          <UploadSuccess workName={formInfo.basicInfo.name} />
+        ) : (
+          <>
+            <ImgUpload imgList={imgList} setImgList={setImgList} />
+            {showEditForm ? (
+              <UploadForm
+                formInfo={formInfo}
+                setFormInfo={setFormInfo}
+                submitTrigger={submitTrigger}
+                uploadWork={uploadWork}
+              />
+            ) : (
+              <div className='relative h-100'>
+                <Empty text='看到这个，你肯定是做了一些不好的事情，对吗？' />
+              </div>
+            )}
+            <div className='flex gap-5'>
+              <Button className='w-40' shape='round' size='large' danger onClick={handleResetForm}>
+                重置表单
+              </Button>
+              <Button
+                className='w-40'
+                shape='round'
+                size='large'
+                type='default'
+                onClick={() => navigate('/home')}>
+                取消{editMode ? '编辑' : '投稿'}
+              </Button>
+              <Button
+                className='w-40'
+                shape='round'
+                size='large'
+                type='primary'
+                loading={uploading}
+                onClick={() => setSubmitTrigger((prev) => prev + 1)}>
+                {editMode ? '编辑' : '投稿'}作品
+              </Button>
             </div>
-          )}
-          <div className='flex gap-5'>
-            <Button className='w-40' shape='round' size='large' danger onClick={handleResetForm}>
-              重置表单
-            </Button>
-            <Button
-              className='w-40'
-              shape='round'
-              size='large'
-              type='default'
-              onClick={() => navigate('/home')}>
-              取消{editMode ? '编辑' : '投稿'}
-            </Button>
-            <Button
-              className='w-40'
-              shape='round'
-              size='large'
-              type='primary'
-              loading={uploading}
-              onClick={() => setSubmitTrigger((prev) => prev + 1)}>
-              {editMode ? '编辑' : '投稿'}作品
-            </Button>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+
+      <HanaModal
+        title='正在上传ing...'
+        visible={uploading}
+        setVisible={setUploading}
+        allowActivelyClose={false}>
+        <div className='w-full m-10 flex justify-center items-center gap-5'>
+          <span>正在逐张处理您上传的图片，请稍微等一下哦！！(&gt; v &lt;)</span>
+          <span>当然，图片上传的优化方案也一直在不断研究中！</span>
+        </div>
+      </HanaModal>
+    </>
   )
 }
 

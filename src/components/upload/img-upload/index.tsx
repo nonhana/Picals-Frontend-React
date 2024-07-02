@@ -173,15 +173,17 @@ const ImgUpload: FC<ImgUploadProps> = ({
         visible={showModal}
         setVisible={setShowModal}
         allowActivelyClose={false}>
-        <div className='m-10 mt-0'>
-          {uploadList.map((item, index) => (
-            <div key={index} className='flex items-center mb-2 h-8'>
-              <span className='w-45 whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
-                {item.fileName}：
-              </span>
-              <Progress percent={item.progress} />
-            </div>
-          ))}
+        <div className='w-full not-show-scrollbar'>
+          <div className='m-10 mt-0 max-h-200 overflow-y-scroll'>
+            {uploadList.map((item, index) => (
+              <div key={index} className='flex items-center mb-2 h-8'>
+                <span className='w-45 whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
+                  {item.fileName}：
+                </span>
+                <Progress percent={item.progress} />
+              </div>
+            ))}
+          </div>
         </div>
       </HanaModal>
     </>
