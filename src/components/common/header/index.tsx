@@ -125,7 +125,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           </Link>
           {isLogin && (
             <Button shape='round' type='default' size='large' onClick={toUpload}>
-              <span className='color-#6d757a'>投稿作品</span>
+              <span className='color-#6d757a'>转载/投稿作品</span>
             </Button>
           )}
           {isLogin ? (

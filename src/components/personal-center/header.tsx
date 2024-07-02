@@ -9,7 +9,7 @@ import {
 } from '@/store/modules/user'
 import type { UserDetailInfo } from '@/utils/types'
 import { getUserDetailAPI, userActionsAPI } from '@/apis'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import EditModal from './edit-modal'
 import InfoModal from './info-modal'
 import { PhotoView } from 'react-photo-view'
@@ -40,6 +40,11 @@ const Header: FC = () => {
 
   useEffect(() => {
     if (type && type === 'profile') {
+      if (!isMe) {
+        message.error('不可以修改他人的资料哦~')
+        navigate(`/personal-center/${userId}/works`)
+        return
+      }
       setTimeout(() => {
         setEditModalVisible(true)
       }, 300)
