@@ -10,6 +10,9 @@ import { labelActionsAPI, getRecommendLabelListAPI } from '@/apis'
 import type { LabelInfo } from '@/utils/types'
 import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
 import LazyImg from '@/components/common/lazy-img'
+import LabelListSkeleton from '@/components/skeleton/label-list'
+import { CSSTransition } from 'react-transition-group'
+import Empty from '@/components/common/empty'
 
 type LabelInfoProps = LabelDetailInfo & {
   like: () => void
@@ -35,13 +38,17 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
   }
 
   const [labelList, setLabelList] = useState<LabelInfo[]>([])
+  const [loading, setLoading] = useState(true)
 
   const getRecommendLabelList = async () => {
+    setLoading(true)
     try {
       const { data } = await getRecommendLabelListAPI()
       setLabelList(data.filter((item) => item.id !== id))
     } catch (error) {
       console.log('出现错误了喵！！', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -83,11 +90,35 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
             </Button>
           ))}
       </div>
-      <LayoutList scrollType='label'>
-        {labelList.map((item) => (
-          <LabelItem key={item.id} {...item} />
-        ))}
-      </LayoutList>
+      <div className='relative w-full min-h-10'>
+        <CSSTransition
+          in={labelList.length !== 0 && !loading}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <LayoutList scrollType='label'>
+            {labelList.map((item) => (
+              <LabelItem key={item.id} {...item} />
+            ))}
+          </LayoutList>
+        </CSSTransition>
+
+        <CSSTransition
+          in={labelList.length === 0 && !loading}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <Empty showImg={false} />
+        </CSSTransition>
+
+        <CSSTransition
+          in={labelList.length === 0 && loading}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <LabelListSkeleton className='absolute top-0' />
+        </CSSTransition>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { CSSTransition } from 'react-transition-group'
@@ -40,6 +40,13 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap 
       })
     }
   }
+
+  // 当子组件变化时，重置回到最左边
+  useEffect(() => {
+    if (layoutRef.current) {
+      layoutRef.current.scrollTo(0, 0)
+    }
+  }, [children])
 
   return (
     <div
