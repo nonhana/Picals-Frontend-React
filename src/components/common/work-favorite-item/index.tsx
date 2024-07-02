@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
@@ -7,6 +7,7 @@ import type { WorkNormalItemInfo } from '@/utils/types'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import LazyImg from '../lazy-img'
+import { PersonalContext } from '@/pages/personal-center'
 
 const dropdownList: MenuProps['items'] = [
   {
@@ -44,6 +45,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
   move,
   copy,
 }) => {
+  const { isMe } = useContext(PersonalContext)
   const { isLogin } = useSelector((state: AppState) => state.user)
 
   const onChooseItem: MenuProps['onClick'] = ({ key }) => {
@@ -129,7 +131,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
               <span>{itemInfo.authorName}</span>
             </Link>
           </div>
-          {isLogin && (
+          {isLogin && isMe && (
             <Dropdown
               menu={{ items: dropdownList, onClick: onChooseItem }}
               placement='bottom'
