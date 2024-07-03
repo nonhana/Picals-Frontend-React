@@ -1,14 +1,19 @@
 import { FC, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '@/store/types'
 import LayoutList from '@/components/common/layout-list'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap } from '@/hooks'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import Empty from '@/components/common/empty'
-import { likeActionsAPI } from '@/apis'
+import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { CSSTransition } from 'react-transition-group'
+import {
+  pushToFollowingNewWorkList,
+  resetOtherList,
+  setCurrentList,
+} from '@/store/modules/viewList'
 
 type FollowedWorksProps = {
   loading: boolean
@@ -16,6 +21,7 @@ type FollowedWorksProps = {
 }
 
 const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }) => {
+  const dispatch = useDispatch()
   const { isLogin } = useSelector((state: AppState) => state.user)
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
 
@@ -26,6 +32,14 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
   const handleLike = async (id: string) => {
     await likeActionsAPI({ id })
     updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
+  }
+
+  // 添加已关注用户新作到浏览列表
+  const addFollowedNewWorkList = async () => {
+    const { data } = await getFollowNewWorksIdListAPI()
+    dispatch(resetOtherList())
+    dispatch(pushToFollowingNewWorkList(data))
+    dispatch(setCurrentList('followingNewWorkList'))
   }
 
   return (
@@ -43,7 +57,12 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
             unmountOnExit>
             <LayoutList scrollType='work-normal' gap={20}>
               {Array.from(workList.values()).map((item) => (
-                <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
+                <WorkNormalItem
+                  key={item.id}
+                  itemInfo={item}
+                  like={handleLike}
+                  onClick={addFollowedNewWorkList}
+                />
               ))}
             </LayoutList>
           </CSSTransition>

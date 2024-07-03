@@ -1,5 +1,6 @@
 import { LabelItem } from '@/apis/types'
 import type { UserInfo, FavoriteItemInfo, UploadWorkFormInfo } from '@/utils/types'
+import { WorkListType } from './modules/viewList'
 
 interface UserState {
   userInfo: UserInfo
@@ -20,9 +21,26 @@ interface UploadFormState {
   formInfo: UploadWorkFormInfo
 }
 
+interface ViewListState {
+  workDetailUserId: string
+  fromUserId: string
+  fromFavoriteId: string
+  fromIllustratorId: string
+  userWorkList: string[]
+  likeWorkList: string[]
+  favoriteWorkList: string[]
+  followingNewWorkList: string[]
+  recommendWorkList: string[]
+  illustratorWorkList: string[]
+  searchResultWorkList: string[]
+  currentList: WorkListType
+  currentIndex: number
+}
+
 export interface AppState {
   user: UserState
   favorite: FavoritesState
   searchHistory: SearchHistoryState
   uploadForm: UploadFormState
+  viewList: ViewListState
 }

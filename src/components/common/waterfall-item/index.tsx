@@ -6,17 +6,18 @@ import LazyImg from '../lazy-img'
 
 type WaterfallItemProps = {
   item: WorkNormalItem
+  [key: string]: any
 }
 
-const WaterfallItem: FC<WaterfallItemProps> = ({ item }) => {
+const WaterfallItem: FC<WaterfallItemProps> = ({ item, ...props }) => {
   const [hovering, setHovering] = useState(false)
 
   return (
     <div
+      {...props}
       className='relative w-75 rd-6 overflow-hidden cursor-pointer'
       onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      onClick={() => console.log('点击了作品')}>
+      onMouseLeave={() => setHovering(false)}>
       <CSSTransition in={hovering} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <Link
           to={`/work-detail/${item.id}`}

@@ -4,6 +4,7 @@ import {
   IEditWorkReq,
   IGetRandomBackgroundsReq,
   IGetRandomBackgroundsRes,
+  ISearchWorksIdListReq,
   IUploadWorkReq,
   WorkDetailInfo,
 } from './types'
@@ -30,6 +31,14 @@ export const getFollowNewWorksAPI = (params: Pagination) => {
 export const getFollowNewWorksTotalAPI = () => {
   return request<undefined, number>({
     url: '/api/illustration/following-count',
+    method: 'GET',
+  })
+}
+
+// 获取已关注用户新作id列表
+export const getFollowNewWorksIdListAPI = () => {
+  return request<undefined, string[]>({
+    url: '/api/illustration/following-id',
     method: 'GET',
   })
 }
@@ -94,6 +103,15 @@ export const getWorkSimpleAPI = (params: Id) => {
 export const searchWorksByLabelAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/illustration/search',
+    method: 'GET',
+    params,
+  })
+}
+
+// 获取搜索作品id列表
+export const searchWorksIdListAPI = (params: ISearchWorksIdListReq) => {
+  return request<ISearchWorksIdListReq, string[]>({
+    url: '/api/illustration/search-id',
     method: 'GET',
     params,
   })

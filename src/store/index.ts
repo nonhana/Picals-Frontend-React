@@ -6,12 +6,14 @@ import userReducer from './modules/user'
 import favoriteReducer from './modules/favorites'
 import searchHistoryReducer from './modules/searchHistory'
 import uploadFormReducer from './modules/uploadForm'
+import viewListReducer from './modules/viewList'
 
 const rootReducer = combineReducers({
   user: userReducer,
   favorite: favoriteReducer,
   searchHistory: searchHistoryReducer,
   uploadForm: uploadFormReducer,
+  viewList: viewListReducer,
 })
 
 // 持久化配置

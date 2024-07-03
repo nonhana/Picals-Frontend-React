@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import WorkHistoryItem from '@/components/common/work-history-item'
 import Pagination from '@/components/common/pagination'
 import Empty from '@/components/common/empty'
@@ -9,8 +10,11 @@ import { Icon } from '@iconify/react'
 import GreyButton from '@/components/common/grey-button'
 import dayjs from 'dayjs'
 import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
+import { resetOtherList, setCurrentList } from '@/store/modules/viewList'
 
 const HistoryList: FC = () => {
+  const dispatch = useDispatch()
+
   const [currentDate, setCurrentDate] = useState<string>(dayjs().format('YYYY-MM-DD')) // 当前日期
   const [workCount, setWorkCount] = useState<number>(0) // 当天浏览记录总数
 
@@ -71,6 +75,11 @@ const HistoryList: FC = () => {
     getHistoryList()
   }, [currentDate, current])
 
+  const addWorks = () => {
+    dispatch(resetOtherList())
+    dispatch(setCurrentList('userWorkList'))
+  }
+
   return (
     <>
       <div className='relative w-full flex justify-between items-center pb-2.5 mb-5 b-b-solid b-2 b-#858585'>
@@ -98,7 +107,7 @@ const HistoryList: FC = () => {
           unmountOnExit>
           <div className='relative w-full flex flex-wrap gap-5'>
             {Array.from(workList.values()).map((work) => (
-              <WorkHistoryItem key={work.id} itemInfo={work} />
+              <WorkHistoryItem key={work.id} itemInfo={work} onClick={addWorks} />
             ))}
           </div>
         </CSSTransition>

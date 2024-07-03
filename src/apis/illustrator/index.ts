@@ -55,3 +55,12 @@ export const getIllustratorWorksInPagesAPI = (params: Pagination) => {
     params,
   })
 }
+
+// 获取某插画家的作品id列表
+export const getIllustratorWorksIdListAPI = (params: Id) => {
+  return request<Id, string[]>({
+    url: '/api/illustrator/works-id',
+    method: 'GET',
+    params,
+  })
+}

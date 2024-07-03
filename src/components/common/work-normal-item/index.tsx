@@ -25,9 +25,10 @@ type WorkNormalItemProps = {
   itemInfo: WorkNormalItemInfo
   like: (id: string) => void
   deleteWork?: (id: string) => void
+  [key: string]: any
 }
 
-const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork }) => {
+const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork, ...props }) => {
   const navigate = useNavigate()
   const { userId, currentPath } = useContext(PersonalContext)
 
@@ -72,7 +73,7 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork })
   }
 
   return (
-    <div className='shrink-0 relative w-184px rd-1 bg-white overflow-hidden'>
+    <div className='shrink-0 relative w-184px rd-1 bg-white overflow-hidden' {...props}>
       <div className='absolute top-0 left-0 w-184px h-184px z-99'>
         <Link
           to={`/work-detail/${itemInfo.id}`}

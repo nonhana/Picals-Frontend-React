@@ -1,14 +1,19 @@
 import { FC, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap } from '@/hooks/useMap'
 import { getFollowNewWorksAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import { likeActionsAPI } from '@/apis'
+import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
 import { CSSTransition } from 'react-transition-group'
 import WorkListSkeleton from '@/components/skeleton/work-list'
+import {
+  pushToFollowingNewWorkList,
+  resetOtherList,
+  setCurrentList,
+} from '@/store/modules/viewList'
 
 type MainListProps = {
   pageSize: number
@@ -16,6 +21,8 @@ type MainListProps = {
 }
 
 const MainList: FC<MainListProps> = ({ pageSize, current }) => {
+  const dispatch = useDispatch()
+
   const { isLogin } = useSelector((state: AppState) => state.user)
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
   const [loading, setLoading] = useState(true)
@@ -42,6 +49,13 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
     updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
+  const addFollowedNewWorkList = async () => {
+    const { data } = await getFollowNewWorksIdListAPI()
+    dispatch(resetOtherList())
+    dispatch(pushToFollowingNewWorkList(data))
+    dispatch(setCurrentList('followingNewWorkList'))
+  }
+
   return (
     <div className='relative w-full p-5 min-h-160'>
       <div className='title mb-10px'>
@@ -57,7 +71,12 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
             unmountOnExit>
             <div className='relative w-full flex flex-wrap gap-5'>
               {Array.from(workList.values()).map((item) => (
-                <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
+                <WorkNormalItem
+                  key={item.id}
+                  itemInfo={item}
+                  like={handleLike}
+                  onClick={addFollowedNewWorkList}
+                />
               ))}
             </div>
           </CSSTransition>

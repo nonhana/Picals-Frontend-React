@@ -1,14 +1,20 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { useMap } from '@/hooks'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
 import { Radio, RadioChangeEvent } from 'antd'
-import { likeActionsAPI, searchWorksByLabelAPI } from '@/apis'
+import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { CSSTransition } from 'react-transition-group'
 import WorkListSkeleton from '@/components/skeleton/work-list'
+import {
+  pushToSearchResultWorkList,
+  resetOtherList,
+  setCurrentList,
+} from '@/store/modules/viewList'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -24,6 +30,7 @@ type WorkListProps = {
 }
 
 const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCount }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const [sortType, setSortType] = useState(URLSortType)
@@ -81,6 +88,16 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     })
   }
 
+  const addSearchResultWorks = async () => {
+    const { data } = await searchWorksIdListAPI({
+      labelName,
+      sortType,
+    })
+    dispatch(resetOtherList())
+    dispatch(pushToSearchResultWorkList(data))
+    dispatch(setCurrentList('searchResultWorkList'))
+  }
+
   return (
     <div className='relative p-5 w-full min-h-180 pb-15'>
       <div className='w-full flex justify-between items-center mb-10px'>
@@ -108,7 +125,12 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
         unmountOnExit>
         <div className='relative w-full flex flex-wrap gap-20px'>
           {Array.from(workList.values()).map((item) => (
-            <WorkNormalItem key={item.id} itemInfo={item} like={handleLike} />
+            <WorkNormalItem
+              key={item.id}
+              itemInfo={item}
+              like={handleLike}
+              onClick={addSearchResultWorks}
+            />
           ))}
         </div>
       </CSSTransition>

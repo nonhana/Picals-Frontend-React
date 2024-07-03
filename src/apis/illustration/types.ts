@@ -56,6 +56,11 @@ export interface IEditWorkReq extends Partial<IUploadWorkReq> {
   id: string
 }
 
+export interface ISearchWorksIdListReq {
+  labelName: string
+  sortType: string
+}
+
 export interface IGetRandomBackgroundsReq {
   /**
    * 选取过的背景图片的所属作品的index列表，以确保每一次请求的背景图片不会重复

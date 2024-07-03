@@ -64,6 +64,15 @@ export const getFavoriteWorkListAPI = (params: Pagination) => {
   })
 }
 
+// 获取收藏夹作品id列表
+export const getFavoriteWorkIdListAPI = (params: Id) => {
+  return request<Id, string[]>({
+    url: '/api/favorite/works-id',
+    method: 'GET',
+    params,
+  })
+}
+
 // 搜索收藏夹内部的作品
 export const searchFavoriteWorkAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({

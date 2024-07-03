@@ -1,14 +1,22 @@
 import { FC, useEffect, useState, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
-import { getUserWorksListAPI, getUserLikeWorksAPI, likeActionsAPI, deleteWorkAPI } from '@/apis'
+import {
+  getUserWorksListAPI,
+  getUserLikeWorksAPI,
+  likeActionsAPI,
+  deleteWorkAPI,
+  getUserLikeWorksIdListAPI,
+} from '@/apis'
 import Empty from '@/components/common/empty'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
 import { message } from 'antd'
 import { CSSTransition } from 'react-transition-group'
 import WorkListSkeleton from '@/components/skeleton/work-list'
+import { pushToLikeWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
 
 type WorkListProps = {
   workCount: number
@@ -16,6 +24,8 @@ type WorkListProps = {
 }
 
 const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
+  const dispatch = useDispatch()
+
   const { userId, currentPath } = useContext(PersonalContext)
 
   const [current, setCurrent] = useState<number>(1)
@@ -88,6 +98,18 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     if (userId) setCurrent(1)
   }, [userId])
 
+  const addWorks = async () => {
+    if (currentPath === 'works') {
+      dispatch(resetOtherList())
+      dispatch(setCurrentList('userWorkList'))
+    } else {
+      const { data } = await getUserLikeWorksIdListAPI({ id: userId! })
+      dispatch(resetOtherList())
+      dispatch(pushToLikeWorkList(data))
+      dispatch(setCurrentList('likeWorkList'))
+    }
+  }
+
   return (
     <div className='relative w-full min-h-160 pb-15'>
       <CSSTransition
@@ -97,7 +119,13 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
         unmountOnExit>
         <div className='relative w-full flex flex-wrap gap-5'>
           {Array.from(workList.values()).map((work) => (
-            <WorkNormalItem key={work.id} itemInfo={work} like={likeWork} deleteWork={deleteWork} />
+            <WorkNormalItem
+              key={work.id}
+              itemInfo={work}
+              like={likeWork}
+              deleteWork={deleteWork}
+              onClick={addWorks}
+            />
           ))}
         </div>
       </CSSTransition>

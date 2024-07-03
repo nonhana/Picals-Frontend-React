@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import WorkInfo from '@/components/work-detail/work-info'
 import UserInfo from '@/components/work-detail/user-info'
+import ViewList from '@/components/work-detail/view-list'
 import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import {
   getWorkDetailAPI,
@@ -20,11 +21,19 @@ import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react'
 import { useAtBottom, useAtTop } from '@/hooks'
 import { CSSTransition } from 'react-transition-group'
+import { reset, resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
 
 const WorkDetail: FC = () => {
   const dispatch = useDispatch()
 
   const { workId } = useParams<{ workId: string }>()
+
+  // 在组件卸载时重置viewList
+  useEffect(() => {
+    return () => {
+      dispatch(reset())
+    }
+  }, [])
 
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
@@ -75,6 +84,8 @@ const WorkDetail: FC = () => {
       const userInfoData = userInfoResponse.data
       const authorWorksListData = authorWorksListResponse.data
 
+      dispatch(resetUserList())
+      dispatch(setWorkDetailUserId(authorId))
       setUserInfo({
         id: userInfoData.id,
         username: userInfoData.username,
@@ -185,13 +196,16 @@ const WorkDetail: FC = () => {
               <div>Loading...</div>
             )}
           </div>
-          <div>
+          <div className='flex flex-col gap-5'>
             {userInfo ? (
-              <UserInfo
-                onFollow={follow}
-                userInfo={userInfo}
-                authorWorkList={Array.from(authorWorkList.values())}
-              />
+              <>
+                <UserInfo
+                  onFollow={follow}
+                  userInfo={userInfo}
+                  authorWorkList={Array.from(authorWorkList.values())}
+                />
+                <ViewList />
+              </>
             ) : (
               <div>Loading...</div>
             )}

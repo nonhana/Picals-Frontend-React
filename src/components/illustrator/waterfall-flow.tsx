@@ -1,15 +1,19 @@
 import { FC, useEffect, useState, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getIllustratorWorksInPagesAPI } from '@/apis'
+import { getIllustratorWorksInPagesAPI, getIllustratorWorksIdListAPI } from '@/apis'
 import type { WorkNormalItem } from '@/apis/types'
 import WaterfallItem from '../common/waterfall-item'
 import { useAtBottom } from '@/hooks'
+import { pushToIllustratorWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
 
 const listClass = 'absolute w-80 flex flex-col gap-5'
 
 type WaterfallItemInfo = WorkNormalItem & { index: number; height: number }
 
 const WaterfallFlow: FC = () => {
+  const dispatch = useDispatch()
+
   const { illustratorId } = useParams<{ illustratorId: string }>()
 
   const [workList, setWorkList] = useState<WaterfallItemInfo[]>([])
@@ -67,13 +71,20 @@ const WaterfallFlow: FC = () => {
     setCurrent((prev) => prev + 1)
   }, [atBottom])
 
+  const addIllustratorWorks = async () => {
+    const { data } = await getIllustratorWorksIdListAPI({ id: illustratorId! })
+    dispatch(resetOtherList())
+    dispatch(pushToIllustratorWorkList(data))
+    dispatch(setCurrentList('illustratorWorkList'))
+  }
+
   return (
     <div ref={containerRef} className='relative w-250'>
       <div className={`${listClass}`}>
         {workList
           .filter((item) => item.index === 0)
           .map((item) => (
-            <WaterfallItem key={item.id} item={item} />
+            <WaterfallItem key={item.id} item={item} onClick={addIllustratorWorks} />
           ))}
       </div>
       <div className={`${listClass} left-340px`}>

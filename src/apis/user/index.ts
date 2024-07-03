@@ -193,6 +193,15 @@ export const getUserWorksListAPI = (params: Pagination) => {
   })
 }
 
+// 获取用户发布的作品id列表
+export const getUserWorksIdListAPI = (params: Id) => {
+  return request<Id, string[]>({
+    url: '/api/user/works-id',
+    method: 'GET',
+    params,
+  })
+}
+
 // 获取用户发布的作品总数
 export const getUserWorksTotalAPI = (params?: Id) => {
   return request<Id, number>({
@@ -206,6 +215,15 @@ export const getUserWorksTotalAPI = (params?: Id) => {
 export const getUserLikeWorksAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/user/like-works',
+    method: 'GET',
+    params,
+  })
+}
+
+// 获取用户喜欢的作品id列表
+export const getUserLikeWorksIdListAPI = (params: Id) => {
+  return request<Id, string[]>({
+    url: '/api/user/like-works-id',
     method: 'GET',
     params,
   })

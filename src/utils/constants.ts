@@ -81,3 +81,13 @@ export const MAX_INFO_SIZE = 1024 * 1024 * 5 // 修改个人信息（如头像�
 
 // 加载时的提示语
 export const LOADING_TIP = '加载中，请稍等...'
+
+// 浏览列表名称映射
+export const VIEW_LIST_MAP = {
+  likeWorkList: '喜欢作品列表',
+  favoriteWorkList: '收藏夹作品列表',
+  followingNewWorkList: '关注用户新作列表',
+  recommendWorkList: '推荐作品列表',
+  illustratorWorkList: '插画师作品列表',
+  searchResultWorkList: '搜索结果列表',
+}
