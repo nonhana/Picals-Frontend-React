@@ -41,6 +41,10 @@ export interface UserItem {
    */
   username: string
   /**
+   * 用户邮箱
+   */
+  email: string
+  /**
    * 用户头像
    */
   avatar: string

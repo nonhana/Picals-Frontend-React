@@ -87,6 +87,7 @@ const WorkDetail: FC = () => {
       setUserInfo({
         id: userInfoData.id,
         username: userInfoData.username,
+        email: userInfoData.email,
         avatar: userInfoData.avatar,
         intro: userInfoData.intro,
         isFollowing: userInfoData.isFollowing,

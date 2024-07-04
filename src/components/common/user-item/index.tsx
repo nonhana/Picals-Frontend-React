@@ -17,6 +17,7 @@ type UserItemProps = UserItemInfo & {
 const UserItem: FC<UserItemProps> = ({
   id,
   username,
+  email,
   intro,
   avatar,
   works,
@@ -36,10 +37,9 @@ const UserItem: FC<UserItemProps> = ({
       </Link>
 
       <div className='flex flex-col gap-5'>
-        <Link
-          to={`/personal-center/${id}/works`}
-          className='font-size-14px font-bold color-#3d3d3d'>
-          <span>{username}</span>
+        <Link className='flex items-center gap-2.5' to={`/personal-center/${id}/works`}>
+          <span className='font-size-14px font-bold color-#3d3d3d'>{username}</span>
+          <span className='font-size-12px color-#6d757a'>{email}</span>
         </Link>
 
         <div className='font-size-12px color-#6d757a w-70 break-words'>

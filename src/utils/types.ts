@@ -109,6 +109,7 @@ export interface WorkRankItemInfo {
 export interface UserItemInfo {
   id: string
   username: string
+  email: string
   avatar: string
   intro: string
   isFollowing: boolean
