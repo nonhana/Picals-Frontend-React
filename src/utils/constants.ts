@@ -84,10 +84,22 @@ export const LOADING_TIP = '加载中，请稍等...'
 
 // 浏览列表名称映射
 export const VIEW_LIST_MAP = {
-  likeWorkList: '喜欢作品列表',
-  favoriteWorkList: '收藏夹作品列表',
-  followingNewWorkList: '关注用户新作列表',
-  recommendWorkList: '推荐作品列表',
-  illustratorWorkList: '插画师作品列表',
-  searchResultWorkList: '搜索结果列表',
+  userWorkList: '用户作品',
+  likeWorkList: '喜欢作品',
+  favoriteWorkList: '收藏作品',
+  followingNewWorkList: '关注作品',
+  recommendWorkList: '推荐作品',
+  illustratorWorkList: '原作作品',
+  searchResultWorkList: '搜索结果',
+}
+
+// 浏览列表图标映射
+export const VIEW_LIST_ICON_MAP = {
+  userWorkList: 'material-symbols:person-outline',
+  likeWorkList: 'material-symbols:favorite-outline',
+  favoriteWorkList: 'material-symbols:star-outline',
+  followingNewWorkList: 'material-symbols:bookmark-outline',
+  recommendWorkList: 'material-symbols:recommend-outline',
+  illustratorWorkList: 'material-symbols:school-outline',
+  searchResultWorkList: 'material-symbols:search',
 }

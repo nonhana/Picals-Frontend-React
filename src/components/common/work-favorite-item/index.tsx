@@ -33,6 +33,7 @@ type WorkFavoriteItemProps = {
   cancel: (id: string) => void
   move: (id: string) => void
   copy: (id: string) => void
+  [key: string]: any
 }
 
 const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
@@ -44,6 +45,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
   cancel,
   move,
   copy,
+  ...props
 }) => {
   const { isMe } = useContext(PersonalContext)
   const { isLogin } = useSelector((state: AppState) => state.user)
@@ -66,6 +68,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
 
   return (
     <div
+      {...props}
       className={`shrink-0 relative w-184px rd-1 overflow-hidden ${settingStatus && chooseStatus ? 'bg-#f5f5f5' : 'bg-white'} ${settingStatus ? 'hover:bg-#f5f5f5' : ''}`}>
       {settingStatus && (
         <div

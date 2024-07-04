@@ -24,7 +24,7 @@ const viewListStore = createSlice({
     illustratorWorkList: <string[]>[],
     searchResultWorkList: <string[]>[],
     currentList: 'userWorkList' as WorkListType,
-    currentIndex: 0,
+    currentIndex: 1,
   },
   reducers: {
     setWorkDetailUserId(state, action) {
@@ -79,7 +79,7 @@ const viewListStore = createSlice({
       state.illustratorWorkList = []
       state.searchResultWorkList = []
       state.currentList = 'userWorkList'
-      state.currentIndex = 0
+      state.currentIndex = 1
     },
     resetUserList(state) {
       state.workDetailUserId = ''

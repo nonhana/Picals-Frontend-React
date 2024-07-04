@@ -116,6 +116,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   const [imgListVisible, setImgListVisible] = useState(false)
 
   useEffect(() => {
+    setImgList([])
     setImgListVisible(false)
     const result: ImageItem[] = []
     workInfo.imgList.forEach((imgUrl) => {

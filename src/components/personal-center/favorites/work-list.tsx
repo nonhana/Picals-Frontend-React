@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useContext } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkFavoriteItem from '@/components/common/work-favorite-item'
@@ -8,10 +8,16 @@ import Pagination from '@/components/common/pagination'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import Empty from '@/components/common/empty'
-import { favoriteActionsAPI, moveFavoriteWorksAPI, copyFavoriteWorksAPI } from '@/apis'
+import {
+  favoriteActionsAPI,
+  moveFavoriteWorksAPI,
+  copyFavoriteWorksAPI,
+  getFavoriteWorkIdListAPI,
+} from '@/apis'
 import { PersonalContext } from '@/pages/personal-center'
 import { CSSTransition } from 'react-transition-group'
 import FavoriteWorkListSkeleton from '@/components/skeleton/favorite-work-list'
+import { pushToFavoriteWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -44,6 +50,8 @@ const WorkList: FC<WorkListProps> = ({
   const { isMe } = useContext(PersonalContext)
 
   const [messageApi, contextHolder] = message.useMessage()
+
+  const dispatch = useDispatch()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
   const { isLogin } = useSelector((state: AppState) => state.user)
   const searchParams = useSearchParams()[0]
@@ -194,6 +202,13 @@ const WorkList: FC<WorkListProps> = ({
   }, [copyModalStatus, folderId])
   //#endregion
 
+  const addFavoriteWorks = async () => {
+    const { data } = await getFavoriteWorkIdListAPI({ id: folderId! })
+    dispatch(resetOtherList())
+    dispatch(pushToFavoriteWorkList(data))
+    dispatch(setCurrentList('favoriteWorkList'))
+  }
+
   return (
     <>
       {contextHolder}
@@ -279,6 +294,7 @@ const WorkList: FC<WorkListProps> = ({
                 cancel={cancelSingleWork}
                 move={moveSingleWork}
                 copy={copySingleWork}
+                onClick={addFavoriteWorks}
               />
             ))}
           </div>

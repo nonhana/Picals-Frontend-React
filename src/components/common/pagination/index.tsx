@@ -7,14 +7,19 @@ type PaginationProps = {
   total: number
   pageSize: number
   current: number
+  size?: 'small' | 'default'
   onChange: (page: number) => void
 }
 
-const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange }) => {
-  // 计算得出总共的页数
+const Pagination: FC<PaginationProps> = ({
+  total,
+  pageSize,
+  current,
+  size = 'default',
+  onChange,
+}) => {
   const totalPages = Math.ceil(total / pageSize) || 1
 
-  // 递增/递减页数
   const stepPage = (type: 'prev' | 'next') => {
     if (type === 'prev') {
       if (current === 1) return
@@ -25,8 +30,8 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
     }
   }
 
-  const maxButtonCount = 7 // 最多显示的按钮数（包括省略号）
-  const sideButtonCount = 2 // current两侧的按钮数
+  const maxButtonCount = size === 'default' ? 7 : 5
+  const sideButtonCount = (maxButtonCount - 3) / 2
 
   const renderButtons = () => {
     const buttons = []
@@ -34,14 +39,14 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
     let end = totalPages
 
     if (totalPages > maxButtonCount) {
-      start = Math.max(current + 1 - sideButtonCount, 2)
-      end = Math.min(current + 1 + sideButtonCount, totalPages - 1)
+      start = Math.max(current - sideButtonCount, 2)
+      end = Math.min(current + sideButtonCount, totalPages - 1)
 
       if (current + 1 < maxButtonCount - 1) {
         end = maxButtonCount - 1
       }
 
-      if (current + 1 > totalPages - maxButtonCount + 2) {
+      if (current > totalPages - maxButtonCount + 2) {
         start = totalPages - maxButtonCount + 2
       }
     }
@@ -50,43 +55,36 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
       buttons.push(
         <div
           key={1}
-          className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === 1 ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
+          className={`rd-full shrink-0 cursor-pointer flex items-center justify-center font-bold ${buttonClass(current === 1)}`}
           onClick={() => onChange(1)}>
-          <span className={`${current === 1 ? 'color-white' : 'color-#6d757a'}`}>1</span>
+          <span className={`${textColorClass(current === 1)}`}>1</span>
         </div>,
       )
     }
 
-    // 添加省略号
     if (start > 2) {
       buttons.push(
-        <div
-          key='left-ellipsis'
-          className='w-10 h-10 cursor-pointer flex items-center justify-center'>
-          <img className='w-6 h-6' src={paginationMore} alt='more' />
+        <div key='left-ellipsis' className='cursor-pointer flex items-center justify-center'>
+          <img className={imgClass()} src={paginationMore} alt='more' />
         </div>,
       )
     }
 
-    // 添加中间的按钮
     for (let i = start; i <= end; i++) {
       buttons.push(
         <div
           key={i}
-          className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${i === current ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
+          className={`rd-full shrink-0 cursor-pointer flex items-center justify-center font-bold ${buttonClass(i === current)}`}
           onClick={() => onChange(i)}>
-          <span className={`${i === current ? 'color-white' : 'color-#6d757a'}`}>{i}</span>
+          <span className={`${textColorClass(i === current)}`}>{i}</span>
         </div>,
       )
     }
 
-    // 添加末尾的省略号
     if (end < totalPages - 1) {
       buttons.push(
-        <div
-          key='right-ellipsis'
-          className='w-10 h-10 cursor-pointer flex items-center justify-center'>
-          <img className='w-6 h-6' src={paginationMore} alt='more' />
+        <div key='right-ellipsis' className='cursor-pointer flex items-center justify-center'>
+          <img className={imgClass()} src={paginationMore} alt='more' />
         </div>,
       )
     }
@@ -95,11 +93,9 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
       buttons.push(
         <div
           key={totalPages}
-          className={`shrink-0 w-10 h-10 rd-full cursor-pointer flex items-center justify-center font-bold font-size-24px ${current === totalPages ? 'bg-black' : 'bg-none hover-bg-#f2f2f2'}`}
+          className={`rd-full shrink-0 cursor-pointer flex items-center justify-center font-bold ${buttonClass(current === totalPages)}`}
           onClick={() => onChange(totalPages)}>
-          <span className={`${current === totalPages ? 'color-white' : 'color-#6d757a'}`}>
-            {totalPages}
-          </span>
+          <span className={`${textColorClass(current === totalPages)}`}>{totalPages}</span>
         </div>,
       )
     }
@@ -107,22 +103,26 @@ const Pagination: FC<PaginationProps> = ({ total, pageSize, current, onChange })
     return buttons
   }
 
+  const containerClass = size === 'small' ? 'gap-2.5' : 'gap-5'
+  const buttonClass = (isActive: boolean) =>
+    `w-${size === 'small' ? '6' : '10'} h-${size === 'small' ? '6' : '10'} ${isActive ? 'bg-black' : 'hover-bg-#f2f2f2'}`
+  const imgClass = () => `w-${size === 'small' ? '3.6' : '6'} h-${size === 'small' ? '3' : '6'}`
+  const textColorClass = (isActive: boolean) => (isActive ? 'color-white' : 'color-#6d757a')
+
   return (
-    <div className='relative flex px-20px py-10px gap-20px select-none'>
-      {/* 左侧按钮 */}
+    <div className={`relative flex px-20px py-10px select-none ${containerClass}`}>
       <div
-        className='w-10 h-10 rd-full cursor-pointer flex items-center justify-center hover-bg-#f2f2f2'
+        className={`rd-full cursor-pointer flex items-center justify-center ${buttonClass(false)}`}
         onClick={() => stepPage('prev')}>
-        <img className='w-6 h-6' src={paginationLeft} alt='left-button' />
+        <img className={imgClass()} src={paginationLeft} alt='left-button' />
       </div>
 
       {renderButtons()}
 
-      {/* 右侧按钮 */}
       <div
-        className='w-10 h-10 rd-full cursor-pointer flex items-center justify-center hover-bg-#f2f2f2'
+        className={`rd-full cursor-pointer flex items-center justify-center ${buttonClass(false)}`}
         onClick={() => stepPage('next')}>
-        <img className='w-6 h-6' src={paginationRight} alt='right-button' />
+        <img className={imgClass()} src={paginationRight} alt='right-button' />
       </div>
     </div>
   )

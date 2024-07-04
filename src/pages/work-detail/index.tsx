@@ -1,5 +1,6 @@
 import { FC, useState, useEffect, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { useParams } from 'react-router-dom'
 import WorkInfo from '@/components/work-detail/work-info'
 import UserInfo from '@/components/work-detail/user-info'
@@ -21,19 +22,14 @@ import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react'
 import { useAtBottom, useAtTop } from '@/hooks'
 import { CSSTransition } from 'react-transition-group'
-import { reset, resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
+import { resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
+import { debounce } from 'lodash'
 
 const WorkDetail: FC = () => {
   const dispatch = useDispatch()
+  const { workDetailUserId } = useSelector((state: AppState) => state.viewList)
 
   const { workId } = useParams<{ workId: string }>()
-
-  // 在组件卸载时重置viewList
-  useEffect(() => {
-    return () => {
-      dispatch(reset())
-    }
-  }, [])
 
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
@@ -84,8 +80,10 @@ const WorkDetail: FC = () => {
       const userInfoData = userInfoResponse.data
       const authorWorksListData = authorWorksListResponse.data
 
-      dispatch(resetUserList())
-      dispatch(setWorkDetailUserId(authorId))
+      if (workDetailUserId !== authorId) {
+        dispatch(resetUserList())
+        dispatch(setWorkDetailUserId(authorId))
+      }
       setUserInfo({
         id: userInfoData.id,
         username: userInfoData.username,
@@ -101,8 +99,16 @@ const WorkDetail: FC = () => {
   }
 
   useEffect(() => {
-    fetchWorkDetail()
-    addViewData()
+    const debouncedFetchWorkDetail = debounce(fetchWorkDetail, 500)
+    const debouncedAddViewData = debounce(addViewData, 500)
+
+    debouncedFetchWorkDetail()
+    debouncedAddViewData()
+
+    return () => {
+      debouncedFetchWorkDetail.cancel()
+      debouncedAddViewData.cancel()
+    }
   }, [workId])
 
   useEffect(() => {
@@ -204,7 +210,9 @@ const WorkDetail: FC = () => {
                   userInfo={userInfo}
                   authorWorkList={Array.from(authorWorkList.values())}
                 />
-                <ViewList />
+                <div className='sticky top-5'>
+                  <ViewList />
+                </div>
               </>
             ) : (
               <div>Loading...</div>
