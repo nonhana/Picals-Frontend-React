@@ -192,6 +192,48 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
     }
   }, [createFolderModalStatus])
 
+  /* ----------键盘上下案件进行图片顶部固定切换---------- */
+  const [imgIndex, setImgIndex] = useState<number | undefined>()
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        (event.key === 'ArrowUp' && imgIndex !== undefined && imgIndex > 0) ||
+        (event.key === 'ArrowDown' && imgIndex !== undefined && imgIndex < imgList.length - 1) ||
+        imgIndex === undefined
+      )
+        event.preventDefault()
+
+      if (event.key === 'ArrowUp') {
+        if (imgIndex !== undefined) {
+          setImgIndex((prev) => (prev! >= imgList.length ? imgList.length - 1 : prev! - 1))
+        }
+      } else if (event.key === 'ArrowDown') {
+        if (imgIndex === undefined) {
+          setImgIndex(0)
+        } else {
+          setImgIndex((prev) => (prev! < 0 ? 0 : prev! + 1))
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [imgIndex, imgList.length])
+
+  useEffect(() => {
+    if (imgIndex !== undefined && imgIndex >= 0 && imgIndex < imgList.length) {
+      const imgElement = document.getElementById(imgList[imgIndex].id)
+      const top = imgElement?.getBoundingClientRect().top
+      const scrollDistance = document.body.scrollTop
+      if (top !== undefined) {
+        document.body.scrollTo(0, scrollDistance + top)
+      }
+    }
+  }, [imgIndex, workInfo.imgList])
+
   return (
     <>
       {contextHolder}
@@ -208,6 +250,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                 {imgList.map((img) => (
                   <PhotoView key={img.id} src={img.originUrl}>
                     <img
+                      id={img.id}
                       className='max-w-full max-h-200 object-contain cursor-pointer'
                       style={{
                         width: img.thumbnailWidth,

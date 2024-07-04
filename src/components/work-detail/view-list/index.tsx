@@ -196,6 +196,23 @@ const ViewList: FC = () => {
     if (showIndexInput) setInputIndex(currentIndex)
   }, [showIndexInput])
 
+  // 监听键盘按下事件进行索引切换
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (showIndexInput) return
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        if (e.key === 'ArrowLeft' && currentIndex > 1) {
+          changeIndex(currentIndex - 1)
+        } else if (e.key === 'ArrowRight' && currentIndex < currentListLength) {
+          changeIndex(currentIndex + 1)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentIndex, currentListLength, showIndexInput])
+
   return (
     <>
       {contextHolder}

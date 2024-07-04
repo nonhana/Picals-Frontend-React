@@ -21,11 +21,7 @@ type CommentProps = {
 }
 
 const Comment: FC<CommentProps> = ({ comment, style, reply, deleteComment }) => {
-  const {
-    user: {
-      userInfo: { id },
-    },
-  } = useSelector((state: AppState) => state)
+  const { id } = useSelector((state: AppState) => state.user.userInfo)
   const [showChildComments, setShowChildComments] = useState(false)
 
   const handleReply = (id: string, isChild: boolean, parentId?: string, userId?: string) => {
