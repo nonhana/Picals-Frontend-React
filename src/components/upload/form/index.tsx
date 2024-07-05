@@ -387,10 +387,9 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
           <Form.Item<UploadWorkFormInfo>
             label={<Label text='作品名称' />}
-            name={['basicInfo', 'name']}
-            rules={[{ required: true, message: '请输入作品名称哦~' }]}>
+            name={['basicInfo', 'name']}>
             <Input
-              placeholder='请输入作品名称'
+              placeholder='请输入作品名称（可为空）'
               showCount
               maxLength={64}
               value={formInfo.basicInfo.name}
@@ -405,10 +404,9 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
           <Form.Item<UploadWorkFormInfo>
             label={<Label text='作品简介' />}
-            name={['basicInfo', 'intro']}
-            rules={[{ required: true, message: '请输入作品简介' }]}>
+            name={['basicInfo', 'intro']}>
             <TextArea
-              placeholder='请输入简介~不超过1024个字哦！'
+              placeholder='请输入简介~不超过1024个字哦！（可为空）'
               showCount
               maxLength={1024}
               autoSize={{ minRows: 4, maxRows: 8 }}
@@ -510,8 +508,8 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
             <Select
               mode='tags'
               style={{ width: '100%' }}
-              placeholder='选择不超过10个标签，或者自己输入'
-              maxCount={10}
+              placeholder='选择不超过50个标签，或者自己输入'
+              maxCount={50}
               onSearch={searchLabels}
               onChange={(value) => {
                 setFormInfo((prevFormInfo) => ({

@@ -107,7 +107,7 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork, .
         <Link
           to={`/work-detail/${itemInfo.id}`}
           className='w-full cursor-pointer font-size-14px color-#3d3d3d font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
-          <span>{itemInfo.name}</span>
+          <span>{itemInfo.name ? itemInfo.name : '无题'}</span>
         </Link>
         <div className='w-full flex justify-between '>
           <div className='flex items-center gap-10px font-size-14px color-#6d757a'>

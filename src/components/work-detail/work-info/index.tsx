@@ -313,7 +313,7 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             <div className='font-bold font-size-14px color-#6d757a line-height-normal'>
               <span>{workIntro}</span>
             </div>
-            <div className='flex flex-wrap gap-10px font-size-14px'>
+            <div className='flex flex-wrap gap-5 font-size-14px'>
               <span className='font-bold color-#0090F0'>
                 {workInfo.reprintType === 0
                   ? '原创作品'
