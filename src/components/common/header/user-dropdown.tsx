@@ -77,6 +77,10 @@ const UserDropdown: FC<{
     toggleBodyOverflow(visible)
   }, [visible])
 
+  useEffect(() => {
+    return () => toggleBodyOverflow(false)
+  }, [])
+
   return (
     <>
       <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
