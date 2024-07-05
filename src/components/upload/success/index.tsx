@@ -6,11 +6,16 @@ import LazyImg from '@/components/common/lazy-img'
 
 const pageCenter = 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
 
-const UploadSuccess: FC = () => {
+type UploadSuccessProps = {
+  workStatus: string | null
+}
+
+const UploadSuccess: FC<UploadSuccessProps> = ({ workStatus }) => {
   const navigate = useNavigate()
 
   const reload = () => {
-    window.location.reload()
+    if (workStatus === 'edit') navigate('/upload')
+    else window.location.reload()
   }
 
   return (

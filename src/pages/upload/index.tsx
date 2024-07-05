@@ -190,7 +190,7 @@ const Upload: FC = () => {
     <>
       <div className='relative w-full min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
         {uploadSuccess ? (
-          <UploadSuccess />
+          <UploadSuccess workStatus={workStatus} />
         ) : (
           <>
             <ImgUpload imgList={imgList} setImgList={setImgList} />
