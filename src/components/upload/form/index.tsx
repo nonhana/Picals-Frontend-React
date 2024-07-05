@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useMemo, useRef } from 'react'
 import type { UploadWorkFormInfo } from '@/utils/types'
-import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex } from 'antd'
+import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex, Modal } from 'antd'
 import type { SelectProps } from 'antd'
 import {
   searchIllustratorsAPI,
@@ -14,6 +14,9 @@ import type { INewIllustratorReq } from '@/apis/illustrator/types'
 import Empty from '@/components/common/empty'
 import { debounce } from 'lodash'
 import CreateIllustratorModal from '@/components/common/create-illustrator-modal'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+
+const { confirm } = Modal
 
 type SelectableItemInfo = {
   value: string
@@ -323,11 +326,36 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       }
       await newIllustratorAPI(newIllustratorInfo)
       setModalStatus(false)
-      messageApi.success('新建插画家成功，现在可以通过搜索框选择啦！')
+      messageApi.success('新建插画家成功！')
+      // 将新的插画家信息填写至表单
+      setFormInfo((prevFormInfo) => ({
+        ...prevFormInfo,
+        illustratorInfo: {
+          name: newIllustratorInfo.name,
+          homeUrl: newIllustratorInfo.homeUrl,
+        },
+      }))
+      workForm.setFieldsValue({
+        illustratorInfo: {
+          name: newIllustratorInfo.name,
+          homeUrl: newIllustratorInfo.homeUrl,
+        },
+      })
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
     }
+  }
+
+  const cancelAction = () => {
+    confirm({
+      title: '确定要关闭吗？',
+      icon: <ExclamationCircleOutlined />,
+      content: '关闭窗口后，填写的信息将不会保存！',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => setModalStatus(false),
+    })
   }
 
   useEffect(() => {
@@ -566,7 +594,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       <CreateIllustratorModal
         modalStatus={modalStatus}
         confirmAction={confirmAction}
-        cancelAction={() => setModalStatus(false)}
+        cancelAction={cancelAction}
         formInfo={newIllustratorInfo}
         setFormInfo={setNewIllustratorInfo}
         homeUrlPrefix={homeUrlPrefix}

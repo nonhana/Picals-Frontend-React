@@ -142,7 +142,7 @@ const Upload: FC = () => {
     if (editMode && editFormLoaded) setShowEditForm(true)
   }, [editMode, editFormLoaded])
 
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>(true)
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
   const [submitTrigger, setSubmitTrigger] = useState(0)
   const [uploading, setUploading] = useState(false)
 
