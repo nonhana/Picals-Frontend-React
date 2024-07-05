@@ -105,7 +105,7 @@ const WorkList: FC = () => {
         </CSSTransition>
       ))}
 
-      <WorkListSkeleton row={1} />
+      {!isFinal && <WorkListSkeleton row={1} />}
     </div>
   )
 }

@@ -152,7 +152,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
         </CSSTransition>
       ))}
 
-      <UserListSkeleton row={1} />
+      {!isFinal && <UserListSkeleton row={1} />}
     </div>
   )
 }
