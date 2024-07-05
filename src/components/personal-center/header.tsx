@@ -123,14 +123,18 @@ const Header: FC = () => {
           </div>
         ) : (
           <div className='relative w-full h-80'>
-            <div
-              className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
-              onClick={() => setEditModalVisible(true)}>
-              <div className='flex flex-col items-center color-#6d757a font-size-14px font-bold'>
-                <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
-                <span>上传背景图</span>
+            {isMe ? (
+              <div
+                className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
+                onClick={() => setEditModalVisible(true)}>
+                <div className='flex flex-col items-center color-#6d757a font-size-14px font-bold'>
+                  <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
+                  <span>上传背景图</span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className='bg-#f8f8f8 h-full' />
+            )}
           </div>
         )}
 
