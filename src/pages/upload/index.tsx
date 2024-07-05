@@ -142,7 +142,7 @@ const Upload: FC = () => {
     if (editMode && editFormLoaded) setShowEditForm(true)
   }, [editMode, editFormLoaded])
 
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(true)
   const [submitTrigger, setSubmitTrigger] = useState(0)
   const [uploading, setUploading] = useState(false)
 
@@ -190,7 +190,7 @@ const Upload: FC = () => {
     <>
       <div className='relative w-full min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
         {uploadSuccess ? (
-          <UploadSuccess workName={formInfo.basicInfo.name} />
+          <UploadSuccess />
         ) : (
           <>
             <ImgUpload imgList={imgList} setImgList={setImgList} />
