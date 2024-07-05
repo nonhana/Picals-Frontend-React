@@ -11,6 +11,7 @@ import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
 import HanaModal from '@/components/common/hana-modal'
+import { Icon } from '@iconify/react'
 
 const { confirm } = Modal
 
@@ -236,9 +237,15 @@ const Upload: FC = () => {
         visible={uploading}
         setVisible={setUploading}
         allowActivelyClose={false}>
-        <div className='w-full m-10 flex justify-center items-center gap-5'>
+        <div className='m-10 mt-0 flex flex-col justify-center items-center gap-5'>
+          <Icon
+            color='#3d3d3d'
+            width={36}
+            className='animate-spin'
+            icon='material-symbols:hourglass-empty'
+          />
           <span>正在逐张处理您上传的图片，请稍微等一下哦！！(&gt; v &lt;)</span>
-          <span>当然，图片上传的优化方案也一直在不断研究中！</span>
+          <span>当然，图片上传的优化方案也一直在不断研究中！!</span>
         </div>
       </HanaModal>
     </>
