@@ -201,6 +201,7 @@ const ViewList: FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showIndexInput) return
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault()
         if (e.key === 'ArrowLeft' && currentIndex > 1) {
           changeIndex(currentIndex - 1)
         } else if (e.key === 'ArrowRight' && currentIndex < currentListLength) {

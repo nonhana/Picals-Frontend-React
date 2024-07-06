@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { CSSTransition } from 'react-transition-group'
+import { debounce } from 'lodash'
 
 type ScrollType =
   | 'label'
@@ -12,10 +13,13 @@ type ScrollType =
   | 'work-little'
 
 type LayoutListProps = {
-  className?: string
-  gap?: number
   scrollType: ScrollType
   children: React.ReactNode
+  className?: string
+  gap?: number
+  type?: string
+  workId?: string
+  setAtBottom?: (status: boolean) => void
 }
 
 const scrollMap: Map<ScrollType, number> = new Map([
@@ -27,7 +31,15 @@ const scrollMap: Map<ScrollType, number> = new Map([
   ['work-little', 300],
 ])
 
-const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap = 10 }) => {
+const LayoutList: FC<LayoutListProps> = ({
+  className,
+  type,
+  workId,
+  scrollType,
+  children,
+  gap = 10,
+  setAtBottom,
+}) => {
   const [showButtons, setShowButtons] = useState(false)
   const layoutRef = useRef<HTMLDivElement>(null)
 
@@ -41,12 +53,52 @@ const LayoutList: FC<LayoutListProps> = ({ className, scrollType, children, gap 
     }
   }
 
-  // 当子组件变化时，重置回到最左边
-  useEffect(() => {
-    if (layoutRef.current) {
-      layoutRef.current.scrollTo(0, 0)
+  const handleScroll = () => {
+    if (layoutRef.current && setAtBottom) {
+      const { scrollLeft, scrollWidth, clientWidth } = layoutRef.current
+      if (scrollLeft + clientWidth >= scrollWidth - 100) {
+        setAtBottom(true)
+      } else {
+        setAtBottom(false)
+      }
     }
+  }
+
+  useEffect(() => {
+    if (!layoutRef.current) return
+    const debouncedHandleScroll = debounce(handleScroll, 50)
+    layoutRef.current.addEventListener('scroll', debouncedHandleScroll)
+    return () => layoutRef.current?.removeEventListener('scroll', debouncedHandleScroll)
+  }, [])
+
+  useEffect(() => {
+    if (!layoutRef.current) return
+    if (type === 'work-detail') return
+    layoutRef.current.scrollTo({
+      left: 0,
+      behavior: 'smooth',
+    })
   }, [children])
+
+  useEffect(() => {
+    if (!layoutRef.current) return
+    const currentWorkItem =
+      type === 'work-detail'
+        ? Array.from(layoutRef.current.children).find(
+            (item) => item.getAttribute('data-id') === workId,
+          )
+        : null
+    if (currentWorkItem) {
+      const itemLeft = currentWorkItem.getBoundingClientRect().left
+      const layoutRefLeft = layoutRef.current.getBoundingClientRect().left
+      layoutRef.current.scrollBy({
+        top: 0,
+        left: itemLeft - layoutRefLeft,
+        behavior: 'smooth',
+      })
+      return
+    }
+  }, [workId])
 
   return (
     <div

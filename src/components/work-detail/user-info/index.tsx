@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
@@ -11,7 +11,10 @@ import LazyImg from '@/components/common/lazy-img'
 
 type UserInfoProps = {
   userInfo: UserItemInfo
-  authorWorkList: WorkNormalItemInfo[]
+  authorWorkList: {
+    page: number
+    list: WorkNormalItemInfo[]
+  }[]
   onFollow: (id: string) => void
 }
 
@@ -36,8 +39,12 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => 
       </div>
       {authorWorkList.length !== 0 ? (
         <LayoutList scrollType='work-little'>
-          {authorWorkList.map((work) => (
-            <WorkLeastItem key={work.id} itemInfo={work} />
+          {authorWorkList.map((everyPage, index) => (
+            <Fragment key={`${everyPage.page}-${index}`}>
+              {everyPage.list.map((work) => (
+                <WorkLeastItem key={work.id} itemInfo={work} />
+              ))}
+            </Fragment>
           ))}
         </LayoutList>
       ) : (

@@ -10,16 +10,19 @@ import LazyImg from '../lazy-img'
 type WorkLittleItemProps = {
   itemInfo: WorkNormalItemInfo
   like: (id: string) => void
+  [key: string]: any
 }
 
 const activeClasses = 'bg-white opacity-16'
 
-const WorkLittleItem: FC<WorkLittleItemProps> = ({ itemInfo, like }) => {
+const WorkLittleItem: FC<WorkLittleItemProps> = ({ itemInfo, like, ...props }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { workId } = useParams<{ workId: string }>()
 
   return (
-    <div className='shrink-0 relative w-118px h-118px rd-1 bg-white overflow-hidden select-none'>
+    <div
+      {...props}
+      className='shrink-0 relative w-118px h-118px rd-1 bg-white overflow-hidden select-none'>
       <div className='absolute top-0 left-0 w-full h-full z-1'>
         <Link
           to={`/work-detail/${itemInfo.id}`}

@@ -25,4 +25,21 @@ const useAtBottom = (): boolean => {
   return isBottom
 }
 
-export { useAtBottom }
+const useAtBottomNoRerender = (eventCallback: (isBottom: boolean) => void) => {
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight
+
+      const isBottom = scrollTop + clientHeight >= scrollHeight - 100
+      eventCallback(isBottom)
+    }, 50)
+
+    document.addEventListener('scroll', handleScroll)
+
+    return () => document.removeEventListener('scroll', handleScroll)
+  }, [eventCallback])
+}
+
+export { useAtBottom, useAtBottomNoRerender }

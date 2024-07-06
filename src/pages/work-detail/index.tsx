@@ -15,7 +15,6 @@ import {
   likeActionsAPI,
   postViewHistoryAPI,
 } from '@/apis'
-import { useMap } from '@/hooks'
 import { notification } from 'antd'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import GreyButton from '@/components/common/grey-button'
@@ -25,6 +24,44 @@ import { CSSTransition } from 'react-transition-group'
 import { resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
 import { debounce } from 'lodash'
 
+const ScrollButtons: FC = () => {
+  const isBottom = useAtBottom()
+  const isTop = useAtTop()
+
+  const scrollTo = (type: 'top' | 'bottom') => {
+    if (type === 'top') {
+      document.body.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      document.body.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    }
+  }
+
+  return (
+    <>
+      <CSSTransition in={!isTop} timeout={300} classNames='opacity-gradient' unmountOnExit>
+        <div className='fixed bottom-25 right-10'>
+          <GreyButton
+            onClick={() => {
+              scrollTo('top')
+            }}>
+            <Icon color='#fff' icon='ant-design:arrow-up-outlined' />
+          </GreyButton>
+        </div>
+      </CSSTransition>
+      <CSSTransition in={!isBottom} timeout={300} classNames='opacity-gradient' unmountOnExit>
+        <div className='fixed bottom-10 right-10'>
+          <GreyButton
+            onClick={() => {
+              scrollTo('bottom')
+            }}>
+            <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
+          </GreyButton>
+        </div>
+      </CSSTransition>
+    </>
+  )
+}
+
 const WorkDetail: FC = () => {
   const dispatch = useDispatch()
   const { workDetailUserId } = useSelector((state: AppState) => state.viewList)
@@ -33,7 +70,7 @@ const WorkDetail: FC = () => {
 
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
-  const [authorWorkList, setAuthorWorkList, updateAuthorWorkList] = useMap<WorkNormalItemInfo>([])
+  // const [authorWorkList, setAuthorWorkList, updateAuthorWorkList] = useMap<WorkNormalItemInfo>([])
 
   const addViewData = async () => {
     try {
@@ -67,37 +104,65 @@ const WorkDetail: FC = () => {
     }
   }
 
-  const fetchUserInfoAndWorks = async (authorId: string) => {
+  const fetchUserInfo = async (authorId: string) => {
     try {
-      const userInfoPromise = getUserSimpleAPI({ id: authorId })
-      const authorWorksListPromise = getUserWorksListAPI({ id: authorId, pageSize: 30, current: 1 })
+      const { data } = await getUserSimpleAPI({ id: authorId })
 
-      const [userInfoResponse, authorWorksListResponse] = await Promise.all([
-        userInfoPromise,
-        authorWorksListPromise,
-      ])
-
-      const userInfoData = userInfoResponse.data
-      const authorWorksListData = authorWorksListResponse.data
-
-      if (workDetailUserId !== authorId) {
-        dispatch(resetUserList())
-        dispatch(setWorkDetailUserId(authorId))
-      }
       setUserInfo({
-        id: userInfoData.id,
-        username: userInfoData.username,
-        email: userInfoData.email,
-        avatar: userInfoData.avatar,
-        intro: userInfoData.intro,
-        isFollowing: userInfoData.isFollowing,
+        id: data.id,
+        username: data.username,
+        email: data.email,
+        avatar: data.avatar,
+        intro: data.intro,
+        isFollowing: data.isFollowing,
       })
-      setAuthorWorkList(authorWorksListData)
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
     }
   }
+
+  const [userWorksCurrent, setUserWorksCurrent] = useState(1)
+  const [isFinal, setIsFinal] = useState(false)
+  const [listEnd, setListEnd] = useState(false)
+  const [authorWorkList, setAuthorWorkList] = useState<
+    {
+      page: number
+      list: WorkNormalItemInfo[]
+    }[]
+  >([{ page: userWorksCurrent, list: [] }])
+
+  const fetchUserWorks = async (authorId: string) => {
+    try {
+      const { data } = await getUserWorksListAPI({
+        id: authorId,
+        pageSize: 30,
+        current: userWorksCurrent,
+      })
+      if (data.length < 30) setIsFinal(true)
+      setAuthorWorkList((prev) => {
+        const result = prev.map((item) => {
+          if (item.page === userWorksCurrent) {
+            return { page: item.page, list: data }
+          }
+          return item
+        })
+        result.push({ page: userWorksCurrent + 1, list: [] })
+        return result
+      })
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if (listEnd && !isFinal) setUserWorksCurrent((prev) => prev + 1)
+  }, [listEnd])
+
+  useEffect(() => {
+    if (workInfo) fetchUserWorks(workInfo.authorInfo.id)
+  }, [userWorksCurrent])
 
   useEffect(() => {
     const debouncedFetchWorkDetail = debounce(fetchWorkDetail, 500)
@@ -113,7 +178,14 @@ const WorkDetail: FC = () => {
   }, [workId])
 
   useEffect(() => {
-    if (workInfo) fetchUserInfoAndWorks(workInfo.authorInfo.id)
+    if (workInfo) {
+      fetchUserInfo(workInfo.authorInfo.id)
+      fetchUserWorks(workInfo.authorInfo.id)
+      if (workDetailUserId !== workInfo.authorInfo.id) {
+        dispatch(resetUserList())
+        dispatch(setWorkDetailUserId(workInfo.authorInfo.id))
+      }
+    }
   }, [workInfo?.id])
 
   const follow = useCallback(
@@ -149,6 +221,7 @@ const WorkDetail: FC = () => {
 
   const likeWork = async (id: string) => {
     if (workId === id) {
+      await likeActions(id)
       setWorkInfo((prev) => {
         if (!prev) return prev
         return {
@@ -158,10 +231,18 @@ const WorkDetail: FC = () => {
         }
       })
     }
-    await likeActions(id)
-    updateAuthorWorkList(id, {
-      ...authorWorkList.get(id)!,
-      isLiked: !authorWorkList.get(id)!.isLiked,
+    setAuthorWorkList((prev) => {
+      return prev.map((item) => {
+        return {
+          page: item.page,
+          list: item.list.map((work) => {
+            if (work.id === id) {
+              return { ...work, isLiked: !work.isLiked }
+            }
+            return work
+          }),
+        }
+      })
     })
   }
 
@@ -174,19 +255,6 @@ const WorkDetail: FC = () => {
     }
   }
 
-  /* ----------页面滚动相关---------- */
-
-  const isBottom = useAtBottom()
-  const isTop = useAtTop()
-
-  const scrollTo = (type: 'top' | 'bottom') => {
-    if (type === 'top') {
-      document.body.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
-      document.body.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
-    }
-  }
-
   return (
     <>
       <div className='bg-#f5f5f5 w-full flex justify-center'>
@@ -194,10 +262,12 @@ const WorkDetail: FC = () => {
           <div>
             {workInfo ? (
               <WorkInfo
+                setAuthorWorkListEnd={setListEnd}
+                isFinal={isFinal}
                 workInfo={workInfo}
                 setWorkInfo={setWorkInfo}
                 likeWork={likeWork}
-                authorWorkList={Array.from(authorWorkList.values())}
+                authorWorkList={authorWorkList}
               />
             ) : (
               <div>Loading...</div>
@@ -206,11 +276,7 @@ const WorkDetail: FC = () => {
           <div className='flex flex-col gap-5'>
             {userInfo ? (
               <>
-                <UserInfo
-                  onFollow={follow}
-                  userInfo={userInfo}
-                  authorWorkList={Array.from(authorWorkList.values())}
-                />
+                <UserInfo onFollow={follow} userInfo={userInfo} authorWorkList={authorWorkList} />
                 <div className='sticky top-5'>
                   <ViewList />
                 </div>
@@ -221,27 +287,7 @@ const WorkDetail: FC = () => {
           </div>
         </div>
       </div>
-
-      <CSSTransition in={!isTop} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='fixed bottom-25 right-10'>
-          <GreyButton
-            onClick={() => {
-              scrollTo('top')
-            }}>
-            <Icon color='#fff' icon='ant-design:arrow-up-outlined' />
-          </GreyButton>
-        </div>
-      </CSSTransition>
-      <CSSTransition in={!isBottom} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='fixed bottom-10 right-10'>
-          <GreyButton
-            onClick={() => {
-              scrollTo('bottom')
-            }}>
-            <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
-          </GreyButton>
-        </div>
-      </CSSTransition>
+      <ScrollButtons />
     </>
   )
 }

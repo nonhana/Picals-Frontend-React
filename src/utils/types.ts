@@ -85,7 +85,7 @@ export interface WorkDetailInfo {
   illustrator?: {
     id: string
     name: string
-    avatar: string
+    avatar: string | null
     intro: string
     homeUrl: string
     workCount: number

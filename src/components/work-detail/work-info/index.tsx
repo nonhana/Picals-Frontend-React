@@ -9,7 +9,7 @@ import type { GetProp } from 'antd'
 import WorkLittleItem from '@/components/common/work-little-item'
 import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
 import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
@@ -20,6 +20,8 @@ import pixiv from '@/assets/svgs/pixiv.svg'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import CreateFolderModal from '@/components/common/create-folder-modal'
 import LazyImg from '@/components/common/lazy-img'
+import { CSSTransition } from 'react-transition-group'
+import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 
 const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
@@ -27,11 +29,25 @@ const CheckboxGroup = Checkbox.Group
 type WorkInfoProps = {
   workInfo: WorkDetailInfo
   setWorkInfo: (workInfo: WorkDetailInfo) => void
-  authorWorkList: WorkNormalItemInfo[]
+  authorWorkList: {
+    page: number
+    list: WorkNormalItemInfo[]
+  }[]
   likeWork: (id: string) => void
+  setAuthorWorkListEnd: (status: boolean) => void
+  isFinal: boolean
 }
 
-const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, likeWork }) => {
+const WorkInfo: FC<WorkInfoProps> = ({
+  workInfo,
+  setWorkInfo,
+  authorWorkList,
+  likeWork,
+  setAuthorWorkListEnd,
+  isFinal,
+}) => {
+  const { workId } = useParams()
+
   const workIntro = workInfo.intro.split('\n').map((item, index) => (
     <span key={index}>
       {item}
@@ -198,9 +214,10 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
-        (event.key === 'ArrowUp' && imgIndex !== undefined && imgIndex > 0) ||
-        (event.key === 'ArrowDown' && imgIndex !== undefined && imgIndex < imgList.length - 1) ||
-        imgIndex === undefined
+        (event.key === 'ArrowUp' || event.key === 'ArrowDown') &&
+        ((imgIndex !== undefined && imgIndex > 0) ||
+          (imgIndex !== undefined && imgIndex < imgList.length - 1) ||
+          imgIndex === undefined)
       )
         event.preventDefault()
 
@@ -321,8 +338,10 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
                     ? '转载作品'
                     : '合集作品'}
               </span>
-              {workInfo.labels.map((label, index) => (
-                <Link to={`/search-result?label=${label.label}&type=work&sortType=new`} key={index}>
+              {workInfo.labels.map((label) => (
+                <Link
+                  to={`/search-result?label=${label.label}&type=work&sortType=new`}
+                  key={label.value}>
                   #{label.label}
                 </Link>
               ))}
@@ -378,10 +397,33 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
             {authorWorkList.length === 0 ? (
               <Empty showImg={false} text='暂无其他作品' />
             ) : (
-              <LayoutList scrollType='work-detail'>
-                {Array.from(authorWorkList.values()).map((work, index) => (
-                  <WorkLittleItem key={index} itemInfo={work} like={likeWork} />
+              <LayoutList
+                workId={workId}
+                type='work-detail'
+                scrollType='work-detail'
+                setAtBottom={setAuthorWorkListEnd}>
+                {authorWorkList.map((everyPage, index) => (
+                  <CSSTransition
+                    key={`${everyPage}-${index}`}
+                    in={everyPage.list.length !== 0}
+                    timeout={300}
+                    classNames='opacity-gradient'
+                    unmountOnExit>
+                    <>
+                      {everyPage.list.map((work) => (
+                        <WorkLittleItem
+                          key={work.id}
+                          data-id={work.id}
+                          itemInfo={work}
+                          like={likeWork}
+                        />
+                      ))}
+                    </>
+                  </CSSTransition>
                 ))}
+                {!isFinal && (
+                  <ImgLoadingSkeleton className='shrink-0 relative w-118px h-118px rd-1' />
+                )}
               </LayoutList>
             )}
           </div>
@@ -417,16 +459,19 @@ const WorkInfo: FC<WorkInfoProps> = ({ workInfo, setWorkInfo, authorWorkList, li
               </div>
               <div className='mt-10px flex items-center justify-between'>
                 <div className='flex gap-20px items-center'>
-                  {/* <Link
-                    to={workInfo.illustrator!.homeUrl}
+                  <Link
+                    to={`/illustrator/${workInfo.illustrator!.id}`}
                     target='_blank'
                     className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
                     <img
                       className='w-full h-full object-cover'
-                      src={workInfo.illustrator!.avatar}
+                      src={
+                        workInfo.illustrator!.avatar ||
+                        `https://fakeimg.pl/400x400?font=noto&text=${workInfo.illustrator!.name}`
+                      }
                       alt={workInfo.illustrator!.name}
                     />
-                  </Link> */}
+                  </Link>
                   <Link to={`/illustrator/${workInfo.illustrator!.id}`}>
                     {workInfo.illustrator!.name}
                   </Link>

@@ -23,4 +23,19 @@ const useAtTop = (): boolean => {
   return isTop
 }
 
-export { useAtTop }
+const useAtTopNoRerender = (eventCallback: (isTop: boolean) => void) => {
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      const scrollTop = document.body.scrollTop
+      if (scrollTop <= 0) {
+        eventCallback(true)
+      } else {
+        eventCallback(false)
+      }
+    }, 50)
+    document.addEventListener('scroll', handleScroll)
+    return () => document.removeEventListener('scroll', handleScroll)
+  }, [eventCallback])
+}
+
+export { useAtTop, useAtTopNoRerender }
