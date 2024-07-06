@@ -15,6 +15,8 @@ type ScrollType =
 type LayoutListProps = {
   scrollType: ScrollType
   children: React.ReactNode
+  initializing?: boolean
+  setInitializing?: (status: boolean) => void
   className?: string
   gap?: number
   type?: string
@@ -32,6 +34,8 @@ const scrollMap: Map<ScrollType, number> = new Map([
 ])
 
 const LayoutList: FC<LayoutListProps> = ({
+  initializing,
+  setInitializing,
   className,
   type,
   workId,
@@ -83,11 +87,14 @@ const LayoutList: FC<LayoutListProps> = ({
   useEffect(() => {
     if (!layoutRef.current) return
     if (type !== 'work-detail') return
+
+    if (setAtBottom) setAtBottom(false)
+    if (initializing) return
+
     const currentWorkItem = Array.from(layoutRef.current.children).find(
       (item) => item.getAttribute('data-id') === workId,
     )
     if (currentWorkItem) {
-      if (setAtBottom) setAtBottom(false)
       const itemLeft = currentWorkItem.getBoundingClientRect().left
       const layoutRefLeft = layoutRef.current.getBoundingClientRect().left
       layoutRef.current.scrollBy({
@@ -97,9 +104,13 @@ const LayoutList: FC<LayoutListProps> = ({
       })
       return
     } else {
-      if (setAtBottom) setAtBottom(true)
+      if (setAtBottom && setInitializing) {
+        console.log('没有找到对应的作品，滚动到底部')
+        setAtBottom(true)
+        setInitializing(true)
+      }
     }
-  }, [workId, children])
+  }, [workId, initializing])
 
   return (
     <div

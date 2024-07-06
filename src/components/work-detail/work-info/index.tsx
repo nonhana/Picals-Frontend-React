@@ -34,6 +34,8 @@ type WorkInfoProps = {
     page: number
     list: WorkNormalItemInfo[]
   }[]
+  initializing: boolean
+  setInitializing: (status: boolean) => void
   likeWork: (id: string) => void
   setAuthorWorkListEnd: (status: boolean) => void
   isFinal: boolean
@@ -44,6 +46,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
   workInfo,
   setWorkInfo,
   authorWorkList,
+  initializing,
+  setInitializing,
   likeWork,
   setAuthorWorkListEnd,
   isFinal,
@@ -399,7 +403,9 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 workId={workId}
                 type='work-detail'
                 scrollType='work-detail'
-                setAtBottom={setAuthorWorkListEnd}>
+                setAtBottom={setAuthorWorkListEnd}
+                initializing={initializing}
+                setInitializing={setInitializing}>
                 {authorWorkList.map((everyPage, index) => (
                   <CSSTransition
                     key={`${everyPage}-${index}`}

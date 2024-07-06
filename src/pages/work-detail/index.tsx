@@ -70,7 +70,6 @@ const WorkDetail: FC = () => {
 
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
-  // const [authorWorkList, setAuthorWorkList, updateAuthorWorkList] = useMap<WorkNormalItemInfo>([])
 
   const addViewData = async () => {
     try {
@@ -107,7 +106,6 @@ const WorkDetail: FC = () => {
   const fetchUserInfo = async (authorId: string) => {
     try {
       const { data } = await getUserSimpleAPI({ id: authorId })
-
       setUserInfo({
         id: data.id,
         username: data.username,
@@ -131,8 +129,10 @@ const WorkDetail: FC = () => {
       list: WorkNormalItemInfo[]
     }[]
   >([{ page: userWorksCurrent, list: [] }])
+  const [initializing, setInitializing] = useState(true)
 
   const fetchUserWorks = async (authorId: string) => {
+    if (userWorksCurrent === 1) setInitializing(true)
     try {
       const { data } = await getUserWorksListAPI({
         id: authorId,
@@ -153,6 +153,8 @@ const WorkDetail: FC = () => {
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return
+    } finally {
+      setInitializing(false)
     }
   }
 
@@ -268,6 +270,8 @@ const WorkDetail: FC = () => {
                 workInfo={workInfo}
                 setWorkInfo={setWorkInfo}
                 likeWork={likeWork}
+                initializing={initializing}
+                setInitializing={setInitializing}
                 authorWorkList={authorWorkList}
               />
             ) : (
@@ -277,16 +281,16 @@ const WorkDetail: FC = () => {
           <div className='flex flex-col gap-5'>
             {userInfo ? (
               <>
-                <UserInfo
-                  setAuthorWorkListEnd={setListEnd}
-                  isFinal={isFinal}
-                  workId={workId!}
-                  onFollow={follow}
-                  userInfo={userInfo}
-                  authorWorkList={authorWorkList}
-                />
+                <UserInfo onFollow={follow} userInfo={userInfo} />
                 <div className='sticky top-5'>
-                  <ViewList />
+                  <ViewList
+                    setAuthorWorkListEnd={setListEnd}
+                    isFinal={isFinal}
+                    workId={workId!}
+                    initializing={initializing}
+                    setInitializing={setInitializing}
+                    authorWorkList={authorWorkList}
+                  />
                 </div>
               </>
             ) : (
