@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react'
+import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
@@ -8,17 +8,29 @@ import LayoutList from '@/components/common/layout-list'
 import { Button } from 'antd'
 import Empty from '@/components/common/empty'
 import LazyImg from '@/components/common/lazy-img'
+import { CSSTransition } from 'react-transition-group'
+import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 
 type UserInfoProps = {
+  workId: string
   userInfo: UserItemInfo
   authorWorkList: {
     page: number
     list: WorkNormalItemInfo[]
   }[]
+  setAuthorWorkListEnd: (status: boolean) => void
+  isFinal: boolean
   onFollow: (id: string) => void
 }
 
-const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => {
+const UserInfo: FC<UserInfoProps> = ({
+  workId,
+  userInfo,
+  authorWorkList,
+  onFollow,
+  setAuthorWorkListEnd,
+  isFinal,
+}) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { id } = useSelector((state: AppState) => state.user.userInfo)
 
@@ -38,14 +50,26 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, authorWorkList, onFollow }) => 
         <span>{userInfo.intro}</span>
       </div>
       {authorWorkList.length !== 0 ? (
-        <LayoutList scrollType='work-little'>
+        <LayoutList
+          workId={workId}
+          type='work-detail'
+          scrollType='work-little'
+          setAtBottom={setAuthorWorkListEnd}>
           {authorWorkList.map((everyPage, index) => (
-            <Fragment key={`${everyPage.page}-${index}`}>
-              {everyPage.list.map((work) => (
-                <WorkLeastItem key={work.id} itemInfo={work} />
-              ))}
-            </Fragment>
+            <CSSTransition
+              key={`${everyPage}-${index}`}
+              in={everyPage.list.length !== 0}
+              timeout={300}
+              classNames='opacity-gradient'
+              unmountOnExit>
+              <>
+                {everyPage.list.map((work) => (
+                  <WorkLeastItem key={work.id} data-id={work.id} itemInfo={work} />
+                ))}
+              </>
+            </CSSTransition>
           ))}
+          {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-90px h-90px rd-1' />}
         </LayoutList>
       ) : (
         <Empty showImg={false} text='暂无其他作品' />

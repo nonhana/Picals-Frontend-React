@@ -82,13 +82,12 @@ const LayoutList: FC<LayoutListProps> = ({
 
   useEffect(() => {
     if (!layoutRef.current) return
-    const currentWorkItem =
-      type === 'work-detail'
-        ? Array.from(layoutRef.current.children).find(
-            (item) => item.getAttribute('data-id') === workId,
-          )
-        : null
+    if (type !== 'work-detail') return
+    const currentWorkItem = Array.from(layoutRef.current.children).find(
+      (item) => item.getAttribute('data-id') === workId,
+    )
     if (currentWorkItem) {
+      if (setAtBottom) setAtBottom(false)
       const itemLeft = currentWorkItem.getBoundingClientRect().left
       const layoutRefLeft = layoutRef.current.getBoundingClientRect().left
       layoutRef.current.scrollBy({
@@ -97,8 +96,10 @@ const LayoutList: FC<LayoutListProps> = ({
         behavior: 'smooth',
       })
       return
+    } else {
+      if (setAtBottom) setAtBottom(true)
     }
-  }, [workId])
+  }, [workId, children])
 
   return (
     <div

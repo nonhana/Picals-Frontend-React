@@ -264,6 +264,7 @@ const WorkDetail: FC = () => {
               <WorkInfo
                 setAuthorWorkListEnd={setListEnd}
                 isFinal={isFinal}
+                workId={workId!}
                 workInfo={workInfo}
                 setWorkInfo={setWorkInfo}
                 likeWork={likeWork}
@@ -276,7 +277,14 @@ const WorkDetail: FC = () => {
           <div className='flex flex-col gap-5'>
             {userInfo ? (
               <>
-                <UserInfo onFollow={follow} userInfo={userInfo} authorWorkList={authorWorkList} />
+                <UserInfo
+                  setAuthorWorkListEnd={setListEnd}
+                  isFinal={isFinal}
+                  workId={workId!}
+                  onFollow={follow}
+                  userInfo={userInfo}
+                  authorWorkList={authorWorkList}
+                />
                 <div className='sticky top-5'>
                   <ViewList />
                 </div>

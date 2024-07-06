@@ -9,7 +9,7 @@ import type { GetProp } from 'antd'
 import WorkLittleItem from '@/components/common/work-little-item'
 import LayoutList from '@/components/common/layout-list'
 import Comments from '../comments'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
 import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
@@ -27,6 +27,7 @@ const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
 
 type WorkInfoProps = {
+  workId: string
   workInfo: WorkDetailInfo
   setWorkInfo: (workInfo: WorkDetailInfo) => void
   authorWorkList: {
@@ -39,6 +40,7 @@ type WorkInfoProps = {
 }
 
 const WorkInfo: FC<WorkInfoProps> = ({
+  workId,
   workInfo,
   setWorkInfo,
   authorWorkList,
@@ -46,8 +48,6 @@ const WorkInfo: FC<WorkInfoProps> = ({
   setAuthorWorkListEnd,
   isFinal,
 }) => {
-  const { workId } = useParams()
-
   const workIntro = workInfo.intro.split('\n').map((item, index) => (
     <span key={index}>
       {item}
@@ -394,9 +394,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
               </Link>
             </div>
 
-            {authorWorkList.length === 0 ? (
-              <Empty showImg={false} text='暂无其他作品' />
-            ) : (
+            {authorWorkList.length !== 0 ? (
               <LayoutList
                 workId={workId}
                 type='work-detail'
@@ -421,10 +419,10 @@ const WorkInfo: FC<WorkInfoProps> = ({
                     </>
                   </CSSTransition>
                 ))}
-                {!isFinal && (
-                  <ImgLoadingSkeleton className='shrink-0 relative w-118px h-118px rd-1' />
-                )}
+                {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
               </LayoutList>
+            ) : (
+              <Empty showImg={false} text='暂无其他作品' />
             )}
           </div>
           {/* 原作信息 */}
