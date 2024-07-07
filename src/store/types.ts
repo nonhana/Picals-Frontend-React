@@ -22,10 +22,8 @@ interface UploadFormState {
 }
 
 interface ViewListState {
+  prevPosition: string
   workDetailUserId: string
-  fromUserId: string
-  fromFavoriteId: string
-  fromIllustratorId: string
   userWorkList: string[]
   likeWorkList: string[]
   favoriteWorkList: string[]

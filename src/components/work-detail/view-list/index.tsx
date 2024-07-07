@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP } from '@/utils'
@@ -10,7 +10,7 @@ import {
   setCurrentIndex,
   setCurrentList,
 } from '@/store/modules/viewList'
-import { message, InputNumber } from 'antd'
+import { message, InputNumber, Button } from 'antd'
 import Pagination from '@/components/common/pagination'
 import { Icon } from '@iconify/react'
 import WorkSlideWindow from '../work-slide-window'
@@ -48,16 +48,8 @@ const ViewList: FC<ViewListProps> = ({
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
-  const {
-    workDetailUserId,
-    fromUserId: _,
-    fromFavoriteId: __,
-    fromIllustratorId: ___,
-    currentList,
-    currentIndex,
-    userWorkList,
-    ...lists
-  } = useSelector((state: AppState) => state.viewList)
+  const { prevPosition, workDetailUserId, currentList, currentIndex, userWorkList, ...lists } =
+    useSelector((state: AppState) => state.viewList)
 
   //#region 更改作品列表相关信息
   const [allowListName, setAllowListName] = useState<keyof typeof lists>()
@@ -482,7 +474,12 @@ const ViewList: FC<ViewListProps> = ({
             />
           </CSSTransition>
         </div>
-        <div className='mt-10px w-full flex justify-center'>
+        <Link className='w-full my-5' to={prevPosition === '' ? '/home' : prevPosition}>
+          <Button className='w-full' type='primary' shape='round' size='large'>
+            回到上一个页面
+          </Button>
+        </Link>
+        <div className='w-full flex justify-center'>
           <Pagination
             total={currentListLength}
             pageSize={1}

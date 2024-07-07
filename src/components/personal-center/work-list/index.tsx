@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, useContext } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
@@ -16,7 +17,12 @@ import { PersonalContext } from '@/pages/personal-center'
 import { message } from 'antd'
 import { CSSTransition } from 'react-transition-group'
 import WorkListSkeleton from '@/components/skeleton/work-list'
-import { pushToLikeWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
+import {
+  pushToLikeWorkList,
+  resetOtherList,
+  setCurrentList,
+  setPrevPosition,
+} from '@/store/modules/viewList'
 
 type WorkListProps = {
   workCount: number
@@ -24,6 +30,8 @@ type WorkListProps = {
 }
 
 const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
+  const location = useLocation()
+
   const dispatch = useDispatch()
 
   const { userId, currentPath } = useContext(PersonalContext)
@@ -108,6 +116,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
       dispatch(pushToLikeWorkList(data))
       dispatch(setCurrentList('likeWorkList'))
     }
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (

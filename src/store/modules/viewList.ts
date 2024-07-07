@@ -12,10 +12,8 @@ export type WorkListType =
 const viewListStore = createSlice({
   name: 'viewList',
   initialState: {
+    prevPosition: '',
     workDetailUserId: '',
-    fromUserId: '',
-    fromFavoriteId: '',
-    fromIllustratorId: '',
     userWorkList: <string[]>[],
     likeWorkList: <string[]>[],
     favoriteWorkList: <string[]>[],
@@ -27,17 +25,11 @@ const viewListStore = createSlice({
     currentIndex: 1,
   },
   reducers: {
+    setPrevPosition(state, action) {
+      state.prevPosition = action.payload
+    },
     setWorkDetailUserId(state, action) {
       state.workDetailUserId = action.payload
-    },
-    setFromUserId(state, action) {
-      state.fromUserId = action.payload
-    },
-    setFromFavoriteId(state, action) {
-      state.fromFavoriteId = action.payload
-    },
-    setFromIllustratorId(state, action) {
-      state.fromIllustratorId = action.payload
     },
     pushToUserWorkList(state, action) {
       state.userWorkList = state.userWorkList.concat(action.payload)
@@ -67,10 +59,8 @@ const viewListStore = createSlice({
       state.currentIndex = action.payload
     },
     reset(state) {
+      state.prevPosition = ''
       state.workDetailUserId = ''
-      state.fromUserId = ''
-      state.fromFavoriteId = ''
-      state.fromIllustratorId = ''
       state.userWorkList = []
       state.likeWorkList = []
       state.favoriteWorkList = []
@@ -86,9 +76,7 @@ const viewListStore = createSlice({
       state.userWorkList = []
     },
     resetOtherList(state) {
-      state.fromUserId = ''
-      state.fromFavoriteId = ''
-      state.fromIllustratorId = ''
+      state.prevPosition = ''
       state.likeWorkList = []
       state.favoriteWorkList = []
       state.followingNewWorkList = []
@@ -100,10 +88,8 @@ const viewListStore = createSlice({
 })
 
 const {
+  setPrevPosition,
   setWorkDetailUserId,
-  setFromUserId,
-  setFromFavoriteId,
-  setFromIllustratorId,
   pushToUserWorkList,
   pushToLikeWorkList,
   pushToFavoriteWorkList,
@@ -121,10 +107,8 @@ const {
 const viewListReducer = viewListStore.reducer
 
 export {
+  setPrevPosition,
   setWorkDetailUserId,
-  setFromUserId,
-  setFromFavoriteId,
-  setFromIllustratorId,
   pushToUserWorkList,
   pushToLikeWorkList,
   pushToFavoriteWorkList,

@@ -1,17 +1,24 @@
 import { FC, useEffect, useState, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getIllustratorWorksInPagesAPI, getIllustratorWorksIdListAPI } from '@/apis'
 import type { WorkNormalItem } from '@/apis/types'
 import WaterfallItem from '../common/waterfall-item'
 import { useAtBottom } from '@/hooks'
-import { pushToIllustratorWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
+import {
+  pushToIllustratorWorkList,
+  resetOtherList,
+  setCurrentList,
+  setPrevPosition,
+} from '@/store/modules/viewList'
 
 const listClass = 'absolute w-80 flex flex-col gap-5'
 
 type WaterfallItemInfo = WorkNormalItem & { index: number; height: number }
 
 const WaterfallFlow: FC = () => {
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const { illustratorId } = useParams<{ illustratorId: string }>()
@@ -76,6 +83,7 @@ const WaterfallFlow: FC = () => {
     dispatch(resetOtherList())
     dispatch(pushToIllustratorWorkList(data))
     dispatch(setCurrentList('illustratorWorkList'))
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (

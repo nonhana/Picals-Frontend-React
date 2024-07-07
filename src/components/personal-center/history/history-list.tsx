@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import WorkHistoryItem from '@/components/common/work-history-item'
 import Pagination from '@/components/common/pagination'
@@ -10,9 +11,10 @@ import { Icon } from '@iconify/react'
 import GreyButton from '@/components/common/grey-button'
 import dayjs from 'dayjs'
 import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
-import { resetOtherList, setCurrentList } from '@/store/modules/viewList'
+import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
 
 const HistoryList: FC = () => {
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const [currentDate, setCurrentDate] = useState<string>(dayjs().format('YYYY-MM-DD')) // 当前日期
@@ -78,6 +80,7 @@ const HistoryList: FC = () => {
   const addWorks = () => {
     dispatch(resetOtherList())
     dispatch(setCurrentList('userWorkList'))
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (

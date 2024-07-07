@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { useMap } from '@/hooks'
 import WorkNormalItem from '@/components/common/work-normal-item'
@@ -14,6 +14,7 @@ import {
   pushToSearchResultWorkList,
   resetOtherList,
   setCurrentList,
+  setPrevPosition,
 } from '@/store/modules/viewList'
 
 const sortOptions = [
@@ -30,6 +31,7 @@ type WorkListProps = {
 }
 
 const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCount }) => {
+  const location = useLocation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -96,6 +98,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     dispatch(resetOtherList())
     dispatch(pushToSearchResultWorkList(data))
     dispatch(setCurrentList('searchResultWorkList'))
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (

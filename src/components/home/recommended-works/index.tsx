@@ -1,4 +1,5 @@
 import { FC, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useMap } from '@/hooks'
@@ -7,7 +8,12 @@ import Empty from '@/components/common/empty'
 import { likeActionsAPI } from '@/apis'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { CSSTransition } from 'react-transition-group'
-import { pushToRecommendWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
+import {
+  pushToRecommendWorkList,
+  resetOtherList,
+  setCurrentList,
+  setPrevPosition,
+} from '@/store/modules/viewList'
 
 type RecommendedWorksProps = {
   loading: boolean
@@ -15,6 +21,7 @@ type RecommendedWorksProps = {
 }
 
 const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: sourceData }) => {
+  const location = useLocation()
   const dispatch = useDispatch()
   const [workList, setWorkList, setWorkMapList] = useMap<WorkNormalItemInfo>([])
 
@@ -31,6 +38,7 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
     dispatch(resetOtherList())
     dispatch(pushToRecommendWorkList(sourceData.map((item) => item.id)))
     dispatch(setCurrentList('recommendWorkList'))
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (

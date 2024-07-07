@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
@@ -13,6 +14,7 @@ import {
   pushToFollowingNewWorkList,
   resetOtherList,
   setCurrentList,
+  setPrevPosition,
 } from '@/store/modules/viewList'
 
 type MainListProps = {
@@ -21,6 +23,7 @@ type MainListProps = {
 }
 
 const MainList: FC<MainListProps> = ({ pageSize, current }) => {
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const { isLogin } = useSelector((state: AppState) => state.user)
@@ -54,6 +57,7 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
     dispatch(resetOtherList())
     dispatch(pushToFollowingNewWorkList(data))
     dispatch(setCurrentList('followingNewWorkList'))
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useContext } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
@@ -17,7 +17,12 @@ import {
 import { PersonalContext } from '@/pages/personal-center'
 import { CSSTransition } from 'react-transition-group'
 import FavoriteWorkListSkeleton from '@/components/skeleton/favorite-work-list'
-import { pushToFavoriteWorkList, resetOtherList, setCurrentList } from '@/store/modules/viewList'
+import {
+  pushToFavoriteWorkList,
+  resetOtherList,
+  setCurrentList,
+  setPrevPosition,
+} from '@/store/modules/viewList'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -47,6 +52,7 @@ const WorkList: FC<WorkListProps> = ({
   refresh,
   like,
 }) => {
+  const location = useLocation()
   const { isMe } = useContext(PersonalContext)
 
   const [messageApi, contextHolder] = message.useMessage()
@@ -207,6 +213,7 @@ const WorkList: FC<WorkListProps> = ({
     dispatch(resetOtherList())
     dispatch(pushToFavoriteWorkList(data))
     dispatch(setCurrentList('favoriteWorkList'))
+    dispatch(setPrevPosition(location.pathname))
   }
 
   return (
