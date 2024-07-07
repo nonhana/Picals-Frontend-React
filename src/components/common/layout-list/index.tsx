@@ -85,10 +85,9 @@ const LayoutList: FC<LayoutListProps> = ({
   }, [children])
 
   useEffect(() => {
+    if (setAtBottom) setAtBottom(false)
     if (!layoutRef.current) return
     if (type !== 'work-detail') return
-
-    if (setAtBottom) setAtBottom(false)
     if (initializing) return
 
     const currentWorkItem = Array.from(layoutRef.current.children).find(
@@ -105,7 +104,6 @@ const LayoutList: FC<LayoutListProps> = ({
       return
     } else {
       if (setAtBottom && setInitializing) {
-        console.log('没有找到对应的作品，滚动到底部')
         setAtBottom(true)
         setInitializing(true)
       }

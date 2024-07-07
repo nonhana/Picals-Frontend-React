@@ -121,15 +121,24 @@ const WorkDetail: FC = () => {
   }
 
   const [userWorksCurrent, setUserWorksCurrent] = useState(1)
-  const [isFinal, setIsFinal] = useState(false)
-  const [listEnd, setListEnd] = useState(false)
   const [authorWorkList, setAuthorWorkList] = useState<
     {
       page: number
       list: WorkNormalItemInfo[]
     }[]
   >([{ page: userWorksCurrent, list: [] }])
-  const [initializing, setInitializing] = useState(true)
+  const [isFinal, setIsFinal] = useState(false) // 是否获取到最后一页
+  const [listEnd, setListEnd] = useState(false) // 浏览列表是否到底
+  const [initializing, setInitializing] = useState(true) // 是否正在初始化、加载中
+  const [prevAuthorId, setPrevAuthorId] = useState('') // 先前的作品作者id
+
+  const resetUserWorks = () => {
+    setAuthorWorkList([{ page: 1, list: [] }])
+    setUserWorksCurrent(1)
+    setIsFinal(false)
+    setListEnd(false)
+    setInitializing(true)
+  }
 
   const fetchUserWorks = async (authorId: string) => {
     if (userWorksCurrent === 1) setInitializing(true)
@@ -163,10 +172,13 @@ const WorkDetail: FC = () => {
   }, [listEnd])
 
   useEffect(() => {
-    if (workInfo) fetchUserWorks(workInfo.authorInfo.id)
+    if (workInfo) {
+      fetchUserWorks(workInfo.authorInfo.id)
+    }
   }, [userWorksCurrent])
 
   useEffect(() => {
+    if (workInfo?.authorInfo.id) setPrevAuthorId(workInfo.authorInfo.id)
     const debouncedFetchWorkDetail = debounce(fetchWorkDetail, 500)
     const debouncedAddViewData = debounce(addViewData, 500)
 
@@ -181,6 +193,7 @@ const WorkDetail: FC = () => {
 
   useEffect(() => {
     if (workInfo) {
+      if (workInfo.authorInfo.id !== prevAuthorId) resetUserWorks()
       fetchUserInfo(workInfo.authorInfo.id)
       fetchUserWorks(workInfo.authorInfo.id)
       if (workDetailUserId !== workInfo.authorInfo.id) {
@@ -188,7 +201,7 @@ const WorkDetail: FC = () => {
         dispatch(setWorkDetailUserId(workInfo.authorInfo.id))
       }
     }
-  }, [workInfo?.id])
+  }, [workInfo])
 
   const follow = useCallback(
     async (id: string) => {

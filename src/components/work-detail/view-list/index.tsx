@@ -121,7 +121,6 @@ const ViewList: FC<ViewListProps> = ({
   useEffect(() => {
     if (currentList === 'recommendWorkList') {
       const initPage = Math.ceil(lists.recommendWorkList.length / recommendPageSize)
-      console.log('位置3触发了')
       setRecommendCurrent(initPage)
       initRecommendWorksList(initPage)
     }
@@ -135,7 +134,6 @@ const ViewList: FC<ViewListProps> = ({
         pageSize: recommendPageSize,
       })
       if (data.length < recommendPageSize) {
-        console.log('推荐作品列表已经到底了')
         setRecommendIsFinal(true)
       }
       setRecommendWorkList((prev) => {
@@ -184,14 +182,12 @@ const ViewList: FC<ViewListProps> = ({
       !recommendIsFinal &&
       recommendCurrent
     ) {
-      console.log('位置2触发了')
       setRecommendCurrent((prev) => prev! + 1)
     }
   }, [currentIndex])
 
   useEffect(() => {
     if (currentList === 'recommendWorkList' && recommendListEnd && !recommendIsFinal) {
-      console.log('位置1触发了')
       setRecommendCurrent((prev) => prev! + 1)
     }
   }, [recommendListEnd])

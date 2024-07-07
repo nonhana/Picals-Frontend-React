@@ -26,31 +26,29 @@ const WorkSlideWindow: FC<WorkSlideWindowProps> = ({
   setInitializing,
 }) => {
   return (
-    workList.length !== 0 && (
-      <LayoutList
-        workId={workId}
-        type='work-detail'
-        scrollType='work-little'
-        setAtBottom={setWorkListEnd}
-        initializing={initializing}
-        setInitializing={setInitializing}>
-        {workList.map((everyPage, index) => (
-          <CSSTransition
-            key={`${everyPage.page}-${index}`}
-            in={everyPage.list.length !== 0}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <>
-              {everyPage.list.map((work) => (
-                <WorkLeastItem key={work.id} data-id={work.id} itemInfo={work} />
-              ))}
-            </>
-          </CSSTransition>
-        ))}
-        {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-90px h-90px rd-1' />}
-      </LayoutList>
-    )
+    <LayoutList
+      workId={workId}
+      type='work-detail'
+      scrollType='work-little'
+      setAtBottom={setWorkListEnd}
+      initializing={initializing}
+      setInitializing={setInitializing}>
+      {workList.map((everyPage, index) => (
+        <CSSTransition
+          key={`${everyPage.page}-${index}`}
+          in={everyPage.list.length !== 0}
+          timeout={300}
+          classNames='opacity-gradient'
+          unmountOnExit>
+          <>
+            {everyPage.list.map((work) => (
+              <WorkLeastItem key={work.id} data-id={work.id} itemInfo={work} />
+            ))}
+          </>
+        </CSSTransition>
+      ))}
+      {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-90px h-90px rd-1' />}
+    </LayoutList>
   )
 }
 

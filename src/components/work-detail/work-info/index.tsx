@@ -22,6 +22,7 @@ import CreateFolderModal from '@/components/common/create-folder-modal'
 import LazyImg from '@/components/common/lazy-img'
 import { CSSTransition } from 'react-transition-group'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
+import { setCurrentList } from '@/store/modules/viewList'
 
 const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
@@ -255,6 +256,10 @@ const WorkInfo: FC<WorkInfoProps> = ({
     }
   }, [imgIndex, workInfo.imgList])
 
+  const addUserWorks = () => {
+    dispatch(setCurrentList('userWorkList'))
+  }
+
   return (
     <>
       {contextHolder}
@@ -398,38 +403,35 @@ const WorkInfo: FC<WorkInfoProps> = ({
               </Link>
             </div>
 
-            {authorWorkList.length !== 0 ? (
-              <LayoutList
-                workId={workId}
-                type='work-detail'
-                scrollType='work-detail'
-                setAtBottom={setAuthorWorkListEnd}
-                initializing={initializing}
-                setInitializing={setInitializing}>
-                {authorWorkList.map((everyPage, index) => (
-                  <CSSTransition
-                    key={`${everyPage}-${index}`}
-                    in={everyPage.list.length !== 0}
-                    timeout={300}
-                    classNames='opacity-gradient'
-                    unmountOnExit>
-                    <>
-                      {everyPage.list.map((work) => (
-                        <WorkLittleItem
-                          key={work.id}
-                          data-id={work.id}
-                          itemInfo={work}
-                          like={likeWork}
-                        />
-                      ))}
-                    </>
-                  </CSSTransition>
-                ))}
-                {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
-              </LayoutList>
-            ) : (
-              <Empty showImg={false} text='暂无其他作品' />
-            )}
+            <LayoutList
+              workId={workId}
+              type='work-detail'
+              scrollType='work-detail'
+              setAtBottom={setAuthorWorkListEnd}
+              initializing={initializing}
+              setInitializing={setInitializing}>
+              {authorWorkList.map((everyPage, index) => (
+                <CSSTransition
+                  key={`${everyPage}-${index}`}
+                  in={everyPage.list.length !== 0}
+                  timeout={300}
+                  classNames='opacity-gradient'
+                  unmountOnExit>
+                  <>
+                    {everyPage.list.map((work) => (
+                      <WorkLittleItem
+                        key={work.id}
+                        data-id={work.id}
+                        itemInfo={work}
+                        like={likeWork}
+                        onClick={addUserWorks}
+                      />
+                    ))}
+                  </>
+                </CSSTransition>
+              ))}
+              {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
+            </LayoutList>
           </div>
           {/* 原作信息 */}
           {workInfo.reprintType !== 0 && (
