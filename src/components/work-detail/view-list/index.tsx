@@ -15,9 +15,10 @@ import Pagination from '@/components/common/pagination'
 import { Icon } from '@iconify/react'
 import WorkSlideWindow from '../work-slide-window'
 import { WorkNormalItemInfo } from '@/utils/types'
+import { CSSTransition } from 'react-transition-group'
 
 const viewListClasses =
-  'w-full h-10 rd-1 transition-duration-300 hover:bg-#f5f5f5 cursor-pointer flex justify-between items-center px-5 color-#3d3d3d'
+  'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-#f5f5f5 cursor-pointer flex justify-between items-center px-5 color-#3d3d3d'
 
 type ViewListProps = {
   workId: string
@@ -143,10 +144,10 @@ const ViewList: FC<ViewListProps> = ({
           }
           return item
         })
-        result.push({ page: recommendCurrent! + 1, list: [] })
+        if (!recommendIsFinal) result.push({ page: recommendCurrent! + 1, list: [] })
         return result
       })
-      const result = data.map((work) => work.id)
+      const result = data.map((work) => ({ workId: work.id, authorId: work.authorId }))
       dispatch(pushToRecommendWorkList(result))
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -226,7 +227,7 @@ const ViewList: FC<ViewListProps> = ({
           }
           return item
         })
-        result.push({ page: current + 1, list: [] })
+        if (!isFinal) result.push({ page: current + 1, list: [] })
         return result
       })
       if (targetList.length < pageSize) setIsFinal(true)
@@ -332,9 +333,9 @@ const ViewList: FC<ViewListProps> = ({
   return (
     <>
       {contextHolder}
-      <div className='relative flex flex-col gap-5 p-5 rd-6 bg-#fff w-82.5 select-none'>
+      <div className='relative flex flex-col p-5 rd-6 bg-#fff w-82.5 select-none'>
         <div
-          className={`${viewListClasses} ${currentList !== 'userWorkList' ? 'bg-#f5f5f5' : 'bg-white'}`}
+          className={`mt-0 ${viewListClasses} ${currentList !== 'userWorkList' ? 'bg-#f5f5f5' : 'bg-white'}`}
           onClick={() => {
             if (allowListName) changeList(allowListName)
           }}>
@@ -380,26 +381,53 @@ const ViewList: FC<ViewListProps> = ({
             </span>
           )}
         </div>
-        {currentList !== 'userWorkList' && currentList !== 'recommendWorkList' && (
-          <WorkSlideWindow
-            workId={workId}
-            workList={currentWorkList}
-            isFinal={isFinal}
-            setWorkListEnd={setListEnd}
-            initializing={initializing}
-            setInitializing={setInitializing}
-          />
-        )}
-        {currentList === 'recommendWorkList' && (
-          <WorkSlideWindow
-            workId={workId}
-            workList={recommendWorkList}
-            isFinal={recommendIsFinal}
-            setWorkListEnd={setRecommendListEnd}
-            initializing={recommendInit}
-            setInitializing={setRecommendInit}
-          />
-        )}
+        <div
+          style={{
+            height: 0,
+            padding:
+              currentList !== 'userWorkList' && currentList !== 'recommendWorkList'
+                ? '45px 0 '
+                : '0',
+          }}
+          className='w-full relative transition-duration-300'>
+          <CSSTransition
+            in={currentList !== 'userWorkList' && currentList !== 'recommendWorkList'}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <WorkSlideWindow
+              className='mt--45px'
+              workId={workId}
+              workList={currentWorkList}
+              isFinal={isFinal}
+              setWorkListEnd={setListEnd}
+              initializing={initializing}
+              setInitializing={setInitializing}
+            />
+          </CSSTransition>
+        </div>
+        <div
+          style={{
+            height: 0,
+            padding: currentList === 'recommendWorkList' ? '45px 0 ' : '0',
+          }}
+          className='w-full relative transition-duration-300'>
+          <CSSTransition
+            in={currentList === 'recommendWorkList'}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <WorkSlideWindow
+              className='mt--45px'
+              workId={workId}
+              workList={recommendWorkList}
+              isFinal={recommendIsFinal}
+              setWorkListEnd={setRecommendListEnd}
+              initializing={recommendInit}
+              setInitializing={setRecommendInit}
+            />
+          </CSSTransition>
+        </div>
         <div
           className={`${viewListClasses} ${currentList === 'userWorkList' ? 'bg-#f5f5f5' : 'bg-white'}`}
           onClick={() => changeList('userWorkList')}>
@@ -432,17 +460,29 @@ const ViewList: FC<ViewListProps> = ({
             {userWorkList.length}
           </span>
         </div>
-        {currentList === 'userWorkList' && (
-          <WorkSlideWindow
-            workId={workId}
-            workList={authorWorkList}
-            setWorkListEnd={setAuthorWorkListEnd}
-            isFinal={userWorkListFinal}
-            initializing={userWorkListInitializing}
-            setInitializing={setUserWorkListInitializing}
-          />
-        )}
-        <div className='w-full flex justify-center'>
+        <div
+          style={{
+            height: 0,
+            padding: currentList === 'userWorkList' ? '45px 0 ' : '0',
+          }}
+          className='w-full relative transition-duration-300'>
+          <CSSTransition
+            in={currentList === 'userWorkList'}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <WorkSlideWindow
+              className='mt--45px'
+              workId={workId}
+              workList={authorWorkList}
+              setWorkListEnd={setAuthorWorkListEnd}
+              isFinal={userWorkListFinal}
+              initializing={userWorkListInitializing}
+              setInitializing={setUserWorkListInitializing}
+            />
+          </CSSTransition>
+        </div>
+        <div className='mt-10px w-full flex justify-center'>
           <Pagination
             total={currentListLength}
             pageSize={1}

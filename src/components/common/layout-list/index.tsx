@@ -99,7 +99,7 @@ const LayoutList: FC<LayoutListProps> = ({
       layoutRef.current.scrollBy({
         top: 0,
         left: itemLeft - layoutRefLeft,
-        behavior: 'smooth',
+        behavior: Math.abs(itemLeft - layoutRefLeft) < 1250 ? 'smooth' : 'instant',
       })
       return
     } else {

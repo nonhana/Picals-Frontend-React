@@ -48,7 +48,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
           }
           return item
         })
-        result.push({ page: current + 1, list: [] })
+        if (!isFinal) result.push({ page: current + 1, list: [] })
         return result
       })
     } catch (error) {

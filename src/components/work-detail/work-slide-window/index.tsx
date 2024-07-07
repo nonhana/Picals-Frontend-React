@@ -15,6 +15,7 @@ type WorkSlideWindowProps = {
   isFinal?: boolean
   initializing?: boolean
   setInitializing?: (status: boolean) => void
+  [key: string]: any
 }
 
 const WorkSlideWindow: FC<WorkSlideWindowProps> = ({
@@ -24,9 +25,11 @@ const WorkSlideWindow: FC<WorkSlideWindowProps> = ({
   isFinal = true,
   initializing,
   setInitializing,
+  ...props
 }) => {
   return (
     <LayoutList
+      {...props}
       workId={workId}
       type='work-detail'
       scrollType='work-little'

@@ -148,6 +148,7 @@ const WorkDetail: FC = () => {
         pageSize: 30,
         current: userWorksCurrent,
       })
+      console.log('当前页数的数据', userWorksCurrent, data)
       if (data.length < 30) setIsFinal(true)
       setAuthorWorkList((prev) => {
         const result = prev.map((item) => {
@@ -156,7 +157,7 @@ const WorkDetail: FC = () => {
           }
           return item
         })
-        result.push({ page: userWorksCurrent + 1, list: [] })
+        if (!isFinal) result.push({ page: userWorksCurrent + 1, list: [] })
         return result
       })
     } catch (error) {
@@ -193,6 +194,7 @@ const WorkDetail: FC = () => {
 
   useEffect(() => {
     if (workInfo) {
+      console.log('重新渲染')
       if (workInfo.authorInfo.id !== prevAuthorId) resetUserWorks()
       fetchUserInfo(workInfo.authorInfo.id)
       fetchUserWorks(workInfo.authorInfo.id)
@@ -201,7 +203,7 @@ const WorkDetail: FC = () => {
         dispatch(setWorkDetailUserId(workInfo.authorInfo.id))
       }
     }
-  }, [workInfo])
+  }, [workInfo?.authorInfo.id])
 
   const follow = useCallback(
     async (id: string) => {

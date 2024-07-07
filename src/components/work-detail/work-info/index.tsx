@@ -69,6 +69,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { id } = useSelector((state: AppState) => state.user.userInfo)
+  const { currentList } = useSelector((state: AppState) => state.viewList)
 
   const [loading, setLoading] = useState(true)
   const [collecting, setCollecting] = useState(false)
@@ -336,7 +337,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
             <div className='font-bold font-size-18px color-#3d3d3d'>
               <span>{workInfo.name}</span>
             </div>
-            <div className='font-bold font-size-14px color-#6d757a line-height-normal'>
+            <div className='font-size-14px color-#6d757a line-height-normal'>
               <span>{workIntro}</span>
             </div>
             <div className='flex flex-wrap gap-5 font-size-14px'>
@@ -403,35 +404,49 @@ const WorkInfo: FC<WorkInfoProps> = ({
               </Link>
             </div>
 
-            <LayoutList
-              workId={workId}
-              type='work-detail'
-              scrollType='work-detail'
-              setAtBottom={setAuthorWorkListEnd}
-              initializing={initializing}
-              setInitializing={setInitializing}>
-              {authorWorkList.map((everyPage, index) => (
-                <CSSTransition
-                  key={`${everyPage}-${index}`}
-                  in={everyPage.list.length !== 0}
-                  timeout={300}
-                  classNames='opacity-gradient'
-                  unmountOnExit>
-                  <>
-                    {everyPage.list.map((work) => (
-                      <WorkLittleItem
-                        key={work.id}
-                        data-id={work.id}
-                        itemInfo={work}
-                        like={likeWork}
-                        onClick={addUserWorks}
-                      />
-                    ))}
-                  </>
-                </CSSTransition>
-              ))}
-              {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
-            </LayoutList>
+            <div
+              style={{
+                height: 0,
+                padding: currentList === 'userWorkList' ? '59px 0 ' : '0',
+              }}
+              className='w-full relative transition-duration-300'>
+              <CSSTransition
+                in={currentList === 'userWorkList'}
+                timeout={300}
+                classNames='opacity-gradient'
+                unmountOnExit>
+                <LayoutList
+                  className='mt--59px'
+                  workId={workId}
+                  type='work-detail'
+                  scrollType='work-detail'
+                  setAtBottom={setAuthorWorkListEnd}
+                  initializing={initializing}
+                  setInitializing={setInitializing}>
+                  {authorWorkList.map((everyPage, index) => (
+                    <CSSTransition
+                      key={`${everyPage}-${index}`}
+                      in={everyPage.list.length !== 0}
+                      timeout={300}
+                      classNames='opacity-gradient'
+                      unmountOnExit>
+                      <>
+                        {everyPage.list.map((work) => (
+                          <WorkLittleItem
+                            key={work.id}
+                            data-id={work.id}
+                            itemInfo={work}
+                            like={likeWork}
+                            onClick={addUserWorks}
+                          />
+                        ))}
+                      </>
+                    </CSSTransition>
+                  ))}
+                  {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
+                </LayoutList>
+              </CSSTransition>
+            </div>
           </div>
           {/* 原作信息 */}
           {workInfo.reprintType !== 0 && (
