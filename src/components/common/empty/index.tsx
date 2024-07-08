@@ -43,7 +43,7 @@ const Empty: FC<EmptyProps> = ({
       {showImg && randomImg && (
         <LazyImg className='rd-1' width={200} height={200} src={randomImg} alt='empty' />
       )}
-      <span className='color-#6d757a font-size-14px font-bold'>{text}</span>
+      <span className='color-#858585 font-size-14px font-bold'>{text}</span>
       {children}
     </div>
   )

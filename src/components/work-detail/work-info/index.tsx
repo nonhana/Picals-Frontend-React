@@ -337,7 +337,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
             <div className='font-bold font-size-18px color-#3d3d3d'>
               <span>{workInfo.name}</span>
             </div>
-            <div className='font-size-14px color-#6d757a line-height-normal'>
+            <div className='font-size-14px color-#858585 line-height-normal'>
               <span>{workIntro}</span>
             </div>
             <div className='flex flex-wrap gap-5 font-size-14px'>
@@ -357,15 +357,15 @@ const WorkInfo: FC<WorkInfoProps> = ({
               ))}
             </div>
             <div className='flex my-3 gap-20px'>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
+              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
                 <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
                 <span>{workInfo.likeNum}</span>
               </div>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
+              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
                 <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
                 <span> {workInfo.viewNum}</span>
               </div>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#6d757a'>
+              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
                 <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
                 <span>{workInfo.collectNum}</span>
               </div>
@@ -470,7 +470,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
               <div className='flex justify-between items-center'>
                 <div className='flex items-center gap-10px'>
                   <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
-                  <span className='font-size-14px color-#6d757a'>
+                  <span className='font-size-14px color-#858585'>
                     目前收录 {workInfo.illustrator!.workCount} 个作品
                   </span>
                 </div>

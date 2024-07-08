@@ -103,7 +103,7 @@ const UserDropdown: FC<{
             <div className='font-bold font-size-14px color-#3d3d3d'>
               <span>{userInfo.username}</span>
             </div>
-            <div className='font-size-12px color-#6d757a'>
+            <div className='font-size-12px color-#858585'>
               <span>{userInfo.email}</span>
             </div>
           </div>
@@ -112,13 +112,13 @@ const UserDropdown: FC<{
               className='h-9 flex flex-col justify-between items-start cursor-pointer'
               onClick={() => selectItem('follow')}>
               <span className='font-size-14px color-#3d3d3d'>{userInfo.followNum}</span>
-              <span className='font-size-12px color-#6d757a'>已关注</span>
+              <span className='font-size-12px color-#858585'>已关注</span>
             </div>
             <div
               className='h-9 flex flex-col justify-between items-start cursor-pointer'
               onClick={() => selectItem('fans')}>
               <span className='font-size-14px color-#3d3d3d'>{userInfo.fanNum}</span>
-              <span className='font-size-12px color-#6d757a'>粉丝</span>
+              <span className='font-size-12px color-#858585'>粉丝</span>
             </div>
           </div>
           <ul className='m-0 p-0 list-none font-size-14px color-#3d3d3d'>

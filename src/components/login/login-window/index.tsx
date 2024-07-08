@@ -156,7 +156,7 @@ const LoginWindow: FC = () => {
           className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-50% -translate-y-50% w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white border-color-#E5E5E5 z-2'>
           <div className='flex flex-col items-center justify-center'>
             <img className='w-50' src={logo} alt='picals-logo' />
-            <span className='font-normal font-size-14px color-#6d757a'>兴趣使然的插画收藏小站</span>
+            <span className='font-normal font-size-14px color-#858585'>兴趣使然的插画收藏小站</span>
           </div>
 
           {/* 返回按钮 */}

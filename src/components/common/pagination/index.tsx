@@ -107,7 +107,7 @@ const Pagination: FC<PaginationProps> = ({
   const buttonClass = (isActive: boolean) =>
     `w-${size === 'small' ? '6' : '10'} h-${size === 'small' ? '6' : '10'} ${isActive ? 'bg-black' : 'hover-bg-#f2f2f2'}`
   const imgClass = () => `w-${size === 'small' ? '3.6' : '6'} h-${size === 'small' ? '3' : '6'}`
-  const textColorClass = (isActive: boolean) => (isActive ? 'color-white' : 'color-#6d757a')
+  const textColorClass = (isActive: boolean) => (isActive ? 'color-white' : 'color-#858585')
 
   return (
     <div className={`relative flex px-20px py-10px select-none ${containerClass}`}>

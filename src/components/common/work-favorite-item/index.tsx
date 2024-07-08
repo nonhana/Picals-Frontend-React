@@ -122,7 +122,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
           <span>{itemInfo.name}</span>
         </Link>
         <div className='w-full flex justify-between '>
-          <div className='flex items-center gap-10px font-size-14px color-#6d757a'>
+          <div className='flex items-center gap-10px font-size-14px color-#858585'>
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}
               className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>

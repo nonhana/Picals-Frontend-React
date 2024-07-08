@@ -12,7 +12,7 @@ const Header: FC<HeaderProps> = ({ name, intro, creatorId, creatorName, cover, w
   }
 
   return (
-    <div className='relative w-954px p-5 flex justify-between border-b-solid border-1px border-color-#6d757a'>
+    <div className='relative w-954px p-5 flex justify-between border-b-solid border-1px border-color-#858585'>
       <div className='flex gap-5 items-center'>
         <div className='w-40 h-40 flex justify-center items-center'>
           <LazyImg

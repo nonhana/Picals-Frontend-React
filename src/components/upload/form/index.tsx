@@ -135,7 +135,7 @@ type UploadFormProps = {
 }
 
 const wrapperStyle = 'relative bg-#fff w-155 p-5 rd-6 mb-5'
-const titleStyle = 'font-size-20px font-bold color-#6d757a mb-5'
+const titleStyle = 'font-size-20px font-bold color-#858585 mb-5'
 const labelStyle = 'font-size-16px font-bold color-#3d3d3d'
 
 const { TextArea } = Input

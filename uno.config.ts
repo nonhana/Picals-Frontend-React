@@ -51,7 +51,6 @@ export default defineConfig({
         'normal-bg': '#f5f5f5',
         'light-bg': '#f8f8f8',
         text: '#3d3d3d',
-        'text-info': '#6d757a',
         icon: '#858585',
       },
     },

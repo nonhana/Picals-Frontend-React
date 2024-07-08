@@ -163,7 +163,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
               <div
                 className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
                 onClick={chooseBgImgFile}>
-                <div className='flex flex-col items-center color-#6d757a font-size-14px font-bold'>
+                <div className='flex flex-col items-center color-#858585 font-size-14px font-bold'>
                   <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
                   <span>上传背景图</span>
                 </div>

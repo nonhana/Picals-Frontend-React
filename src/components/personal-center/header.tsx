@@ -127,7 +127,7 @@ const Header: FC = () => {
               <div
                 className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
                 onClick={() => setEditModalVisible(true)}>
-                <div className='flex flex-col items-center color-#6d757a font-size-14px font-bold'>
+                <div className='flex flex-col items-center color-#858585 font-size-14px font-bold'>
                   <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
                   <span>上传背景图</span>
                 </div>
@@ -154,7 +154,7 @@ const Header: FC = () => {
             <div className='w-150 flex flex-col gap-10px font-size-14px color-#3d3d3d text-wrap'>
               <div className='flex items-center gap-10px'>
                 <span className='font-size-18px font-bold'>{userInfo.username}</span>
-                <span className='color-#6d757a'>{userInfo.email}</span>
+                <span className='color-#858585'>{userInfo.email}</span>
               </div>
               <div className='flex gap-10px'>
                 <span

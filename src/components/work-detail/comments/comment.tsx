@@ -54,7 +54,7 @@ const Comment: FC<CommentProps> = ({ comment, style, reply, deleteComment }) => 
           <div className='line-height-normal font-size-14px color-#3d3d3d text-wrap'>
             <span>{comment.content}</span>
           </div>
-          <div className='w-full flex justify-between items-center font-size-14px color-#6d757a'>
+          <div className='w-full flex justify-between items-center font-size-14px color-#858585'>
             <div>
               <span>{comment.createdAt}</span>
               <Button size='small' type='link' onClick={() => handleReply(comment.id, false)}>
