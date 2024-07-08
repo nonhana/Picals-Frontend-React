@@ -14,7 +14,7 @@ import {
   HistoryOutlined,
 } from '@ant-design/icons'
 
-const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '' })
+const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '', width: 0 })
 
 const PersonalCenter: FC = () => {
   const location = useLocation()
@@ -89,7 +89,7 @@ const PersonalCenter: FC = () => {
   }, [currentWidth])
 
   return (
-    <PersonalContext.Provider value={{ isMe, currentPath, userId: userId! }}>
+    <PersonalContext.Provider value={{ isMe, currentPath, userId: userId!, width }}>
       <div className='relative w-full flex flex-col items-center'>
         <Header />
         <Menu

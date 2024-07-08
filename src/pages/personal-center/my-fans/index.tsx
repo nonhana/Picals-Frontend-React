@@ -4,7 +4,7 @@ import { getFansTotalAPI } from '@/apis'
 import { PersonalContext } from '..'
 
 const MyFans: FC = () => {
-  const { userId } = useContext(PersonalContext)
+  const { userId, width } = useContext(PersonalContext)
 
   const [total, setTotal] = useState(0) // 用户总数
 
@@ -30,7 +30,7 @@ const MyFans: FC = () => {
           <span>{total}</span>
         </div>
       </div>
-      <UserList width={320} total={total} />
+      <UserList width={width} total={total} />
     </div>
   )
 }
