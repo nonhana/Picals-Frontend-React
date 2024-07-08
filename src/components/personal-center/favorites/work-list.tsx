@@ -213,7 +213,7 @@ const WorkList: FC<WorkListProps> = ({
     dispatch(resetOtherList())
     dispatch(pushToFavoriteWorkList(data))
     dispatch(setCurrentList('favoriteWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

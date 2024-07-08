@@ -474,11 +474,6 @@ const ViewList: FC<ViewListProps> = ({
             />
           </CSSTransition>
         </div>
-        <Link className='w-full my-5' to={prevPosition === '' ? '/home' : prevPosition}>
-          <Button className='w-full' type='primary' shape='round' size='large'>
-            回到上一个页面
-          </Button>
-        </Link>
         <div className='w-full flex justify-center'>
           <Pagination
             total={currentListLength}
@@ -488,6 +483,11 @@ const ViewList: FC<ViewListProps> = ({
             onChange={changeIndex}
           />
         </div>
+        <Link className='w-full' to={prevPosition === '' ? '/home' : prevPosition}>
+          <Button className='w-full' type='primary' shape='round' size='large'>
+            回到上一个页面
+          </Button>
+        </Link>
       </div>
     </>
   )

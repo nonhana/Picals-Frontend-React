@@ -98,7 +98,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     dispatch(resetOtherList())
     dispatch(pushToSearchResultWorkList(data))
     dispatch(setCurrentList('searchResultWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

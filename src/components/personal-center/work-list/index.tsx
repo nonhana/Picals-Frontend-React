@@ -116,7 +116,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
       dispatch(pushToLikeWorkList(data))
       dispatch(setCurrentList('likeWorkList'))
     }
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

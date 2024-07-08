@@ -146,14 +146,14 @@ const MyFavorites: FC = () => {
   }, [userId])
 
   return (
-    <div className='flex mt-5 border-solid border-1px border-color-#6d757a min-h-150'>
+    <div className='flex mt-5 border-solid border-1px color-#858585 min-h-150 rd-6 overflow-hidden'>
       <Sidebar
         loading={gettingFolderList}
         folderList={folderList}
         setFolderList={setFolderList}
         fetchFavoriteList={fetchFavoriteList}
       />
-      <div className='w-954px h-full border-l-solid border-1px border-color-#6d757a'>
+      <div className='w-954px h-full border-l-solid border-1px color-#858585'>
         {folderId ? (
           favoriteDetailInfo && (
             <>

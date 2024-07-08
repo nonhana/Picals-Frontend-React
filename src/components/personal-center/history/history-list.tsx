@@ -80,7 +80,7 @@ const HistoryList: FC = () => {
   const addWorks = () => {
     dispatch(resetOtherList())
     dispatch(setCurrentList('userWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

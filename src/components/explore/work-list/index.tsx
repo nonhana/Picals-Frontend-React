@@ -85,7 +85,7 @@ const WorkList: FC = () => {
     }, [] as string[])
     dispatch(pushToRecommendWorkList(result))
     dispatch(setCurrentList('recommendWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

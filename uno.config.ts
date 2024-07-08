@@ -44,6 +44,16 @@ export default defineConfig({
       animation: {
         spin: 'spin 1s linear infinite',
       },
+      colors: {
+        primary: '#0090F0',
+        'primary-bg': '#e6f9ff',
+        'primary-dark': '#0072c9',
+        'normal-bg': '#f5f5f5',
+        'light-bg': '#f8f8f8',
+        text: '#3d3d3d',
+        'text-info': '#6d757a',
+        icon: '#858585',
+      },
     },
   },
 })

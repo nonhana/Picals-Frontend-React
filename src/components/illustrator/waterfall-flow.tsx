@@ -83,7 +83,7 @@ const WaterfallFlow: FC = () => {
     dispatch(resetOtherList())
     dispatch(pushToIllustratorWorkList(data))
     dispatch(setCurrentList('illustratorWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

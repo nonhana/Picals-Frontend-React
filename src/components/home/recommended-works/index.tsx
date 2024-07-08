@@ -38,7 +38,7 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
     dispatch(resetOtherList())
     dispatch(pushToRecommendWorkList(sourceData.map((item) => item.id)))
     dispatch(setCurrentList('recommendWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (

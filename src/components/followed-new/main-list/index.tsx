@@ -57,7 +57,7 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
     dispatch(resetOtherList())
     dispatch(pushToFollowingNewWorkList(data))
     dispatch(setCurrentList('followingNewWorkList'))
-    dispatch(setPrevPosition(location.pathname))
+    dispatch(setPrevPosition(location.pathname + location.search))
   }
 
   return (
