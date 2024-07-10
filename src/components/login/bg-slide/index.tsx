@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { getRandomBackgroundsAPI } from '@/apis'
 import LazyImg from '@/components/common/lazy-img'
 import { debounce } from 'lodash'
@@ -12,10 +12,10 @@ const BgSlide: FC = () => {
   const [chosenIdList, setChosenIdList] = useState<number[]>([])
   const [loadedImgs, setLoadedImgs] = useState<string[]>([])
   const [isFetching, setIsFetching] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
-  const [_, setIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(true)
+  const [index, setIndex] = useState(0)
 
-  const getRandomBackgrounds = useCallback(async () => {
+  const getRandomBackgrounds = async () => {
     if (isFetching) return
     setIsFetching(true)
     try {
@@ -28,55 +28,61 @@ const BgSlide: FC = () => {
       setChosenIdList(data.chosenIdList)
     } catch (error) {
       console.log('出现错误了喵！！', error)
+      return
     } finally {
       setIsFetching(false)
     }
-  }, [isFetching, chosenIdList])
+  }
 
   useEffect(() => {
     getRandomBackgrounds()
-  }, [getRandomBackgrounds])
+  }, [])
 
   useEffect(() => {
     const debouncedGetRandomBackgrounds = debounce(getRandomBackgrounds, 1000)
-    if (chosenIdList.length < 10) {
-      debouncedGetRandomBackgrounds()
+    debouncedGetRandomBackgrounds()
+    if (chosenIdList.length === 10) {
+      debouncedGetRandomBackgrounds.cancel()
     }
     return () => {
       debouncedGetRandomBackgrounds.cancel()
     }
-  }, [chosenIdList, getRandomBackgrounds])
+  }, [chosenIdList])
 
-  const imgLoaded = useCallback(
-    (url: string) => {
-      setLoadedImgs((prev) => {
-        if (prev.includes(url)) return prev
-        return [...prev, url]
-      })
-      if (loadedImgs.length + 1 === bgImgList.length) {
-        setIsPaused(false)
-      }
-    },
-    [loadedImgs.length, bgImgList.length],
-  )
+  const imgLoaded = (url: string) => {
+    setLoadedImgs((prev) => {
+      if (prev.includes(url)) return prev
+      return [...prev, url]
+    })
+  }
 
   useEffect(() => {
-    if (!isPaused) {
-      intervalRef.current = setInterval(() => {
-        setIndex((prevIndex) => {
-          const newIndex = prevIndex === bgImgListRef.current.length - 1 ? 0 : prevIndex + 1
-          if (slideWindow.current) {
-            slideWindow.current.style.transform = `translateX(-${newIndex * 100}vw)`
-          }
-          return newIndex
-        })
-      }, 5000)
+    if (loadedImgs.length <= index) {
+      setIsPaused(true)
+    } else {
+      setIsPaused(false)
     }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+  }, [loadedImgs, index])
+
+  const slideImg = () => {
+    setIndex((prevIndex) => {
+      const newIndex = prevIndex === bgImgListRef.current.length - 1 ? 0 : prevIndex + 1
+      if (slideWindow.current) {
+        slideWindow.current.style.transform = `translateX(-${newIndex * 100}vw)`
+      }
+      return newIndex
+    })
+  }
+
+  useEffect(() => {
+    if (isPaused && intervalRef.current) {
+      clearInterval(intervalRef.current)
+    } else {
+      if (!isPaused) {
+        intervalRef.current = setInterval(slideImg, 5000)
       }
     }
+    return () => clearInterval(intervalRef.current!)
   }, [isPaused])
 
   return (
@@ -84,8 +90,8 @@ const BgSlide: FC = () => {
       {/* 阻止用户选中图片 */}
       <div className='absolute h-full w-full z-1' />
       <div ref={slideWindow} className='relative flex h-full transition-transform duration-500'>
-        {bgImgList.map((bgImg) => (
-          <LazyImg imgLoaded={imgLoaded} className='shrink-0' key={bgImg} src={bgImg} alt={bgImg} />
+        {bgImgList.map((bgImg, idx) => (
+          <LazyImg imgLoaded={imgLoaded} className='shrink-0' key={idx} src={bgImg} alt={bgImg} />
         ))}
       </div>
     </div>
