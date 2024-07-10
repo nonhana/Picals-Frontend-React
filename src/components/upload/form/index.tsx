@@ -23,16 +23,17 @@ type SelectableItemInfo = {
   label: string
 }
 
-export interface DebounceSelectProps<ValueType = any>
+export interface DebounceSelectProps<ValueType>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
   fetchOptions: (search: string) => Promise<ValueType[]>
   debounceTimeout?: number
 }
 
 const DebounceSelect = <ValueType extends SelectableItemInfo>({
+  value,
+  onChange,
   fetchOptions,
   debounceTimeout = 500,
-  ...props
 }: DebounceSelectProps<ValueType>) => {
   const [fetching, setFetching] = useState(false)
   const [options, setOptions] = useState<ValueType[]>([])
@@ -116,12 +117,15 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
 
   return (
     <Select
+      showSearch
+      placeholder='输入插画家的名字进行搜索~'
+      value={value}
+      onChange={onChange}
       filterOption={false}
       onSearch={debounceFetcher}
       onPopupScroll={onPopupScroll}
       notFoundContent={fetching ? <Spin size='small' /> : <Empty showImg={false} />}
       onDropdownVisibleChange={onDropdownVisibleChange}
-      {...props}
       options={options}
     />
   )
@@ -462,9 +466,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
                 rules={[{ required: true, message: '请输入原作者的名称！' }]}>
                 <Flex gap={20}>
                   <DebounceSelect
-                    showSearch
                     value={formInfo.illustratorInfo?.name}
-                    placeholder='输入插画家的名字进行搜索~'
                     fetchOptions={fetchIllustratorList}
                     onChange={selectIllustrator}
                   />
