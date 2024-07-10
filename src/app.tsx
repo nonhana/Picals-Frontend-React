@@ -1,10 +1,15 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import type { AppState } from './store/types'
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './components/common/header'
 import { SIDEBAR_WHITE_LIST } from './utils/constants'
 import { useWinChange } from './hooks'
 
 const App: FC = () => {
+  const { uploadSuccess } = useSelector((state: AppState) => state.uploadForm)
+  console.log(uploadSuccess)
+
   const location = useLocation()
   const [showSideBar, setShowSideBar] = useState(false)
   const [naturalSideBarVisible, setNaturalSideBarVisible] = useState(false) // 是否自然地触发侧边栏显示与否，而非点击按钮
@@ -27,7 +32,7 @@ const App: FC = () => {
 
   return (
     <>
-      {location.pathname !== '/login' && (
+      {location.pathname !== '/login' && location.pathname !== '/not-found' && !uploadSuccess && (
         <Header
           width={currentWidth}
           changeSideBarStatus={setShowSideBar}

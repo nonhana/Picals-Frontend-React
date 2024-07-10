@@ -19,6 +19,7 @@ interface SearchHistoryState {
 interface UploadFormState {
   imgList: string[]
   formInfo: UploadWorkFormInfo
+  uploadSuccess: boolean
 }
 
 interface ViewListState {

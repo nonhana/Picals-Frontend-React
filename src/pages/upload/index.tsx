@@ -9,7 +9,7 @@ import { Button, notification, Modal, message } from 'antd'
 import type { UploadWorkFormInfo } from '@/utils/types'
 import { uploadWorkAPI, editWorkAPI, getWorkDetailAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import { saveFormInfo, saveImgList } from '@/store/modules/uploadForm'
+import { saveFormInfo, saveImgList, saveUploadSuccess } from '@/store/modules/uploadForm'
 import HanaModal from '@/components/common/hana-modal'
 import { Icon } from '@iconify/react'
 
@@ -142,7 +142,7 @@ const Upload: FC = () => {
     if (editMode && editFormLoaded) setShowEditForm(true)
   }, [editMode, editFormLoaded])
 
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false)
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(true)
   const [submitTrigger, setSubmitTrigger] = useState(0)
   const [uploading, setUploading] = useState(false)
 
@@ -161,6 +161,7 @@ const Upload: FC = () => {
         await uploadWorkAPI(uploadWorkInfo)
       }
       setUploadSuccess(true)
+      dispatch(saveUploadSuccess(true))
       resetForm()
     } catch (error) {
       console.error('上传作品时发生错误:', error)

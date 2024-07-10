@@ -91,6 +91,14 @@ const routeList: RouteObject[] = [
           },
         ],
       },
+      {
+        path: '/not-found',
+        element: LazyLoad(lazy(() => import('@/pages/not-found'))),
+      },
+      {
+        path: '*',
+        element: <Navigate to='/not-found' replace />,
+      },
     ],
   },
 ]
