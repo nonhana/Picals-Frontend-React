@@ -31,7 +31,7 @@ const Illustrator: FC = () => {
   }, [illustratorId])
 
   return (
-    <div className='relative w-full min-h-screen bg-#f5f5f5 flex justify-center'>
+    <div className='relative w-full min-h-screen flex justify-center bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
       <div className='relative mt-30 mb-10 w-300 bg-white rd-6 flex flex-col items-center'>
         {illustratorInfo && (
           <div className='p-5 w-full flex justify-between items-center'>

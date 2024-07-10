@@ -188,7 +188,7 @@ const Upload: FC = () => {
 
   return (
     <>
-      <div className='relative w-full min-h-screen bg-#f5f5f5 flex flex-col items-center gap-5 py-5'>
+      <div className='relative w-full min-h-screen flex flex-col items-center gap-5 py-5 bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
         {uploadSuccess ? (
           <UploadSuccess workStatus={workStatus} />
         ) : (
