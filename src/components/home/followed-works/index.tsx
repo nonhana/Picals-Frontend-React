@@ -34,7 +34,6 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
     updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
   }
 
-  // 添加已关注用户新作到浏览列表
   const addFollowedNewWorkList = async () => {
     const { data } = await getFollowNewWorksIdListAPI()
     dispatch(resetOtherList())

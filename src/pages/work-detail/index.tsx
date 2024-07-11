@@ -235,8 +235,8 @@ const WorkDetail: FC = () => {
   }, [workInfo?.authorInfo.isFollowing])
 
   const likeWork = async (id: string) => {
+    await likeActions(id)
     if (workId === id) {
-      await likeActions(id)
       setWorkInfo((prev) => {
         if (!prev) return prev
         return {

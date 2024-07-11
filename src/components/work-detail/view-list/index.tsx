@@ -68,8 +68,14 @@ const ViewList: FC<ViewListProps> = ({
   useEffect(() => {
     if (currentList !== 'userWorkList') {
       setAllowListName(currentList as keyof typeof lists)
+    } else {
+      Object.keys(lists).forEach((key) => {
+        if (lists[key as keyof typeof lists].length > 0) {
+          setAllowListName(key as keyof typeof lists)
+        }
+      })
     }
-  }, [currentList])
+  }, [currentList, lists])
 
   //#region 分页获取推荐作品列表
   const [recommendCurrent, setRecommendCurrent] = useState<number>()
@@ -269,7 +275,6 @@ const ViewList: FC<ViewListProps> = ({
       messageApi.success(`已切换到${VIEW_LIST_MAP[listName as keyof typeof VIEW_LIST_MAP]}列表`)
     }
   }
-  //#endregion
 
   // 获取到当前作品的作者的作品id列表
   const getUserWorksIdList = async () => {
