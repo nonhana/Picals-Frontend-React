@@ -23,7 +23,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
   const [editUserInfo, setEditUserInfo] = useState<IUpdateUserInfoReq>({})
   useEffect(() => {
     const editInfo: IUpdateUserInfoReq = {
-      avatar: info.avatar,
+      avatar: info.littleAvatar,
       signature: info.intro,
       username: info.username,
       gender: info.gender,
@@ -123,7 +123,16 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
   const updateUserInfo = async () => {
     try {
       setLoading(true)
-      await updateUserInfoAPI(editUserInfo)
+
+      const requestInfo: IUpdateUserInfoReq = {}
+      if (editUserInfo.avatar !== info.littleAvatar) requestInfo.avatar = editUserInfo.avatar
+      if (editUserInfo.backgroundImg !== info.background_img)
+        requestInfo.backgroundImg = editUserInfo.backgroundImg
+      if (editUserInfo.username !== info.username) requestInfo.username = editUserInfo.username
+      if (editUserInfo.signature !== info.intro) requestInfo.signature = editUserInfo.signature
+      if (editUserInfo.gender !== info.gender) requestInfo.gender = editUserInfo.gender
+
+      await updateUserInfoAPI(requestInfo)
       onConfirm()
       message.success('修改个人资料成功！')
     } catch (error) {

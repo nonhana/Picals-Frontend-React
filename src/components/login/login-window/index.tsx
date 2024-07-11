@@ -61,6 +61,7 @@ const LoginWindow: FC = () => {
           id: userInfo.id,
           username: userInfo.username,
           avatar: userInfo.avatar,
+          littleAvatar: userInfo.littleAvatar,
           email: userInfo.email,
           fanNum: userInfo.fanCount,
           followNum: userInfo.followCount,

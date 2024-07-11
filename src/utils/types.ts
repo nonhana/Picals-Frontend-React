@@ -8,6 +8,7 @@ export interface UserInfo {
   username: string
   email: string
   avatar: string
+  littleAvatar: string
   intro: string
   fanNum: number
   followNum: number
@@ -19,6 +20,7 @@ export interface UserDetailInfo {
   username: string
   email: string
   avatar: string
+  littleAvatar: string
   intro: string
   fanNum: number
   followNum: number

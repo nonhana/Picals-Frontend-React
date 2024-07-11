@@ -474,7 +474,7 @@ const ViewList: FC<ViewListProps> = ({
             />
           </CSSTransition>
         </div>
-        <div className='w-full flex justify-center'>
+        <div className='w-full my-10px flex justify-center'>
           <Pagination
             total={currentListLength}
             pageSize={1}

@@ -14,7 +14,7 @@ const NotFound: FC = () => {
           <LazyImg src={notFound} alt='notFound' />
         </div>
         <span>请求路径不存在~的说~</span>
-        <span>如果页面有误，请即使反馈</span>
+        <span>如果页面有误，请及时反馈</span>
         <Button className='w-50' shape='round' size='large' onClick={() => navigate('/home')}>
           返回首页
         </Button>

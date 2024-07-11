@@ -65,6 +65,10 @@ export interface UserDetailInfo {
    */
   avatar: string
   /**
+   * 用户头像缩略图
+   */
+  littleAvatar: string
+  /**
    * 用户背景图
    */
   backgroundImg: string
@@ -137,6 +141,7 @@ export interface UserLoginInfo {
   email: string
   backgroundImg: string
   avatar: string
+  littleAvatar: string
   signature: string
   gender: number
   fanCount: number

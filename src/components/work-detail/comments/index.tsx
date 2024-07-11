@@ -234,7 +234,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
         <div ref={inputRef} className='my-5 flex justify-between items-center'>
           <div className='flex gap-10px items-center'>
             <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
-              <LazyImg src={userInfo.avatar} alt={userInfo.username} />
+              <LazyImg src={userInfo.littleAvatar} alt={userInfo.username} />
             </div>
             <Input
               className='w-90'

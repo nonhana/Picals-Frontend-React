@@ -8,7 +8,6 @@ import { useWinChange } from './hooks'
 
 const App: FC = () => {
   const { uploadSuccess } = useSelector((state: AppState) => state.uploadForm)
-  console.log(uploadSuccess)
 
   const location = useLocation()
   const [showSideBar, setShowSideBar] = useState(false)

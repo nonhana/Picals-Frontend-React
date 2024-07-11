@@ -132,7 +132,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
             <div
               className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
               onClick={() => setShowUserDropdown(!showUserDropdown)}>
-              <LazyImg src={userInfo.avatar} alt='avatar' />
+              <LazyImg src={userInfo.littleAvatar} alt='avatar' />
             </div>
           ) : (
             <Link

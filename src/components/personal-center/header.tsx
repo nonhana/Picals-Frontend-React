@@ -29,6 +29,7 @@ const Header: FC = () => {
     username: '',
     email: '',
     avatar: '',
+    littleAvatar: '',
     intro: '',
     fanNum: 0,
     followNum: 0,
@@ -64,6 +65,7 @@ const Header: FC = () => {
         username: data.username,
         email: data.email,
         avatar: data.avatar,
+        littleAvatar: data.littleAvatar,
         intro: data.signature,
         fanNum: data.fanCount,
         followNum: data.followCount,
@@ -78,6 +80,7 @@ const Header: FC = () => {
             id: data.id,
             username: data.username,
             avatar: data.avatar,
+            littleAvatar: data.littleAvatar,
             intro: data.signature,
             email: data.email,
             fanNum: data.fanCount,
@@ -145,8 +148,8 @@ const Header: FC = () => {
                 <PhotoView src={userInfo.avatar}>
                   <img
                     className='w-full h-full object-cover'
-                    src={userInfo.avatar}
-                    alt={userInfo.avatar}
+                    src={userInfo.littleAvatar}
+                    alt={userInfo.littleAvatar}
                   />
                 </PhotoView>
               </HanaViewer>

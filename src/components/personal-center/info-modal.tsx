@@ -32,7 +32,11 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
             <HanaViewer>
               <div className='w-24 h-24 rd-full cursor-pointer overflow-hidden'>
                 <PhotoView src={info.avatar}>
-                  <img className='object-cover w-full h-full' src={info.avatar} alt={info.avatar} />
+                  <img
+                    className='object-cover w-full h-full'
+                    src={info.littleAvatar}
+                    alt={info.littleAvatar}
+                  />
                 </PhotoView>
               </div>
             </HanaViewer>

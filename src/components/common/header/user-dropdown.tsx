@@ -97,7 +97,7 @@ const UserDropdown: FC<{
           <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
             <Link to={`/personal-center/${userInfo.id}/works`}>
               <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
-                <LazyImg src={userInfo.avatar} alt='avatar' />
+                <LazyImg src={userInfo.littleAvatar} alt='avatar' />
               </div>
             </Link>
             <div className='font-bold font-size-14px color-#3d3d3d'>
