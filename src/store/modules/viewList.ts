@@ -13,6 +13,7 @@ const viewListStore = createSlice({
   name: 'viewList',
   initialState: {
     prevPosition: '',
+    prevWorkId: '',
     workDetailUserId: '',
     userWorkList: <string[]>[],
     likeWorkList: <string[]>[],
@@ -27,6 +28,9 @@ const viewListStore = createSlice({
   reducers: {
     setPrevPosition(state, action) {
       state.prevPosition = action.payload
+    },
+    setPrevWorkId(state, action) {
+      state.prevWorkId = action.payload
     },
     setWorkDetailUserId(state, action) {
       state.workDetailUserId = action.payload
@@ -60,6 +64,7 @@ const viewListStore = createSlice({
     },
     reset(state) {
       state.prevPosition = ''
+      state.prevWorkId = ''
       state.workDetailUserId = ''
       state.userWorkList = []
       state.likeWorkList = []
@@ -77,6 +82,7 @@ const viewListStore = createSlice({
     },
     resetOtherList(state) {
       state.prevPosition = ''
+      state.prevWorkId = ''
       state.likeWorkList = []
       state.favoriteWorkList = []
       state.followingNewWorkList = []
@@ -89,6 +95,7 @@ const viewListStore = createSlice({
 
 const {
   setPrevPosition,
+  setPrevWorkId,
   setWorkDetailUserId,
   pushToUserWorkList,
   pushToLikeWorkList,
@@ -108,6 +115,7 @@ const viewListReducer = viewListStore.reducer
 
 export {
   setPrevPosition,
+  setPrevWorkId,
   setWorkDetailUserId,
   pushToUserWorkList,
   pushToLikeWorkList,

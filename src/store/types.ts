@@ -24,6 +24,7 @@ interface UploadFormState {
 
 interface ViewListState {
   prevPosition: string
+  prevWorkId: string
   workDetailUserId: string
   userWorkList: string[]
   likeWorkList: string[]

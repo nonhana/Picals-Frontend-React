@@ -9,6 +9,7 @@ import {
   pushToUserWorkList,
   setCurrentIndex,
   setCurrentList,
+  setPrevWorkId,
 } from '@/store/modules/viewList'
 import { message, InputNumber, Button } from 'antd'
 import Pagination from '@/components/common/pagination'
@@ -48,13 +49,19 @@ const ViewList: FC<ViewListProps> = ({
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
-  const { prevPosition, workDetailUserId, currentList, currentIndex, userWorkList, ...lists } =
-    useSelector((state: AppState) => state.viewList)
+  const {
+    prevPosition,
+    prevWorkId,
+    workDetailUserId,
+    currentList,
+    currentIndex,
+    userWorkList,
+    ...lists
+  } = useSelector((state: AppState) => state.viewList)
 
   //#region 更改作品列表相关信息
   const [allowListName, setAllowListName] = useState<keyof typeof lists>()
   const [currentListLength, setCurrentListLength] = useState(0)
-  const [prevWorkId, setPrevWorkId] = useState('')
 
   // 用来设置当前的作品列表长度
   useEffect(() => {
@@ -118,12 +125,12 @@ const ViewList: FC<ViewListProps> = ({
   }
 
   useEffect(() => {
-    if (currentList === 'recommendWorkList') {
+    if (allowListName === 'recommendWorkList') {
       const initPage = Math.ceil(lists.recommendWorkList.length / recommendPageSize)
       setRecommendCurrent(initPage)
       initRecommendWorksList(initPage)
     }
-  }, [])
+  }, [allowListName])
 
   const getRecommendWorksList = async () => {
     setLoading(true)
@@ -145,7 +152,7 @@ const ViewList: FC<ViewListProps> = ({
         if (!recommendIsFinal) result.push({ page: recommendCurrent! + 1, list: [] })
         return result
       })
-      const result = data.map((work) => ({ workId: work.id, authorId: work.authorId }))
+      const result = data.map((work) => work.id)
       dispatch(pushToRecommendWorkList(result))
     } catch (error) {
       console.log('出现错误了喵！！', error)
@@ -156,40 +163,40 @@ const ViewList: FC<ViewListProps> = ({
   }
 
   useEffect(() => {
-    if (currentList === 'recommendWorkList' && recommendCurrent) {
+    if (allowListName === 'recommendWorkList' && recommendCurrent) {
       setRecommendCurrentChanged((prev) => prev + 1)
     }
-  }, [recommendCurrent])
+  }, [recommendCurrent, allowListName])
 
   useEffect(() => {
-    if (currentList === 'recommendWorkList') {
+    if (allowListName === 'recommendWorkList') {
       if (loading) messageApi.loading('正在获取推荐作品列表...', 0)
       else messageApi.destroy()
     }
-  }, [loading])
+  }, [loading, allowListName])
 
   useEffect(() => {
-    if (currentList === 'recommendWorkList' && recommendCurrentChanged > 1) {
+    if (allowListName === 'recommendWorkList' && recommendCurrentChanged > 1) {
       getRecommendWorksList()
     }
-  }, [recommendCurrentChanged])
+  }, [recommendCurrentChanged, allowListName])
 
   useEffect(() => {
     if (
-      currentList === 'recommendWorkList' &&
-      currentIndex === currentListLength &&
+      allowListName === 'recommendWorkList' &&
+      currentIndex >= currentListLength &&
       !recommendIsFinal &&
       recommendCurrent
     ) {
       setRecommendCurrent((prev) => prev! + 1)
     }
-  }, [currentIndex])
+  }, [currentIndex, allowListName])
 
   useEffect(() => {
-    if (currentList === 'recommendWorkList' && recommendListEnd && !recommendIsFinal) {
+    if (allowListName === 'recommendWorkList' && recommendListEnd && !recommendIsFinal) {
       setRecommendCurrent((prev) => prev! + 1)
     }
-  }, [recommendListEnd])
+  }, [recommendListEnd, allowListName])
   //#endregion
 
   //#region 分页获取当前浏览的作品列表信息（用户作品列表和推荐作品列表除外）
@@ -238,13 +245,13 @@ const ViewList: FC<ViewListProps> = ({
   }
 
   useEffect(() => {
-    if (currentList !== 'recommendWorkList' && listEnd && !isFinal) setCurrent((prev) => prev + 1)
-  }, [listEnd])
+    if (allowListName && allowListName !== 'recommendWorkList' && listEnd && !isFinal)
+      setCurrent((prev) => prev + 1)
+  }, [listEnd, allowListName])
 
   useEffect(() => {
-    if (currentList !== 'recommendWorkList' && currentList !== 'userWorkList')
-      fetchCurrentWorkList()
-  }, [current])
+    if (allowListName && allowListName !== 'recommendWorkList') fetchCurrentWorkList()
+  }, [current, allowListName])
   //#endregion
 
   // 获取到目前正在浏览的作品id列表，并找到当前作品id对应的索引
@@ -267,10 +274,10 @@ const ViewList: FC<ViewListProps> = ({
   const changeList = (listName: string) => {
     if (currentList !== listName) {
       dispatch(setCurrentList(listName))
-      if (listName === 'userWorkList') setPrevWorkId(workId)
+      if (listName === 'userWorkList') dispatch(setPrevWorkId(workId))
       if (listName !== 'userWorkList' && prevWorkId !== '') {
         navigate(`/work-detail/${prevWorkId}`)
-        setPrevWorkId('')
+        dispatch(setPrevWorkId(workId))
       }
       messageApi.success(`已切换到${VIEW_LIST_MAP[listName as keyof typeof VIEW_LIST_MAP]}列表`)
     }
