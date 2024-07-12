@@ -1,4 +1,4 @@
-import { ImageItem } from '@/apis/types'
+import { ImageItem, LabelItem } from '@/apis/types'
 
 export type Option = { label: string; value: string }
 
@@ -63,7 +63,7 @@ export interface WorkDetailInfo {
   images: ImageItem[]
   name: string
   intro: string
-  labels: Option[]
+  labels: LabelItem[]
   isLiked: boolean
   isCollected: boolean
   favoriteIds?: string[]

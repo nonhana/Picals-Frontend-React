@@ -387,6 +387,10 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           style={{
+            margin:
+              currentList !== 'userWorkList' && currentList !== 'recommendWorkList'
+                ? '0 '
+                : '-5px 0',
             height: 0,
             padding:
               currentList !== 'userWorkList' && currentList !== 'recommendWorkList'
@@ -412,6 +416,7 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           style={{
+            margin: currentList === 'recommendWorkList' ? '0 ' : '-5px 0',
             height: 0,
             padding: currentList === 'recommendWorkList' ? '45px 0 ' : '0',
           }}
@@ -466,6 +471,7 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           style={{
+            margin: currentList === 'userWorkList' ? '0 ' : '-10px 0',
             height: 0,
             padding: currentList === 'userWorkList' ? '45px 0 ' : '0',
           }}

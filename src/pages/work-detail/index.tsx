@@ -94,9 +94,8 @@ const WorkDetail: FC = () => {
 
       const { authorId, ...rest } = data
       const authorInfo = (await getUserSimpleAPI({ id: authorId })).data
-      const labels = data.labels.map((label) => ({ value: label.id, label: label.name }))
 
-      setWorkInfo({ ...rest, authorInfo, labels })
+      setWorkInfo({ ...rest, authorInfo })
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return

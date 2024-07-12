@@ -23,6 +23,7 @@ import LazyImg from '@/components/common/lazy-img'
 import { CSSTransition } from 'react-transition-group'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { setCurrentList } from '@/store/modules/viewList'
+import LabelItem from '@/components/common/label-item'
 
 const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
@@ -40,6 +41,32 @@ type WorkInfoProps = {
   likeWork: (id: string) => void
   setAuthorWorkListEnd: (status: boolean) => void
   isFinal: boolean
+}
+
+const WorkStatusMark: FC<{ status: number }> = ({ status }) => {
+  switch (status) {
+    case 0:
+      return (
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-14px color-#0090F0'>
+          原创作品
+          <Icon width={24} color='#0090F0' icon='material-symbols:edit-outline' />
+        </span>
+      )
+    case 1:
+      return (
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-14px color-#0090F0'>
+          转载作品
+          <Icon width={24} color='#0090F0' icon='material-symbols:school-outline' />
+        </span>
+      )
+    case 2:
+      return (
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-14px color-#0090F0'>
+          合集作品
+          <Icon width={24} color='#0090F0' icon='material-symbols:book-outline' />
+        </span>
+      )
+  }
 }
 
 const WorkInfo: FC<WorkInfoProps> = ({
@@ -296,7 +323,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
           )}
           {/* 操作栏 */}
           {isLogin && (
-            <div className='w-full mt-10px flex justify-end'>
+            <div className='w-full my-5 flex justify-between'>
+              <WorkStatusMark status={workInfo.reprintType} />
               <div className='flex gap-40px'>
                 <Icon
                   className='cursor-pointer'
@@ -333,51 +361,42 @@ const WorkInfo: FC<WorkInfoProps> = ({
             </div>
           )}
           {/* 作品信息 */}
-          <div className='w-150 mt-10px flex flex-col gap-10px'>
-            <div className='font-bold font-size-18px color-#3d3d3d'>
-              <span>{workInfo.name}</span>
+          <div className='mt-10px flex flex-col gap-10px'>
+            <div className='flex gap-10px items-center'>
+              <span className='font-bold font-size-18px color-#3d3d3d'>{workInfo.name}</span>
             </div>
-            <div className='font-size-14px color-#858585 line-height-normal'>
+            <div className='py-10px font-size-14px color-#858585 line-height-normal'>
               <span>{workIntro}</span>
             </div>
-            <div className='flex flex-wrap gap-5 font-size-14px'>
-              <span className='font-bold color-#0090F0'>
-                {workInfo.reprintType === 0
-                  ? '原创作品'
-                  : workInfo.reprintType === 1
-                    ? '转载作品'
-                    : '合集作品'}
-              </span>
+            <LayoutList scrollType='label'>
               {workInfo.labels.map((label) => (
-                <Link
-                  to={`/search-result?label=${label.label}&type=work&sortType=new`}
-                  key={label.value}>
-                  #{label.label}
-                </Link>
+                <LabelItem key={label.id} {...label} />
               ))}
-            </div>
-            <div className='flex my-3 gap-20px'>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
-                <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
-                <span>{workInfo.likeNum}</span>
+            </LayoutList>
+            <div className='flex justify-between items-start my-3'>
+              <div className='flex gap-20px'>
+                <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+                  <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
+                  <span>{workInfo.likeNum}</span>
+                </div>
+                <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+                  <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
+                  <span> {workInfo.viewNum}</span>
+                </div>
+                <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+                  <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
+                  <span>{workInfo.collectNum}</span>
+                </div>
               </div>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
-                <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
-                <span> {workInfo.viewNum}</span>
+              <div className='flex flex-col gap-10px font-italic font-size-14px color-#858585'>
+                <span>发布日期：{workInfo.createdDate}</span>
+                <span>更新日期：{workInfo.updatedDate}</span>
               </div>
-              <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
-                <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
-                <span>{workInfo.collectNum}</span>
-              </div>
-            </div>
-            <div className='flex flex-col gap-10px font-size-14px font-bold color-#3d3d3d'>
-              <span>发布日期：{workInfo.createdDate}</span>
-              <span>更新日期：{workInfo.updatedDate}</span>
             </div>
           </div>
           {/* 用户信息 */}
-          <div className='w-full my-5 flex flex-col gap-10px items-center'>
-            <div className='w-150 mb-3 flex justify-between'>
+          <div className='w-full my-10px flex flex-col gap-10px items-center'>
+            <div className='w-150 flex justify-between'>
               <div className='flex gap-20px items-center'>
                 <Link
                   to={`/personal-center/${workInfo.authorInfo.id}`}
@@ -406,6 +425,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
 
             <div
               style={{
+                margin: currentList === 'userWorkList' ? '10px 0 ' : '0',
                 height: 0,
                 padding: currentList === 'userWorkList' ? '59px 0 ' : '0',
               }}
