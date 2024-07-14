@@ -1,16 +1,22 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate, useParams } from 'react-router-dom'
 import WorkList from '@/components/explore/work-list'
+import LatestList from '@/components/explore/latest-list'
 import UserList from '@/components/explore/user-list'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
-import { PictureOutlined, UserOutlined } from '@ant-design/icons'
+import { PictureOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/icons'
 
 const items: MenuProps['items'] = [
   {
     label: '推荐作品',
-    key: 'works',
+    key: 'recommend',
     icon: <PictureOutlined />,
+  },
+  {
+    label: '最新发布',
+    key: 'latest',
+    icon: <ClockCircleOutlined />,
   },
   {
     label: '推荐用户',
@@ -20,9 +26,11 @@ const items: MenuProps['items'] = [
 ]
 
 const Explore: FC = () => {
+  const navigate = useNavigate()
+  const { type } = useParams()
+
   const [width, setWidth] = useState<number>(1245)
   const exploreRef = useRef<HTMLDivElement>(null)
-  const [current, setCurrent] = useState('works')
   const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
@@ -34,7 +42,7 @@ const Explore: FC = () => {
   }, [currentWidth])
 
   const checkoutMenu: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key)
+    navigate(`/explore/${e.key}`)
   }
 
   return (
@@ -43,11 +51,17 @@ const Explore: FC = () => {
         <Menu
           className='w-full'
           onClick={checkoutMenu}
-          selectedKeys={[current]}
+          selectedKeys={[type!]}
           mode='horizontal'
           items={items}
         />
-        {current === 'works' ? <WorkList /> : <UserList width={width} />}
+        {type === 'recommend' ? (
+          <WorkList />
+        ) : type === 'latest' ? (
+          <LatestList />
+        ) : type === 'users' ? (
+          <UserList width={width} />
+        ) : null}
       </div>
     </div>
   )

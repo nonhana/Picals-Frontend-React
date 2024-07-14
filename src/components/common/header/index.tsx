@@ -4,13 +4,12 @@ import logo from '@/assets/svgs/logo.svg'
 import { Icon } from '@iconify/react'
 import { Input, Button, message } from 'antd'
 import type { InputRef } from 'antd'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
-import { addRecord } from '@/store/modules/searchHistory'
 import LazyImg from '../lazy-img'
 
 const { Search } = Input
@@ -22,8 +21,6 @@ type HeaderProps = {
 }
 
 const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBarVisible }) => {
-  const dispatch = useDispatch()
-
   const searchParams = useSearchParams()[0]
   const searchLabel = searchParams.get('label')
   const location = useLocation()
@@ -42,7 +39,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
   }, [location])
 
   useEffect(() => {
-    if (!SIDEBAR_WHITE_LIST.includes(location.pathname)) return
+    if (!SIDEBAR_WHITE_LIST.test(location.pathname)) return
     if (width < TRIGGER_MIN_WIDTH) {
       setShowSidebar(false)
       setNaturalSideBarVisible(false)
@@ -72,7 +69,6 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
       pathname: '/search-result',
       search: `?label=${value}&type=work&sortType=new`,
     })
-    dispatch(addRecord(value))
     setShowSearchDropdown(false)
     searchRef.current?.input?.blur()
   }

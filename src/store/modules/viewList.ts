@@ -6,6 +6,7 @@ export type WorkListType =
   | 'favoriteWorkList'
   | 'followingNewWorkList'
   | 'recommendWorkList'
+  | 'latestWorkList'
   | 'illustratorWorkList'
   | 'searchResultWorkList'
 
@@ -20,6 +21,7 @@ const viewListStore = createSlice({
     favoriteWorkList: <string[]>[],
     followingNewWorkList: <string[]>[],
     recommendWorkList: <string[]>[],
+    latestWorkList: <string[]>[],
     illustratorWorkList: <string[]>[],
     searchResultWorkList: <string[]>[],
     currentList: 'userWorkList' as WorkListType,
@@ -50,6 +52,9 @@ const viewListStore = createSlice({
     pushToRecommendWorkList(state, action) {
       state.recommendWorkList = state.recommendWorkList.concat(action.payload)
     },
+    pushToLatestWorkList(state, action) {
+      state.latestWorkList = state.latestWorkList.concat(action.payload)
+    },
     pushToIllustratorWorkList(state, action) {
       state.illustratorWorkList = state.illustratorWorkList.concat(action.payload)
     },
@@ -71,6 +76,7 @@ const viewListStore = createSlice({
       state.favoriteWorkList = []
       state.followingNewWorkList = []
       state.recommendWorkList = []
+      state.latestWorkList = []
       state.illustratorWorkList = []
       state.searchResultWorkList = []
       state.currentList = 'userWorkList'
@@ -87,6 +93,7 @@ const viewListStore = createSlice({
       state.favoriteWorkList = []
       state.followingNewWorkList = []
       state.recommendWorkList = []
+      state.latestWorkList = []
       state.illustratorWorkList = []
       state.searchResultWorkList = []
     },
@@ -102,6 +109,7 @@ const {
   pushToFavoriteWorkList,
   pushToFollowingNewWorkList,
   pushToRecommendWorkList,
+  pushToLatestWorkList,
   pushToIllustratorWorkList,
   pushToSearchResultWorkList,
   setCurrentList,
@@ -122,6 +130,7 @@ export {
   pushToFavoriteWorkList,
   pushToFollowingNewWorkList,
   pushToRecommendWorkList,
+  pushToLatestWorkList,
   pushToIllustratorWorkList,
   pushToSearchResultWorkList,
   setCurrentList,

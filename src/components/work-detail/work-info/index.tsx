@@ -80,12 +80,14 @@ const WorkInfo: FC<WorkInfoProps> = ({
   setAuthorWorkListEnd,
   isFinal,
 }) => {
-  const workIntro = workInfo.intro.split('\n').map((item, index) => (
-    <span key={index}>
-      {item}
-      <br />
-    </span>
-  ))
+  const workIntro = workInfo.intro
+    ? workInfo.intro.split('\n').map((item, index) => (
+        <span key={index}>
+          {item}
+          <br />
+        </span>
+      ))
+    : '暂无介绍'
 
   const navigate = useNavigate()
 
@@ -363,7 +365,9 @@ const WorkInfo: FC<WorkInfoProps> = ({
           {/* 作品信息 */}
           <div className='mt-10px flex flex-col gap-10px'>
             <div className='flex gap-10px items-center'>
-              <span className='font-bold font-size-18px color-#3d3d3d'>{workInfo.name}</span>
+              <span className='font-bold font-size-18px color-#3d3d3d'>
+                {workInfo.name || '无题'}
+              </span>
             </div>
             <div className='py-10px font-size-14px color-#858585 line-height-normal'>
               <span>{workIntro}</span>

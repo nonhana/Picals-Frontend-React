@@ -4,13 +4,7 @@ import type { UserItemInfo } from '@/utils/types'
 import UserItem from '@/components/common/user-item'
 import { useMap } from '@/hooks'
 import Pagination from '@/components/common/pagination'
-import {
-  likeActionsAPI,
-  userActionsAPI,
-  getFansListAPI,
-  getFollowingListAPI,
-  getWorkSimpleAPI,
-} from '@/apis'
+import { likeActionsAPI, userActionsAPI, getFansListAPI, getFollowingListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { PersonalContext } from '@/pages/personal-center'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
@@ -81,15 +75,8 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
               current,
               pageSize,
             })
-      const userSource = await Promise.all(
-        data.map(async (user) => {
-          const works = await Promise.all(
-            user.works!.map(async (workId) => (await getWorkSimpleAPI({ id: workId })).data),
-          )
-          return { ...user, works }
-        }),
-      )
-      setUserList(userSource)
+
+      setUserList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)
       return

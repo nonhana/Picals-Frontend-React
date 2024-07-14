@@ -31,6 +31,7 @@ interface ViewListState {
   favoriteWorkList: string[]
   followingNewWorkList: string[]
   recommendWorkList: string[]
+  latestWorkList: string[]
   illustratorWorkList: string[]
   searchResultWorkList: string[]
   currentList: WorkListType

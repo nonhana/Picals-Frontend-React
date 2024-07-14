@@ -18,6 +18,15 @@ export const getRecommendWorksAPI = (params: Pagination) => {
   })
 }
 
+// 分页获取最新作品列表
+export const getLatestWorksAPI = (params: Pagination) => {
+  return request<Pagination, WorkNormalItem[]>({
+    url: '/api/illustration/latest',
+    method: 'GET',
+    params,
+  })
+}
+
 // 获取已关注用户新作
 export const getFollowNewWorksAPI = (params: Pagination) => {
   return request<Pagination, WorkNormalItem[]>({
@@ -132,5 +141,13 @@ export const getRandomBackgroundsAPI = (data: IGetRandomBackgroundsReq) => {
     url: '/api/illustration/background',
     method: 'POST',
     data,
+  })
+}
+
+// 获取数据库内部作品总数
+export const getWorkCountAPI = () => {
+  return request<undefined, number>({
+    url: '/api/illustration/work-count',
+    method: 'GET',
   })
 }

@@ -17,14 +17,12 @@ const App: FC = () => {
   const currentWidth = useWinChange(appRef)
 
   useEffect(() => {
-    if (SIDEBAR_WHITE_LIST.includes(location.pathname)) {
+    if (SIDEBAR_WHITE_LIST.test(location.pathname)) {
       if (naturalSideBarVisible) setMarginTrigger(showSideBar)
       else setMarginTrigger(false)
     } else {
       setMarginTrigger(
-        showSideBar &&
-          location.pathname !== '/login' &&
-          SIDEBAR_WHITE_LIST.includes(location.pathname),
+        showSideBar && location.pathname !== '/login' && SIDEBAR_WHITE_LIST.test(location.pathname),
       )
     }
   }, [showSideBar, location.pathname, currentWidth])

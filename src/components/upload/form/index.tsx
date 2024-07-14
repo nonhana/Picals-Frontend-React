@@ -9,6 +9,7 @@ import {
   searchLabelsAPI,
   getLabelsInPagesAPI,
   newIllustratorAPI,
+  getWorkCountAPI,
 } from '@/apis'
 import type { INewIllustratorReq } from '@/apis/illustrator/types'
 import Empty from '@/components/common/empty'
@@ -370,9 +371,26 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     }
   }, [modalStatus])
 
+  const [workCount, setWorkCount] = useState(0)
+
+  const getWorkCount = async () => {
+    try {
+      const { data } = await getWorkCountAPI()
+      setWorkCount(data)
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    getWorkCount()
+  }, [])
+
   return (
     <>
       {contextHolder}
+
       <Form
         name='workForm'
         form={workForm}
@@ -384,6 +402,17 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
         onFinish={submitWork}
         onFinishFailed={handleFailed}
         autoComplete='off'>
+        <div className={`${wrapperStyle}`}>
+          <div
+            style={{ margin: 0 }}
+            className={`${titleStyle} font-normal flex items-center justify-between`}>
+            <span className='font-carter color-#0090F0'>
+              Total number of works currently saved:
+            </span>
+            <span className='font-carter color-#3d3d3d font-size-8'>{workCount}</span>
+          </div>
+        </div>
+
         <div className={wrapperStyle}>
           <div className={titleStyle}>
             <span>基本信息填写</span>
@@ -572,6 +601,9 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div className='flex flex-col gap-10px font-size-14px font-bold color-#3d3d3d line-height-normal'>
             <span>
               这个小站只是因纯粹的热爱而搭建，大家所上传的图片全部都会在后台管理系统进行审核，通过后会在本站进行展示。
+            </span>
+            <span>
+              尽可能不要转载相同的作品，如果发现有重复的作品，会在后台管理系统进行统一的处理。
             </span>
             <span>包含以下要素的作品将不予上传：</span>
             <ul className='flex flex-col m-0 pl-5 gap-10px'>

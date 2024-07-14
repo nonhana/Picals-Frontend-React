@@ -35,6 +35,10 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'explore',
+        element: <Navigate to='recommend' replace />,
+      },
+      {
+        path: 'explore/:type',
         element: LazyLoad(lazy(() => import('@/pages/explore'))),
       },
       {

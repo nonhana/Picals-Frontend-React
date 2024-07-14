@@ -69,7 +69,7 @@ export const HEADER_MENU_LIST_VISITOR: HeaderMenuItem[] = [
 export const HEADER_WHITE_LIST: RegExp = /^\/login/
 
 // 哪些路由前缀需要对 Sidebar 进行特殊处理
-export const SIDEBAR_WHITE_LIST = ['/home', '/followed-new', '/explore']
+export const SIDEBAR_WHITE_LIST = /^\/(home|followed-new|explore)/
 
 // 主页显隐侧边栏的触发宽度
 export const TRIGGER_MIN_WIDTH = 1305

@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useSearchParams, useNavigate, useOutletContext } from 'react-router-dom'
 import type { MenuProps } from 'antd'
 import { Menu, Button, Input, message } from 'antd'
@@ -11,6 +12,7 @@ import UserList from '@/components/search-result/user-list'
 import { getLabelDetailAPI, newLabelAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import HanaModal from '@/components/common/hana-modal'
+import { addRecord } from '@/store/modules/searchHistory'
 
 const items: MenuProps['items'] = [
   {
@@ -26,6 +28,8 @@ const items: MenuProps['items'] = [
 ]
 
 const SearchResult: FC = () => {
+  const dispatch = useDispatch()
+
   const navigate = useNavigate()
   const query = useSearchParams()[0]
   const searchFilter: SearchFilter = {
@@ -80,6 +84,7 @@ const SearchResult: FC = () => {
   useEffect(() => {
     getLabelDetail()
     setLabelName(searchFilter.label || '')
+    dispatch(addRecord(searchFilter.label))
   }, [searchFilter.label])
 
   const confirmAddLabel = async () => {

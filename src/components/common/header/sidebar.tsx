@@ -29,7 +29,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
   useEffect(() => setMaskTrigger(true), [location.pathname])
 
   useEffect(() => {
-    if (!SIDEBAR_WHITE_LIST.includes(location.pathname)) return
+    if (!SIDEBAR_WHITE_LIST.test(location.pathname)) return
     if (width < TRIGGER_MIN_WIDTH) setMaskTrigger(true)
     if (width > TRIGGER_MAX_WIDTH) setMaskTrigger(false)
   }, [width, location.pathname])
@@ -63,7 +63,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
             {(isLogin ? HEADER_MENU_LIST : HEADER_MENU_LIST_VISITOR).map((item) => (
               <Link key={item.route} to={item.route}>
                 <li
-                  className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-#f5f5f5 transition-duration-300 ${location.pathname === item.route ? 'bg-#f5f5f5' : ''}`}>
+                  className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-#f5f5f5 transition-duration-300 ${location.pathname.includes(item.route) ? 'bg-#f5f5f5' : ''}`}>
                   <Icon color='#858585' width={20} icon={item.icon} />
                   <span className='font-size-14px color-#3d3d3d'>{item.name}</span>
                 </li>

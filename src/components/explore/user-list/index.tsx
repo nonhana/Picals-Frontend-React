@@ -4,7 +4,7 @@ import { AppState } from '@/store/types'
 import type { UserItemInfo } from '@/utils/types'
 import UserItem from '@/components/common/user-item'
 import { useAtBottom } from '@/hooks'
-import { getRecommendUserListAPI, getWorkSimpleAPI, likeActionsAPI, userActionsAPI } from '@/apis'
+import { getRecommendUserListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
 import { message } from 'antd'
 import { increaseFollowNum, decreaseFollowNum } from '@/store/modules/user'
 import UserListSkeleton from '@/components/skeleton/user-list'
@@ -33,18 +33,10 @@ const UserList: FC<UserListProps> = ({ width }) => {
     try {
       const { data } = await getRecommendUserListAPI({ current, pageSize: 6 })
       if (data.length < 6) setIsFinal(true)
-      const userSource = await Promise.all(
-        data.map(async (user) => {
-          const works = await Promise.all(
-            user.works!.map(async (workId) => (await getWorkSimpleAPI({ id: workId })).data),
-          )
-          return { ...user, works }
-        }),
-      )
       setRecommendUserList((prev) => {
         const result = prev.map((item) => {
           if (item.page === current) {
-            return { page: item.page, list: userSource }
+            return { page: item.page, list: data }
           }
           return item
         })

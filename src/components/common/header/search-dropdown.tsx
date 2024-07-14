@@ -9,7 +9,7 @@ import LabelItem from '../label-item'
 import LabelImgItem from '../label-img-item'
 import LayoutList from '@/components/common/layout-list'
 import Empty from '../empty'
-import { addRecord, clear } from '@/store/modules/searchHistory'
+import { clear } from '@/store/modules/searchHistory'
 import { getRecommendLabelListAPI } from '@/apis'
 import type { LabelInfo } from '@/utils/types'
 
@@ -37,12 +37,6 @@ const SearchDropdown: FC<{
   useEffect(() => {
     toggleBodyOverflow(visible)
   }, [visible])
-
-  // 手动选取历史记录
-  const handleClickHistory = (value: string) => {
-    dispatch(addRecord(value))
-    setKeyword(value)
-  }
 
   // 清空历史记录
   const handleClearHistory = () => {
@@ -113,7 +107,7 @@ const SearchDropdown: FC<{
                   <li key={item}>
                     <Link
                       to={`/search-result?label=${item}&type=work&sortType=new`}
-                      onClick={() => handleClickHistory(item)}
+                      onClick={() => setKeyword(item)}
                       className='cursor-pointer p-10px flex justify-between items-center font-size-14px color-#858585 hover:bg-#f5f5f5 transition-duration-300'>
                       <span>{item}</span>
                       <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />

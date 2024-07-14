@@ -16,7 +16,7 @@ import presetRemToPx from '@unocss/preset-rem-to-px'
 import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
 
 // 自定义规则
-const customRules: Rule[] = []
+const customRules: Rule[] = [['font-carter', { 'font-family': 'CarterOne' }]]
 
 export default defineConfig({
   presets: [
