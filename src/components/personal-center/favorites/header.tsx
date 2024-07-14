@@ -1,16 +1,22 @@
 import { FC } from 'react'
 import type { FavoriteDetailInfo } from '@/utils/types'
 import { Link } from 'react-router-dom'
-import { Button, message } from 'antd'
+import { Button } from 'antd'
 import LazyImg from '@/components/common/lazy-img'
 
-type HeaderProps = FavoriteDetailInfo
+type HeaderProps = FavoriteDetailInfo & {
+  setStartAppreciate: (status: boolean) => void
+}
 
-const Header: FC<HeaderProps> = ({ name, intro, creatorId, creatorName, cover, workNum }) => {
-  const handleViewWorkList = () => {
-    message.info('该功能暂未开放，敬请期待~！')
-  }
-
+const Header: FC<HeaderProps> = ({
+  name,
+  intro,
+  creatorId,
+  creatorName,
+  cover,
+  workNum,
+  setStartAppreciate,
+}) => {
   return (
     <div className='relative w-954px p-5 flex justify-between border-b-solid border-1px border-color-#858585'>
       <div className='flex gap-5 items-center'>
@@ -31,7 +37,7 @@ const Header: FC<HeaderProps> = ({ name, intro, creatorId, creatorName, cover, w
           <span>{intro}</span>
         </div>
       </div>
-      <Button size='large' shape='round' type='primary' onClick={handleViewWorkList}>
+      <Button size='large' shape='round' type='primary' onClick={() => setStartAppreciate(true)}>
         开始浏览全部作品
       </Button>
     </div>

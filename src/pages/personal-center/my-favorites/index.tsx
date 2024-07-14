@@ -145,6 +145,8 @@ const MyFavorites: FC = () => {
     fetchFavoriteList()
   }, [userId])
 
+  const [startAppreciate, setStartAppreciate] = useState(false)
+
   return (
     <div className='flex mt-5 border-solid border-1px color-#858585 min-h-150 rd-6 overflow-hidden'>
       <Sidebar
@@ -157,7 +159,7 @@ const MyFavorites: FC = () => {
         {folderId ? (
           favoriteDetailInfo && (
             <>
-              <Header {...favoriteDetailInfo} />
+              <Header {...favoriteDetailInfo} setStartAppreciate={setStartAppreciate} />
               <WorkList
                 total={searchStatus ? searchTotal : favoriteDetailInfo.workNum}
                 current={searchStatus ? searchCurrent : current}
@@ -169,6 +171,7 @@ const MyFavorites: FC = () => {
                 handleSearch={handleSearch}
                 refresh={refresh}
                 like={like}
+                startAppreciate={startAppreciate}
               />
             </>
           )

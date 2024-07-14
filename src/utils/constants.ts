@@ -89,6 +89,7 @@ export const VIEW_LIST_MAP = {
   favoriteWorkList: '收藏作品',
   followingNewWorkList: '关注作品',
   recommendWorkList: '推荐作品',
+  latestWorkList: '最新作品',
   illustratorWorkList: '原作作品',
   searchResultWorkList: '搜索结果',
 }
@@ -100,6 +101,7 @@ export const VIEW_LIST_ICON_MAP = {
   favoriteWorkList: 'material-symbols:star-outline',
   followingNewWorkList: 'material-symbols:bookmark-outline',
   recommendWorkList: 'material-symbols:recommend-outline',
+  latestWorkList: 'material-symbols:alarm-outline',
   illustratorWorkList: 'material-symbols:school-outline',
   searchResultWorkList: 'material-symbols:search',
 }

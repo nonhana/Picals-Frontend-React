@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getIllustratorWorksInPagesAPI, getIllustratorWorksIdListAPI } from '@/apis'
@@ -12,12 +12,19 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { message } from 'antd'
+import { VIEW_LIST_MAP } from '@/utils'
 
 const listClass = 'absolute w-80 flex flex-col gap-5'
 
 type WaterfallItemInfo = WorkNormalItem & { index: number; height: number }
 
-const WaterfallFlow: FC = () => {
+type WaterfallFlowProps = {
+  startAppreciate: boolean
+}
+
+const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
+  const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
 
@@ -84,7 +91,14 @@ const WaterfallFlow: FC = () => {
     dispatch(pushToIllustratorWorkList(data))
     dispatch(setCurrentList('illustratorWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
+    message.success(`成功进入至 ${VIEW_LIST_MAP['illustratorWorkList']}`)
   }
+
+  useEffect(() => {
+    if (!startAppreciate) return
+    navigate(`/work-detail/${workList[0].id}`)
+    addIllustratorWorks()
+  }, [startAppreciate])
 
   return (
     <div ref={containerRef} className='relative w-250'>

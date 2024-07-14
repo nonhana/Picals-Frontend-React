@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useContext } from 'react'
-import { useSearchParams, useLocation } from 'react-router-dom'
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
@@ -23,6 +23,7 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { VIEW_LIST_MAP } from '@/utils'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -38,6 +39,7 @@ type WorkListProps = {
   setSearchStatus: (status: boolean) => void
   refresh: () => Promise<void> // 刷新作品列表
   like: (id: string) => void
+  startAppreciate: boolean
 }
 
 const WorkList: FC<WorkListProps> = ({
@@ -51,7 +53,9 @@ const WorkList: FC<WorkListProps> = ({
   setSearchStatus,
   refresh,
   like,
+  startAppreciate,
 }) => {
+  const navigate = useNavigate()
   const location = useLocation()
   const { isMe } = useContext(PersonalContext)
 
@@ -214,7 +218,17 @@ const WorkList: FC<WorkListProps> = ({
     dispatch(pushToFavoriteWorkList(data))
     dispatch(setCurrentList('favoriteWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
+    message.success(`成功进入至 ${VIEW_LIST_MAP['favoriteWorkList']}`)
   }
+
+  useEffect(() => {
+    if (!startAppreciate) return
+    if (workList.length === 0) {
+      messageApi.info('暂无作品，快去收藏一些吧~')
+    }
+    navigate(`/work-detail/${workList[0].id}`)
+    addFavoriteWorks()
+  }, [startAppreciate])
 
   return (
     <>

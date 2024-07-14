@@ -30,6 +30,8 @@ const Illustrator: FC = () => {
     getIllustratorDetail()
   }, [illustratorId])
 
+  const [startAppreciate, setStartAppreciate] = useState(false)
+
   return (
     <div className='relative w-full min-h-screen flex justify-center bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
       <div className='relative mt-30 mb-10 w-300 bg-white rd-6 flex flex-col items-center'>
@@ -67,14 +69,18 @@ const Illustrator: FC = () => {
               <Button shape='round' size='large' onClick={() => setInfoModalVisible(true)}>
                 查看画家信息
               </Button>
-              <Button type='primary' shape='round' size='large'>
+              <Button
+                type='primary'
+                shape='round'
+                size='large'
+                onClick={() => setStartAppreciate(true)}>
                 开始浏览作品
               </Button>
             </div>
           </div>
         )}
         <div className='w-full mt-15 flex justify-center'>
-          <WaterfallFlow />
+          <WaterfallFlow startAppreciate={startAppreciate} />
         </div>
       </div>
 

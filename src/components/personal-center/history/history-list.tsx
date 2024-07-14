@@ -12,6 +12,8 @@ import GreyButton from '@/components/common/grey-button'
 import dayjs from 'dayjs'
 import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
 import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
+import { message } from 'antd'
+import { VIEW_LIST_MAP } from '@/utils'
 
 const HistoryList: FC = () => {
   const location = useLocation()
@@ -81,6 +83,7 @@ const HistoryList: FC = () => {
     dispatch(resetOtherList())
     dispatch(setCurrentList('userWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
+    message.success(`成功进入至 ${VIEW_LIST_MAP['userWorkList']}`)
   }
 
   return (

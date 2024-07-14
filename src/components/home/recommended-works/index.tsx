@@ -14,6 +14,8 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { message } from 'antd'
+import { VIEW_LIST_MAP } from '@/utils'
 
 type RecommendedWorksProps = {
   loading: boolean
@@ -39,6 +41,7 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
     dispatch(pushToRecommendWorkList(sourceData.map((item) => item.id)))
     dispatch(setCurrentList('recommendWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
+    message.success(`成功进入至 ${VIEW_LIST_MAP['recommendWorkList']}`)
   }
 
   return (

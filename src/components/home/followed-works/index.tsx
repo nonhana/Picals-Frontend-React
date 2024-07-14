@@ -13,7 +13,10 @@ import {
   pushToFollowingNewWorkList,
   resetOtherList,
   setCurrentList,
+  setPrevPosition,
 } from '@/store/modules/viewList'
+import { message } from 'antd'
+import { VIEW_LIST_MAP } from '@/utils'
 
 type FollowedWorksProps = {
   loading: boolean
@@ -39,6 +42,8 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
     dispatch(resetOtherList())
     dispatch(pushToFollowingNewWorkList(data))
     dispatch(setCurrentList('followingNewWorkList'))
+    dispatch(setPrevPosition(location.pathname + location.search))
+    message.success(`成功进入至 ${VIEW_LIST_MAP['followingNewWorkList']}`)
   }
 
   return (

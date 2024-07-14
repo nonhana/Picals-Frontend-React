@@ -3,8 +3,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP } from '@/utils'
-import { getRecommendWorksAPI, getUserWorksIdListAPI, getWorkSimpleAPI } from '@/apis'
 import {
+  getRecommendWorksAPI,
+  getLatestWorksAPI,
+  getUserWorksIdListAPI,
+  getWorkSimpleAPI,
+} from '@/apis'
+import {
+  pushToLatestWorkList,
   pushToRecommendWorkList,
   pushToUserWorkList,
   setCurrentIndex,
@@ -89,7 +95,7 @@ const ViewList: FC<ViewListProps> = ({
   const recommendPageSize = 30
   const [recommendIsFinal, setRecommendIsFinal] = useState(false)
   const [recommendCurrentChanged, setRecommendCurrentChanged] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [recommendLoading, setRecommendLoading] = useState(false)
   const [recommendWorkList, setRecommendWorkList] = useState<
     {
       page: number
@@ -133,7 +139,7 @@ const ViewList: FC<ViewListProps> = ({
   }, [allowListName])
 
   const getRecommendWorksList = async () => {
-    setLoading(true)
+    setRecommendLoading(true)
     try {
       const { data } = await getRecommendWorksAPI({
         current: recommendCurrent!,
@@ -158,7 +164,7 @@ const ViewList: FC<ViewListProps> = ({
       console.log('出现错误了喵！！', error)
       return
     } finally {
-      setLoading(false)
+      setRecommendLoading(false)
     }
   }
 
@@ -170,10 +176,10 @@ const ViewList: FC<ViewListProps> = ({
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList') {
-      if (loading) messageApi.loading('正在获取推荐作品列表...', 0)
+      if (recommendLoading) messageApi.loading('正在获取推荐作品列表...', 0)
       else messageApi.destroy()
     }
-  }, [loading, allowListName])
+  }, [recommendLoading, allowListName])
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList' && recommendCurrentChanged > 1) {
@@ -197,6 +203,118 @@ const ViewList: FC<ViewListProps> = ({
       setRecommendCurrent((prev) => prev! + 1)
     }
   }, [recommendListEnd, allowListName])
+  //#endregion
+
+  //#region 分页获取最新作品列表
+  const [latestCurrent, setLatestCurrent] = useState<number>()
+  const latestPageSize = 30
+  const [latestIsFinal, setLatestIsFinal] = useState(false)
+  const [latestCurrentChanged, setLatestCurrentChanged] = useState(0)
+  const [latestLoading, setLatestLoading] = useState(false)
+  const [latestWorkList, setLatestWorkList] = useState<
+    {
+      page: number
+      list: WorkNormalItemInfo[]
+    }[]
+  >([])
+  const [latestListEnd, setLatestListEnd] = useState(false)
+  const [latestInit, setLatestInit] = useState(true)
+
+  const initLatestWorksList = async (initPage: number) => {
+    setLatestInit(true)
+    try {
+      for (let i = 1; i <= initPage; i++) {
+        const targetList = lists.latestWorkList.slice((i - 1) * latestPageSize, i * latestPageSize)
+        const resultList = await Promise.all(
+          targetList.map(async (id) => {
+            const { data } = await getWorkSimpleAPI({ id })
+            return data
+          }),
+        )
+        setLatestWorkList((prev) => [...prev, { page: i, list: resultList }])
+      }
+      setLatestWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    } finally {
+      setLatestInit(false)
+    }
+  }
+
+  useEffect(() => {
+    if (allowListName === 'latestWorkList') {
+      const initPage = Math.ceil(lists.latestWorkList.length / latestPageSize)
+      setLatestCurrent(initPage)
+      initLatestWorksList(initPage)
+    }
+  }, [allowListName])
+
+  const getLatestWorksList = async () => {
+    setLatestLoading(true)
+    try {
+      const { data } = await getLatestWorksAPI({
+        current: latestCurrent!,
+        pageSize: latestPageSize,
+      })
+      if (data.length < latestPageSize) {
+        setLatestIsFinal(true)
+      }
+      setLatestWorkList((prev) => {
+        const result = prev.map((item) => {
+          if (item.page === latestCurrent) {
+            return { page: item.page, list: data }
+          }
+          return item
+        })
+        if (!latestIsFinal) result.push({ page: latestCurrent! + 1, list: [] })
+        return result
+      })
+      const result = data.map((work) => work.id)
+      dispatch(pushToLatestWorkList(result))
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    } finally {
+      setLatestLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (allowListName === 'latestWorkList' && latestCurrent) {
+      setLatestCurrentChanged((prev) => prev + 1)
+    }
+  }, [latestCurrent, allowListName])
+
+  useEffect(() => {
+    if (allowListName === 'latestWorkList') {
+      if (latestLoading) messageApi.loading('正在获取最新作品列表...', 0)
+      else messageApi.destroy()
+    }
+  }, [latestLoading, allowListName])
+
+  useEffect(() => {
+    if (allowListName === 'latestWorkList' && latestCurrentChanged > 1) {
+      getLatestWorksList()
+    }
+  }, [latestCurrentChanged, allowListName])
+
+  useEffect(() => {
+    if (
+      allowListName === 'latestWorkList' &&
+      currentIndex >= currentListLength &&
+      !latestIsFinal &&
+      latestCurrent
+    ) {
+      setLatestCurrent((prev) => prev! + 1)
+    }
+  }, [currentIndex, allowListName])
+
+  useEffect(() => {
+    if (allowListName === 'latestWorkList' && latestListEnd && !latestIsFinal) {
+      setLatestCurrent((prev) => prev! + 1)
+    }
+  }, [latestListEnd, allowListName])
   //#endregion
 
   //#region 分页获取当前浏览的作品列表信息（用户作品列表和推荐作品列表除外）
@@ -334,6 +452,24 @@ const ViewList: FC<ViewListProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [currentIndex, currentListLength, showIndexInput])
 
+  // WorkSlideWindow 展示状态数组
+  const [showSlideWindows, setShowSlideWindows] = useState<[boolean, boolean, boolean, boolean]>([
+    false,
+    false,
+    false,
+    false,
+  ])
+  useEffect(() => {
+    setShowSlideWindows([
+      currentList !== 'userWorkList' &&
+        currentList !== 'recommendWorkList' &&
+        currentList !== 'latestWorkList',
+      currentList === 'recommendWorkList',
+      currentList === 'latestWorkList',
+      currentList === 'userWorkList',
+    ])
+  }, [currentList])
+
   return (
     <>
       {contextHolder}
@@ -387,19 +523,17 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           style={{
-            margin:
-              currentList !== 'userWorkList' && currentList !== 'recommendWorkList'
-                ? '0 '
-                : '-5px 0',
+            display:
+              allowListName === 'recommendWorkList' || allowListName === 'latestWorkList'
+                ? 'none'
+                : 'block',
+            margin: showSlideWindows[0] ? '0 ' : '-10px 0',
             height: 0,
-            padding:
-              currentList !== 'userWorkList' && currentList !== 'recommendWorkList'
-                ? '45px 0 '
-                : '0',
+            padding: showSlideWindows[0] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
           <CSSTransition
-            in={currentList !== 'userWorkList' && currentList !== 'recommendWorkList'}
+            in={showSlideWindows[0]}
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>
@@ -416,13 +550,14 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           style={{
-            margin: currentList === 'recommendWorkList' ? '0 ' : '-5px 0',
+            display: allowListName !== 'recommendWorkList' ? 'none' : 'block',
+            margin: showSlideWindows[1] ? '0 ' : '-10px 0',
             height: 0,
-            padding: currentList === 'recommendWorkList' ? '45px 0 ' : '0',
+            padding: showSlideWindows[1] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
           <CSSTransition
-            in={currentList === 'recommendWorkList'}
+            in={showSlideWindows[1]}
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>
@@ -438,14 +573,38 @@ const ViewList: FC<ViewListProps> = ({
           </CSSTransition>
         </div>
         <div
-          className={`${viewListClasses} ${currentList === 'userWorkList' ? 'bg-#f5f5f5' : 'bg-white'}`}
+          style={{
+            display: allowListName !== 'latestWorkList' ? 'none' : 'block',
+            margin: showSlideWindows[2] ? '0 ' : '-10px 0',
+            height: 0,
+            padding: showSlideWindows[2] ? '45px 0 ' : '0',
+          }}
+          className='w-full relative transition-duration-300'>
+          <CSSTransition
+            in={showSlideWindows[2]}
+            timeout={300}
+            classNames='opacity-gradient'
+            unmountOnExit>
+            <WorkSlideWindow
+              className='mt--45px'
+              workId={workId}
+              workList={latestWorkList}
+              isFinal={latestIsFinal}
+              setWorkListEnd={setLatestListEnd}
+              initializing={latestInit}
+              setInitializing={setLatestInit}
+            />
+          </CSSTransition>
+        </div>
+        <div
+          className={`${viewListClasses} ${showSlideWindows[3] ? 'bg-#f5f5f5' : 'bg-white'}`}
           onClick={() => changeList('userWorkList')}>
           <span className='flex items-center gap-2.5'>
             <Icon width={24} icon={VIEW_LIST_ICON_MAP.userWorkList} color='#3d3d3d' />
             用户作品
           </span>
           <span className='color-#858585 font-bold'>
-            {currentList === 'userWorkList' &&
+            {showSlideWindows[3] &&
               (!showIndexInput ? (
                 <span onDoubleClick={() => setShowIndexInput(true)}>{currentIndex}/</span>
               ) : (
@@ -471,13 +630,13 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           style={{
-            margin: currentList === 'userWorkList' ? '0 ' : '-10px 0',
+            margin: showSlideWindows[3] ? '0 ' : '-10px 0',
             height: 0,
-            padding: currentList === 'userWorkList' ? '45px 0 ' : '0',
+            padding: showSlideWindows[3] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
           <CSSTransition
-            in={currentList === 'userWorkList'}
+            in={showSlideWindows[3]}
             timeout={300}
             classNames='opacity-gradient'
             unmountOnExit>
