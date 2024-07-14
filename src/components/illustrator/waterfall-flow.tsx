@@ -113,14 +113,14 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
         {workList
           .filter((item) => item.index === 1)
           .map((item) => (
-            <WaterfallItem key={item.id} item={item} />
+            <WaterfallItem key={item.id} item={item} onClick={addIllustratorWorks} />
           ))}
       </div>
       <div className={`${listClass} left-680px`}>
         {workList
           .filter((item) => item.index === 2)
           .map((item) => (
-            <WaterfallItem key={item.id} item={item} />
+            <WaterfallItem key={item.id} item={item} onClick={addIllustratorWorks} />
           ))}
       </div>
     </div>
