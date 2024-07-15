@@ -23,7 +23,6 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { VIEW_LIST_MAP } from '@/utils'
 
 type WorkListProps = {
   workCount: number
@@ -111,13 +110,11 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     if (currentPath === 'works') {
       dispatch(resetOtherList())
       dispatch(setCurrentList('userWorkList'))
-      message.success(`成功进入至 ${VIEW_LIST_MAP['userWorkList']}`)
     } else {
       const { data } = await getUserLikeWorksIdListAPI({ id: userId! })
       dispatch(resetOtherList())
       dispatch(pushToLikeWorkList(data))
       dispatch(setCurrentList('likeWorkList'))
-      message.success(`成功进入至 ${VIEW_LIST_MAP['likeWorkList']}`)
     }
     dispatch(setPrevPosition(location.pathname + location.search))
   }

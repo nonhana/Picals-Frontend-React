@@ -23,7 +23,6 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { VIEW_LIST_MAP } from '@/utils'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -218,7 +217,6 @@ const WorkList: FC<WorkListProps> = ({
     dispatch(pushToFavoriteWorkList(data))
     dispatch(setCurrentList('favoriteWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
-    message.success(`成功进入至 ${VIEW_LIST_MAP['favoriteWorkList']}`)
   }
 
   useEffect(() => {

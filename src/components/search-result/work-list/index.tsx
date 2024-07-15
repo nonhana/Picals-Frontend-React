@@ -5,7 +5,7 @@ import type { WorkNormalItemInfo } from '@/utils/types'
 import { useMap } from '@/hooks'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import Pagination from '@/components/common/pagination'
-import { message, Radio, RadioChangeEvent } from 'antd'
+import { Radio, RadioChangeEvent } from 'antd'
 import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import { CSSTransition } from 'react-transition-group'
@@ -16,7 +16,6 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { VIEW_LIST_MAP } from '@/utils'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -100,7 +99,6 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     dispatch(pushToSearchResultWorkList(data))
     dispatch(setCurrentList('searchResultWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
-    message.success(`成功进入至 ${VIEW_LIST_MAP['searchResultWorkList']}`)
   }
 
   return (
