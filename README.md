@@ -1,5 +1,5 @@
 <div align="center">
-   <img src="https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/picals-logo.png" alt="picals-logo" style="zoom: 50%" />
+   <img src="https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/picals-logo.png" alt="picals-logo" />
 </div>
 
 ### 项目简介
