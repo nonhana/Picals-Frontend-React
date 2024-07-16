@@ -1,10 +1,10 @@
 <div align="center">
-   <img src="https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/logo.png" alt="picals-logo" />
+   <img src="https://common-1319721118.cos.ap-shanghai.myqcloud.com/picgo/picals-logo.png" alt="picals-logo" style="zoom: 50%" />
 </div>
 
 ### 项目简介
 
-**Picals** 是一个受 [Pixiv](https://www.pixiv.net) 启发、纯粹由兴趣驱动、从零设计并编写的一个插画收藏平台项目。
+**Picals** 是一个受 [Pixiv](https://www.pixiv.net) 启发、纯粹由兴趣驱动、从零设计并编写的一个插画收藏平台。
 
 它旨在为大家提供一个相较于 Pixiv 更方便、在国内浏览更快捷的找图、存图的方式，并且和论坛的功能相结合，营造和谐、舒适的国内插画讨论环境。
 
@@ -55,7 +55,7 @@
 
 ### 联系/加入我们
 
-您在使用中，对这个项目产生了任何想要完善的点子，都可以参考[Issue 提交指南](https://github.com/nonhana/Picals-Frontend-React/issues/60)来新建一个 Issue。
+您在使用中，对这个项目产生了任何想要完善的点子，都可以参考： [Issue 提交指南](https://github.com/nonhana/Picals-Frontend-React/issues/60) 来新建一个 Issue。
 
 如果您：
 
@@ -66,5 +66,5 @@
 
 您可以选择加入我们！！**于我而言，大家一起做东西，在交流中一起进步、一起了解更多的前沿技术或者是解决一些困难的 bug，都是十分有意义的事情\~**
 
-> - 邮箱：[zhouxiang757@gmail.com](mailto:zhouxiang757@gmail.com)
-> - QQ群：**891904073**
+- 邮箱：[zhouxiang757@gmail.com](mailto:zhouxiang757@gmail.com)
+- 一个可爱的交流群（QQ）：891904073
