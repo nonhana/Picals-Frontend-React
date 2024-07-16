@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { UserInfo } from '@/utils/types'
 import { LabelItem } from '@/apis/types'
+import { generateTempId } from '@/utils'
 
 const userStore = createSlice({
   name: 'user',
@@ -15,6 +16,7 @@ const userStore = createSlice({
       fanNum: 0,
       followNum: 0,
     } as UserInfo,
+    tempId: '',
     likedLabels: [] as LabelItem[],
     isLogin: false,
     loginBgs: [],
@@ -22,6 +24,9 @@ const userStore = createSlice({
   reducers: {
     setUserInfo(state, action) {
       state.userInfo = action.payload
+    },
+    setTempId(state, action) {
+      state.tempId = action.payload
     },
     setLikedLabels(state, action) {
       state.likedLabels = action.payload
@@ -52,6 +57,7 @@ const userStore = createSlice({
         fanNum: 0,
         followNum: 0,
       }
+      state.tempId = generateTempId()
       state.likedLabels = []
       state.isLogin = false
     },
@@ -60,6 +66,7 @@ const userStore = createSlice({
 
 const {
   setUserInfo,
+  setTempId,
   setLikedLabels,
   addLikedLabel,
   removeLikedLabel,
@@ -71,9 +78,9 @@ const {
 
 const userReducer = userStore.reducer
 
-// 导出
 export {
   setUserInfo,
+  setTempId,
   setLikedLabels,
   addLikedLabel,
   removeLikedLabel,

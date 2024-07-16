@@ -2,13 +2,15 @@ import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '@/store/types'
 import type { UserItemInfo } from '@/utils/types'
+import { generateTempId } from '@/utils'
 import UserItem from '@/components/common/user-item'
 import { useAtBottom } from '@/hooks'
 import { getRecommendUserListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
 import { message } from 'antd'
-import { increaseFollowNum, decreaseFollowNum } from '@/store/modules/user'
+import { increaseFollowNum, decreaseFollowNum, setTempId } from '@/store/modules/user'
 import UserListSkeleton from '@/components/skeleton/user-list'
 import { CSSTransition } from 'react-transition-group'
+import { Pagination } from '@/apis/types'
 
 type UserListProps = {
   width: number
@@ -18,6 +20,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
   const dispatch = useDispatch()
 
   const { id: storeId } = useSelector((state: AppState) => state.user.userInfo)
+  const { isLogin, tempId } = useSelector((state: AppState) => state.user)
   const [current, setCurrent] = useState(1)
   const [recommendUserList, setRecommendUserList] = useState<
     {
@@ -31,7 +34,12 @@ const UserList: FC<UserListProps> = ({ width }) => {
   // 获取推荐用户列表
   const getRecommendUserList = async () => {
     try {
-      const { data } = await getRecommendUserListAPI({ current, pageSize: 6 })
+      const params: Pagination = { current, pageSize: 6 }
+      if (!isLogin) {
+        if (!tempId) dispatch(setTempId(generateTempId()))
+        params.id = tempId
+      }
+      const { data } = await getRecommendUserListAPI(params)
       if (data.length < 6) setIsFinal(true)
       setRecommendUserList((prev) => {
         const result = prev.map((item) => {

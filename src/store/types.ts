@@ -4,6 +4,7 @@ import { WorkListType } from './modules/viewList'
 
 interface UserState {
   userInfo: UserInfo
+  tempId: string
   likedLabels: LabelItem[]
   isLogin: boolean
 }

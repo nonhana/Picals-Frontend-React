@@ -16,7 +16,7 @@ import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
 import GreyButton from '@/components/common/grey-button'
 import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
-import { setLikedLabels, setLoginStatus, setUserInfo } from '@/store/modules/user'
+import { setLikedLabels, setLoginStatus, setTempId, setUserInfo } from '@/store/modules/user'
 import { setFavoriteList } from '@/store/modules/favorites'
 
 // 登录表单
@@ -67,6 +67,7 @@ const LoginWindow: FC = () => {
           followNum: userInfo.followCount,
         }),
       )
+      dispatch(setTempId(''))
       dispatch(setLikedLabels(userInfo.likedLabels))
       dispatch(setLoginStatus(true))
       localStorage.setItem('accessToken', accessToken)

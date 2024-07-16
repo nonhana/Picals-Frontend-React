@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import LabelList from '@/components/home/label-list/index'
 import FollowedWorks from '@/components/home/followed-works'
@@ -8,11 +8,15 @@ import RecommendedWorks from '@/components/home/recommended-works'
 // import RankingList from '@/components/home/ranking-list'
 import { getRecommendLabelListAPI, getFollowNewWorksAPI, getRecommendWorksAPI } from '@/apis'
 import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
+import { generateTempId } from '@/utils'
 import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react'
+import { Pagination } from '@/apis/types'
+import { setTempId } from '@/store/modules/user'
 
 const Home: FC = () => {
-  const { isLogin } = useSelector((state: AppState) => state.user)
+  const dispatch = useDispatch()
+  const { isLogin, tempId } = useSelector((state: AppState) => state.user)
 
   const [width, setWidth] = useState<number>(1245)
   const currentWidth = useOutletContext<number>()
@@ -69,7 +73,12 @@ const Home: FC = () => {
     setGettingRecommendWorkList(true)
     setRecommendWorkList([])
     try {
-      const { data } = await getRecommendWorksAPI({ pageSize: 30, current: 1 }) // 只获取一页
+      const params: Pagination = { pageSize: 30, current: 1 }
+      if (!isLogin) {
+        if (!tempId) dispatch(setTempId(generateTempId()))
+        params.id = tempId
+      }
+      const { data } = await getRecommendWorksAPI(params) // 只获取一页
       setRecommendWorkList(data)
     } catch (error) {
       console.log('出现错误了喵！！', error)

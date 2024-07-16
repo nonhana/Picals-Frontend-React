@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   viewList: viewListReducer,
 })
 
-// 持久化配置
+// Redux 持久化
 const persistConfig = {
   key: 'root',
   storage,

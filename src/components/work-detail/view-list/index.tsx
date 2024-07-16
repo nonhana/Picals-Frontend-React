@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
-import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP } from '@/utils'
+import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP, generateTempId } from '@/utils'
 import {
   getRecommendWorksAPI,
   getLatestWorksAPI,
@@ -18,11 +18,13 @@ import {
   setPrevWorkId,
 } from '@/store/modules/viewList'
 import { message, InputNumber, Button } from 'antd'
-import Pagination from '@/components/common/pagination'
+import PaginationComponent from '@/components/common/pagination'
 import { Icon } from '@iconify/react'
 import WorkSlideWindow from '../work-slide-window'
 import { WorkNormalItemInfo } from '@/utils/types'
 import { CSSTransition } from 'react-transition-group'
+import { Pagination } from '@/apis/types'
+import { setTempId } from '@/store/modules/user'
 
 const viewListClasses =
   'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-#f5f5f5 cursor-pointer flex justify-between items-center px-5 color-#3d3d3d'
@@ -64,6 +66,7 @@ const ViewList: FC<ViewListProps> = ({
     userWorkList,
     ...lists
   } = useSelector((state: AppState) => state.viewList)
+  const { tempId, isLogin } = useSelector((state: AppState) => state.user)
 
   //#region 更改作品列表相关信息
   const [allowListName, setAllowListName] = useState<keyof typeof lists>()
@@ -141,10 +144,15 @@ const ViewList: FC<ViewListProps> = ({
   const getRecommendWorksList = async () => {
     setRecommendLoading(true)
     try {
-      const { data } = await getRecommendWorksAPI({
+      const params: Pagination = {
         current: recommendCurrent!,
         pageSize: recommendPageSize,
-      })
+      }
+      if (!isLogin) {
+        if (!tempId) dispatch(setTempId(generateTempId()))
+        params.id = tempId
+      }
+      const { data } = await getRecommendWorksAPI(params)
       if (data.length < recommendPageSize) {
         setRecommendIsFinal(true)
       }
@@ -652,7 +660,7 @@ const ViewList: FC<ViewListProps> = ({
           </CSSTransition>
         </div>
         <div className='w-full my-10px flex justify-center'>
-          <Pagination
+          <PaginationComponent
             total={currentListLength}
             pageSize={1}
             current={currentIndex}

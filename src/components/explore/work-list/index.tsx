@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
 import { useAtBottom } from '@/hooks'
@@ -14,11 +14,16 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { AppState } from '@/store/types'
+import { generateTempId } from '@/utils'
+import { Pagination } from '@/apis/types'
+import { setTempId } from '@/store/modules/user'
 
 const WorkList: FC = () => {
   const location = useLocation()
 
   const dispatch = useDispatch()
+  const { tempId, isLogin } = useSelector((state: AppState) => state.user)
 
   const [current, setCurrent] = useState(1)
   const [recommendWorkList, setRecommendWorkList] = useState<
@@ -32,7 +37,12 @@ const WorkList: FC = () => {
 
   const getRecommendWorks = async () => {
     try {
-      const { data } = await getRecommendWorksAPI({ pageSize: 30, current })
+      const params: Pagination = { pageSize: 30, current }
+      if (!isLogin) {
+        if (!tempId) dispatch(setTempId(generateTempId()))
+        params.id = tempId
+      }
+      const { data } = await getRecommendWorksAPI(params)
       if (data.length < 30) setIsFinal(true)
       setRecommendWorkList((prev) => {
         const result = prev.map((item) => {
