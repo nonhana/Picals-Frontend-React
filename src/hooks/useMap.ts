@@ -1,12 +1,12 @@
+import { useState } from 'react'
 import { message } from 'antd'
-import { useState, useCallback } from 'react'
 
 type MapType<T> = Map<string, T>
 
 function useMap<T extends object>(
   initialItems: T[],
 ): [MapType<T>, (items: T[]) => void, (id: string, newItem: T) => void, (id: string) => void] {
-  const convertArrayToMap = useCallback((items: T[]): MapType<T> => {
+  const convertArrayToMap = (items: T[]): MapType<T> => {
     const map = new Map<string, T>()
     items.forEach((item) => {
       if (!('id' in item)) {
@@ -16,16 +16,13 @@ function useMap<T extends object>(
       map.set(String(item.id), item)
     })
     return map
-  }, [])
+  }
 
   const [map, setMap] = useState<MapType<T>>(convertArrayToMap(initialItems))
 
-  const setSource = useCallback(
-    (items: T[]) => {
-      setMap(convertArrayToMap(items))
-    },
-    [convertArrayToMap],
-  )
+  const setSource = (items: T[]) => {
+    setMap(convertArrayToMap(items))
+  }
 
   const updateItem = (id: string, newItem: T) => {
     setMap((prev) => {

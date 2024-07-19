@@ -1,9 +1,9 @@
-import LazyImg from '@/components/common/lazy-img'
-import type { AppState } from '@/store/types'
-import { Button, Input } from 'antd'
 import { FC } from 'react'
 import { useSelector } from 'react-redux'
+import type { AppState } from '@/store/types'
 import { CSSTransition } from 'react-transition-group'
+import { Button, Input } from 'antd'
+import LazyImg from '@/components/common/lazy-img'
 
 interface Replying {
   id: string

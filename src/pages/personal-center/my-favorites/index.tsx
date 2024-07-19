@@ -1,3 +1,11 @@
+import { FC, useEffect, useState, useContext } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setFavoriteList } from '@/store/modules/favorites'
+import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
+import Sidebar from '@/components/personal-center/favorites/sidebar'
+import Header from '@/components/personal-center/favorites/header'
+import WorkList from '@/components/personal-center/favorites/work-list'
 import {
   getFavoriteDetailAPI,
   getFavoriteWorkListAPI,
@@ -6,17 +14,8 @@ import {
   likeActionsAPI,
   getUserFavoriteListAPI,
 } from '@/apis'
-import Empty from '@/components/common/empty'
-import Header from '@/components/personal-center/favorites/header'
-import Sidebar from '@/components/personal-center/favorites/sidebar'
-import WorkList from '@/components/personal-center/favorites/work-list'
-import { setFavoriteList } from '@/store/modules/favorites'
-import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
-import { FC, useEffect, useState, useContext, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
-
 import { PersonalContext } from '..'
+import Empty from '@/components/common/empty'
 
 const MyFavorites: FC = () => {
   const { isMe, userId } = useContext(PersonalContext)
@@ -30,7 +29,7 @@ const MyFavorites: FC = () => {
   const [favoriteDetailInfo, setFavoriteDetailInfo] = useState<FavoriteDetailInfo>()
 
   // 获取收藏夹详细信息
-  const getFavoriteDetail = useCallback(async () => {
+  const getFavoriteDetail = async () => {
     try {
       const { data } = await getFavoriteDetailAPI({ id: folderId! })
       setFavoriteDetailInfo(data)
@@ -38,17 +37,17 @@ const MyFavorites: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [folderId])
+  }
 
   useEffect(() => {
     if (folderId) getFavoriteDetail()
-  }, [folderId, getFavoriteDetail])
+  }, [folderId])
 
   const [current, setCurrent] = useState(1)
   const [workList, setWorkList] = useState<WorkNormalItemInfo[]>([])
   const [gettingWorkList, setGettingWorkList] = useState(true)
 
-  const getFavoriteWorkList = useCallback(async () => {
+  const getFavoriteWorkList = async () => {
     setGettingWorkList(true)
     try {
       const { data } = await getFavoriteWorkListAPI({ id: folderId!, current, pageSize: 12 })
@@ -59,11 +58,11 @@ const MyFavorites: FC = () => {
     } finally {
       setGettingWorkList(false)
     }
-  }, [folderId, current])
+  }
 
   useEffect(() => {
     if (folderId) getFavoriteWorkList()
-  }, [folderId, getFavoriteWorkList])
+  }, [folderId, current])
 
   // 给收藏夹的作品点赞
   const like = async (id: string) => {
@@ -103,7 +102,7 @@ const MyFavorites: FC = () => {
       setSearchCurrent(1)
       getFavoriteWorkList()
     }
-  }, [getFavoriteWorkList, mounted, searchStatus])
+  }, [searchStatus])
 
   const handleSearch = async (keyword: string) => {
     try {
@@ -127,7 +126,7 @@ const MyFavorites: FC = () => {
   const [folderList, setFolderList] = useState<FavoriteItemInfo[]>([])
   const [gettingFolderList, setGettingFolderList] = useState(true)
 
-  const fetchFavoriteList = useCallback(async () => {
+  const fetchFavoriteList = async () => {
     setGettingFolderList(true)
     try {
       const { data } = await getUserFavoriteListAPI({ id: userId! })
@@ -140,11 +139,11 @@ const MyFavorites: FC = () => {
     } finally {
       setGettingFolderList(false)
     }
-  }, [dispatch, isMe, userId])
+  }
 
   useEffect(() => {
     fetchFavoriteList()
-  }, [fetchFavoriteList])
+  }, [userId])
 
   const [startAppreciate, setStartAppreciate] = useState(false)
 

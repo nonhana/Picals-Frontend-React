@@ -1,14 +1,14 @@
+import { FC, useEffect, useState, useContext } from 'react'
+import { useDispatch } from 'react-redux'
+import type { UserItemInfo } from '@/utils/types'
+import UserItem from '@/components/common/user-item'
+import { useMap } from '@/hooks'
+import Pagination from '@/components/common/pagination'
 import { likeActionsAPI, userActionsAPI, getFansListAPI, getFollowingListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import Pagination from '@/components/common/pagination'
-import UserItem from '@/components/common/user-item'
-import UserListSkeleton from '@/components/skeleton/user-list'
-import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
-import type { UserItemInfo } from '@/utils/types'
-import { FC, useEffect, useState, useContext, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import UserListSkeleton from '@/components/skeleton/user-list'
 import { CSSTransition } from 'react-transition-group'
 
 type UserListProps = {
@@ -60,7 +60,7 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
 
   const [gettingUser, setGettingUser] = useState(true) // 获取用户列表中
 
-  const getUserList = useCallback(async () => {
+  const getUserList = async () => {
     setGettingUser(true)
     try {
       const { data } =
@@ -83,11 +83,11 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
     } finally {
       setGettingUser(false)
     }
-  }, [current, currentPath, userId, setUserList])
+  }
 
   useEffect(() => {
     getUserList()
-  }, [getUserList])
+  }, [currentPath, userId, current])
 
   return (
     <div className='relative p-5 w-full min-h-160'>

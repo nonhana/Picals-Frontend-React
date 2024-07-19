@@ -1,13 +1,13 @@
-import { getIllustratorDetailAPI } from '@/apis'
+import { FC, useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import type { IllustratorInfo } from '@/apis/illustrator/types'
+import { Button } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
 import InfoModal from '@/components/illustrator/info-modal'
+import { getIllustratorDetailAPI } from '@/apis'
 import WaterfallFlow from '@/components/illustrator/waterfall-flow'
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
-import { FC, useCallback, useEffect, useState } from 'react'
-import { PhotoView } from 'react-photo-view'
-import { useNavigate, useParams } from 'react-router-dom'
 
 const Illustrator: FC = () => {
   const navigate = useNavigate()
@@ -16,7 +16,7 @@ const Illustrator: FC = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false)
   const [illustratorInfo, setIllustratorInfo] = useState<IllustratorInfo>()
 
-  const getIllustratorDetail = useCallback(async () => {
+  const getIllustratorDetail = async () => {
     try {
       const { data } = await getIllustratorDetailAPI({ id: illustratorId! })
       setIllustratorInfo(data)
@@ -24,11 +24,11 @@ const Illustrator: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [illustratorId])
+  }
 
   useEffect(() => {
     getIllustratorDetail()
-  }, [getIllustratorDetail])
+  }, [illustratorId])
 
   const [startAppreciate, setStartAppreciate] = useState(false)
 

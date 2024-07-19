@@ -1,17 +1,17 @@
-import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
-import type { HistoryItem } from '@/apis/types'
-import Empty from '@/components/common/empty'
-import GreyButton from '@/components/common/grey-button'
-import Pagination from '@/components/common/pagination'
-import WorkHistoryItem from '@/components/common/work-history-item'
-import WorkListSkeleton from '@/components/skeleton/work-list'
-import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
-import { Icon } from '@iconify/react'
-import dayjs from 'dayjs'
-import { FC, useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { FC, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import WorkHistoryItem from '@/components/common/work-history-item'
+import Pagination from '@/components/common/pagination'
+import Empty from '@/components/common/empty'
 import { CSSTransition } from 'react-transition-group'
+import WorkListSkeleton from '@/components/skeleton/work-list'
+import type { HistoryItem } from '@/apis/types'
+import { Icon } from '@iconify/react'
+import GreyButton from '@/components/common/grey-button'
+import dayjs from 'dayjs'
+import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
+import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
 
 const HistoryList: FC = () => {
   const location = useLocation()
@@ -36,7 +36,7 @@ const HistoryList: FC = () => {
   }
 
   // 获取某一天的浏览记录总数
-  const getHistoryCount = useCallback(async () => {
+  const getHistoryCount = async () => {
     try {
       const { data } = await getViewHistoryTotalAPI({ date: currentDate })
       setWorkCount(data)
@@ -44,11 +44,11 @@ const HistoryList: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [currentDate])
+  }
 
   useEffect(() => {
     getHistoryCount()
-  }, [getHistoryCount])
+  }, [currentDate])
 
   /* ----------作品列表相关---------- */
   const [gettingWorkList, setGettingWorkList] = useState<boolean>(true)
@@ -56,7 +56,7 @@ const HistoryList: FC = () => {
   const [current, setCurrent] = useState(1)
 
   // 获取某一天的浏览记录
-  const getHistoryList = useCallback(async () => {
+  const getHistoryList = async () => {
     setGettingWorkList(true)
     try {
       const { data } = await getViewHistoryAPI({
@@ -71,11 +71,11 @@ const HistoryList: FC = () => {
     } finally {
       setGettingWorkList(false)
     }
-  }, [current, currentDate])
+  }
 
   useEffect(() => {
     getHistoryList()
-  }, [getHistoryList])
+  }, [currentDate, current])
 
   const addWorks = () => {
     dispatch(resetOtherList())

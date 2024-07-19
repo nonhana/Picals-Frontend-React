@@ -1,7 +1,6 @@
-import { isWarmHue } from '@/utils'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
-
+import { isWarmHue } from '@/utils'
 import LazyImg from '../lazy-img'
 
 type LabelImgItemProps = {

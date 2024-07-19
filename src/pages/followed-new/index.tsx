@@ -1,8 +1,8 @@
-import { getFollowNewWorksTotalAPI } from '@/apis'
-import Pagination from '@/components/common/pagination'
-import MainList from '@/components/followed-new/main-list'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
+import MainList from '@/components/followed-new/main-list'
+import Pagination from '@/components/common/pagination'
+import { getFollowNewWorksTotalAPI } from '@/apis'
 
 const FollowedNew: FC = () => {
   const [current, setCurrent] = useState(1)

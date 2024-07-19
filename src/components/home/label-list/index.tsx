@@ -1,9 +1,9 @@
-import Empty from '@/components/common/empty'
+import { FC } from 'react'
+import type { LabelInfo } from '@/utils/types'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
+import Empty from '@/components/common/empty'
 import LabelListSkeleton from '@/components/skeleton/label-list'
-import type { LabelInfo } from '@/utils/types'
-import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 type LabelListProps = {

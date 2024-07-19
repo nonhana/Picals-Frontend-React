@@ -1,13 +1,12 @@
-import App from '@/app'
-import PersonalCenter from '@/pages/personal-center'
 import { lazy } from 'react'
 import type { RouteObject } from 'react-router-dom'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-
-import AuthRouter from './utils/auth-router'
+import App from '@/app'
 import AutoTop from './utils/auto-top'
 import LazyLoad from './utils/lazy-load'
+import AuthRouter from './utils/auth-router'
 import PersonalPage from './utils/personal-page'
+import PersonalCenter from '@/pages/personal-center'
 
 const routeList: RouteObject[] = [
   {

@@ -1,18 +1,18 @@
+import { FC, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useSearchParams, useNavigate, useOutletContext } from 'react-router-dom'
+import type { MenuProps } from 'antd'
+import { Menu, Button, Input, message } from 'antd'
+import { PictureOutlined, UserOutlined } from '@ant-design/icons'
+import { SearchFilter } from '@/utils/types'
+import type { LabelDetailInfo } from '@/utils/types'
+import LabelInfo from '@/components/search-result/label-info'
+import WorkList from '@/components/search-result/work-list'
+import UserList from '@/components/search-result/user-list'
 import { getLabelDetailAPI, newLabelAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import HanaModal from '@/components/common/hana-modal'
-import LabelInfo from '@/components/search-result/label-info'
-import UserList from '@/components/search-result/user-list'
-import WorkList from '@/components/search-result/work-list'
 import { addRecord } from '@/store/modules/searchHistory'
-import { SearchFilter } from '@/utils/types'
-import type { LabelDetailInfo } from '@/utils/types'
-import { PictureOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu, Button, Input, message } from 'antd'
-import type { MenuProps } from 'antd'
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useSearchParams, useNavigate, useOutletContext } from 'react-router-dom'
 
 const items: MenuProps['items'] = [
   {
@@ -62,7 +62,7 @@ const SearchResult: FC = () => {
 
   const [labelDetail, setLabelDetail] = useState<LabelDetailInfo>()
 
-  const getLabelDetail = useCallback(async () => {
+  const getLabelDetail = async () => {
     try {
       const { data } = await getLabelDetailAPI({ name: searchFilter.label })
       if (data) {
@@ -74,7 +74,7 @@ const SearchResult: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [searchFilter.label])
+  }
 
   const likeLabel = () => setLabelDetail((prev) => ({ ...prev!, isMyLike: !prev!.isMyLike }))
 
@@ -85,7 +85,7 @@ const SearchResult: FC = () => {
     getLabelDetail()
     setLabelName(searchFilter.label || '')
     dispatch(addRecord(searchFilter.label))
-  }, [dispatch, getLabelDetail, searchFilter.label])
+  }, [searchFilter.label])
 
   const confirmAddLabel = async () => {
     if (!labelName) return

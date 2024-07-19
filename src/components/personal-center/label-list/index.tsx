@@ -1,11 +1,11 @@
-import { getUserWorksLabelsAPI } from '@/apis'
-import Empty from '@/components/common/empty'
-import LabelItem from '@/components/common/label-item'
-import LabelListSkeleton from '@/components/skeleton/label-list'
-import { PersonalContext } from '@/pages/personal-center'
+import { FC, useEffect, useState, useContext } from 'react'
 import type { LabelInfo } from '@/utils/types'
-import { FC, useEffect, useState, useContext, useCallback } from 'react'
+import LabelItem from '@/components/common/label-item'
+import { getUserWorksLabelsAPI } from '@/apis'
+import { PersonalContext } from '@/pages/personal-center'
 import { CSSTransition } from 'react-transition-group'
+import LabelListSkeleton from '@/components/skeleton/label-list'
+import Empty from '@/components/common/empty'
 
 const LabelList: FC = () => {
   const { userId } = useContext(PersonalContext)
@@ -13,7 +13,7 @@ const LabelList: FC = () => {
   const [labels, setLabels] = useState<LabelInfo[]>([])
   const [gettingLabels, setGettingLabels] = useState(true)
 
-  const getLabels = useCallback(async () => {
+  const getLabels = async () => {
     setGettingLabels(true)
     try {
       const { data } = await getUserWorksLabelsAPI({ id: userId! })
@@ -24,11 +24,11 @@ const LabelList: FC = () => {
     } finally {
       setGettingLabels(false)
     }
-  }, [userId])
+  }
 
   useEffect(() => {
     getLabels()
-  }, [getLabels])
+  }, [userId])
 
   return (
     <div className='relative w-full min-h-10'>

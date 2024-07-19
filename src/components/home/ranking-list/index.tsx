@@ -1,10 +1,10 @@
-import { likeActionsAPI } from '@/apis'
-import Empty from '@/components/common/empty'
-import LayoutList from '@/components/common/layout-list'
+import { FC } from 'react'
 import WorkRankItem from '@/components/common/work-rank-item'
 import { useMap } from '@/hooks/useMap'
 import type { WorkRankItemInfo } from '@/utils/types'
-import { FC } from 'react'
+import LayoutList from '@/components/common/layout-list'
+import { likeActionsAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 
 type RankingListProps = {
   loading: boolean

@@ -1,10 +1,10 @@
-import ErrorImg from '@/assets/imgs/500.png'
+import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 import HanaCard from '@/components/common/hana-card'
 import LazyImg from '@/components/common/lazy-img'
+import ErrorImg from '@/assets/imgs/500.png'
 import { Button } from 'antd'
-import { FC } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
-import { useNavigate } from 'react-router-dom'
 
 const Error: FC<FallbackProps> = ({ error }) => {
   const navigate = useNavigate()

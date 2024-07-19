@@ -1,7 +1,7 @@
+import { FC, useEffect, useState } from 'react'
+import { Input, Button, message } from 'antd'
 import HistoryList from '@/components/personal-center/history/history-list'
 import SearchResult from '@/components/personal-center/history/search-result'
-import { Input, Button, message } from 'antd'
-import { FC, useEffect, useState } from 'react'
 
 const { Search } = Input
 

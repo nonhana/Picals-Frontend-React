@@ -1,9 +1,8 @@
-import type { INewIllustratorReq } from '@/apis/illustrator/types'
-import { Icon } from '@iconify/react'
-import { Flex, Input, Modal, Select, Upload, message, notification, type UploadProps } from 'antd'
 import { FC, useState } from 'react'
+import { Flex, Input, Modal, Select, Upload, message, notification, type UploadProps } from 'antd'
 import { CSSTransition } from 'react-transition-group'
-
+import { Icon } from '@iconify/react'
+import type { INewIllustratorReq } from '@/apis/illustrator/types'
 import LazyImg from '../lazy-img'
 
 const { Option } = Select

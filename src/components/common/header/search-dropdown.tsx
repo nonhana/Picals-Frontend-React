@@ -1,18 +1,17 @@
-import { getRecommendLabelListAPI } from '@/apis'
-import LayoutList from '@/components/common/layout-list'
-import { clear } from '@/store/modules/searchHistory'
-import type { AppState } from '@/store/types'
-import type { LabelInfo } from '@/utils/types'
-import { Icon } from '@iconify/react'
-import { Modal, message } from 'antd'
 import { FC, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import type { AppState } from '@/store/types'
+import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
-
-import Empty from '../empty'
-import LabelImgItem from '../label-img-item'
+import { Modal, message } from 'antd'
 import LabelItem from '../label-item'
+import LabelImgItem from '../label-img-item'
+import LayoutList from '@/components/common/layout-list'
+import Empty from '../empty'
+import { clear } from '@/store/modules/searchHistory'
+import { getRecommendLabelListAPI } from '@/apis'
+import type { LabelInfo } from '@/utils/types'
 
 const { confirm } = Modal
 

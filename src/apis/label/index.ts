@@ -1,5 +1,4 @@
 import request from '@/service'
-
 import { LabelDetailInfo, INewLabelReq } from './types'
 import { Keyword, LabelItem, Name, Pagination } from '../types'
 

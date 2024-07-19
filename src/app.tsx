@@ -1,11 +1,10 @@
-import { FC, useEffect, useRef, useState, useCallback } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, useLocation } from 'react-router-dom'
-
-import Header from './components/common/header'
-import { useWinChange } from './hooks'
 import type { AppState } from './store/types'
+import { Outlet, useLocation } from 'react-router-dom'
+import Header from './components/common/header'
 import { SIDEBAR_WHITE_LIST } from './utils/constants'
+import { useWinChange } from './hooks'
 
 const App: FC = () => {
   const { uploadSuccess } = useSelector((state: AppState) => state.uploadForm)
@@ -17,14 +16,6 @@ const App: FC = () => {
   const appRef = useRef<HTMLDivElement | null>(null)
   const currentWidth = useWinChange(appRef)
 
-  const changeSideBarStatus = useCallback((status: boolean) => {
-    setShowSideBar(status)
-  }, [])
-
-  const changeNaturalSideBarStatus = useCallback((status: boolean) => {
-    setNaturalSideBarVisible(status)
-  }, [])
-
   useEffect(() => {
     if (SIDEBAR_WHITE_LIST.test(location.pathname)) {
       if (naturalSideBarVisible) setMarginTrigger(showSideBar)
@@ -34,15 +25,15 @@ const App: FC = () => {
         showSideBar && location.pathname !== '/login' && SIDEBAR_WHITE_LIST.test(location.pathname),
       )
     }
-  }, [showSideBar, location.pathname, currentWidth, naturalSideBarVisible])
+  }, [showSideBar, location.pathname, currentWidth])
 
   return (
     <>
       {location.pathname !== '/login' && location.pathname !== '/not-found' && !uploadSuccess && (
         <Header
           width={currentWidth}
-          changeSideBarStatus={changeSideBarStatus}
-          changeNaturalSideBarStatus={changeNaturalSideBarStatus}
+          changeSideBarStatus={setShowSideBar}
+          setNaturalSideBarVisible={setNaturalSideBarVisible}
         />
       )}
       <div

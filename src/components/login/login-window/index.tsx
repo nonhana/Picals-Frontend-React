@@ -1,9 +1,4 @@
-import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
 import logo from '@/assets/svgs/logo.svg'
-import GreyButton from '@/components/common/grey-button'
-import { setFavoriteList } from '@/store/modules/favorites'
-import { setLikedLabels, setLoginStatus, setTempId, setUserInfo } from '@/store/modules/user'
-import { Icon } from '@iconify/react'
 import {
   notification,
   Button,
@@ -17,7 +12,12 @@ import {
 import { FC, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Icon } from '@iconify/react'
 import { CSSTransition } from 'react-transition-group'
+import GreyButton from '@/components/common/grey-button'
+import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
+import { setLikedLabels, setLoginStatus, setTempId, setUserInfo } from '@/store/modules/user'
+import { setFavoriteList } from '@/store/modules/favorites'
 
 // 登录表单
 type LoginForm = {

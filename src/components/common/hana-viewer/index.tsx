@@ -1,6 +1,6 @@
-import { Modal, message } from 'antd'
 import { FC } from 'react'
 import { PhotoProvider } from 'react-photo-view'
+import { Modal, message } from 'antd'
 
 const { confirm } = Modal
 

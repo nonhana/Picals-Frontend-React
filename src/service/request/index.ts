@@ -1,9 +1,8 @@
-import { refreshTokenAPI } from '@/apis/user'
-import { notification } from 'antd'
 import axios from 'axios'
+import { notification } from 'antd'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
-
 import type { RequestConfig, RequestInterceptors, CreateRequestConfig } from './types'
+import { refreshTokenAPI } from '@/apis/user'
 
 interface PendingTask {
   config: AxiosRequestConfig

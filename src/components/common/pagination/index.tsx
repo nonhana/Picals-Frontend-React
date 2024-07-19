@@ -1,7 +1,7 @@
-import paginationLeft from '@/assets/svgs/pagination-left.svg'
-import paginationMore from '@/assets/svgs/pagination-more.svg'
-import paginationRight from '@/assets/svgs/pagination-right.svg'
 import { FC } from 'react'
+import paginationLeft from '@/assets/svgs/pagination-left.svg'
+import paginationRight from '@/assets/svgs/pagination-right.svg'
+import paginationMore from '@/assets/svgs/pagination-more.svg'
 
 type PaginationProps = {
   total: number

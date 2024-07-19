@@ -1,20 +1,20 @@
-import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
-import Empty from '@/components/common/empty'
+import { FC, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { AppState } from '@/store/types'
 import LayoutList from '@/components/common/layout-list'
 import WorkNormalItem from '@/components/common/work-normal-item'
-import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import Empty from '@/components/common/empty'
+import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
+import WorkListSkeleton from '@/components/skeleton/work-list'
+import { CSSTransition } from 'react-transition-group'
 import {
   pushToFollowingNewWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { AppState } from '@/store/types'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { FC, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { CSSTransition } from 'react-transition-group'
 
 type FollowedWorksProps = {
   loading: boolean
@@ -28,7 +28,7 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
 
   useEffect(() => {
     setWorkList(sourceData)
-  }, [setWorkList, sourceData])
+  }, [sourceData])
 
   const handleLike = async (id: string) => {
     await likeActionsAPI({ id })

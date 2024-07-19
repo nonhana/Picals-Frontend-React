@@ -1,9 +1,8 @@
-import { debounce } from 'lodash'
 import { FC, useRef, useState } from 'react'
-import { Cropper, ReactCropperElement } from 'react-cropper'
-
+import Cropper, { ReactCropperElement } from 'react-cropper'
 import 'cropperjs/dist/cropper.css'
 import HanaModal from '../hana-modal'
+import { debounce } from 'lodash'
 
 type HanaCropperProps = {
   loading: boolean

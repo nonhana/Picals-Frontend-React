@@ -1,5 +1,10 @@
-import Header from '@/components/personal-center/header'
+import { FC, useState, createContext, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { AppState } from '@/store/types'
+import { useOutletContext, Outlet, useNavigate, useLocation, useParams } from 'react-router-dom'
+import Header from '@/components/personal-center/header'
+import type { MenuProps } from 'antd'
+import { Menu } from 'antd'
 import {
   PictureOutlined,
   HeartOutlined,
@@ -8,11 +13,6 @@ import {
   TeamOutlined,
   HistoryOutlined,
 } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
-import { Menu } from 'antd'
-import { FC, useState, createContext, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useOutletContext, Outlet, useNavigate, useLocation, useParams } from 'react-router-dom'
 
 const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '', width: 0 })
 

@@ -1,12 +1,11 @@
-import { AppState } from '@/store/types'
-import type { UserDetailInfo } from '@/utils/types'
-import { Button } from 'antd'
 import { FC } from 'react'
-import { PhotoView } from 'react-photo-view'
-import { useSelector } from 'react-redux'
-
+import type { UserDetailInfo } from '@/utils/types'
 import HanaModal from '../common/hana-modal'
 import HanaViewer from '../common/hana-viewer'
+import { PhotoView } from 'react-photo-view'
+import { Button } from 'antd'
+import { useSelector } from 'react-redux'
+import { AppState } from '@/store/types'
 
 const genderMap = {
   0: '男性',

@@ -1,6 +1,5 @@
-import { random } from 'lodash'
 import { FC, useEffect, useState } from 'react'
-
+import { random } from 'lodash'
 import LazyImg from '../lazy-img'
 
 // 动态导入所有图片
@@ -40,9 +39,7 @@ const Empty: FC<EmptyProps> = ({
     <div
       {...props}
       style={{ width, height }}
-      className={
-        'z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-#f8f8f8 rd-1'
-      }>
+      className={`z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-#f8f8f8 rd-1`}>
       {showImg && randomImg && (
         <LazyImg className='rd-1' width={200} height={200} src={randomImg} alt='empty' />
       )}

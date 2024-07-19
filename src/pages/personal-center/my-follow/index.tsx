@@ -1,7 +1,6 @@
-import { getFollowingTotalAPI } from '@/apis'
+import { FC, useState, useEffect, useContext } from 'react'
 import UserList from '@/components/personal-center/user-list'
-import { FC, useState, useEffect, useContext, useCallback } from 'react'
-
+import { getFollowingTotalAPI } from '@/apis'
 import { PersonalContext } from '..'
 
 const MyFollow: FC = () => {
@@ -9,7 +8,7 @@ const MyFollow: FC = () => {
 
   const [total, setTotal] = useState(0) // 用户总数
 
-  const getFollowingTotal = useCallback(async () => {
+  const getFollowingTotal = async () => {
     try {
       const { data } = await getFollowingTotalAPI({ id: userId })
       setTotal(data)
@@ -17,11 +16,11 @@ const MyFollow: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [userId])
+  }
 
   useEffect(() => {
     getFollowingTotal()
-  }, [getFollowingTotal])
+  }, [userId])
 
   return (
     <div className='relative w-full'>

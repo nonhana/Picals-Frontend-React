@@ -1,5 +1,4 @@
 import request from '@/service'
-
 import {
   FavoriteDetailInfo,
   IChangeFavoriteOrderReq,

@@ -1,10 +1,10 @@
-import type { AppState } from '@/store/types'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { Icon } from '@iconify/react'
 import { FC } from 'react'
+import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useParams, Link } from 'react-router-dom'
-
+import type { AppState } from '@/store/types'
+import { Link } from 'react-router-dom'
+import { Icon } from '@iconify/react'
+import type { WorkNormalItemInfo } from '@/utils/types'
 import LazyImg from '../lazy-img'
 
 type WorkLittleItemProps = {

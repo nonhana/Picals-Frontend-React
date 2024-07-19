@@ -1,5 +1,5 @@
-import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { FC, useState } from 'react'
+import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { CSSTransition } from 'react-transition-group'
 
 type LazyImgProps = {

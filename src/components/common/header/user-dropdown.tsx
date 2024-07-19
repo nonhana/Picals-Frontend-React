@@ -1,14 +1,13 @@
-import { reset } from '@/store/modules/favorites'
-import { clear } from '@/store/modules/searchHistory'
-import { logout } from '@/store/modules/user'
+import { FC, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
-import { Modal, message } from 'antd'
-import { FC, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-
+import { Modal, message } from 'antd'
+import { logout } from '@/store/modules/user'
+import { clear } from '@/store/modules/searchHistory'
+import { reset } from '@/store/modules/favorites'
 import LazyImg from '../lazy-img'
 
 const { confirm } = Modal

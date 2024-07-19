@@ -1,21 +1,21 @@
+import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate, useLocation } from 'react-router-dom'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { useMap } from '@/hooks'
+import WorkNormalItem from '@/components/common/work-normal-item'
+import Pagination from '@/components/common/pagination'
+import { Radio, RadioChangeEvent } from 'antd'
 import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import Pagination from '@/components/common/pagination'
-import WorkNormalItem from '@/components/common/work-normal-item'
+import { CSSTransition } from 'react-transition-group'
 import WorkListSkeleton from '@/components/skeleton/work-list'
-import { useMap } from '@/hooks'
 import {
   pushToSearchResultWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { Radio, RadioChangeEvent } from 'antd'
-import { FC, useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -52,7 +52,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
   const [gettingWorkList, setGettingWorkList] = useState(true)
 
-  const searchWorksByLabel = useCallback(async () => {
+  const searchWorksByLabel = async () => {
     setGettingWorkList(true)
     try {
       const { data } = await searchWorksByLabelAPI({
@@ -68,11 +68,11 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     } finally {
       setGettingWorkList(false)
     }
-  }, [current, labelName, setWorkList, sortType])
+  }
 
   useEffect(() => {
     searchWorksByLabel()
-  }, [searchWorksByLabel])
+  }, [labelName, sortType, current])
 
   const handleLike = async (id: string) => {
     try {

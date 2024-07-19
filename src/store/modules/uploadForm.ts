@@ -1,5 +1,5 @@
-import type { UploadWorkFormInfo } from '@/utils/types'
 import { createSlice } from '@reduxjs/toolkit'
+import type { UploadWorkFormInfo } from '@/utils/types'
 
 const uploadFormStore = createSlice({
   name: 'uploadForm',

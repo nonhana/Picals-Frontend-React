@@ -1,9 +1,9 @@
-import { PersonalContext } from '@/pages/personal-center'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import { FC, useState, useContext } from 'react'
 import { Icon } from '@iconify/react'
 import { Dropdown, type MenuProps } from 'antd'
-import { FC, useState, useContext } from 'react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { PersonalContext } from '@/pages/personal-center'
 
 const dropdownList: MenuProps['items'] = [
   {

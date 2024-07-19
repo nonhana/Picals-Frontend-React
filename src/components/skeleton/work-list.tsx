@@ -1,6 +1,6 @@
 import { FC, Fragment, useEffect, useState } from 'react'
-import ContentLoader from 'react-content-loader'
 import { useOutletContext } from 'react-router-dom'
+import ContentLoader from 'react-content-loader'
 
 type WorkListSkeletonProps = {
   heading?: {

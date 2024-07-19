@@ -1,5 +1,4 @@
 import request from '@/service'
-
 import { IEditIllustratorReq, INewIllustratorReq, IllustratorInfo } from './types'
 import { Id, Keyword, Pagination, WorkNormalItem } from '../types'
 

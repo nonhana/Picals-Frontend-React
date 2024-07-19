@@ -1,7 +1,6 @@
-import { getFansTotalAPI } from '@/apis'
+import { FC, useState, useEffect, useContext } from 'react'
 import UserList from '@/components/personal-center/user-list'
-import { FC, useState, useEffect, useContext, useCallback } from 'react'
-
+import { getFansTotalAPI } from '@/apis'
 import { PersonalContext } from '..'
 
 const MyFans: FC = () => {
@@ -9,7 +8,7 @@ const MyFans: FC = () => {
 
   const [total, setTotal] = useState(0) // 用户总数
 
-  const getFansTotal = useCallback(async () => {
+  const getFansTotal = async () => {
     try {
       const { data } = await getFansTotalAPI({ id: userId })
       setTotal(data)
@@ -17,11 +16,11 @@ const MyFans: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [userId])
+  }
 
   useEffect(() => {
     getFansTotal()
-  }, [getFansTotal])
+  }, [userId])
 
   return (
     <div className='relative w-full'>

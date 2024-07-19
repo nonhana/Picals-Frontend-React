@@ -1,16 +1,15 @@
-import logo from '@/assets/svgs/logo.svg'
-import type { AppState } from '@/store/types'
-import { SIDEBAR_WHITE_LIST, TRIGGER_MAX_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils/constants'
-import { Icon } from '@iconify/react'
-import type { InputRef } from 'antd'
-import { Button, Input, message } from 'antd'
 import { FC, useEffect, useRef, useState } from 'react'
+import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/utils/constants'
+import logo from '@/assets/svgs/logo.svg'
+import { Icon } from '@iconify/react'
+import { Input, Button, message } from 'antd'
+import type { InputRef } from 'antd'
 import { useSelector } from 'react-redux'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-
+import type { AppState } from '@/store/types'
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import UserDropdown from './user-dropdown'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
-import UserDropdown from './user-dropdown'
 import LazyImg from '../lazy-img'
 
 const { Search } = Input
@@ -18,10 +17,10 @@ const { Search } = Input
 type HeaderProps = {
   width: number
   changeSideBarStatus: (status: boolean) => void
-  changeNaturalSideBarStatus: (status: boolean) => void
+  setNaturalSideBarVisible: (status: boolean) => void
 }
 
-const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, changeNaturalSideBarStatus }) => {
+const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBarVisible }) => {
   const searchParams = useSearchParams()[0]
   const searchLabel = searchParams.get('label')
   const location = useLocation()
@@ -30,7 +29,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, changeNaturalSide
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
 
-  useEffect(() => changeSideBarStatus(showSidebar), [showSidebar, changeSideBarStatus])
+  useEffect(() => changeSideBarStatus(showSidebar), [showSidebar])
 
   // 当路径变化时，隐藏所有工具栏
   useEffect(() => {
@@ -43,13 +42,13 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, changeNaturalSide
     if (!SIDEBAR_WHITE_LIST.test(location.pathname)) return
     if (width < TRIGGER_MIN_WIDTH) {
       setShowSidebar(false)
-      changeNaturalSideBarStatus(false)
+      setNaturalSideBarVisible(false)
     }
     if (width > TRIGGER_MAX_WIDTH) {
       setShowSidebar(true)
-      changeNaturalSideBarStatus(true)
+      setNaturalSideBarVisible(true)
     }
-  }, [width, location.pathname, changeNaturalSideBarStatus])
+  }, [width, location.pathname])
 
   const { userInfo, isLogin } = useSelector((state: AppState) => state.user)
 
@@ -58,7 +57,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, changeNaturalSide
 
   useEffect(() => {
     setKeyword(searchParams.get('label') || '')
-  }, [searchLabel, searchParams])
+  }, [searchLabel])
 
   const handleSearch = (value: string) => {
     value = value.trim()

@@ -1,10 +1,10 @@
-import LazyImg from '@/components/common/lazy-img'
+import { FC, useState } from 'react'
+import { useSelector } from 'react-redux'
 import type { AppState } from '@/store/types'
 import type { CommentItem } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Button } from 'antd'
-import { FC, useState } from 'react'
-import { useSelector } from 'react-redux'
+import LazyImg from '@/components/common/lazy-img'
 
 interface Replying {
   id: string

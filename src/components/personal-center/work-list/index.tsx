@@ -1,3 +1,9 @@
+import { FC, useEffect, useState, useContext } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import WorkNormalItem from '@/components/common/work-normal-item'
+import Pagination from '@/components/common/pagination'
 import {
   getUserWorksListAPI,
   getUserLikeWorksAPI,
@@ -6,23 +12,17 @@ import {
   getUserLikeWorksIdListAPI,
 } from '@/apis'
 import Empty from '@/components/common/empty'
-import Pagination from '@/components/common/pagination'
-import WorkNormalItem from '@/components/common/work-normal-item'
-import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
+import { message } from 'antd'
+import { CSSTransition } from 'react-transition-group'
+import WorkListSkeleton from '@/components/skeleton/work-list'
 import {
   pushToLikeWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { message } from 'antd'
-import { FC, useEffect, useState, useContext, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 
 type WorkListProps = {
   workCount: number
@@ -62,7 +62,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
 
   const [gettingWorkList, setGettingWorkList] = useState(true)
 
-  const getUserWorks = useCallback(async () => {
+  const getUserWorks = async () => {
     setGettingWorkList(true)
     try {
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
@@ -73,9 +73,9 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     } finally {
       setGettingWorkList(false)
     }
-  }, [current, setWorkList, userId])
+  }
 
-  const getUserLikeWorks = useCallback(async () => {
+  const getUserLikeWorks = async () => {
     setGettingWorkList(true)
     try {
       const { data } = await getUserLikeWorksAPI({
@@ -90,17 +90,17 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     } finally {
       setGettingWorkList(false)
     }
-  }, [current, setWorkList, userId])
+  }
 
-  const refreshWorkList = useCallback(async () => {
+  const refreshWorkList = async () => {
     await getWorkCount()
     if (currentPath === 'works') await getUserWorks()
     if (currentPath === 'likes') await getUserLikeWorks()
-  }, [currentPath, getUserLikeWorks, getUserWorks, getWorkCount])
+  }
 
   useEffect(() => {
     refreshWorkList()
-  }, [refreshWorkList])
+  }, [current, currentPath])
 
   useEffect(() => {
     if (userId) setCurrent(1)

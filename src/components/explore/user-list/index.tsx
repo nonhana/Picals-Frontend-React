@@ -1,16 +1,16 @@
-import { getRecommendUserListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
-import { Pagination } from '@/apis/types'
-import UserItem from '@/components/common/user-item'
-import UserListSkeleton from '@/components/skeleton/user-list'
-import { useAtBottom } from '@/hooks'
-import { increaseFollowNum, decreaseFollowNum, setTempId } from '@/store/modules/user'
-import { AppState } from '@/store/types'
-import { generateTempId } from '@/utils'
-import type { UserItemInfo } from '@/utils/types'
-import { message } from 'antd'
-import { FC, useEffect, useState, useCallback } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { AppState } from '@/store/types'
+import type { UserItemInfo } from '@/utils/types'
+import { generateTempId } from '@/utils'
+import UserItem from '@/components/common/user-item'
+import { useAtBottom } from '@/hooks'
+import { getRecommendUserListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
+import { message } from 'antd'
+import { increaseFollowNum, decreaseFollowNum, setTempId } from '@/store/modules/user'
+import UserListSkeleton from '@/components/skeleton/user-list'
 import { CSSTransition } from 'react-transition-group'
+import { Pagination } from '@/apis/types'
 
 type UserListProps = {
   width: number
@@ -32,7 +32,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
   const [isFinal, setIsFinal] = useState(false)
 
   // 获取推荐用户列表
-  const getRecommendUserList = useCallback(async () => {
+  const getRecommendUserList = async () => {
     try {
       const params: Pagination = { current, pageSize: 6 }
       if (!isLogin) {
@@ -55,15 +55,15 @@ const UserList: FC<UserListProps> = ({ width }) => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [current, dispatch, isFinal, isLogin, tempId])
+  }
 
   useEffect(() => {
     if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
-  }, [atBottom, isFinal])
+  }, [atBottom])
 
   useEffect(() => {
     getRecommendUserList()
-  }, [getRecommendUserList])
+  }, [current])
 
   const handleFollow = async (page: number, id: string) => {
     if (id === storeId) {

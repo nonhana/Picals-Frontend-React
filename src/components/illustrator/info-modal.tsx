@@ -1,10 +1,9 @@
-import type { IllustratorInfo } from '@/apis/illustrator/types'
 import { FC, useEffect, useState } from 'react'
-import { PhotoView } from 'react-photo-view'
 import { Link } from 'react-router-dom'
-
+import type { IllustratorInfo } from '@/apis/illustrator/types'
 import HanaModal from '../common/hana-modal'
 import HanaViewer from '../common/hana-viewer'
+import { PhotoView } from 'react-photo-view'
 
 type InfoModalProps = {
   visible: boolean
@@ -17,7 +16,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
 
   useEffect(() => {
     setIllustratorAvatar(info.avatar || `https://fakeimg.pl/400x400?font=noto&text=${info.name}`)
-  }, [info.avatar, info.name, setIllustratorAvatar])
+  }, [info.avatar])
 
   return (
     <HanaModal title='插画家信息' visible={visible} setVisible={setVisible}>

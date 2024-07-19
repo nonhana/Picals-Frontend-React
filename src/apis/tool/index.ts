@@ -1,5 +1,4 @@
 import request from '@/service'
-
 import { IUploadImageReq } from './types'
 
 // 上传单张图片并获取上传进度

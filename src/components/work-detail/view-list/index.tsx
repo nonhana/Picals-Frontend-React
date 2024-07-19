@@ -1,12 +1,14 @@
+import { FC, useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import type { AppState } from '@/store/types'
+import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP, generateTempId } from '@/utils'
 import {
   getRecommendWorksAPI,
   getLatestWorksAPI,
   getUserWorksIdListAPI,
   getWorkSimpleAPI,
 } from '@/apis'
-import { Pagination } from '@/apis/types'
-import PaginationComponent from '@/components/common/pagination'
-import { setTempId } from '@/store/modules/user'
 import {
   pushToLatestWorkList,
   pushToRecommendWorkList,
@@ -15,17 +17,14 @@ import {
   setCurrentList,
   setPrevWorkId,
 } from '@/store/modules/viewList'
-import type { AppState } from '@/store/types'
-import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP, generateTempId } from '@/utils'
-import { WorkNormalItemInfo } from '@/utils/types'
-import { Icon } from '@iconify/react'
 import { message, InputNumber, Button } from 'antd'
-import { FC, useState, useEffect, useCallback, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
-
+import PaginationComponent from '@/components/common/pagination'
+import { Icon } from '@iconify/react'
 import WorkSlideWindow from '../work-slide-window'
+import { WorkNormalItemInfo } from '@/utils/types'
+import { CSSTransition } from 'react-transition-group'
+import { Pagination } from '@/apis/types'
+import { setTempId } from '@/store/modules/user'
 
 const viewListClasses =
   'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-#f5f5f5 cursor-pointer flex justify-between items-center px-5 color-#3d3d3d'
@@ -95,7 +94,6 @@ const ViewList: FC<ViewListProps> = ({
   }, [currentList, lists])
 
   //#region 分页获取推荐作品列表
-  const recommendMounted = useRef(false)
   const [recommendCurrent, setRecommendCurrent] = useState<number>()
   const recommendPageSize = 30
   const [recommendIsFinal, setRecommendIsFinal] = useState(false)
@@ -110,47 +108,40 @@ const ViewList: FC<ViewListProps> = ({
   const [recommendListEnd, setRecommendListEnd] = useState(false)
   const [recommendInit, setRecommendInit] = useState(true)
 
-  const initRecommendWorksList = useCallback(
-    async (initPage: number) => {
-      setRecommendInit(true)
-      try {
-        for (let i = 1; i <= initPage; i++) {
-          const targetList = lists.recommendWorkList.slice(
-            (i - 1) * recommendPageSize,
-            i * recommendPageSize,
-          )
-          const resultList = await Promise.all(
-            targetList.map(async (id) => {
-              const { data } = await getWorkSimpleAPI({ id })
-              return data
-            }),
-          )
-          setRecommendWorkList((prev) => [...prev, { page: i, list: resultList }])
-        }
-        setRecommendWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
-      } catch (error) {
-        console.log('出现错误了喵！！', error)
-        return
-      } finally {
-        setRecommendInit(false)
+  const initRecommendWorksList = async (initPage: number) => {
+    setRecommendInit(true)
+    try {
+      for (let i = 1; i <= initPage; i++) {
+        const targetList = lists.recommendWorkList.slice(
+          (i - 1) * recommendPageSize,
+          i * recommendPageSize,
+        )
+        const resultList = await Promise.all(
+          targetList.map(async (id) => {
+            const { data } = await getWorkSimpleAPI({ id })
+            return data
+          }),
+        )
+        setRecommendWorkList((prev) => [...prev, { page: i, list: resultList }])
       }
-    },
-    [lists.recommendWorkList],
-  )
+      setRecommendWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    } finally {
+      setRecommendInit(false)
+    }
+  }
 
   useEffect(() => {
-    if (recommendMounted.current) return
     if (allowListName === 'recommendWorkList') {
       const initPage = Math.ceil(lists.recommendWorkList.length / recommendPageSize)
-      console.log('是在位置3触发的')
       setRecommendCurrent(initPage)
       initRecommendWorksList(initPage)
-      recommendMounted.current = true
     }
-  }, [allowListName, initRecommendWorksList, lists.recommendWorkList.length])
+  }, [allowListName])
 
-  const getRecommendWorksList = useCallback(async () => {
-    console.log('推荐函数发生变化', recommendCurrent, recommendIsFinal, tempId, isLogin, dispatch)
+  const getRecommendWorksList = async () => {
     setRecommendLoading(true)
     try {
       const params: Pagination = {
@@ -183,11 +174,10 @@ const ViewList: FC<ViewListProps> = ({
     } finally {
       setRecommendLoading(false)
     }
-  }, [recommendCurrent, recommendIsFinal, tempId, isLogin, dispatch])
+  }
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList' && recommendCurrent) {
-      console.log(allowListName, recommendCurrent)
       setRecommendCurrentChanged((prev) => prev + 1)
     }
   }, [recommendCurrent, allowListName])
@@ -197,32 +187,30 @@ const ViewList: FC<ViewListProps> = ({
       if (recommendLoading) messageApi.loading('正在获取推荐作品列表...', 0)
       else messageApi.destroy()
     }
-  }, [recommendLoading, allowListName, messageApi])
+  }, [recommendLoading, allowListName])
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList' && recommendCurrentChanged > 1) {
-      console.log('是在 getRecommendWorksList 外部触发的', allowListName, recommendCurrentChanged)
       getRecommendWorksList()
     }
-  }, [recommendCurrentChanged, allowListName, getRecommendWorksList])
+  }, [recommendCurrentChanged, allowListName])
 
   useEffect(() => {
     if (
       allowListName === 'recommendWorkList' &&
       currentIndex >= currentListLength &&
-      !recommendIsFinal
+      !recommendIsFinal &&
+      recommendCurrent
     ) {
-      console.log('是在位置1触发的')
       setRecommendCurrent((prev) => prev! + 1)
     }
-  }, [currentIndex, allowListName, currentListLength, recommendIsFinal])
+  }, [currentIndex, allowListName])
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList' && recommendListEnd && !recommendIsFinal) {
-      console.log('是在位置2触发的')
       setRecommendCurrent((prev) => prev! + 1)
     }
-  }, [recommendListEnd, allowListName, recommendIsFinal])
+  }, [recommendListEnd, allowListName])
   //#endregion
 
   //#region 分页获取最新作品列表
@@ -240,33 +228,27 @@ const ViewList: FC<ViewListProps> = ({
   const [latestListEnd, setLatestListEnd] = useState(false)
   const [latestInit, setLatestInit] = useState(true)
 
-  const initLatestWorksList = useCallback(
-    async (initPage: number) => {
-      setLatestInit(true)
-      try {
-        for (let i = 1; i <= initPage; i++) {
-          const targetList = lists.latestWorkList.slice(
-            (i - 1) * latestPageSize,
-            i * latestPageSize,
-          )
-          const resultList = await Promise.all(
-            targetList.map(async (id) => {
-              const { data } = await getWorkSimpleAPI({ id })
-              return data
-            }),
-          )
-          setLatestWorkList((prev) => [...prev, { page: i, list: resultList }])
-        }
-        setLatestWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
-      } catch (error) {
-        console.log('出现错误了喵！！', error)
-        return
-      } finally {
-        setLatestInit(false)
+  const initLatestWorksList = async (initPage: number) => {
+    setLatestInit(true)
+    try {
+      for (let i = 1; i <= initPage; i++) {
+        const targetList = lists.latestWorkList.slice((i - 1) * latestPageSize, i * latestPageSize)
+        const resultList = await Promise.all(
+          targetList.map(async (id) => {
+            const { data } = await getWorkSimpleAPI({ id })
+            return data
+          }),
+        )
+        setLatestWorkList((prev) => [...prev, { page: i, list: resultList }])
       }
-    },
-    [lists.latestWorkList],
-  )
+      setLatestWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
+    } catch (error) {
+      console.log('出现错误了喵！！', error)
+      return
+    } finally {
+      setLatestInit(false)
+    }
+  }
 
   useEffect(() => {
     if (allowListName === 'latestWorkList') {
@@ -274,9 +256,9 @@ const ViewList: FC<ViewListProps> = ({
       setLatestCurrent(initPage)
       initLatestWorksList(initPage)
     }
-  }, [allowListName, initLatestWorksList, lists.latestWorkList.length])
+  }, [allowListName])
 
-  const getLatestWorksList = useCallback(async () => {
+  const getLatestWorksList = async () => {
     setLatestLoading(true)
     try {
       const { data } = await getLatestWorksAPI({
@@ -304,7 +286,7 @@ const ViewList: FC<ViewListProps> = ({
     } finally {
       setLatestLoading(false)
     }
-  }, [dispatch, latestCurrent, latestIsFinal])
+  }
 
   useEffect(() => {
     if (allowListName === 'latestWorkList' && latestCurrent) {
@@ -317,13 +299,13 @@ const ViewList: FC<ViewListProps> = ({
       if (latestLoading) messageApi.loading('正在获取最新作品列表...', 0)
       else messageApi.destroy()
     }
-  }, [latestLoading, allowListName, messageApi])
+  }, [latestLoading, allowListName])
 
   useEffect(() => {
     if (allowListName === 'latestWorkList' && latestCurrentChanged > 1) {
       getLatestWorksList()
     }
-  }, [latestCurrentChanged, allowListName, getLatestWorksList])
+  }, [latestCurrentChanged, allowListName])
 
   useEffect(() => {
     if (
@@ -334,13 +316,13 @@ const ViewList: FC<ViewListProps> = ({
     ) {
       setLatestCurrent((prev) => prev! + 1)
     }
-  }, [currentIndex, allowListName, currentListLength, latestIsFinal, latestCurrent])
+  }, [currentIndex, allowListName])
 
   useEffect(() => {
     if (allowListName === 'latestWorkList' && latestListEnd && !latestIsFinal) {
       setLatestCurrent((prev) => prev! + 1)
     }
-  }, [latestListEnd, allowListName, latestIsFinal])
+  }, [latestListEnd, allowListName])
   //#endregion
 
   //#region 分页获取当前浏览的作品列表信息（用户作品列表和推荐作品列表除外）
@@ -356,7 +338,7 @@ const ViewList: FC<ViewListProps> = ({
   const pageSize = 30
   const [initializing, setInitializing] = useState(true)
 
-  const fetchCurrentWorkList = useCallback(async () => {
+  const fetchCurrentWorkList = async () => {
     if (current === 1) setInitializing(true)
     try {
       const targetList = lists[currentList as keyof typeof lists].slice(
@@ -386,16 +368,16 @@ const ViewList: FC<ViewListProps> = ({
     } finally {
       setInitializing(false)
     }
-  }, [current, currentList, isFinal, lists])
+  }
 
   useEffect(() => {
     if (allowListName && allowListName !== 'recommendWorkList' && listEnd && !isFinal)
       setCurrent((prev) => prev + 1)
-  }, [listEnd, allowListName, isFinal])
+  }, [listEnd, allowListName])
 
   useEffect(() => {
     if (allowListName && allowListName !== 'recommendWorkList') fetchCurrentWorkList()
-  }, [current, allowListName, fetchCurrentWorkList])
+  }, [current, allowListName])
   //#endregion
 
   // 获取到目前正在浏览的作品id列表，并找到当前作品id对应的索引
@@ -413,7 +395,7 @@ const ViewList: FC<ViewListProps> = ({
         dispatch(setCurrentIndex(index + 1))
       }
     }
-  }, [lists, currentList, workId, userWorkList, dispatch])
+  }, [lists, currentList, workId, userWorkList])
 
   const changeList = (listName: string) => {
     if (currentList !== listName) {
@@ -428,7 +410,7 @@ const ViewList: FC<ViewListProps> = ({
   }
 
   // 获取到当前作品的作者的作品id列表
-  const getUserWorksIdList = useCallback(async () => {
+  const getUserWorksIdList = async () => {
     try {
       const { data } = await getUserWorksIdListAPI({ id: workDetailUserId })
       dispatch(pushToUserWorkList(data))
@@ -436,32 +418,29 @@ const ViewList: FC<ViewListProps> = ({
       console.log('出现错误了喵！！', error)
       return
     }
-  }, [dispatch, workDetailUserId])
+  }
 
   useEffect(() => {
     if (workDetailUserId !== '' && userWorkList.length === 0) {
       getUserWorksIdList()
     }
-  }, [getUserWorksIdList, userWorkList.length, workDetailUserId])
+  }, [workDetailUserId])
 
   // 在目前的作品列表中切换
-  const changeIndex = useCallback(
-    (targetIndex: number) => {
-      if (currentList === 'userWorkList') {
-        navigate(`/work-detail/${userWorkList[targetIndex - 1]}`)
-      } else {
-        navigate(`/work-detail/${lists[currentList as keyof typeof lists][targetIndex - 1]}`)
-      }
-    },
-    [currentList, lists, userWorkList, navigate],
-  )
+  const changeIndex = (targetIndex: number) => {
+    if (currentList === 'userWorkList') {
+      navigate(`/work-detail/${userWorkList[targetIndex - 1]}`)
+    } else {
+      navigate(`/work-detail/${lists[currentList as keyof typeof lists][targetIndex - 1]}`)
+    }
+  }
 
   const [showIndexInput, setShowIndexInput] = useState(false)
   const [inputIndex, setInputIndex] = useState(0)
 
   useEffect(() => {
     if (showIndexInput) setInputIndex(currentIndex)
-  }, [currentIndex, showIndexInput])
+  }, [showIndexInput])
 
   // 监听键盘按下事件进行索引切换
   useEffect(() => {
@@ -479,7 +458,7 @@ const ViewList: FC<ViewListProps> = ({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [changeIndex, currentIndex, currentListLength, showIndexInput])
+  }, [currentIndex, currentListLength, showIndexInput])
 
   // WorkSlideWindow 展示状态数组
   const [showSlideWindows, setShowSlideWindows] = useState<[boolean, boolean, boolean, boolean]>([
