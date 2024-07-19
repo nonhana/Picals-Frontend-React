@@ -1,11 +1,11 @@
-import { FC, useEffect, useState, useContext } from 'react'
-import type { LabelInfo } from '@/utils/types'
-import LabelItem from '@/components/common/label-item'
 import { getUserWorksLabelsAPI } from '@/apis'
-import { PersonalContext } from '@/pages/personal-center'
-import { CSSTransition } from 'react-transition-group'
-import LabelListSkeleton from '@/components/skeleton/label-list'
 import Empty from '@/components/common/empty'
+import LabelItem from '@/components/common/label-item'
+import LabelListSkeleton from '@/components/skeleton/label-list'
+import { PersonalContext } from '@/pages/personal-center'
+import type { LabelInfo } from '@/utils/types'
+import { FC, useEffect, useState, useContext } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 const LabelList: FC = () => {
   const { userId } = useContext(PersonalContext)

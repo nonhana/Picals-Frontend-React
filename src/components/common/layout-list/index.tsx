@@ -1,8 +1,8 @@
-import { FC, useEffect, useRef, useState } from 'react'
 import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { CSSTransition } from 'react-transition-group'
 import { debounce } from 'lodash'
+import { FC, useEffect, useRef, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 type ScrollType =
   | 'label'

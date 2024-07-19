@@ -1,18 +1,20 @@
-import ReactDOM from 'react-dom/client'
-import 'react-photo-view/dist/react-photo-view.css'
-import '@unocss/reset/normalize.css'
-import 'uno.css'
-import { persistor, store } from './store'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
-import router from './router'
-import { AliveScope } from 'react-activation'
-import { RouterProvider } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
+import { AliveScope } from 'react-activation'
+import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
-import ErrorPage from './pages/error'
+import 'react-photo-view/dist/react-photo-view.css'
+import { Provider } from 'react-redux'
+import { RouterProvider } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/integration/react'
+import '@unocss/reset/normalize.css'
+// eslint-disable-next-line import/no-unresolved
+import 'uno.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+import ErrorPage from './pages/error'
+import router from './router'
+import { persistor, store } from './store'
+
+createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <AliveScope>

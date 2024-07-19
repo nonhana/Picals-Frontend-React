@@ -2,10 +2,10 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import userReducer from './modules/user'
 import favoriteReducer from './modules/favorites'
 import searchHistoryReducer from './modules/searchHistory'
 import uploadFormReducer from './modules/uploadForm'
+import userReducer from './modules/user'
 import viewListReducer from './modules/viewList'
 
 const rootReducer = combineReducers({

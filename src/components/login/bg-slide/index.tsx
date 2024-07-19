@@ -1,7 +1,7 @@
-import { FC, useEffect, useRef, useState } from 'react'
 import { getRandomBackgroundsAPI } from '@/apis'
 import LazyImg from '@/components/common/lazy-img'
 import { debounce } from 'lodash'
+import { FC, useEffect, useRef, useState } from 'react'
 
 const BgSlide: FC = () => {
   const slideWindow = useRef<HTMLDivElement>(null)

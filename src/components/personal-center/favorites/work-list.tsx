@@ -1,28 +1,28 @@
-import { FC, useEffect, useState, useContext } from 'react'
-import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import type { AppState } from '@/store/types'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import WorkFavoriteItem from '@/components/common/work-favorite-item'
-import Pagination from '@/components/common/pagination'
-import { ExclamationCircleFilled } from '@ant-design/icons'
-import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
-import Empty from '@/components/common/empty'
 import {
   favoriteActionsAPI,
   moveFavoriteWorksAPI,
   copyFavoriteWorksAPI,
   getFavoriteWorkIdListAPI,
 } from '@/apis'
-import { PersonalContext } from '@/pages/personal-center'
-import { CSSTransition } from 'react-transition-group'
+import Empty from '@/components/common/empty'
+import Pagination from '@/components/common/pagination'
+import WorkFavoriteItem from '@/components/common/work-favorite-item'
 import FavoriteWorkListSkeleton from '@/components/skeleton/favorite-work-list'
+import { PersonalContext } from '@/pages/personal-center'
 import {
   pushToFavoriteWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import type { AppState } from '@/store/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { ExclamationCircleFilled } from '@ant-design/icons'
+import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
+import { FC, useEffect, useState, useContext } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 const { Search } = Input
 const { confirm } = Modal

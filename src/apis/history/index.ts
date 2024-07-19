@@ -1,6 +1,7 @@
 import request from '@/service'
-import { Id, Pagination, HistoryItem } from '../types'
+
 import { IGetViewHistoryTotalReq, ISearchViewHistoryReq } from './types'
+import { Id, Pagination, HistoryItem } from '../types'
 
 // 分页获取用户某天的浏览历史记录
 export const getViewHistoryAPI = (params: Pagination) => {

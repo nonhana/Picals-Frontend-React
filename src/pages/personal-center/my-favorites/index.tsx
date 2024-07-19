@@ -1,11 +1,3 @@
-import { FC, useEffect, useState, useContext } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setFavoriteList } from '@/store/modules/favorites'
-import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
-import Sidebar from '@/components/personal-center/favorites/sidebar'
-import Header from '@/components/personal-center/favorites/header'
-import WorkList from '@/components/personal-center/favorites/work-list'
 import {
   getFavoriteDetailAPI,
   getFavoriteWorkListAPI,
@@ -14,8 +6,17 @@ import {
   likeActionsAPI,
   getUserFavoriteListAPI,
 } from '@/apis'
-import { PersonalContext } from '..'
 import Empty from '@/components/common/empty'
+import Header from '@/components/personal-center/favorites/header'
+import Sidebar from '@/components/personal-center/favorites/sidebar'
+import WorkList from '@/components/personal-center/favorites/work-list'
+import { setFavoriteList } from '@/store/modules/favorites'
+import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
+import { FC, useEffect, useState, useContext } from 'react'
+import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
+
+import { PersonalContext } from '..'
 
 const MyFavorites: FC = () => {
   const { isMe, userId } = useContext(PersonalContext)

@@ -1,10 +1,5 @@
-import { FC, useEffect, useState, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
 import { getIllustratorWorksInPagesAPI, getIllustratorWorksIdListAPI } from '@/apis'
 import type { WorkNormalItem } from '@/apis/types'
-import WaterfallItem from '../common/waterfall-item'
 import { useAtBottom } from '@/hooks'
 import {
   pushToIllustratorWorkList,
@@ -12,6 +7,11 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { FC, useEffect, useState, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+
+import WaterfallItem from '../common/waterfall-item'
 
 const listClass = 'absolute w-80 flex flex-col gap-5'
 

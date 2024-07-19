@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
 import type { FavoriteItemInfo } from '@/utils/types'
+import { createSlice } from '@reduxjs/toolkit'
 
 const favoriteStore = createSlice({
   name: 'favorites',

@@ -1,9 +1,3 @@
-import { FC, useEffect, useState, useContext } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import WorkNormalItem from '@/components/common/work-normal-item'
-import Pagination from '@/components/common/pagination'
 import {
   getUserWorksListAPI,
   getUserLikeWorksAPI,
@@ -12,17 +6,23 @@ import {
   getUserLikeWorksIdListAPI,
 } from '@/apis'
 import Empty from '@/components/common/empty'
+import Pagination from '@/components/common/pagination'
+import WorkNormalItem from '@/components/common/work-normal-item'
+import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
-import { message } from 'antd'
-import { CSSTransition } from 'react-transition-group'
-import WorkListSkeleton from '@/components/skeleton/work-list'
 import {
   pushToLikeWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { message } from 'antd'
+import { FC, useEffect, useState, useContext } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 type WorkListProps = {
   workCount: number

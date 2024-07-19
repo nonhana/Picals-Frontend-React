@@ -1,9 +1,9 @@
-import { FC } from 'react'
 import LayoutList from '@/components/common/layout-list'
-import { CSSTransition } from 'react-transition-group'
 import WorkLeastItem from '@/components/common/work-least-item'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { WorkNormalItemInfo } from '@/utils/types'
+import { FC } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 type WorkSlideWindowProps = {
   workId: string

@@ -1,12 +1,12 @@
-import { FC, useState, useEffect } from 'react'
 import { searchViewHistoryAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
-import dayjs from 'dayjs'
-import { Icon } from '@iconify/react'
-import WorkHistoryItem from '@/components/common/work-history-item'
-import { CSSTransition } from 'react-transition-group'
 import Empty from '@/components/common/empty'
+import WorkHistoryItem from '@/components/common/work-history-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
+import { Icon } from '@iconify/react'
+import dayjs from 'dayjs'
+import { FC, useState, useEffect } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 type SearchResultProps = {
   keyword: string

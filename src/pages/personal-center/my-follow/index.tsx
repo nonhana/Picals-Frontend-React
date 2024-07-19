@@ -1,6 +1,7 @@
-import { FC, useState, useEffect, useContext } from 'react'
-import UserList from '@/components/personal-center/user-list'
 import { getFollowingTotalAPI } from '@/apis'
+import UserList from '@/components/personal-center/user-list'
+import { FC, useState, useEffect, useContext } from 'react'
+
 import { PersonalContext } from '..'
 
 const MyFollow: FC = () => {

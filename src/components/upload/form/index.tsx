@@ -1,7 +1,3 @@
-import { FC, useEffect, useState, useMemo, useRef } from 'react'
-import type { UploadWorkFormInfo } from '@/utils/types'
-import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex, Modal } from 'antd'
-import type { SelectProps } from 'antd'
 import {
   searchIllustratorsAPI,
   getIllustratorDetailAPI,
@@ -12,10 +8,14 @@ import {
   getWorkCountAPI,
 } from '@/apis'
 import type { INewIllustratorReq } from '@/apis/illustrator/types'
-import Empty from '@/components/common/empty'
-import { debounce } from 'lodash'
 import CreateIllustratorModal from '@/components/common/create-illustrator-modal'
+import Empty from '@/components/common/empty'
+import type { UploadWorkFormInfo } from '@/utils/types'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex, Modal } from 'antd'
+import type { SelectProps } from 'antd'
+import { debounce } from 'lodash'
+import { FC, useEffect, useState, useMemo, useRef } from 'react'
 
 const { confirm } = Modal
 

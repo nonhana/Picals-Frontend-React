@@ -1,7 +1,7 @@
-import { FC } from 'react'
-import { PhotoView } from 'react-photo-view'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { FC } from 'react'
+import { PhotoView } from 'react-photo-view'
 
 type FavoriteItemProps = {
   id: string

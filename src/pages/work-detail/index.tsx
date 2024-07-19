@@ -1,11 +1,3 @@
-import { FC, useState, useEffect, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import type { AppState } from '@/store/types'
-import { useParams } from 'react-router-dom'
-import WorkInfo from '@/components/work-detail/work-info'
-import UserInfo from '@/components/work-detail/user-info'
-import ViewList from '@/components/work-detail/view-list'
-import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import {
   getWorkDetailAPI,
   getUserWorksListAPI,
@@ -15,14 +7,22 @@ import {
   likeActionsAPI,
   postViewHistoryAPI,
 } from '@/apis'
-import { notification } from 'antd'
-import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import GreyButton from '@/components/common/grey-button'
-import { Icon } from '@iconify/react'
+import UserInfo from '@/components/work-detail/user-info'
+import ViewList from '@/components/work-detail/view-list'
+import WorkInfo from '@/components/work-detail/work-info'
 import { useAtBottom, useAtTop } from '@/hooks'
-import { CSSTransition } from 'react-transition-group'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import { resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
+import type { AppState } from '@/store/types'
+import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
+import { Icon } from '@iconify/react'
+import { notification } from 'antd'
 import { debounce } from 'lodash'
+import { FC, useState, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 const ScrollButtons: FC = () => {
   const isBottom = useAtBottom()

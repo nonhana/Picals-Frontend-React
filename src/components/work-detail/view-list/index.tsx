@@ -1,14 +1,12 @@
-import { FC, useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import type { AppState } from '@/store/types'
-import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP, generateTempId } from '@/utils'
 import {
   getRecommendWorksAPI,
   getLatestWorksAPI,
   getUserWorksIdListAPI,
   getWorkSimpleAPI,
 } from '@/apis'
+import { Pagination } from '@/apis/types'
+import PaginationComponent from '@/components/common/pagination'
+import { setTempId } from '@/store/modules/user'
 import {
   pushToLatestWorkList,
   pushToRecommendWorkList,
@@ -17,14 +15,17 @@ import {
   setCurrentList,
   setPrevWorkId,
 } from '@/store/modules/viewList'
-import { message, InputNumber, Button } from 'antd'
-import PaginationComponent from '@/components/common/pagination'
-import { Icon } from '@iconify/react'
-import WorkSlideWindow from '../work-slide-window'
+import type { AppState } from '@/store/types'
+import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP, generateTempId } from '@/utils'
 import { WorkNormalItemInfo } from '@/utils/types'
+import { Icon } from '@iconify/react'
+import { message, InputNumber, Button } from 'antd'
+import { FC, useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-import { Pagination } from '@/apis/types'
-import { setTempId } from '@/store/modules/user'
+
+import WorkSlideWindow from '../work-slide-window'
 
 const viewListClasses =
   'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-#f5f5f5 cursor-pointer flex justify-between items-center px-5 color-#3d3d3d'

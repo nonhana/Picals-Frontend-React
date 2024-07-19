@@ -1,9 +1,10 @@
-import { FC, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import type { IllustratorInfo } from '@/apis/illustrator/types'
+import { FC, useEffect, useState } from 'react'
+import { PhotoView } from 'react-photo-view'
+import { Link } from 'react-router-dom'
+
 import HanaModal from '../common/hana-modal'
 import HanaViewer from '../common/hana-viewer'
-import { PhotoView } from 'react-photo-view'
 
 type InfoModalProps = {
   visible: boolean

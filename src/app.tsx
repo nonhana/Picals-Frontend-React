@@ -1,10 +1,11 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import type { AppState } from './store/types'
 import { Outlet, useLocation } from 'react-router-dom'
+
 import Header from './components/common/header'
-import { SIDEBAR_WHITE_LIST } from './utils/constants'
 import { useWinChange } from './hooks'
+import type { AppState } from './store/types'
+import { SIDEBAR_WHITE_LIST } from './utils/constants'
 
 const App: FC = () => {
   const { uploadSuccess } = useSelector((state: AppState) => state.uploadForm)

@@ -1,15 +1,16 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/utils/constants'
 import logo from '@/assets/svgs/logo.svg'
+import type { AppState } from '@/store/types'
+import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/utils/constants'
 import { Icon } from '@iconify/react'
 import { Input, Button, message } from 'antd'
 import type { InputRef } from 'antd'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import type { AppState } from '@/store/types'
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
-import UserDropdown from './user-dropdown'
+
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
+import UserDropdown from './user-dropdown'
 import LazyImg from '../lazy-img'
 
 const { Search } = Input

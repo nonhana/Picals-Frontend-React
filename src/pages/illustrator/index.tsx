@@ -1,13 +1,13 @@
-import { FC, useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { getIllustratorDetailAPI } from '@/apis'
 import type { IllustratorInfo } from '@/apis/illustrator/types'
-import { Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import { PhotoView } from 'react-photo-view'
 import HanaViewer from '@/components/common/hana-viewer'
 import InfoModal from '@/components/illustrator/info-modal'
-import { getIllustratorDetailAPI } from '@/apis'
 import WaterfallFlow from '@/components/illustrator/waterfall-flow'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { Button } from 'antd'
+import { FC, useEffect, useState } from 'react'
+import { PhotoView } from 'react-photo-view'
+import { useParams, useNavigate } from 'react-router-dom'
 
 const Illustrator: FC = () => {
   const navigate = useNavigate()
