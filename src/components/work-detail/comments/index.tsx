@@ -1,15 +1,16 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { deleteCommentAPI, getCommentListAPI, postCommentAPI } from '@/apis'
+import { IPostCommentReq } from '@/apis/comment/types'
+import Empty from '@/components/common/empty'
+import LazyImg from '@/components/common/lazy-img'
 import type { AppState } from '@/store/types'
-import Comment from './comment'
-import InputWindow from './input-window'
 import type { CommentItem } from '@/utils/types'
 import { Input, Button, message, Modal } from 'antd'
-import { deleteCommentAPI, getCommentListAPI, postCommentAPI } from '@/apis'
-import Empty from '@/components/common/empty'
-import { IPostCommentReq } from '@/apis/comment/types'
-import LazyImg from '@/components/common/lazy-img'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+
+import Comment from './comment'
+import InputWindow from './input-window'
 
 const { confirm } = Modal
 
@@ -33,7 +34,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
   const [commentList, setCommentList] = useState<CommentItem[]>([])
   const [count, setCount] = useState(totalCount)
 
-  const fetchCommentList = async () => {
+  const fetchCommentList = useCallback(async () => {
     try {
       const { data } = await getCommentListAPI({ id: workId! })
       setCommentList(data)
@@ -41,11 +42,11 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [workId])
 
   useEffect(() => {
     fetchCommentList()
-  }, [workId])
+  }, [fetchCommentList])
 
   const [upContent, setUpContent] = useState('') // 上方输入框的内容
   const [downContent, setDownContent] = useState('') // 下方输入框的内容
@@ -60,16 +61,14 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
 
   const inputRef = useRef<HTMLDivElement | null>(null)
   const [inputIsInWindow, setInputIsInWindow] = useState(false)
-  let inputRefObserver: IntersectionObserver | null = null
 
   const workInfoRef = useRef<HTMLElement | null>(null)
   const [workInfoIsInWindow, setWorkInfoIsInWindow] = useState(false)
-  let workInfoRefObserver: IntersectionObserver | null = null
 
   useEffect(() => {
     if (!loading) workInfoRef.current = document.getElementById('work-info')
     if (workInfoRef.current) {
-      workInfoRefObserver = new IntersectionObserver((entries) => {
+      const workInfoRefObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setWorkInfoIsInWindow(true)
@@ -87,7 +86,7 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRefObserver = new IntersectionObserver((entries) => {
+      const inputRefObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setInputIsInWindow(true)

@@ -1,7 +1,8 @@
-import { FC, useEffect, useState, useContext } from 'react'
+import { getUserWorksTotalAPI } from '@/apis'
 import LabelList from '@/components/personal-center/label-list'
 import WorkList from '@/components/personal-center/work-list'
-import { getUserWorksTotalAPI } from '@/apis'
+import { FC, useEffect, useState, useContext, useCallback } from 'react'
+
 import { PersonalContext } from '..'
 
 const MyWorks: FC = () => {
@@ -9,7 +10,7 @@ const MyWorks: FC = () => {
 
   const [workCount, setWorkCount] = useState<number>(0)
 
-  const getWorkCount = async () => {
+  const getWorkCount = useCallback(async () => {
     try {
       const { data } = await getUserWorksTotalAPI({ id: userId })
       setWorkCount(data)
@@ -17,11 +18,11 @@ const MyWorks: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     getWorkCount()
-  }, [userId])
+  }, [getWorkCount])
 
   return (
     <div className='relative w-full'>

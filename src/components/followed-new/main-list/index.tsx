@@ -1,21 +1,20 @@
-import { FC, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { AppState } from '@/store/types'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import WorkNormalItem from '@/components/common/work-normal-item'
-import { useMap } from '@/hooks/useMap'
-import { getFollowNewWorksAPI } from '@/apis'
+import { getFollowNewWorksAPI, likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
-import { CSSTransition } from 'react-transition-group'
+import WorkNormalItem from '@/components/common/work-normal-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
+import { useMap } from '@/hooks/useMap'
 import {
   pushToFollowingNewWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { AppState } from '@/store/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 type MainListProps = {
   pageSize: number
@@ -30,7 +29,7 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
   const [workList, setWorkList, updateWorkList] = useMap<WorkNormalItemInfo>([])
   const [loading, setLoading] = useState(true)
 
-  const getFollowNewWorks = async () => {
+  const getFollowNewWorks = useCallback(async () => {
     setLoading(true)
     try {
       const { data } = await getFollowNewWorksAPI({ pageSize, current })
@@ -41,11 +40,11 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [current, pageSize, setWorkList])
 
   useEffect(() => {
     getFollowNewWorks()
-  }, [current, pageSize])
+  }, [getFollowNewWorks])
 
   const handleLike = async (id: string) => {
     await likeActionsAPI({ id })

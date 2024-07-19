@@ -1,6 +1,4 @@
-import { FC, useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import logo from '@/assets/svgs/logo.svg'
 import type { AppState } from '@/store/types'
 import {
   HEADER_MENU_LIST,
@@ -10,7 +8,9 @@ import {
   TRIGGER_MAX_WIDTH,
 } from '@/utils/constants'
 import { Icon } from '@iconify/react'
-import logo from '@/assets/svgs/logo.svg'
+import { FC, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link, useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 type SidebarProps = {

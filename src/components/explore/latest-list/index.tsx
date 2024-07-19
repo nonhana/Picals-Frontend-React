@@ -1,18 +1,18 @@
-import { FC, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import WorkNormalItem from '@/components/common/work-normal-item'
-import { useAtBottom } from '@/hooks'
 import { getLatestWorksAPI, likeActionsAPI } from '@/apis'
+import WorkNormalItem from '@/components/common/work-normal-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
-import { CSSTransition } from 'react-transition-group'
+import { useAtBottom } from '@/hooks'
 import {
   pushToLatestWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { FC, useEffect, useState, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 const LatestList: FC = () => {
   const location = useLocation()
@@ -29,7 +29,7 @@ const LatestList: FC = () => {
   const atBottom = useAtBottom()
   const [isFinal, setIsFinal] = useState(false)
 
-  const getLatestWorks = async () => {
+  const getLatestWorks = useCallback(async () => {
     try {
       const { data } = await getLatestWorksAPI({ pageSize: 30, current })
       if (data.length < 30) setIsFinal(true)
@@ -47,15 +47,15 @@ const LatestList: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [current, isFinal])
 
   useEffect(() => {
     if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
-  }, [atBottom])
+  }, [atBottom, isFinal])
 
   useEffect(() => {
     getLatestWorks()
-  }, [current])
+  }, [current, getLatestWorks])
 
   const handleLike = async (page: number, id: string) => {
     await likeActionsAPI({ id })

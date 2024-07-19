@@ -1,6 +1,7 @@
 import request from '@/service'
-import { Id } from '../types'
+
 import { CommentItem, IPostCommentReq } from './types'
+import { Id } from '../types'
 
 // 获取某个作品的评论列表
 export const getCommentListAPI = (params: Id) => {

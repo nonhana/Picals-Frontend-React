@@ -1,6 +1,6 @@
 import { FC, Fragment, useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
 import ContentLoader from 'react-content-loader'
+import { useOutletContext } from 'react-router-dom'
 
 type UserListSkeletonProps = {
   row?: number

@@ -1,6 +1,7 @@
-import { FC, useEffect, useState, useContext } from 'react'
-import WorkList from '@/components/personal-center/work-list'
 import { getUserLikeWorksTotalAPI } from '@/apis'
+import WorkList from '@/components/personal-center/work-list'
+import { FC, useEffect, useState, useContext, useCallback } from 'react'
+
 import { PersonalContext } from '..'
 
 const MyLikes: FC = () => {
@@ -8,7 +9,7 @@ const MyLikes: FC = () => {
 
   const [workCount, setWorkCount] = useState<number>(0)
 
-  const getLikeWorkCount = async () => {
+  const getLikeWorkCount = useCallback(async () => {
     try {
       const { data } = await getUserLikeWorksTotalAPI({ id: userId! })
       setWorkCount(data)
@@ -16,11 +17,11 @@ const MyLikes: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     getLikeWorkCount()
-  }, [userId])
+  }, [getLikeWorkCount])
 
   return (
     <div className='relative w-full'>

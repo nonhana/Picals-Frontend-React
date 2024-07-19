@@ -1,13 +1,9 @@
-import { FC, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import type { WorkNormalItemInfo } from '@/utils/types'
+import { getRecommendWorksAPI, likeActionsAPI } from '@/apis'
+import { Pagination } from '@/apis/types'
 import WorkNormalItem from '@/components/common/work-normal-item'
-import { useAtBottom } from '@/hooks'
-import { getRecommendWorksAPI } from '@/apis'
-import { likeActionsAPI } from '@/apis'
 import WorkListSkeleton from '@/components/skeleton/work-list'
-import { CSSTransition } from 'react-transition-group'
+import { useAtBottom } from '@/hooks'
+import { setTempId } from '@/store/modules/user'
 import {
   pushToRecommendWorkList,
   resetOtherList,
@@ -16,8 +12,11 @@ import {
 } from '@/store/modules/viewList'
 import { AppState } from '@/store/types'
 import { generateTempId } from '@/utils'
-import { Pagination } from '@/apis/types'
-import { setTempId } from '@/store/modules/user'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 const WorkList: FC = () => {
   const location = useLocation()
@@ -35,7 +34,7 @@ const WorkList: FC = () => {
   const atBottom = useAtBottom()
   const [isFinal, setIsFinal] = useState(false)
 
-  const getRecommendWorks = async () => {
+  const getRecommendWorks = useCallback(async () => {
     try {
       const params: Pagination = { pageSize: 30, current }
       if (!isLogin) {
@@ -58,15 +57,15 @@ const WorkList: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [current, dispatch, isFinal, isLogin, tempId])
 
   useEffect(() => {
     if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
-  }, [atBottom])
+  }, [atBottom, isFinal])
 
   useEffect(() => {
     getRecommendWorks()
-  }, [current])
+  }, [getRecommendWorks])
 
   const handleLike = async (page: number, id: string) => {
     await likeActionsAPI({ id })

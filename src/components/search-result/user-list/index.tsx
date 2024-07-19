@@ -1,13 +1,13 @@
-import { FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import type { UserItemInfo } from '@/utils/types'
-import UserItem from '@/components/common/user-item'
-import { useMap } from '@/hooks'
-import Pagination from '@/components/common/pagination'
 import { likeActionsAPI, userActionsAPI, searchUserAPI, searchUserTotalAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
+import Pagination from '@/components/common/pagination'
+import UserItem from '@/components/common/user-item'
 import UserListSkeleton from '@/components/skeleton/user-list'
+import { useMap } from '@/hooks'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
+import type { UserItemInfo } from '@/utils/types'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { CSSTransition } from 'react-transition-group'
 
 type UserListProps = {
@@ -54,7 +54,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
     current !== page && setCurrent(page)
   }
 
-  const getUserCount = async () => {
+  const getUserCount = useCallback(async () => {
     try {
       const { data } = await searchUserTotalAPI({ keyword: labelName })
       setTotal(data)
@@ -62,10 +62,10 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [labelName])
 
   const [searchingUser, setSearchingUser] = useState(true)
-  const searchUser = async () => {
+  const searchUser = useCallback(async () => {
     setSearchingUser(true)
     try {
       const { data } = await searchUserAPI({
@@ -80,15 +80,15 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
     } finally {
       setSearchingUser(false)
     }
-  }
+  }, [current, labelName, setUserList])
 
   useEffect(() => {
     getUserCount()
-  }, [labelName])
+  }, [getUserCount])
 
   useEffect(() => {
     searchUser()
-  }, [labelName, current])
+  }, [searchUser])
 
   return (
     <div className='relative p-5 w-full min-h-160 pb-15'>

@@ -1,13 +1,14 @@
-import { FC, useEffect, useState, useRef } from 'react'
 import { updateUserInfoAPI, uploadSingleImageAPI } from '@/apis'
 import type { IUpdateUserInfoReq } from '@/apis/user/types'
-import type { UserDetailInfo } from '@/utils/types'
 import { base64ToFile, MAX_INFO_SIZE } from '@/utils'
+import type { UserDetailInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
-import { CSSTransition } from 'react-transition-group'
 import { Input, Button, message, Radio } from 'antd'
-import HanaModal from '../common/hana-modal'
+import { FC, useEffect, useState, useRef } from 'react'
+import { CSSTransition } from 'react-transition-group'
+
 import HanaCropper from '../common/hana-cropper'
+import HanaModal from '../common/hana-modal'
 import LazyImg from '../common/lazy-img'
 
 const { TextArea } = Input

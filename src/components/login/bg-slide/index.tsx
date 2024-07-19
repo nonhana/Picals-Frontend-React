@@ -1,7 +1,7 @@
-import { FC, useEffect, useRef, useState } from 'react'
 import { getRandomBackgroundsAPI } from '@/apis'
 import LazyImg from '@/components/common/lazy-img'
 import { debounce } from 'lodash'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
 const BgSlide: FC = () => {
   const slideWindow = useRef<HTMLDivElement>(null)
@@ -15,7 +15,7 @@ const BgSlide: FC = () => {
   const [isPaused, setIsPaused] = useState(true)
   const [index, setIndex] = useState(0)
 
-  const getRandomBackgrounds = async () => {
+  const getRandomBackgrounds = useCallback(async () => {
     if (isFetching) return
     setIsFetching(true)
     try {
@@ -32,11 +32,11 @@ const BgSlide: FC = () => {
     } finally {
       setIsFetching(false)
     }
-  }
+  }, [chosenIdList, isFetching])
 
   useEffect(() => {
     getRandomBackgrounds()
-  }, [])
+  }, [getRandomBackgrounds])
 
   useEffect(() => {
     const debouncedGetRandomBackgrounds = debounce(getRandomBackgrounds, 1000)
@@ -47,7 +47,7 @@ const BgSlide: FC = () => {
     return () => {
       debouncedGetRandomBackgrounds.cancel()
     }
-  }, [chosenIdList])
+  }, [chosenIdList, getRandomBackgrounds])
 
   const imgLoaded = (url: string) => {
     setLoadedImgs((prev) => {

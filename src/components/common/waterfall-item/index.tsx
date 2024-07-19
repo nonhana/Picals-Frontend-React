@@ -1,7 +1,8 @@
+import type { WorkNormalItem } from '@/apis/types'
 import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { WorkNormalItem } from '@/apis/types'
 import { CSSTransition } from 'react-transition-group'
+
 import LazyImg from '../lazy-img'
 
 type WaterfallItemProps = {

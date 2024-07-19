@@ -1,7 +1,7 @@
-import { FC } from 'react'
-import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import type { WorkNormalItemInfo } from '@/utils/types'
+import { FC } from 'react'
+import { useParams, Link } from 'react-router-dom'
+
 import LazyImg from '../lazy-img'
 
 type WorkLeastItemProps = {

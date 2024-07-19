@@ -1,8 +1,9 @@
-import { FC, useState } from 'react'
-import { Flex, Input, Modal, Upload, message, notification, type UploadProps } from 'antd'
-import { CSSTransition } from 'react-transition-group'
-import { Icon } from '@iconify/react'
 import type { FavoriteFormInfo } from '@/utils/types'
+import { Icon } from '@iconify/react'
+import { Flex, Input, Modal, Upload, message, notification, type UploadProps } from 'antd'
+import { FC, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
+
 import LazyImg from '../lazy-img'
 
 type CreateFolderModalProps = {

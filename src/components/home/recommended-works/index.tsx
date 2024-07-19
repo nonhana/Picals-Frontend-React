@@ -1,19 +1,19 @@
-import { FC, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import WorkNormalItem from '@/components/common/work-normal-item'
-import { useMap } from '@/hooks'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import Empty from '@/components/common/empty'
 import { likeActionsAPI } from '@/apis'
+import Empty from '@/components/common/empty'
+import WorkNormalItem from '@/components/common/work-normal-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
-import { CSSTransition } from 'react-transition-group'
+import { useMap } from '@/hooks'
 import {
   pushToRecommendWorkList,
   resetOtherList,
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import { FC, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 type RecommendedWorksProps = {
   loading: boolean
@@ -27,7 +27,7 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
 
   useEffect(() => {
     setWorkList(sourceData)
-  }, [sourceData])
+  }, [sourceData, setWorkList])
 
   const handleLike = async (id: string) => {
     await likeActionsAPI({ id })

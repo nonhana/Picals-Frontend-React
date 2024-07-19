@@ -1,21 +1,22 @@
-import { FC, useEffect, useState, useContext } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import type { AppState } from '@/store/types'
+import { getUserDetailAPI, userActionsAPI } from '@/apis'
+import { PersonalContext } from '@/pages/personal-center'
 import {
   decreaseFollowNum,
   increaseFollowNum,
   setUserInfo as setLocalUserInfo,
 } from '@/store/modules/user'
+import type { AppState } from '@/store/types'
 import type { UserDetailInfo } from '@/utils/types'
-import { getUserDetailAPI, userActionsAPI } from '@/apis'
+import { Icon } from '@iconify/react'
 import { Button, message } from 'antd'
+import { FC, useEffect, useState, useContext, useCallback } from 'react'
+import { PhotoView } from 'react-photo-view'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+
 import EditModal from './edit-modal'
 import InfoModal from './info-modal'
-import { PhotoView } from 'react-photo-view'
 import HanaViewer from '../common/hana-viewer'
-import { PersonalContext } from '@/pages/personal-center'
-import { Icon } from '@iconify/react'
 
 const Header: FC = () => {
   const navigate = useNavigate()
@@ -50,14 +51,14 @@ const Header: FC = () => {
         setEditModalVisible(true)
       }, 300)
     }
-  }, [type])
+  }, [type, isMe, userId, navigate])
 
   const [infoModalVisible, setInfoModalVisible] = useState(false)
 
   const dispatch = useDispatch()
 
   // 获取用户的详细信息
-  const getUserDetail = async () => {
+  const getUserDetail = useCallback(async () => {
     try {
       const { data } = await getUserDetailAPI({ id: userId! })
       setUserInfo({
@@ -91,7 +92,7 @@ const Header: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [dispatch, isMe, userId])
 
   // 关注或取消关注
   const handleFollow = async () => {
@@ -111,7 +112,7 @@ const Header: FC = () => {
 
   useEffect(() => {
     getUserDetail()
-  }, [userId])
+  }, [getUserDetail])
 
   return (
     <>

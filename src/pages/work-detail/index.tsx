@@ -1,11 +1,3 @@
-import { FC, useState, useEffect, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import type { AppState } from '@/store/types'
-import { useParams } from 'react-router-dom'
-import WorkInfo from '@/components/work-detail/work-info'
-import UserInfo from '@/components/work-detail/user-info'
-import ViewList from '@/components/work-detail/view-list'
-import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import {
   getWorkDetailAPI,
   getUserWorksListAPI,
@@ -15,14 +7,22 @@ import {
   likeActionsAPI,
   postViewHistoryAPI,
 } from '@/apis'
-import { notification } from 'antd'
-import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import GreyButton from '@/components/common/grey-button'
-import { Icon } from '@iconify/react'
+import UserInfo from '@/components/work-detail/user-info'
+import ViewList from '@/components/work-detail/view-list'
+import WorkInfo from '@/components/work-detail/work-info'
 import { useAtBottom, useAtTop } from '@/hooks'
-import { CSSTransition } from 'react-transition-group'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import { resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
+import type { AppState } from '@/store/types'
+import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
+import { Icon } from '@iconify/react'
+import { notification } from 'antd'
 import { debounce } from 'lodash'
+import { FC, useState, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 const ScrollButtons: FC = () => {
   const isBottom = useAtBottom()
@@ -71,7 +71,7 @@ const WorkDetail: FC = () => {
   const [workInfo, setWorkInfo] = useState<WorkDetailInfo>()
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
 
-  const addViewData = async () => {
+  const addViewData = useCallback(async () => {
     try {
       await postViewHistoryAPI({ id: workId! })
       await addWorkViewAPI({ id: workId! })
@@ -79,9 +79,9 @@ const WorkDetail: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [workId])
 
-  const fetchWorkDetail = async () => {
+  const fetchWorkDetail = useCallback(async () => {
     try {
       const { data } = await getWorkDetailAPI({ id: workId! })
       if (!data) {
@@ -100,7 +100,7 @@ const WorkDetail: FC = () => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [workId])
 
   const fetchUserInfo = async (authorId: string) => {
     try {
@@ -139,42 +139,45 @@ const WorkDetail: FC = () => {
     setInitializing(true)
   }
 
-  const fetchUserWorks = async (authorId: string) => {
-    if (userWorksCurrent === 1) setInitializing(true)
-    try {
-      const { data } = await getUserWorksListAPI({
-        id: authorId,
-        pageSize: 30,
-        current: userWorksCurrent,
-      })
-      if (data.length < 30) setIsFinal(true)
-      setAuthorWorkList((prev) => {
-        const result = prev.map((item) => {
-          if (item.page === userWorksCurrent) {
-            return { page: item.page, list: data }
-          }
-          return item
+  const fetchUserWorks = useCallback(
+    async (authorId: string) => {
+      if (userWorksCurrent === 1) setInitializing(true)
+      try {
+        const { data } = await getUserWorksListAPI({
+          id: authorId,
+          pageSize: 30,
+          current: userWorksCurrent,
         })
-        if (!isFinal) result.push({ page: userWorksCurrent + 1, list: [] })
-        return result
-      })
-    } catch (error) {
-      console.log('出现错误了喵！！', error)
-      return
-    } finally {
-      setInitializing(false)
-    }
-  }
+        if (data.length < 30) setIsFinal(true)
+        setAuthorWorkList((prev) => {
+          const result = prev.map((item) => {
+            if (item.page === userWorksCurrent) {
+              return { page: item.page, list: data }
+            }
+            return item
+          })
+          if (!isFinal) result.push({ page: userWorksCurrent + 1, list: [] })
+          return result
+        })
+      } catch (error) {
+        console.log('出现错误了喵！！', error)
+        return
+      } finally {
+        setInitializing(false)
+      }
+    },
+    [isFinal, userWorksCurrent],
+  )
 
   useEffect(() => {
     if (listEnd && !isFinal) setUserWorksCurrent((prev) => prev + 1)
-  }, [listEnd])
+  }, [isFinal, listEnd])
 
   useEffect(() => {
     if (workInfo) {
       fetchUserWorks(workInfo.authorInfo.id)
     }
-  }, [userWorksCurrent])
+  }, [fetchUserWorks, userWorksCurrent, workInfo])
 
   useEffect(() => {
     if (workInfo?.authorInfo.id) setPrevAuthorId(workInfo.authorInfo.id)
@@ -188,7 +191,7 @@ const WorkDetail: FC = () => {
       debouncedFetchWorkDetail.cancel()
       debouncedAddViewData.cancel()
     }
-  }, [workId])
+  }, [addViewData, fetchWorkDetail, workInfo?.authorInfo.id])
 
   useEffect(() => {
     if (workInfo) {
@@ -200,7 +203,7 @@ const WorkDetail: FC = () => {
         dispatch(setWorkDetailUserId(workInfo.authorInfo.id))
       }
     }
-  }, [workInfo?.authorInfo.id])
+  }, [dispatch, fetchUserWorks, prevAuthorId, workDetailUserId, workInfo])
 
   const follow = useCallback(
     async (id: string) => {
@@ -224,14 +227,14 @@ const WorkDetail: FC = () => {
         return
       }
     },
-    [userInfo],
+    [dispatch, userInfo],
   )
 
   useEffect(() => {
     if (workInfo?.authorInfo) {
       setUserInfo((prev) => prev && { ...prev, isFollowing: workInfo.authorInfo.isFollowing })
     }
-  }, [workInfo?.authorInfo.isFollowing])
+  }, [workInfo?.authorInfo])
 
   const likeWork = async (id: string) => {
     await likeActions(id)

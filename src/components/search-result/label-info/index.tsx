@@ -1,18 +1,17 @@
-import { FC, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import type { AppState } from '@/store/types'
-import type { LabelDetailInfo } from '@/utils/types'
-import { Button } from 'antd'
+import { labelActionsAPI, getRecommendLabelListAPI } from '@/apis'
+import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
-import { isWarmHue } from '@/utils'
-import { labelActionsAPI, getRecommendLabelListAPI } from '@/apis'
-import type { LabelInfo } from '@/utils/types'
-import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
 import LazyImg from '@/components/common/lazy-img'
 import LabelListSkeleton from '@/components/skeleton/label-list'
+import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
+import type { AppState } from '@/store/types'
+import { isWarmHue } from '@/utils'
+import type { LabelDetailInfo, LabelInfo } from '@/utils/types'
+import { Button } from 'antd'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { CSSTransition } from 'react-transition-group'
-import Empty from '@/components/common/empty'
 
 type LabelInfoProps = LabelDetailInfo & {
   like: () => void
@@ -40,7 +39,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
   const [labelList, setLabelList] = useState<LabelInfo[]>([])
   const [loading, setLoading] = useState(true)
 
-  const getRecommendLabelList = async () => {
+  const getRecommendLabelList = useCallback(async () => {
     setLoading(true)
     try {
       const { data } = await getRecommendLabelListAPI()
@@ -50,11 +49,11 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
 
   useEffect(() => {
     getRecommendLabelList()
-  }, [id])
+  }, [getRecommendLabelList])
 
   return (
     <div className='relative w-full flex flex-col mb-30px'>

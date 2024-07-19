@@ -1,7 +1,8 @@
+import type { HistoryItem } from '@/apis/types'
+import { Icon } from '@iconify/react'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon } from '@iconify/react'
-import type { HistoryItem } from '@/apis/types'
+
 import LazyImg from '../lazy-img'
 
 type WorkHistoryItemProps = {

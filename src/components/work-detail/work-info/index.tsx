@@ -1,29 +1,30 @@
-import { FC, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
+import type { ImageItem } from '@/apis/types'
+import pixiv from '@/assets/svgs/pixiv.svg'
+import CreateFolderModal from '@/components/common/create-folder-modal'
+import Empty from '@/components/common/empty'
+import HanaViewer from '@/components/common/hana-viewer'
+import LabelItem from '@/components/common/label-item'
+import LayoutList from '@/components/common/layout-list'
+import LazyImg from '@/components/common/lazy-img'
+import WorkLittleItem from '@/components/common/work-little-item'
+import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
+import { setFavoriteList } from '@/store/modules/favorites'
+import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
+import { setCurrentList } from '@/store/modules/viewList'
 import { AppState } from '@/store/types'
 import { verifyPixivUser, verifyPixivWork, download } from '@/utils'
 import type { FavoriteFormInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
-import { Button, Divider, Modal, message, Checkbox } from 'antd'
 import type { GetProp } from 'antd'
-import WorkLittleItem from '@/components/common/work-little-item'
-import LayoutList from '@/components/common/layout-list'
-import Comments from '../comments'
-import { Link, useNavigate } from 'react-router-dom'
+import { Button, Divider, Modal, message, Checkbox } from 'antd'
+import { FC, useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
-import HanaViewer from '@/components/common/hana-viewer'
-import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
-import type { ImageItem } from '@/apis/types'
-import Empty from '@/components/common/empty'
-import { setFavoriteList } from '@/store/modules/favorites'
-import pixiv from '@/assets/svgs/pixiv.svg'
-import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
-import CreateFolderModal from '@/components/common/create-folder-modal'
-import LazyImg from '@/components/common/lazy-img'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
-import { setCurrentList } from '@/store/modules/viewList'
-import LabelItem from '@/components/common/label-item'
+
+import Comments from '../comments'
 
 const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
@@ -108,7 +109,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
     if (!collecting) {
       setFolderIds(workInfo.favoriteIds || [])
     }
-  }, [collecting])
+  }, [collecting, workInfo.favoriteIds])
 
   // 刷新收藏夹列表数据
   const refreshFavoriteList = async () => {
@@ -175,7 +176,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       if (img) result.push(img)
     })
     setImgList(result)
-  }, [workInfo.images])
+  }, [workInfo.images, workInfo.imgList])
 
   useEffect(() => {
     setImgListVisible(true)
@@ -284,7 +285,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
         document.body.scrollTo(0, scrollDistance + top)
       }
     }
-  }, [imgIndex, workInfo.imgList])
+  }, [imgIndex, imgList, workInfo.imgList])
 
   const addUserWorks = () => {
     dispatch(setCurrentList('userWorkList'))

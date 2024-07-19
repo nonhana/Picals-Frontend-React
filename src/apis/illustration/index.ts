@@ -1,5 +1,5 @@
 import request from '@/service'
-import { Id, Pagination, WorkNormalItem } from '../types'
+
 import {
   IEditWorkReq,
   IGetRandomBackgroundsReq,
@@ -8,6 +8,7 @@ import {
   IUploadWorkReq,
   WorkDetailInfo,
 } from './types'
+import { Id, Pagination, WorkNormalItem } from '../types'
 
 // 分页获取推荐作品列表
 export const getRecommendWorksAPI = (params: Pagination) => {

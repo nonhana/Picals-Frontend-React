@@ -1,7 +1,3 @@
-import { FC, useEffect, useState, useMemo, useRef } from 'react'
-import type { UploadWorkFormInfo } from '@/utils/types'
-import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex, Modal } from 'antd'
-import type { SelectProps } from 'antd'
 import {
   searchIllustratorsAPI,
   getIllustratorDetailAPI,
@@ -12,10 +8,14 @@ import {
   getWorkCountAPI,
 } from '@/apis'
 import type { INewIllustratorReq } from '@/apis/illustrator/types'
-import Empty from '@/components/common/empty'
-import { debounce } from 'lodash'
 import CreateIllustratorModal from '@/components/common/create-illustrator-modal'
+import Empty from '@/components/common/empty'
+import type { UploadWorkFormInfo } from '@/utils/types'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex, Modal } from 'antd'
+import type { SelectProps } from 'antd'
+import { debounce } from 'lodash'
+import { FC, useEffect, useState, useMemo, useRef, useCallback } from 'react'
 
 const { confirm } = Modal
 
@@ -45,26 +45,29 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
   const pageSize = 20
   const fetchRef = useRef(0)
 
-  const getIllustratorList = async (reset?: boolean) => {
-    try {
-      const { data } = await getIllustratorListInPagesAPI({ current, pageSize })
-      if (data.length < pageSize) setIsFinal(true)
-      const result = data.map((item) => ({ value: item.id, label: item.name }))
-      if (reset) {
-        setOptions(result as ValueType[])
-      } else {
-        setOptions(options.concat(result as ValueType[]))
+  const getIllustratorList = useCallback(
+    async (reset?: boolean) => {
+      try {
+        const { data } = await getIllustratorListInPagesAPI({ current, pageSize })
+        if (data.length < pageSize) setIsFinal(true)
+        const result = data.map((item) => ({ value: item.id, label: item.name }))
+        if (reset) {
+          setOptions(result as ValueType[])
+        } else {
+          setOptions(options.concat(result as ValueType[]))
+        }
+      } catch (error) {
+        console.log('出现错误了喵！！', error)
+        return
       }
-    } catch (error) {
-      console.log('出现错误了喵！！', error)
-      return
-    }
-  }
+    },
+    [current, options],
+  )
 
   useEffect(() => {
     if (isFinal) return
     getIllustratorList()
-  }, [current, isFinal])
+  }, [getIllustratorList, isFinal])
 
   const onPopupScroll = (e: any) => {
     dropdownList.current = e.target
@@ -191,7 +194,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   useEffect(() => {
     if (submitTrigger === 0) return
     workForm.submit()
-  }, [submitTrigger])
+  }, [submitTrigger, workForm])
 
   /* ----------标签选择相关---------- */
   const [labels, setLabels] = useState<SelectableItemInfo[]>([])
@@ -201,26 +204,29 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   const dropdownList = useRef<any>()
   const pageSize = 20
 
-  const getLabels = async (reset?: boolean) => {
-    try {
-      const { data } = await getLabelsInPagesAPI({ current, pageSize })
-      if (data.length < pageSize) setIsFinal(true)
-      const result = data.map((item) => ({ value: item.name, label: item.name }))
-      if (reset) {
-        setLabels(result)
-      } else {
-        setLabels(labels.concat(result))
+  const getLabels = useCallback(
+    async (reset?: boolean) => {
+      try {
+        const { data } = await getLabelsInPagesAPI({ current, pageSize })
+        if (data.length < pageSize) setIsFinal(true)
+        const result = data.map((item) => ({ value: item.name, label: item.name }))
+        if (reset) {
+          setLabels(result)
+        } else {
+          setLabels(labels.concat(result))
+        }
+      } catch (error) {
+        console.log('出现错误了喵！！', error)
+        return
       }
-    } catch (error) {
-      console.log('出现错误了喵！！', error)
-      return
-    }
-  }
+    },
+    [current, labels],
+  )
 
   useEffect(() => {
     if (isFinal) return
     getLabels()
-  }, [current, isFinal])
+  }, [getLabels, isFinal])
 
   const onPopupScroll = (e: any) => {
     dropdownList.current = e.target
@@ -321,7 +327,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       ...newIllustratorInfo,
       homeUrl: homeUrlPrefix + illustratorId,
     })
-  }, [homeUrlPrefix, illustratorId])
+  }, [homeUrlPrefix, illustratorId, newIllustratorInfo])
 
   const confirmAction = async () => {
     try {

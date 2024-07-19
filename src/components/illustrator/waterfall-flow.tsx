@@ -1,10 +1,5 @@
-import { FC, useEffect, useState, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
 import { getIllustratorWorksInPagesAPI, getIllustratorWorksIdListAPI } from '@/apis'
 import type { WorkNormalItem } from '@/apis/types'
-import WaterfallItem from '../common/waterfall-item'
 import { useAtBottom } from '@/hooks'
 import {
   pushToIllustratorWorkList,
@@ -12,6 +7,11 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
+import { FC, useEffect, useState, useRef, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+
+import WaterfallItem from '../common/waterfall-item'
 
 const listClass = 'absolute w-80 flex flex-col gap-5'
 
@@ -35,7 +35,7 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
   const atBottom = useAtBottom()
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const getIllustratorWorksInPages = async () => {
+  const getIllustratorWorksInPages = useCallback(async () => {
     try {
       const { data } = await getIllustratorWorksInPagesAPI({
         id: illustratorId!,
@@ -72,30 +72,30 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
       console.log('出现错误了喵！！', error)
       return
     }
-  }
+  }, [current, pageSize, illustratorId])
 
   useEffect(() => {
     getIllustratorWorksInPages()
-  }, [illustratorId, current])
+  }, [getIllustratorWorksInPages])
 
   useEffect(() => {
     if (!atBottom) return
     setCurrent((prev) => prev + 1)
   }, [atBottom])
 
-  const addIllustratorWorks = async () => {
+  const addIllustratorWorks = useCallback(async () => {
     const { data } = await getIllustratorWorksIdListAPI({ id: illustratorId! })
     dispatch(resetOtherList())
     dispatch(pushToIllustratorWorkList(data))
     dispatch(setCurrentList('illustratorWorkList'))
     dispatch(setPrevPosition(location.pathname + location.search))
-  }
+  }, [dispatch, illustratorId, location.pathname, location.search])
 
   useEffect(() => {
     if (!startAppreciate) return
     navigate(`/work-detail/${workList[0].id}`)
     addIllustratorWorks()
-  }, [startAppreciate])
+  }, [startAppreciate, navigate, workList, addIllustratorWorks])
 
   return (
     <div ref={containerRef} className='relative w-250'>

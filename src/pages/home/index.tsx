@@ -1,18 +1,18 @@
-import { FC, useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import type { AppState } from '@/store/types'
-import LabelList from '@/components/home/label-list/index'
-import FollowedWorks from '@/components/home/followed-works'
-import RecommendedWorks from '@/components/home/recommended-works'
 // import RankingList from '@/components/home/ranking-list'
 import { getRecommendLabelListAPI, getFollowNewWorksAPI, getRecommendWorksAPI } from '@/apis'
-import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
-import { generateTempId } from '@/utils'
-import GreyButton from '@/components/common/grey-button'
-import { Icon } from '@iconify/react'
 import { Pagination } from '@/apis/types'
+import GreyButton from '@/components/common/grey-button'
+import FollowedWorks from '@/components/home/followed-works'
+import LabelList from '@/components/home/label-list/index'
+import RecommendedWorks from '@/components/home/recommended-works'
 import { setTempId } from '@/store/modules/user'
+import type { AppState } from '@/store/types'
+import { generateTempId } from '@/utils'
+import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
+import { Icon } from '@iconify/react'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useOutletContext } from 'react-router-dom'
 
 const Home: FC = () => {
   const dispatch = useDispatch()
@@ -69,7 +69,7 @@ const Home: FC = () => {
   const [recommendWorkList, setRecommendWorkList] = useState<WorkNormalItemInfo[]>([])
   const [gettingRecommendWorkList, setGettingRecommendWorkList] = useState(true)
 
-  const getRecommendWorks = async () => {
+  const getRecommendWorks = useCallback(async () => {
     setGettingRecommendWorkList(true)
     setRecommendWorkList([])
     try {
@@ -86,13 +86,13 @@ const Home: FC = () => {
     } finally {
       setGettingRecommendWorkList(false)
     }
-  }
+  }, [dispatch, isLogin, tempId])
 
   useEffect(() => {
     getLabelList()
     if (isLogin) getFollowNewWorks()
     getRecommendWorks()
-  }, [])
+  }, [getRecommendWorks, isLogin])
 
   return (
     <div className='relative w-full my-30px select-none'>

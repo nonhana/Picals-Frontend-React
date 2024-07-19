@@ -1,8 +1,8 @@
-import { FC, useEffect, useRef, useState } from 'react'
 import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { CSSTransition } from 'react-transition-group'
 import { debounce } from 'lodash'
+import { FC, useEffect, useRef, useState, useCallback } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 type ScrollType =
   | 'label'
@@ -57,7 +57,7 @@ const LayoutList: FC<LayoutListProps> = ({
     }
   }
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (layoutRef.current && setAtBottom) {
       const { scrollLeft, scrollWidth, clientWidth } = layoutRef.current
       if (scrollLeft + clientWidth >= scrollWidth - 100) {
@@ -66,14 +66,15 @@ const LayoutList: FC<LayoutListProps> = ({
         setAtBottom(false)
       }
     }
-  }
+  }, [setAtBottom])
 
   useEffect(() => {
-    if (!layoutRef.current) return
+    const currentLayout = layoutRef.current
+    if (!currentLayout) return
     const debouncedHandleScroll = debounce(handleScroll, 50)
-    layoutRef.current.addEventListener('scroll', debouncedHandleScroll)
-    return () => layoutRef.current?.removeEventListener('scroll', debouncedHandleScroll)
-  }, [])
+    currentLayout.addEventListener('scroll', debouncedHandleScroll)
+    return () => currentLayout.removeEventListener('scroll', debouncedHandleScroll)
+  }, [handleScroll])
 
   useEffect(() => {
     if (!layoutRef.current) return
@@ -82,7 +83,7 @@ const LayoutList: FC<LayoutListProps> = ({
       left: 0,
       behavior: 'smooth',
     })
-  }, [children])
+  }, [children, type])
 
   useEffect(() => {
     if (setAtBottom) setAtBottom(false)
@@ -108,7 +109,7 @@ const LayoutList: FC<LayoutListProps> = ({
         setInitializing(true)
       }
     }
-  }, [workId, initializing])
+  }, [workId, initializing, setAtBottom, type, setInitializing])
 
   return (
     <div
