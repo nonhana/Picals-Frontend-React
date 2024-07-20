@@ -1,5 +1,4 @@
 import { ConfigProvider } from 'antd'
-import { AliveScope } from 'react-activation'
 import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
 import 'react-photo-view/dist/react-photo-view.css'
@@ -17,16 +16,14 @@ import { persistor, store } from './store'
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <AliveScope>
-        <ConfigProvider
-          theme={{
-            token: { colorPrimary: '#0090F0' },
-          }}>
-          <ErrorBoundary fallbackRender={ErrorPage}>
-            <RouterProvider fallbackElement={<p>初始化加载...</p>} router={router} />
-          </ErrorBoundary>
-        </ConfigProvider>
-      </AliveScope>
+      <ConfigProvider
+        theme={{
+          token: { colorPrimary: '#0090F0' },
+        }}>
+        <ErrorBoundary fallbackRender={ErrorPage}>
+          <RouterProvider fallbackElement={<p>初始化加载...</p>} router={router} />
+        </ErrorBoundary>
+      </ConfigProvider>
     </PersistGate>
   </Provider>,
 )
