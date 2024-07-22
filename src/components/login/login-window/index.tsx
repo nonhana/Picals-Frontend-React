@@ -141,7 +141,7 @@ const LoginWindow: FC = () => {
     <>
       {contextHolder}
       <CSSTransition in={!windowVisible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='absolute top-10px left-1/2 -translate-x-50% z-2'>
+        <div className='absolute top-10px left-1/2 -translate-x-1/2 z-2'>
           <GreyButton
             onClick={() => {
               setWindowVisible(true)
@@ -155,10 +155,10 @@ const LoginWindow: FC = () => {
         <div
           onMouseEnter={() => setMouseEnter(true)}
           onMouseLeave={() => setMouseEnter(false)}
-          className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-50% -translate-y-50% w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white border-color-#E5E5E5 z-2'>
+          className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white z-2'>
           <div className='flex flex-col items-center justify-center'>
             <img className='w-50' src={logo} alt='picals-logo' />
-            <span className='font-normal font-size-14px color-#858585'>兴趣使然的插画收藏小站</span>
+            <span className='font-normal font-size-m color-deepgrey'>兴趣使然的插画收藏小站</span>
           </div>
 
           {/* 返回按钮 */}

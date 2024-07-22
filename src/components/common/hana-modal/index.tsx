@@ -61,7 +61,7 @@ const HanaModal: FC<HanaModalProps> = ({
             zIndex: zIndex || 2000,
           }}
           className='fixed top-1/2 left-1/2 transform -translate-1/2 bg-white rd-6 flex flex-col'>
-          <div className='relative w-full h-16 flex justify-center items-center color-#3d3d3d font-size-18px font-bold'>
+          <div className='relative w-full h-16 flex justify-center items-center color-shallowblack font-size-18px font-bold'>
             <span>{title}</span>
             {allowActivelyClose && (
               <Icon

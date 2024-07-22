@@ -22,7 +22,7 @@ const WaterfallItem: FC<WaterfallItemProps> = ({ item, ...props }) => {
       <CSSTransition in={hovering} timeout={300} classNames='opacity-gradient' unmountOnExit>
         <Link
           to={`/work-detail/${item.id}`}
-          className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center gap-10px items-center bg-black bg-opacity-32 color-white font-size-14px z-1'>
+          className='absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center gap-10px items-center bg-black bg-opacity-32 color-white font-size-m z-1'>
           <span>作品名称：{item.name}</span>
           <span>转载人：{item.authorName}</span>
           <span>创建时间：{item.createdAt}</span>

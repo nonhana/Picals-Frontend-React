@@ -70,7 +70,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
   return (
     <div
       {...props}
-      className={`shrink-0 relative w-184px rd-1 overflow-hidden ${settingStatus && chooseStatus ? 'bg-#f5f5f5' : 'bg-white'} ${settingStatus ? 'hover:bg-#f5f5f5' : ''}`}>
+      className={`shrink-0 relative w-184px rd-1 overflow-hidden ${settingStatus && chooseStatus ? 'bg-normal' : 'bg-white'} ${settingStatus ? 'hover:bg-normal' : ''}`}>
       {settingStatus && (
         <div
           className='absolute top-0 left-0 w-184px h-full z-100'
@@ -119,11 +119,11 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
       <div className='relative p-10px flex flex-col gap-5px'>
         <Link
           to={`/work-detail/${itemInfo.id}`}
-          className='w-full cursor-pointer font-size-14px color-#3d3d3d font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
+          className='w-full cursor-pointer font-size-m color-shallowblack font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
           <span>{itemInfo.name}</span>
         </Link>
         <div className='w-full flex justify-between '>
-          <div className='flex items-center gap-10px font-size-14px color-#858585'>
+          <div className='flex items-center gap-10px font-size-m color-deepgrey'>
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}
               className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
@@ -131,7 +131,7 @@ const WorkFavoriteItem: FC<WorkFavoriteItemProps> = ({
             </Link>
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}
-              className='cursor-pointer color-#3d3d3d'>
+              className='cursor-pointer color-shallowblack'>
               <span>{itemInfo.authorName}</span>
             </Link>
           </div>

@@ -169,9 +169,9 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
           <div className='relative h-full'>
             {isMe && (
               <div
-                className='relative flex justify-between items-center w-250px h-15 bg-#fff cursor-pointer hover:bg-#f5f5f5'
+                className='relative flex justify-between items-center w-250px h-15 bg-white cursor-pointer hover:bg-normal'
                 onClick={onAddFolder}>
-                <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-#3d3d3d'>
+                <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-shallowblack'>
                   <Icon width='24px' color='#858585' icon='ant-design:plus-circle-outlined' />
                   <span>新建收藏集</span>
                 </div>
@@ -203,7 +203,7 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
               timeout={300}
               classNames='opacity-gradient'
               unmountOnExit>
-              <div className='w-250px bg-#fff'>
+              <div className='w-250px bg-white'>
                 <Empty showImg={false} text='暂无收藏集' />
               </div>
             </CSSTransition>

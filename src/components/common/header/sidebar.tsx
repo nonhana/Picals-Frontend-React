@@ -47,7 +47,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
 
       <CSSTransition in={visible} timeout={300} classNames='left-to-right' unmountOnExit>
         <div
-          className={`border-#858585 border-1px border-r-solid select-none fixed top-0 bottom-0 w-60 bg-white z-1000 ${className}`}>
+          className={`b-deepgrey b-1px b-r-solid select-none fixed top-0 bottom-0 w-60 bg-white z-1000 ${className}`}>
           <div className='px-10 h-16 flex items-center gap-2.5'>
             <Icon
               className='cursor-pointer'
@@ -63,9 +63,9 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
             {(isLogin ? HEADER_MENU_LIST : HEADER_MENU_LIST_VISITOR).map((item) => (
               <Link key={item.route} to={item.route}>
                 <li
-                  className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-#f5f5f5 transition-duration-300 ${location.pathname.includes(item.route) ? 'bg-#f5f5f5' : ''}`}>
+                  className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-normal transition-duration-300 ${location.pathname.includes(item.route) ? 'bg-normal' : ''}`}>
                   <Icon color='#858585' width={20} icon={item.icon} />
-                  <span className='font-size-14px color-#3d3d3d'>{item.name}</span>
+                  <span className='font-size-m color-shallowblack'>{item.name}</span>
                 </li>
               </Link>
             ))}

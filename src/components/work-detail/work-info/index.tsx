@@ -48,21 +48,21 @@ const WorkStatusMark: FC<{ status: number }> = ({ status }) => {
   switch (status) {
     case 0:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-14px color-#0090F0'>
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-m color-primary'>
           原创作品
           <Icon width={24} color='#0090F0' icon='material-symbols:edit-outline' />
         </span>
       )
     case 1:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-14px color-#0090F0'>
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-m color-primary'>
           转载作品
           <Icon width={24} color='#0090F0' icon='material-symbols:school-outline' />
         </span>
       )
     case 2:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-14px color-#0090F0'>
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-m color-primary'>
           合集作品
           <Icon width={24} color='#0090F0' icon='material-symbols:book-outline' />
         </span>
@@ -294,7 +294,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
   return (
     <>
       {contextHolder}
-      <div className='relative bg-#fff rd-6 p-5 w-180 flex flex-col items-center overflow-hidden'>
+      <div className='relative bg-white rd-6 p-5 w-180 flex flex-col items-center overflow-hidden'>
         <div id='work-info' className='w-full'>
           {/* 图片列表 */}
           {imgListVisible && (
@@ -366,11 +366,11 @@ const WorkInfo: FC<WorkInfoProps> = ({
           {/* 作品信息 */}
           <div className='mt-10px flex flex-col gap-10px'>
             <div className='flex gap-10px items-center'>
-              <span className='font-bold font-size-18px color-#3d3d3d'>
+              <span className='font-bold font-size-18px color-shallowblack'>
                 {workInfo.name || '无题'}
               </span>
             </div>
-            <div className='py-10px font-size-14px color-#858585 line-height-normal'>
+            <div className='py-10px font-size-m color-deepgrey line-height-normal'>
               <span>{workIntro}</span>
             </div>
             <LayoutList scrollType='label'>
@@ -380,20 +380,20 @@ const WorkInfo: FC<WorkInfoProps> = ({
             </LayoutList>
             <div className='flex justify-between items-start my-3'>
               <div className='flex gap-20px'>
-                <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+                <div className='flex items-center gap-10px font-bold font-size-m color-deepgrey'>
                   <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
                   <span>{workInfo.likeNum}</span>
                 </div>
-                <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+                <div className='flex items-center gap-10px font-bold font-size-m color-deepgrey'>
                   <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
                   <span> {workInfo.viewNum}</span>
                 </div>
-                <div className='flex items-center gap-10px font-bold font-size-14px color-#858585'>
+                <div className='flex items-center gap-10px font-bold font-size-m color-deepgrey'>
                   <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
                   <span>{workInfo.collectNum}</span>
                 </div>
               </div>
-              <div className='flex flex-col gap-10px font-italic font-size-14px color-#858585'>
+              <div className='flex flex-col gap-10px font-italic font-size-m color-deepgrey'>
                 <span>发布日期：{workInfo.createdDate}</span>
                 <span>更新日期：{workInfo.updatedDate}</span>
               </div>
@@ -405,10 +405,12 @@ const WorkInfo: FC<WorkInfoProps> = ({
               <div className='flex gap-20px items-center'>
                 <Link
                   to={`/personal-center/${workInfo.authorInfo.id}`}
-                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
+                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-m color-shallowblack'>
                   <LazyImg src={workInfo.authorInfo.avatar} alt={workInfo.authorInfo.username} />
                 </Link>
-                <Link className='color-#3d3d3d' to={`/personal-center/${workInfo.authorInfo.id}`}>
+                <Link
+                  className='color-shallowblack'
+                  to={`/personal-center/${workInfo.authorInfo.id}`}>
                   {workInfo.authorInfo.username}
                 </Link>
                 {workInfo.authorInfo.id !== id && isLogin && (
@@ -475,11 +477,11 @@ const WorkInfo: FC<WorkInfoProps> = ({
           </div>
           {/* 原作信息 */}
           {workInfo.reprintType !== 0 && (
-            <div className='bg-#f5f5f5 relative p-5 w-full'>
+            <div className='bg-normal relative p-5 w-full rd-1'>
               {workInfo.reprintType === 1 && (
                 <>
                   <div className='flex justify-between items-center'>
-                    <span className='font-size-18px font-bold color-#3d3d3d'>原作品地址</span>
+                    <span className='font-size-18px font-bold color-shallowblack'>原作品地址</span>
                     {verifyPixivWork(workInfo.workUrl!) && (
                       <img className='w-15' src={pixiv} alt='pixiv' />
                     )}
@@ -494,8 +496,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
               )}
               <div className='flex justify-between items-center'>
                 <div className='flex items-center gap-10px'>
-                  <span className='font-size-18px font-bold color-#3d3d3d'>原作者信息</span>
-                  <span className='font-size-14px color-#858585'>
+                  <span className='font-size-18px font-bold color-shallowblack'>原作者信息</span>
+                  <span className='font-size-m color-deepgrey'>
                     目前收录 {workInfo.illustrator!.workCount} 个作品
                   </span>
                 </div>
@@ -508,7 +510,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
                   <Link
                     to={`/illustrator/${workInfo.illustrator!.id}`}
                     target='_blank'
-                    className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-14px color-#3d3d3d'>
+                    className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-m color-shallowblack'>
                     <img
                       className='w-full h-full object-cover'
                       src={

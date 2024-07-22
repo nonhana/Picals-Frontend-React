@@ -129,22 +129,22 @@ const Header: FC = () => {
           <div className='relative w-full h-80'>
             {isMe ? (
               <div
-                className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
+                className='bg-light h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-light'
                 onClick={() => setEditModalVisible(true)}>
-                <div className='flex flex-col items-center color-#858585 font-size-14px font-bold'>
+                <div className='flex flex-col items-center color-deepgrey font-size-m font-bold'>
                   <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
                   <span>上传背景图</span>
                 </div>
               </div>
             ) : (
-              <div className='bg-#f8f8f8 h-full' />
+              <div className='bg-light h-full' />
             )}
           </div>
         )}
 
         <div className='relative mx-auto w-full max-w-350 p-5 flex justify-between'>
           <div className='flex gap-5'>
-            <div className='border-solid border-2px border-#fff mt--17 w-24 h-24 rd-full overflow-hidden cursor-pointer z-1'>
+            <div className='b-solid b-2px b-white mt--17 w-24 h-24 rd-full overflow-hidden cursor-pointer z-1'>
               <HanaViewer>
                 <PhotoView src={userInfo.avatar}>
                   <img
@@ -155,10 +155,10 @@ const Header: FC = () => {
                 </PhotoView>
               </HanaViewer>
             </div>
-            <div className='w-150 flex flex-col gap-10px font-size-14px color-#3d3d3d text-wrap'>
+            <div className='w-150 flex flex-col gap-10px font-size-m color-shallowblack text-wrap'>
               <div className='flex items-center gap-10px'>
                 <span className='font-size-18px font-bold'>{userInfo.username}</span>
-                <span className='color-#858585'>{userInfo.email}</span>
+                <span className='color-deepgrey'>{userInfo.email}</span>
               </div>
               <div className='flex gap-10px'>
                 <span

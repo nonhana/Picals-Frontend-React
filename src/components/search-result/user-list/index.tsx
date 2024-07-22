@@ -97,7 +97,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
           <div className='title font-size-24px'>
             <span>用户</span>
           </div>
-          <div className='px-10px py-5px bg-#858585 rd-full color-white font-size-14px font-bold'>
+          <div className='px-10px py-5px bg-deepgrey rd-full color-white font-size-m font-bold'>
             <span>{total}</span>
           </div>
         </div>

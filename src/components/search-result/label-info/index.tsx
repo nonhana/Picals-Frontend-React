@@ -59,7 +59,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
     <div className='relative w-full flex flex-col mb-30px'>
       <div className='w-full flex justify-between mb-20px items-center'>
         <div className='flex gap-5'>
-          <div className='w-30 h-30 rd-2 border-solid border-2px border-#fff overflow-hidden'>
+          <div className='w-30 h-30 rd-2 b-solid b-2px b-white overflow-hidden'>
             <LazyImg
               src={
                 cover ||
@@ -68,7 +68,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
               alt={name}
             />
           </div>
-          <div className='flex flex-col gap-5 color-#3d3d3d font-size-24px font-bold'>
+          <div className='flex flex-col gap-5 color-shallowblack font-size-24px font-bold'>
             <div>
               <span>{name}</span>
             </div>

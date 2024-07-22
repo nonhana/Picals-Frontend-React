@@ -162,7 +162,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                   classNames='opacity-gradient'
                   unmountOnExit>
                   <div
-                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-14px z-1'
+                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-m z-1'
                     onClick={chooseBgImgFile}>
                     <span>重新更改背景图片</span>
                   </div>
@@ -171,9 +171,9 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
               </div>
             ) : (
               <div
-                className='bg-#f8f8f8 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-#f0f0f0'
+                className='bg-light h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-light'
                 onClick={chooseBgImgFile}>
-                <div className='flex flex-col items-center color-#858585 font-size-14px font-bold'>
+                <div className='flex flex-col items-center color-deepgrey font-size-m font-bold'>
                   <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
                   <span>上传背景图</span>
                 </div>
@@ -188,7 +188,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                 ref={avatarInput}
                 onChange={avatarImgFileChange}
               />
-              <span className='color-#3d3d3d font-size-14px font-bold'>个人头像</span>
+              <span className='color-shallowblack font-size-m font-bold'>个人头像</span>
               <div
                 className='relative w-24 h-24 rd-full overflow-hidden flex justify-center items-center cursor-pointer'
                 onMouseEnter={() => setAvatarHovering(true)}
@@ -199,7 +199,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                   classNames='opacity-gradient'
                   unmountOnExit>
                   <div
-                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-14px z-1'
+                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-m z-1'
                     onClick={chooseAvatarFile}>
                     <span>选择文件</span>
                   </div>
@@ -208,7 +208,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
               </div>
             </div>
             <div className='flex items-center gap-5'>
-              <span className='color-#3d3d3d font-size-14px font-bold'>个人名称</span>
+              <span className='color-shallowblack font-size-m font-bold'>个人名称</span>
               <Input
                 className='w-100'
                 placeholder='请输入个人名称'
@@ -217,7 +217,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
               />
             </div>
             <div className='flex items-center gap-5'>
-              <span className='color-#3d3d3d font-size-14px font-bold'>个人简介</span>
+              <span className='color-shallowblack font-size-m font-bold'>个人简介</span>
               <TextArea
                 className='w-100'
                 placeholder='请输入简介~不超过1024个字哦！'
@@ -229,7 +229,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
               />
             </div>
             <div className='flex items-center gap-5'>
-              <span className='color-#3d3d3d font-size-14px font-bold'>个人性别</span>
+              <span className='color-shallowblack font-size-m font-bold'>个人性别</span>
               <Radio.Group
                 value={editUserInfo.gender}
                 onChange={(e) => setEditUserInfo({ ...editUserInfo, gender: e.target.value })}>

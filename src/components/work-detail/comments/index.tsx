@@ -229,8 +229,8 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       {contextHolder}
       <div>
         <div className='flex gap-10px items-center'>
-          <span className='font-size-18px font-bold color-#3d3d3d'>评论</span>
-          <span className='font-size-14px color-#858585'>目前共有{count}条评论</span>
+          <span className='font-size-18px font-bold color-shallowblack'>评论</span>
+          <span className='font-size-m color-deepgrey'>目前共有{count}条评论</span>
         </div>
         <div ref={inputRef} className='my-5 flex justify-between items-center'>
           <div className='flex gap-10px items-center'>

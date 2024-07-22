@@ -85,10 +85,10 @@ const HistoryList: FC = () => {
 
   return (
     <>
-      <div className='relative w-full flex justify-between items-center pb-2.5 mb-5 b-b-solid b-2 b-#858585'>
+      <div className='relative w-full flex justify-between items-center pb-2.5 mb-5 b-b-solid b-2 b-deepgrey'>
         <div className='flex items-center gap-5'>
           <Icon width='32px' color='#858585' icon='ant-design:clock-circle-twotone' />
-          <span className='title color-#858585 select-none'>{currentDate}</span>
+          <span className='title color-deepgrey select-none'>{currentDate}</span>
         </div>
         <div className='flex items-center gap-5'>
           <GreyButton onClick={() => changeDate('backward')}>

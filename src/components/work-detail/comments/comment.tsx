@@ -40,8 +40,8 @@ const Comment: FC<CommentProps> = ({ comment, style, reply, deleteComment }) => 
           <LazyImg src={comment.authorInfo.avatar} alt={comment.authorInfo.username} />
         </div>
         <div className='w-full flex flex-col gap-10px'>
-          <div className='flex items-center font-bold font-size-14px'>
-            <span className='color-#3d3d3d'>{comment.authorInfo.username}</span>
+          <div className='flex items-center font-bold font-size-m'>
+            <span className='color-shallowblack'>{comment.authorInfo.username}</span>
             {comment.authorInfo.id === id && <span className='color-red'>（你）</span>}
             {comment.level === 1 && comment.replyTo && (
               <>
@@ -51,10 +51,10 @@ const Comment: FC<CommentProps> = ({ comment, style, reply, deleteComment }) => 
               </>
             )}
           </div>
-          <div className='line-height-normal font-size-14px color-#3d3d3d text-wrap'>
+          <div className='line-height-normal font-size-m color-shallowblack text-wrap'>
             <span>{comment.content}</span>
           </div>
-          <div className='w-full flex justify-between items-center font-size-14px color-#858585'>
+          <div className='w-full flex justify-between items-center font-size-m color-deepgrey'>
             <div>
               <span>{comment.createdAt}</span>
               <Button size='small' type='link' onClick={() => handleReply(comment.id, false)}>

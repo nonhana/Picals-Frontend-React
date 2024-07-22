@@ -42,7 +42,7 @@ const InputWindow: FC<InputWindowProps> = ({
 
   return (
     <CSSTransition in={showWindow} timeout={300} classNames='down-to-up' unmountOnExit>
-      <div className='z-1000 rd-10px box-content m-l--5 fixed bottom-5 bg-#fff b-solid b-1px p-5 w-150 flex justify-between items-center'>
+      <div className='z-1000 rd-10px box-content m-l--5 fixed bottom-5 bg-white b-solid b-1px p-5 w-150 flex justify-between items-center'>
         <div className='flex gap-10px items-center'>
           <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
             <LazyImg src={userInfo.avatar} alt={userInfo.username} />

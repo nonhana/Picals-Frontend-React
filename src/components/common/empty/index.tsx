@@ -41,12 +41,12 @@ const Empty: FC<EmptyProps> = ({
       {...props}
       style={{ width, height }}
       className={
-        'z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-#f8f8f8 rd-1'
+        'z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-light rd-1'
       }>
       {showImg && randomImg && (
         <LazyImg className='rd-1' width={200} height={200} src={randomImg} alt='empty' />
       )}
-      <span className='color-#858585 font-size-14px font-bold'>{text}</span>
+      <span className='color-deepgrey font-size-m font-bold'>{text}</span>
       {children}
     </div>
   )

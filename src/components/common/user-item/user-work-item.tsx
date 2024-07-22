@@ -48,7 +48,7 @@ const UserWorkItem: FC<UserWorkItemProps> = ({ itemInfo, like }) => {
 
       <Link
         to={`/work-detail/${itemInfo.id}`}
-        className='w-full cursor-pointer font-size-14px color-#3d3d3d font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
+        className='w-full cursor-pointer font-size-m color-shallowblack font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
         <span>{itemInfo.name}</span>
       </Link>
     </div>

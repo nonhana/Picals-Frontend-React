@@ -139,9 +139,9 @@ type UploadFormProps = {
   uploadWork: () => void
 }
 
-const wrapperStyle = 'relative bg-#fff w-155 p-5 rd-6 mb-5'
-const titleStyle = 'font-size-20px font-bold color-#858585 mb-5'
-const labelStyle = 'font-size-16px font-bold color-#3d3d3d'
+const wrapperStyle = 'relative bg-white w-155 p-5 rd-6 mb-5'
+const titleStyle = 'font-size-20px font-bold color-deepgrey mb-5'
+const labelStyle = 'font-size-l font-bold color-shallowblack'
 
 const { TextArea } = Input
 
@@ -406,10 +406,10 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div
             style={{ margin: 0 }}
             className={`${titleStyle} font-normal flex items-center justify-between`}>
-            <span className='font-carter color-#0090F0'>
+            <span className='font-carter color-primary'>
               Total number of works currently saved:
             </span>
-            <span className='font-carter color-#3d3d3d font-size-8'>{workCount}</span>
+            <span className='font-carter color-shallowblack font-size-8'>{workCount}</span>
           </div>
         </div>
 
@@ -598,7 +598,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div className={titleStyle}>
             <span>其他须知</span>
           </div>
-          <div className='flex flex-col gap-10px font-size-14px font-bold color-#3d3d3d line-height-normal'>
+          <div className='flex flex-col gap-10px font-size-m font-bold color-shallowblack line-height-normal'>
             <span>
               这个小站只是因纯粹的热爱而搭建，大家所上传的图片全部都会在后台管理系统进行审核，通过后会在本站进行展示。
             </span>

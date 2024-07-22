@@ -95,7 +95,7 @@ const CreateFolderModal: FC<CreateFolderModalProps> = ({
                 classNames='opacity-gradient'
                 unmountOnExit>
                 <div
-                  className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-14px z-1'
+                  className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-m z-1'
                   onClick={removeImg}>
                   <span>移除图片</span>
                 </div>
@@ -104,7 +104,7 @@ const CreateFolderModal: FC<CreateFolderModalProps> = ({
             </div>
           ) : (
             <Upload {...uploadProps}>
-              <div className='w-100px h-100px flex justify-center items-center bg-#f5f5f5 cursor-pointer'>
+              <div className='w-100px h-100px flex justify-center items-center bg-normal cursor-pointer'>
                 <Icon width='24px' color='#858585' icon='ant-design:upload-outlined' />
               </div>
             </Upload>

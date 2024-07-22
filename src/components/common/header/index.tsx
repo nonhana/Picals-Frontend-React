@@ -103,7 +103,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           alt='picals-logo'
         />
 
-        <div className='absolute w-30% top-1/2 left-1/2 -translate-x-50% -translate-y-50%'>
+        <div className='absolute w-30% top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
           <Search
             ref={searchRef}
             size='large'
@@ -122,19 +122,19 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           </Link>
           {isLogin && (
             <Button shape='round' type='default' size='large' onClick={toUpload}>
-              <span className='color-#858585'>转载/投稿作品</span>
+              <span className='color-deepgrey'>转载/投稿作品</span>
             </Button>
           )}
           {isLogin ? (
             <div
-              className='w-10 h-10 border-rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
+              className='w-10 h-10 rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
               onClick={() => setShowUserDropdown(!showUserDropdown)}>
               <LazyImg src={userInfo.littleAvatar} alt='avatar' />
             </div>
           ) : (
             <Link
               to='/login'
-              className='w-10 h-10 rounded-full flex items-center justify-center cursor-pointer color-white font-size-14px bg-#c0c0c0'>
+              className='w-10 h-10 rounded-full flex items-center justify-center cursor-pointer color-white font-size-m bg-normalgrey'>
               <span>登录</span>
             </Link>
           )}
@@ -149,7 +149,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
       />
 
       <SearchDropdown
-        className='top-16 left-1/2 -translate-x-50%'
+        className='top-16 left-1/2 -translate-x-1/2'
         visible={showSearchDropdown}
         setVisible={setShowSearchDropdown}
         setKeyword={setKeyword}

@@ -107,11 +107,11 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork, .
       <div className='relative p-10px flex flex-col gap-5px'>
         <Link
           to={`/work-detail/${itemInfo.id}`}
-          className='w-full cursor-pointer font-size-14px color-#3d3d3d font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
+          className='w-full cursor-pointer font-size-m color-shallowblack font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
           <span>{itemInfo.name ? itemInfo.name : '无题'}</span>
         </Link>
         <div className='w-full flex justify-between '>
-          <div className='flex items-center gap-10px font-size-14px color-#858585'>
+          <div className='flex items-center gap-10px font-size-m color-deepgrey'>
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}
               className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
@@ -119,7 +119,7 @@ const WorkNormalItem: FC<WorkNormalItemProps> = ({ itemInfo, like, deleteWork, .
             </Link>
             <Link
               to={`/personal-center/${itemInfo.authorId}/works`}
-              className='cursor-pointer color-#3d3d3d'>
+              className='cursor-pointer color-shallowblack'>
               <span>{itemInfo.authorName}</span>
             </Link>
           </div>
