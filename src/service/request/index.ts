@@ -1,4 +1,3 @@
-import { refreshTokenAPI } from '@/apis/user'
 import { notification } from 'antd'
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
@@ -53,7 +52,15 @@ class Request {
             try {
               refreshing = true
               const refreshToken = localStorage.getItem('refreshToken')
-              const { data } = await refreshTokenAPI({ refreshToken: refreshToken! })
+
+              const response = await axios({
+                url: '/api/user/refresh-token',
+                method: 'GET',
+                params: { refreshToken: refreshToken },
+              })
+
+              const data = response.data.data
+
               localStorage.setItem('accessToken', data.access_token)
               localStorage.setItem('refreshToken', data.refresh_token)
 
@@ -66,12 +73,16 @@ class Request {
               return this.instance.request(config)
             } catch (error) {
               notification.error({
-                message: 'token已失效，请重新进行登录~',
+                message: 'token已失效',
+                description: '请重新进行登录~即将跳转到首页哦',
               })
               pendingTasks.forEach((task) => {
                 task.reject(error)
               })
               pendingTasks.length = 0 // 清空队列
+              setTimeout(() => {
+                window.location.href = '/login'
+              }, 2000)
             } finally {
               refreshing = false
             }

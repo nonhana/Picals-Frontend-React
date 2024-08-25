@@ -37,7 +37,7 @@ const WorkHistoryItem: FC<WorkHistoryItemProps> = ({ itemInfo, ...props }) => {
         <Link
           to={`/work-detail/${itemInfo.id}`}
           className='w-full cursor-pointer font-size-m color-shallowblack font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
-          <span>{itemInfo.name}</span>
+          <span>{itemInfo.name ? itemInfo.name : '无题'}</span>
         </Link>
         <div className='w-full flex justify-between '>
           <div className='flex items-center gap-10px font-size-m color-deepgrey'>
