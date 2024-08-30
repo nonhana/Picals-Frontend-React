@@ -54,9 +54,9 @@ class Request {
               const refreshToken = localStorage.getItem('refreshToken')
 
               const response = await axios({
-                url: '/api/user/refresh-token',
+                url: `${import.meta.env.VITE_BASE_URL}/api/user/refresh-token`,
                 method: 'GET',
-                params: { refreshToken: refreshToken },
+                params: { refreshToken },
               })
 
               const data = response.data.data
@@ -74,7 +74,7 @@ class Request {
             } catch (error) {
               notification.error({
                 message: 'token已失效',
-                description: '请重新进行登录~即将跳转到首页哦',
+                description: '请重新进行登录~即将跳转到登录页哦',
               })
               pendingTasks.forEach((task) => {
                 task.reject(error)
