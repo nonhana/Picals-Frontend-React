@@ -72,17 +72,12 @@ class Request {
               pendingTasks.length = 0 // 清空队列
               return this.instance.request(config)
             } catch (error) {
-              notification.error({
-                message: 'token已失效',
-                description: '请重新进行登录~即将跳转到登录页哦',
-              })
               pendingTasks.forEach((task) => {
                 task.reject(error)
               })
               pendingTasks.length = 0 // 清空队列
-              setTimeout(() => {
-                window.location.href = '/login'
-              }, 2000)
+              localStorage.clear()
+              window.location.href = '/'
             } finally {
               refreshing = false
             }
