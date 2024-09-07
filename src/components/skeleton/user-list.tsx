@@ -1,3 +1,4 @@
+import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
 import { FC, Fragment, useEffect, useState } from 'react'
 import ContentLoader from 'react-content-loader'
 import { useOutletContext } from 'react-router-dom'
@@ -9,14 +10,14 @@ type UserListSkeletonProps = {
 }
 
 const UserListSkeleton: FC<UserListSkeletonProps> = ({ row = 2, borderRadius = 4, ...props }) => {
-  const [width, setWidth] = useState<number>(1245)
+  const [width, setWidth] = useState<number>(MAX_WIDTH)
   const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
-    if (currentWidth < 1305) {
-      setWidth(1040)
+    if (currentWidth < TRIGGER_MIN_WIDTH) {
+      setWidth(MIN_WIDTH)
     } else {
-      setWidth(1245)
+      setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
 

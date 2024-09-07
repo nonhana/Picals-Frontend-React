@@ -7,7 +7,7 @@ import RecommendedWorks from '@/components/home/recommended-works'
 import { setTempId } from '@/store/modules/user'
 import type { AppState } from '@/store/types'
 // import RankingList from '@/components/home/ranking-list'
-import { generateTempId } from '@/utils'
+import { generateTempId, MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
 import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { FC, useEffect, useState } from 'react'
@@ -18,14 +18,14 @@ const Home: FC = () => {
   const dispatch = useDispatch()
   const { isLogin, tempId } = useSelector((state: AppState) => state.user)
 
-  const [width, setWidth] = useState<number>(1245)
+  const [width, setWidth] = useState<number>(MAX_WIDTH)
   const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
-    if (currentWidth < 1305) {
-      setWidth(1040)
+    if (currentWidth < TRIGGER_MIN_WIDTH) {
+      setWidth(MIN_WIDTH)
     } else {
-      setWidth(1245)
+      setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
 

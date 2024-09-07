@@ -1,4 +1,5 @@
 import type { AppState } from '@/store/types'
+import { MAX_WIDTH } from '@/utils'
 import type { UserItemInfo } from '@/utils/types'
 import { Button } from 'antd'
 import { FC } from 'react'
@@ -79,7 +80,7 @@ const UserItem: FC<UserItemProps> = ({
         <Empty showImg={false} />
       ) : (
         <div className='flex gap-5'>
-          {works.slice(0, width === 1245 ? 4 : 3).map((work) => (
+          {works.slice(0, width === MAX_WIDTH ? 4 : 3).map((work) => (
             <UserWorkItem key={work.id} itemInfo={work} like={likeWork} />
           ))}
         </div>

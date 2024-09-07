@@ -156,7 +156,7 @@ const MyFavorites: FC = () => {
         setFolderList={setFolderList}
         fetchFavoriteList={fetchFavoriteList}
       />
-      <div className='w-954px h-full b-l-solid b-1px color-deepgrey'>
+      <div className='w-209 h-full b-l-solid b-1px color-deepgrey'>
         {folderId ? (
           favoriteDetailInfo && (
             <>

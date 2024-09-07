@@ -231,7 +231,7 @@ const WorkList: FC<WorkListProps> = ({
   return (
     <>
       {contextHolder}
-      <div className='relative w-954px flex flex-col items-center min-h-150 pb-10'>
+      <div className='relative flex flex-col items-center min-h-150 pb-10'>
         {settingStatus && (
           <div className='w-full h-16 px-5 flex items-center b-1px b-b-solid color-deepgrey'>
             <Button type='default' onClick={() => setSettingStatus(false)}>
@@ -299,7 +299,7 @@ const WorkList: FC<WorkListProps> = ({
           timeout={300}
           classNames='opacity-gradient'
           unmountOnExit>
-          <div className='w-199 relative flex flex-wrap gap-5 py-5'>
+          <div className='w-199 relative flex flex-wrap gap-5 py-5 mx-5'>
             {workList.map((item) => (
               <WorkFavoriteItem
                 key={item.id}
@@ -322,7 +322,7 @@ const WorkList: FC<WorkListProps> = ({
           timeout={300}
           classNames='opacity-gradient'
           unmountOnExit>
-          <div className='absolute w-952px top-16'>
+          <div className='absolute w-full top-16'>
             <Empty text={searchStatus ? '没有找到相关作品' : '暂无作品，快去收藏一些吧~'} />
           </div>
         </CSSTransition>

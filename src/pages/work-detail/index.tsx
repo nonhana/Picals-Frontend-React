@@ -65,6 +65,7 @@ const ScrollButtons: FC = () => {
 const WorkDetail: FC = () => {
   const dispatch = useDispatch()
   const { workDetailUserId } = useSelector((state: AppState) => state.viewList)
+  const { isLogin } = useSelector((state: AppState) => state.user)
 
   const { workId } = useParams<{ workId: string }>()
 
@@ -72,6 +73,7 @@ const WorkDetail: FC = () => {
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
 
   const addViewData = async () => {
+    if (!isLogin) return
     try {
       await postViewHistoryAPI({ id: workId! })
       await addWorkViewAPI({ id: workId! })

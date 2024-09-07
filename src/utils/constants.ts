@@ -105,3 +105,7 @@ export const VIEW_LIST_ICON_MAP = {
   illustratorWorkList: 'material-symbols:school-outline',
   searchResultWorkList: 'material-symbols:search',
 }
+
+// 页面变化的宽度
+export const MAX_WIDTH = 1245
+export const MIN_WIDTH = 1040

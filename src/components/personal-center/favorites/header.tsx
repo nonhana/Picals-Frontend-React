@@ -18,7 +18,7 @@ const Header: FC<HeaderProps> = ({
   setStartAppreciate,
 }) => {
   return (
-    <div className='relative w-954px p-5 flex justify-between b-b-solid b-1px color-deepgrey'>
+    <div className='relative p-5 flex justify-between b-b-solid b-1px color-deepgrey'>
       <div className='flex gap-5 items-center'>
         <div className='w-40 h-40 flex justify-center items-center'>
           <LazyImg
@@ -37,7 +37,12 @@ const Header: FC<HeaderProps> = ({
           <span>{intro}</span>
         </div>
       </div>
-      <Button size='large' shape='round' type='primary' onClick={() => setStartAppreciate(true)}>
+      <Button
+        size='large'
+        shape='round'
+        type='primary'
+        onClick={() => setStartAppreciate(true)}
+        disabled={!workNum}>
         开始浏览全部作品
       </Button>
     </div>

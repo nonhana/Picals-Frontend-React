@@ -77,7 +77,7 @@ class Request {
               })
               pendingTasks.length = 0 // 清空队列
               localStorage.clear()
-              window.location.href = '/'
+              // window.location.href = '/'
             } finally {
               refreshing = false
             }
