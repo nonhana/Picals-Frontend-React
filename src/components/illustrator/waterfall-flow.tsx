@@ -13,7 +13,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import WaterfallItem from '../common/waterfall-item'
 
-const listClass = 'absolute w-80 flex flex-col gap-5'
+const pageSize = 10
+const listClass = 'absolute w-75 flex flex-col gap-5'
 
 type WaterfallItemInfo = WorkNormalItem & { index: number; height: number }
 
@@ -29,9 +30,9 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
   const { illustratorId } = useParams<{ illustratorId: string }>()
 
   const [workList, setWorkList] = useState<WaterfallItemInfo[]>([])
-  const [_, setHeightArr] = useState<number[]>([0, 0, 0])
+  const [heightArr, setHeightArr] = useState<number[]>([0, 0, 0])
   const [current, setCurrent] = useState(1)
-  const pageSize = 10
+  const [isFinal, setIsFinal] = useState(false)
   const atBottom = useAtBottom()
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -42,6 +43,7 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
         current,
         pageSize,
       })
+      if (data.length < pageSize) setIsFinal(true)
       // 遍历作品数组，将每个作品插入到目前最短的列中
       data.forEach((item) => {
         const coverImage = new Image()
@@ -50,20 +52,16 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
           setHeightArr((prev) => {
             const minIndex = prev.indexOf(Math.min(...prev))
             const newArr = [...prev]
-            const resultHeight = Math.ceil((coverImage.height * 300) / coverImage.width)
+            const resultHeight = (coverImage.height * 300) / coverImage.width
             newArr[minIndex] += resultHeight + 20
             setWorkList((prev) => [
               ...prev,
               {
                 ...item,
                 index: minIndex,
-                height: coverImage.height,
+                height: resultHeight,
               },
             ])
-            // 更新外层 div 高度
-            if (containerRef.current) {
-              containerRef.current.style.height = `${Math.max(...newArr)}px`
-            }
             return newArr
           })
         }
@@ -75,11 +73,17 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
   }
 
   useEffect(() => {
+    if (!containerRef.current || heightArr.every((item) => !item)) return
+    const maxHeight = Math.max(...heightArr)
+    containerRef.current.style.height = maxHeight + 'px'
+  }, [heightArr])
+
+  useEffect(() => {
     getIllustratorWorksInPages()
   }, [illustratorId, current])
 
   useEffect(() => {
-    if (!atBottom) return
+    if (!atBottom || isFinal) return
     setCurrent((prev) => prev + 1)
   }, [atBottom])
 
@@ -98,26 +102,41 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
   }, [startAppreciate])
 
   return (
-    <div ref={containerRef} className='relative w-250'>
-      <div className={`${listClass}`}>
+    <div ref={containerRef} className='relative w-245'>
+      <div className={listClass}>
         {workList
           .filter((item) => item.index === 0)
           .map((item) => (
-            <WaterfallItem key={item.id} item={item} onClick={addIllustratorWorks} />
+            <WaterfallItem
+              key={item.id}
+              item={item}
+              height={item.height}
+              onClick={addIllustratorWorks}
+            />
           ))}
       </div>
       <div className={`${listClass} left-340px`}>
         {workList
           .filter((item) => item.index === 1)
           .map((item) => (
-            <WaterfallItem key={item.id} item={item} onClick={addIllustratorWorks} />
+            <WaterfallItem
+              key={item.id}
+              item={item}
+              height={item.height}
+              onClick={addIllustratorWorks}
+            />
           ))}
       </div>
       <div className={`${listClass} left-680px`}>
         {workList
           .filter((item) => item.index === 2)
           .map((item) => (
-            <WaterfallItem key={item.id} item={item} onClick={addIllustratorWorks} />
+            <WaterfallItem
+              key={item.id}
+              item={item}
+              height={item.height}
+              onClick={addIllustratorWorks}
+            />
           ))}
       </div>
     </div>
