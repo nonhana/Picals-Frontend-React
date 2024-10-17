@@ -52,19 +52,3 @@
 前端项目：[https://github.com/nonhana/Picals-Frontend-React](https://github.com/nonhana/Picals-Frontend-React)
 
 后端项目：[https://github.com/nonhana/Picals-Backend-Nest](https://github.com/nonhana/Picals-Backend-Nest)
-
-### 联系/加入我们
-
-您在使用中，对这个项目产生了任何想要完善的点子，都可以参考： [Issue 提交指南](https://github.com/nonhana/Picals-Frontend-React/issues/60) 来新建一个 Issue。
-
-如果您：
-
-1. 是无意间浏览到这个项目的，并且有兴趣参与这个项目
-2. 在目前的使用过程中发现 BUG
-3. 想要提出新的需求
-4. 单纯的想要了解我们、一起讨论交流一些爱好（良い友達になる\~）
-
-您可以选择加入我们！！**于我而言，大家一起做东西，在交流中一起进步、一起了解更多的前沿技术或者是解决一些困难的 bug，都是十分有意义的事情\~**
-
-- 邮箱：[zhouxiang757@gmail.com](mailto:zhouxiang757@gmail.com)
-- 一个可爱的交流群（QQ）：891904073
