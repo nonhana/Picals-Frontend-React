@@ -6,7 +6,6 @@ import LabelList from '@/components/home/label-list/index'
 import RecommendedWorks from '@/components/home/recommended-works'
 import { setTempId } from '@/store/modules/user'
 import type { AppState } from '@/store/types'
-// import RankingList from '@/components/home/ranking-list'
 import { generateTempId, MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
 import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
@@ -100,8 +99,6 @@ const Home: FC = () => {
         <LabelList loading={gettingLabelList} labelList={labelList} />
         {isLogin && <FollowedWorks loading={gettingFollowWorkList} workList={followWorkList} />}
         <RecommendedWorks loading={gettingRecommendWorkList} workList={recommendWorkList} />
-        {/* TODO: 暂时没写好排行榜接口 */}
-        {/* <RankingList loading={loading} workList={rankWorkList} /> */}
       </div>
 
       <div className='fixed bottom-10 right-10'>

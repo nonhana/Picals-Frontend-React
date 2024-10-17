@@ -18,7 +18,7 @@ const WorkListSkeleton: FC<WorkListSkeletonProps> = ({
   heading,
   row = 2,
   padding = 20,
-  borderRadius = 4,
+  borderRadius = 8,
   ...props
 }) => {
   const [width, setWidth] = useState<number>(MAX_WIDTH)

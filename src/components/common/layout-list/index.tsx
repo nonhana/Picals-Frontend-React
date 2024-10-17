@@ -4,13 +4,7 @@ import { debounce } from 'lodash'
 import { FC, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-type ScrollType =
-  | 'label'
-  | 'label-img'
-  | 'work-normal'
-  | 'work-rank'
-  | 'work-detail'
-  | 'work-little'
+type ScrollType = 'label' | 'label-img' | 'work-normal' | 'work-detail' | 'work-little'
 
 type LayoutListProps = {
   scrollType: ScrollType
@@ -28,7 +22,6 @@ const scrollMap: Map<ScrollType, number> = new Map([
   ['label', 400],
   ['label-img', 512],
   ['work-normal', 1020],
-  ['work-rank', 924],
   ['work-detail', 640],
   ['work-little', 300],
 ])

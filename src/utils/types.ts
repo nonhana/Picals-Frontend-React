@@ -94,19 +94,6 @@ export interface WorkDetailInfo {
   }
 }
 
-// 排行榜作品item信息
-export interface WorkRankItemInfo {
-  id: string
-  range: number
-  imgList: string[]
-  cover: string
-  name: string
-  authorId: string
-  authorName: string
-  authorAvatar: string
-  isLiked: boolean
-}
-
 // 用户item信息
 export interface UserItemInfo {
   id: string

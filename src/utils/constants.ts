@@ -1,6 +1,8 @@
 // src/utils/constants.ts
 // 用以存放项目中的常量
 
+import { MenuProps } from 'antd'
+
 // 下拉框中的选项列表
 type UserHeaderItem = {
   value: string
@@ -109,3 +111,38 @@ export const VIEW_LIST_ICON_MAP = {
 // 页面变化的宽度
 export const MAX_WIDTH = 1245
 export const MIN_WIDTH = 1040
+
+// WorkItem 下拉框数据配置
+export const WORKITEM_DROPDOWN_LIST: Map<'personal_center' | 'favorite', MenuProps['items']> =
+  new Map([
+    [
+      'personal_center',
+      [
+        {
+          key: 'delete',
+          label: '删除作品',
+        },
+        {
+          key: 'edit',
+          label: '编辑作品',
+        },
+      ],
+    ],
+    [
+      'favorite',
+      [
+        {
+          key: 'cancel',
+          label: '取消收藏',
+        },
+        {
+          key: 'move',
+          label: '移动到',
+        },
+        {
+          key: 'copy',
+          label: '复制到',
+        },
+      ],
+    ],
+  ])

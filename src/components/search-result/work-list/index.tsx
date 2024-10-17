@@ -1,7 +1,7 @@
 import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
-import WorkNormalItem from '@/components/common/work-normal-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -128,7 +128,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
         unmountOnExit>
         <div className='relative w-full flex flex-wrap gap-20px'>
           {Array.from(workList.values()).map((item) => (
-            <WorkNormalItem
+            <WorkItem
               key={item.id}
               itemInfo={item}
               like={handleLike}

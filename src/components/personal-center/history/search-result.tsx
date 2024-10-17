@@ -1,7 +1,7 @@
 import { searchViewHistoryAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
 import Empty from '@/components/common/empty'
-import WorkHistoryItem from '@/components/common/work-history-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { Icon } from '@iconify/react'
 import dayjs from 'dayjs'
@@ -63,7 +63,7 @@ const SearchResult: FC<SearchResultProps> = ({ keyword, searchTrigger }) => {
               </div>
               <div className='relative w-full flex flex-wrap gap-5'>
                 {resultMap[date].map((work) => (
-                  <WorkHistoryItem key={work.id} itemInfo={work} />
+                  <WorkItem type='history' key={work.id} itemInfo={work} />
                 ))}
               </div>
             </div>

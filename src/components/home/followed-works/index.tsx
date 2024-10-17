@@ -1,7 +1,7 @@
 import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import LayoutList from '@/components/common/layout-list'
-import WorkNormalItem from '@/components/common/work-normal-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -58,7 +58,7 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
             unmountOnExit>
             <LayoutList scrollType='work-normal' gap={20}>
               {Array.from(workList.values()).map((item) => (
-                <WorkNormalItem
+                <WorkItem
                   key={item.id}
                   itemInfo={item}
                   like={handleLike}

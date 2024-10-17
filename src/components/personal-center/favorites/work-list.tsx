@@ -6,7 +6,7 @@ import {
 } from '@/apis'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
-import WorkFavoriteItem from '@/components/common/work-favorite-item'
+import WorkItem from '@/components/common/work-item'
 import FavoriteWorkListSkeleton from '@/components/skeleton/favorite-work-list'
 import { PersonalContext } from '@/pages/personal-center'
 import {
@@ -301,7 +301,8 @@ const WorkList: FC<WorkListProps> = ({
           unmountOnExit>
           <div className='w-199 relative flex flex-wrap gap-5 py-5 mx-5'>
             {workList.map((item) => (
-              <WorkFavoriteItem
+              <WorkItem
+                type='favorite'
                 key={item.id}
                 itemInfo={item}
                 settingStatus={settingStatus}

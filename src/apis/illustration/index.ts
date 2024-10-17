@@ -53,14 +53,6 @@ export const getFollowNewWorksIdListAPI = () => {
   })
 }
 
-// 获取昨日排行榜作品
-export const getRankWorksAPI = () => {
-  return request<undefined, WorkNormalItem[]>({
-    url: '/api/illustration/rank',
-    method: 'GET',
-  })
-}
-
 // 上传作品
 export const uploadWorkAPI = (data: IUploadWorkReq) => {
   return request<IUploadWorkReq, undefined>({

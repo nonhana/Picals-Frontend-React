@@ -1,5 +1,5 @@
 import LayoutList from '@/components/common/layout-list'
-import WorkLeastItem from '@/components/common/work-least-item'
+import WorkItem from '@/components/common/work-item'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { WorkNormalItemInfo } from '@/utils/types'
 import { FC } from 'react'
@@ -45,7 +45,7 @@ const WorkSlideWindow: FC<WorkSlideWindowProps> = ({
           unmountOnExit>
           <>
             {everyPage.list.map((work) => (
-              <WorkLeastItem key={work.id} data-id={work.id} itemInfo={work} />
+              <WorkItem type='least' key={work.id} data-id={work.id} itemInfo={work} />
             ))}
           </>
         </CSSTransition>

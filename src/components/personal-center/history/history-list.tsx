@@ -3,7 +3,7 @@ import type { HistoryItem } from '@/apis/types'
 import Empty from '@/components/common/empty'
 import GreyButton from '@/components/common/grey-button'
 import Pagination from '@/components/common/pagination'
-import WorkHistoryItem from '@/components/common/work-history-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
 import { Icon } from '@iconify/react'
@@ -110,7 +110,7 @@ const HistoryList: FC = () => {
           unmountOnExit>
           <div className='relative w-full flex flex-wrap gap-5'>
             {Array.from(workList.values()).map((work) => (
-              <WorkHistoryItem key={work.id} itemInfo={work} onClick={addWorks} />
+              <WorkItem type='history' key={work.id} itemInfo={work} onClick={addWorks} />
             ))}
           </div>
         </CSSTransition>

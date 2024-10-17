@@ -7,7 +7,7 @@ import {
 } from '@/apis'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
-import WorkNormalItem from '@/components/common/work-normal-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
@@ -128,7 +128,8 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
         unmountOnExit>
         <div className='relative w-full flex flex-wrap gap-5'>
           {Array.from(workList.values()).map((work) => (
-            <WorkNormalItem
+            <WorkItem
+              type='personal_center'
               key={work.id}
               itemInfo={work}
               like={likeWork}

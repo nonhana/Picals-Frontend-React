@@ -203,7 +203,7 @@ const Upload: FC = () => {
                 uploadWork={uploadWork}
               />
             ) : (
-              <div className='relative h-100'>
+              <div className='relative h-100 w-200'>
                 <Empty text='看到这个，你肯定是做了一些不好的事情，对吗？' />
               </div>
             )}

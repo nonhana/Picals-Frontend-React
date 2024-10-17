@@ -1,5 +1,5 @@
 import { getLatestWorksAPI, likeActionsAPI } from '@/apis'
-import WorkNormalItem from '@/components/common/work-normal-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useAtBottom } from '@/hooks'
 import {
@@ -102,10 +102,10 @@ const LatestList: FC = () => {
           unmountOnExit>
           <div className='relative w-full flex flex-wrap gap-5'>
             {everyPage.list.map((work) => (
-              <WorkNormalItem
+              <WorkItem
                 key={work.id}
                 itemInfo={work}
-                like={(id) => handleLike(everyPage.page, id)}
+                like={(id: string) => handleLike(everyPage.page, id)}
                 onClick={addLatestWorks}
               />
             ))}

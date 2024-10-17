@@ -7,7 +7,7 @@ import HanaViewer from '@/components/common/hana-viewer'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
 import LazyImg from '@/components/common/lazy-img'
-import WorkLittleItem from '@/components/common/work-little-item'
+import WorkItem from '@/components/common/work-item'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { setFavoriteList } from '@/store/modules/favorites'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
@@ -459,7 +459,8 @@ const WorkInfo: FC<WorkInfoProps> = ({
                       unmountOnExit>
                       <>
                         {everyPage.list.map((work) => (
-                          <WorkLittleItem
+                          <WorkItem
+                            type='little'
                             key={work.id}
                             data-id={work.id}
                             itemInfo={work}

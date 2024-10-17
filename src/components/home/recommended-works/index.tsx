@@ -1,6 +1,7 @@
 import { likeActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
-import WorkNormalItem from '@/components/common/work-normal-item'
+// import WorkNormalItem from '@/components/common/work-normal-item'
+import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -54,12 +55,7 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
         unmountOnExit>
         <div className='relative w-full flex flex-wrap gap-5'>
           {Array.from(workList.values()).map((item) => (
-            <WorkNormalItem
-              key={item.id}
-              itemInfo={item}
-              like={handleLike}
-              onClick={addRecommendWorks}
-            />
+            <WorkItem key={item.id} itemInfo={item} like={handleLike} onClick={addRecommendWorks} />
           ))}
         </div>
       </CSSTransition>

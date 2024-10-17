@@ -6,9 +6,9 @@ import { FC } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import UserWorkItem from './user-work-item'
 import Empty from '../empty'
 import LazyImg from '../lazy-img'
+import WorkItem from '../work-item'
 
 type UserItemProps = UserItemInfo & {
   width: number
@@ -31,7 +31,7 @@ const UserItem: FC<UserItemProps> = ({
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { id: localUserId } = useSelector((state: AppState) => state.user.userInfo)
   return (
-    <div className='relative p-5 h-61 flex gap-5 rd-1 bg-white'>
+    <div className='relative p-5 h-65 flex gap-5 rd-1 bg-white'>
       <Link
         to={`/personal-center/${id}/works`}
         className='shrink-0 w-20 h-20 rd-full overflow-hidden cursor-pointer'>
@@ -81,7 +81,7 @@ const UserItem: FC<UserItemProps> = ({
       ) : (
         <div className='flex gap-5'>
           {works.slice(0, width === MAX_WIDTH ? 4 : 3).map((work) => (
-            <UserWorkItem key={work.id} itemInfo={work} like={likeWork} />
+            <WorkItem type='user_work' key={work.id} itemInfo={work} like={likeWork} />
           ))}
         </div>
       )}
