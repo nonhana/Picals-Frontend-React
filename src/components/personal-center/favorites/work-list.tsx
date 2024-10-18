@@ -302,9 +302,9 @@ const WorkList: FC<WorkListProps> = ({
           <div className='w-199 relative flex flex-wrap gap-5 py-5 mx-5'>
             {workList.map((item) => (
               <WorkItem
-                type='favorite'
                 key={item.id}
                 itemInfo={item}
+                type='favorite'
                 settingStatus={settingStatus}
                 chooseStatus={chosenWorkList.includes(item.id)}
                 choose={choose}

@@ -1,5 +1,5 @@
 import { getLatestWorksAPI, likeActionsAPI } from '@/apis'
-import WorkItem from '@/components/common/work-item'
+import AnimeList from '@/components/common/anime-list'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useAtBottom } from '@/hooks'
 import {
@@ -12,7 +12,6 @@ import type { WorkNormalItemInfo } from '@/utils/types'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 
 const LatestList: FC = () => {
   const location = useLocation()
@@ -93,25 +92,17 @@ const LatestList: FC = () => {
         <span>最新发布</span>
       </div>
 
-      {latestWorkList.map((everyPage) => (
-        <CSSTransition
-          key={everyPage.page}
-          in={everyPage.list.length !== 0}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <div className='relative w-full flex flex-wrap gap-5'>
-            {everyPage.list.map((work) => (
-              <WorkItem
-                key={work.id}
-                itemInfo={work}
-                like={(id: string) => handleLike(everyPage.page, id)}
-                onClick={addLatestWorks}
-              />
-            ))}
-          </div>
-        </CSSTransition>
-      ))}
+      {latestWorkList.map(
+        (everyPage) =>
+          everyPage.list.length !== 0 && (
+            <AnimeList
+              key={everyPage.page}
+              workList={everyPage.list}
+              like={(id: string) => handleLike(everyPage.page, id)}
+              onClick={addLatestWorks}
+            />
+          ),
+      )}
 
       {!isFinal && <WorkListSkeleton row={1} />}
     </div>

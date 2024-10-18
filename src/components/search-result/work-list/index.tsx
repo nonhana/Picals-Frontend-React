@@ -1,7 +1,7 @@
 import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
+import AnimeList from '@/components/common/anime-list'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
-import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -121,22 +121,13 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
         />
       </div>
 
-      <CSSTransition
-        in={workList.size !== 0 && !gettingWorkList}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <div className='relative w-full flex flex-wrap gap-20px'>
-          {Array.from(workList.values()).map((item) => (
-            <WorkItem
-              key={item.id}
-              itemInfo={item}
-              like={handleLike}
-              onClick={addSearchResultWorks}
-            />
-          ))}
-        </div>
-      </CSSTransition>
+      {workList.size !== 0 && !gettingWorkList && (
+        <AnimeList
+          workList={Array.from(workList.values())}
+          like={handleLike}
+          onClick={addSearchResultWorks}
+        />
+      )}
 
       <CSSTransition
         in={workList.size === 0 && !gettingWorkList}

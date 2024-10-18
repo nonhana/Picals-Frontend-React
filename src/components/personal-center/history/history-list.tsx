@@ -1,9 +1,9 @@
 import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
+import AnimeList from '@/components/common/anime-list'
 import Empty from '@/components/common/empty'
 import GreyButton from '@/components/common/grey-button'
 import Pagination from '@/components/common/pagination'
-import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
 import { Icon } from '@iconify/react'
@@ -103,17 +103,9 @@ const HistoryList: FC = () => {
       </div>
 
       <div className='relative w-full min-h-160 pb-15'>
-        <CSSTransition
-          in={workList.length !== 0 && !gettingWorkList}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <div className='relative w-full flex flex-wrap gap-5'>
-            {Array.from(workList.values()).map((work) => (
-              <WorkItem type='history' key={work.id} itemInfo={work} onClick={addWorks} />
-            ))}
-          </div>
-        </CSSTransition>
+        {workList.length !== 0 && !gettingWorkList && (
+          <AnimeList type='history' workList={workList} onClick={addWorks} />
+        )}
 
         <CSSTransition
           in={workList.length === 0 && !gettingWorkList}

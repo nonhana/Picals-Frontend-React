@@ -1,7 +1,7 @@
 import { searchViewHistoryAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
+import AnimeList from '@/components/common/anime-list'
 import Empty from '@/components/common/empty'
-import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { Icon } from '@iconify/react'
 import dayjs from 'dayjs'
@@ -61,11 +61,7 @@ const SearchResult: FC<SearchResultProps> = ({ keyword, searchTrigger }) => {
                 <Icon width='32px' color='#858585' icon='ant-design:clock-circle-twotone' />
                 <span className='title color-deepgrey select-none'>{date}</span>
               </div>
-              <div className='relative w-full flex flex-wrap gap-5'>
-                {resultMap[date].map((work) => (
-                  <WorkItem type='history' key={work.id} itemInfo={work} />
-                ))}
-              </div>
+              <AnimeList type='history' workList={resultMap[date]} />
             </div>
           ))}
         </>

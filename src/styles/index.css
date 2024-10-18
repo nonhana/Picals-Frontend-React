@@ -140,3 +140,18 @@ a {
   transition: transform 300ms;
   transform: translateX(calc(-100% - 20px));
 }
+
+/* keyframes 动画 */
+@keyframes float-up {
+  from {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.float-up {
+  animation: float-up 300ms forwards;
+}

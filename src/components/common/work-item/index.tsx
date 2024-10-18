@@ -5,7 +5,7 @@ import { WORKITEM_DROPDOWN_LIST } from '@/utils'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Dropdown, Modal, type MenuProps } from 'antd'
-import { FC, useContext } from 'react'
+import { forwardRef, ForwardRefRenderFunction, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
@@ -21,7 +21,10 @@ const littleSize = 'w-118px h-118px'
 
 const activeClasses = 'bg-white opacity-16'
 
-const WorkItem: FC<WorkItemProps> = (props) => {
+const beforeClasses =
+  'before:content-[""] before:absolute before:block before:top-0 before:left-0 before:w-full before:h-full before:bg-black before:opacity-4 before:rd-2'
+
+const WorkItem: ForwardRefRenderFunction<HTMLDivElement, WorkItemProps> = (props, ref) => {
   let curWrapper: string
   let curSize: string
   let type: WorkItemType | undefined
@@ -141,6 +144,7 @@ const WorkItem: FC<WorkItemProps> = (props) => {
   return (
     <div
       {...args!}
+      ref={ref}
       className={`shrink-0 relative rd-2 overflow-hidden ${settingStatus! && chooseStatus! ? 'bg-normal' : 'bg-white'} ${settingStatus! ? 'hover:bg-normal' : ''} ${curWrapper}`}>
       {settingStatus! && (
         <div
@@ -159,7 +163,7 @@ const WorkItem: FC<WorkItemProps> = (props) => {
           </div>
         </div>
       )}
-      <div className={`absolute top-0 left-0 z-99 ${curSize}`}>
+      <div className={`absolute top-0 left-0 z-99 ${curSize} ${beforeClasses}`}>
         <Link
           to={`/work-detail/${itemInfo!.id}`}
           className={`transition-all cursor-pointer opacity-16 hover:bg-white absolute top-0 left-0 ${curSize} ${(type! === 'least' || type! === 'little') && itemInfo!.id === workId ? activeClasses : ''}`}
@@ -248,4 +252,4 @@ const WorkItem: FC<WorkItemProps> = (props) => {
   )
 }
 
-export default WorkItem
+export default forwardRef(WorkItem)

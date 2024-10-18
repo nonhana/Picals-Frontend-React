@@ -5,9 +5,9 @@ import {
   deleteWorkAPI,
   getUserLikeWorksIdListAPI,
 } from '@/apis'
+import AnimeList from '@/components/common/anime-list'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
-import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
@@ -121,24 +121,15 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
 
   return (
     <div className='relative w-full min-h-160 pb-15'>
-      <CSSTransition
-        in={workList.size !== 0 && !gettingWorkList}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <div className='relative w-full flex flex-wrap gap-5'>
-          {Array.from(workList.values()).map((work) => (
-            <WorkItem
-              type='personal_center'
-              key={work.id}
-              itemInfo={work}
-              like={likeWork}
-              deleteWork={deleteWork}
-              onClick={addWorks}
-            />
-          ))}
-        </div>
-      </CSSTransition>
+      {workList.size !== 0 && !gettingWorkList && (
+        <AnimeList
+          type='personal_center'
+          workList={Array.from(workList.values())}
+          like={likeWork}
+          deleteWork={deleteWork}
+          onClick={addWorks}
+        />
+      )}
 
       <CSSTransition
         in={workList.size === 0 && !gettingWorkList}

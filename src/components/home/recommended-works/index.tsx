@@ -1,7 +1,6 @@
 import { likeActionsAPI } from '@/apis'
+import AnimeList from '@/components/common/anime-list'
 import Empty from '@/components/common/empty'
-// import WorkNormalItem from '@/components/common/work-normal-item'
-import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -48,17 +47,13 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
         <span>推荐作品</span>
       </div>
 
-      <CSSTransition
-        in={workList.size !== 0 && !loading}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <div className='relative w-full flex flex-wrap gap-5'>
-          {Array.from(workList.values()).map((item) => (
-            <WorkItem key={item.id} itemInfo={item} like={handleLike} onClick={addRecommendWorks} />
-          ))}
-        </div>
-      </CSSTransition>
+      {workList.size !== 0 && !loading && (
+        <AnimeList
+          workList={Array.from(workList.values())}
+          like={handleLike}
+          onClick={addRecommendWorks}
+        />
+      )}
 
       <CSSTransition
         in={workList.size === 0 && !loading}

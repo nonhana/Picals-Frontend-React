@@ -1,6 +1,6 @@
 import { getFollowNewWorksAPI, likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
+import AnimeList from '@/components/common/anime-list'
 import Empty from '@/components/common/empty'
-import WorkItem from '@/components/common/work-item'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks/useMap'
 import {
@@ -67,22 +67,13 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
 
       {isLogin ? (
         <>
-          <CSSTransition
-            in={workList.size !== 0 && !loading}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <div className='relative w-full flex flex-wrap gap-5'>
-              {Array.from(workList.values()).map((item) => (
-                <WorkItem
-                  key={item.id}
-                  itemInfo={item}
-                  like={handleLike}
-                  onClick={addFollowedNewWorkList}
-                />
-              ))}
-            </div>
-          </CSSTransition>
+          {workList.size !== 0 && !loading && (
+            <AnimeList
+              workList={Array.from(workList.values())}
+              like={handleLike}
+              onClick={addFollowedNewWorkList}
+            />
+          )}
 
           <CSSTransition
             in={workList.size === 0 && !loading}
