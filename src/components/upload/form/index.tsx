@@ -406,10 +406,8 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div
             style={{ margin: 0 }}
             className={`${titleStyle} font-normal flex items-center justify-between`}>
-            <span className='font-carter color-primary'>
-              Total number of works currently saved:
-            </span>
-            <span className='font-carter color-shallowblack font-size-8'>{workCount}</span>
+            <span className='color-primary'>Total number of works currently saved:</span>
+            <span className=' color-shallowblack font-size-8'>{workCount}</span>
           </div>
         </div>
 

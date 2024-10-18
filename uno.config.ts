@@ -13,7 +13,6 @@ import {
 } from 'unocss'
 
 const customRules: Rule[] = [
-  ['font-carter', { 'font-family': 'CarterOne' }],
   ['font-size-s', { 'font-size': '12px' }],
   ['font-size-m', { 'font-size': '14px' }],
   ['font-size-l', { 'font-size': '16px' }],
