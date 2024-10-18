@@ -18,6 +18,7 @@ body {
   margin: 0 auto;
   overflow: auto;
   background: #fff;
+  font-family: 'Noto Sans SC', 'Noto Sans', 'Microsoft YaHei', sans-serif !important;
 }
 
 img {
