@@ -310,11 +310,11 @@ const WorkInfo: FC<WorkInfoProps> = ({
                       id={img.id}
                       className='max-w-full max-h-200 object-contain cursor-pointer'
                       style={{
-                        width: img.thumbnailWidth,
+                        width: img.thumbnailWidth || '100%',
                         height:
-                          img.thumbnailWidth > 720
+                          (img.thumbnailWidth > 720
                             ? (img.thumbnailHeight * 720) / img.thumbnailWidth
-                            : img.thumbnailHeight,
+                            : img.thumbnailHeight) || 'auto',
                       }}
                       src={img.thumbnailUrl}
                       alt={`work-${img.id}`}
