@@ -47,7 +47,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
 
       <CSSTransition in={visible} timeout={300} classNames='left-to-right' unmountOnExit>
         <div
-          className={`b-light b-2 b-r-solid select-none fixed top-0 bottom-0 w-60 bg-white z-1000 ${className}`}>
+          className={`rounded-r-6 shadow-2xl select-none fixed top-0 bottom-0 w-60 bg-white z-1000 ${className}`}>
           <div className='px-10 h-16 flex items-center gap-2.5'>
             <Icon
               className='cursor-pointer'
