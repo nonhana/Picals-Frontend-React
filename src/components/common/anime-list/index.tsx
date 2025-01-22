@@ -30,12 +30,7 @@ const AnimeList: FC<AnimeListProps> = ({ workList, ...props }) => {
   return (
     <div ref={containerRef} className='relative w-full flex flex-wrap gap-5'>
       {workList.map((item, index) => (
-        <WorkItem
-          {...props}
-          ref={(el) => (itemsRef.current[index] = el!)}
-          key={item.id}
-          itemInfo={item}
-        />
+        <WorkItem key={item.id} {...props} index={index} itemInfo={item} />
       ))}
     </div>
   )

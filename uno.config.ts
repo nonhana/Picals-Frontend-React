@@ -1,4 +1,4 @@
-import presetRemToPx from '@unocss/preset-rem-to-px'
+import { presetRemToPx } from '@unocss/preset-rem-to-px'
 import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
 import {
   defineConfig,

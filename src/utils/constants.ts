@@ -146,3 +146,5 @@ export const WORKITEM_DROPDOWN_LIST: Map<'personal_center' | 'favorite', MenuPro
       ],
     ],
   ])
+
+export const FLOAT_DURATION = 80

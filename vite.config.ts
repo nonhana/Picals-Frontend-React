@@ -5,7 +5,7 @@ import UnoCSS from 'unocss/vite'
 import { defineConfig, loadEnv } from 'vite'
 import viteCompression from 'vite-plugin-compression'
 import viteImagemin from 'vite-plugin-imagemin'
-import webfontDownload from 'vite-plugin-webfont-dl'
+import { webfontDownload } from 'vite-plugin-webfont-dl'
 
 const colors = [
   'white',

@@ -1,11 +1,12 @@
 import { HistoryItem } from '@/apis/types'
+import { useFloat } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
 import type { AppState } from '@/store/types'
-import { WORKITEM_DROPDOWN_LIST } from '@/utils'
+import { FLOAT_DURATION, WORKITEM_DROPDOWN_LIST } from '@/utils'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Dropdown, Modal, type MenuProps } from 'antd'
-import { forwardRef, ForwardRefRenderFunction, useContext } from 'react'
+import { type FC, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
@@ -24,7 +25,9 @@ const activeClasses = 'bg-white opacity-16'
 const beforeClasses =
   'before:content-[""] before:absolute before:block before:top-0 before:left-0 before:w-full before:h-full before:bg-black before:opacity-4 before:rd-2'
 
-const WorkItem: ForwardRefRenderFunction<HTMLDivElement, WorkItemProps> = (props, ref) => {
+const WorkItem: FC<WorkItemProps & { index?: number }> = (props) => {
+  const index = props.index ?? 0
+
   let curWrapper: string
   let curSize: string
   let type: WorkItemType | undefined
@@ -141,10 +144,16 @@ const WorkItem: ForwardRefRenderFunction<HTMLDivElement, WorkItemProps> = (props
     }
   }
 
+  const [opacity, top] = useFloat()
+
   return (
     <div
       {...args!}
-      ref={ref}
+      style={{
+        transition: `all 0.2s ${index * FLOAT_DURATION}ms`,
+        opacity,
+        transform: `translateY(${top})`,
+      }}
       className={`shrink-0 relative rd-2 overflow-hidden ${settingStatus! && chooseStatus! ? 'bg-normal' : 'bg-white'} ${settingStatus! ? 'hover:bg-normal' : ''} ${curWrapper}`}>
       {settingStatus! && (
         <div
@@ -252,4 +261,4 @@ const WorkItem: ForwardRefRenderFunction<HTMLDivElement, WorkItemProps> = (props
   )
 }
 
-export default forwardRef(WorkItem)
+export default WorkItem
