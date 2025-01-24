@@ -14,8 +14,6 @@ import Empty from '../empty'
 import LabelImgItem from '../label-img-item'
 import LabelItem from '../label-item'
 
-const { confirm } = Modal
-
 const SearchDropdown: FC<{
   visible: boolean
   className?: string
@@ -27,7 +25,7 @@ const SearchDropdown: FC<{
   const { likedLabels } = useSelector((state: AppState) => state.user)
   const { historyList } = useSelector((state: AppState) => state.searchHistory)
 
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
 
   const toggleBodyOverflow = (visible: boolean) => {
     document.documentElement.style.overflow = visible ? 'hidden scroll' : ''
@@ -61,110 +59,115 @@ const SearchDropdown: FC<{
     getRecommendLabelList()
   }, [])
 
+  const [modal, modalContextHolder] = Modal.useModal()
+
   return (
-    <AnimatePresence>
-      {contextHolder}
+    <>
+      {msgContextHolder}
+      {modalContextHolder}
 
-      {visible && (
-        <motion.div
-          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
-          onClick={() => setVisible(false)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        />
-      )}
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
+            onClick={() => setVisible(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
 
-      {visible && (
-        <motion.div
-          className={`not-show-scrollbar absolute bg-white w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}>
-          <div className='m-b-5'>
-            <div className='w-full p-10px flex justify-between items-center'>
-              <span className='font-bold font-size-m color-deepgrey'>历史记录</span>
-              <span
-                className='font-size-m color-deepgrey cursor-pointer'
-                onClick={() => {
-                  confirm({
-                    title: '确定要清空历史记录吗？',
-                    content: '一旦清除，不可恢复！',
-                    okText: '确定',
-                    cancelText: '取消',
-                    onOk: handleClearHistory,
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  })
-                }}>
-                清除历史记录
-              </span>
-            </div>
-            {historyList.length === 0 ? (
-              <div className='relative mx-10px'>
-                <Empty showImg={false} />
+        {visible && (
+          <motion.div
+            className={`not-show-scrollbar absolute bg-white w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
+            <div className='m-b-5'>
+              <div className='w-full p-10px flex justify-between items-center'>
+                <span className='font-bold font-size-m color-deepgrey'>历史记录</span>
+                <span
+                  className='font-size-m color-deepgrey cursor-pointer'
+                  onClick={() => {
+                    modal.confirm({
+                      title: '确定要清空历史记录吗？',
+                      content: '一旦清除，不可恢复！',
+                      okText: '确定',
+                      cancelText: '取消',
+                      onOk: handleClearHistory,
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    })
+                  }}>
+                  清除历史记录
+                </span>
               </div>
-            ) : (
-              <ul className='list-none m-0 p-0 max-h-40 overflow-y-scroll'>
-                {historyList.map((item) => (
-                  <li key={item}>
-                    <Link
-                      to={`/search-result?label=${item}&type=work&sortType=new`}
-                      onClick={() => setKeyword(item)}
-                      className='cursor-pointer p-10px flex justify-between items-center font-size-m color-deepgrey hover:bg-normal transition-duration-300'>
-                      <span>{item}</span>
-                      <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {isLogin && (
-            <div className='relative m-b-5'>
-              <div className='w-full p-10px font-bold font-size-m color-deepgrey'>
-                <span>喜欢的标签</span>
-              </div>
-              {likedLabels.length === 0 ? (
+              {historyList.length === 0 ? (
                 <div className='relative mx-10px'>
                   <Empty showImg={false} />
                 </div>
               ) : (
-                <LayoutList className='px-10px' scrollType='label'>
-                  {likedLabels.map((item) => (
-                    <LabelItem key={item.id} {...item} />
+                <ul className='list-none m-0 p-0 max-h-40 overflow-y-scroll'>
+                  {historyList.map((item) => (
+                    <li key={item}>
+                      <Link
+                        to={`/search-result?label=${item}&type=work&sortType=new`}
+                        onClick={() => setKeyword(item)}
+                        className='cursor-pointer p-10px flex justify-between items-center font-size-m color-deepgrey hover:bg-normal transition-duration-300'>
+                        <span>{item}</span>
+                        <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {isLogin && (
+              <div className='relative m-b-5'>
+                <div className='w-full p-10px font-bold font-size-m color-deepgrey'>
+                  <span>喜欢的标签</span>
+                </div>
+                {likedLabels.length === 0 ? (
+                  <div className='relative mx-10px'>
+                    <Empty showImg={false} />
+                  </div>
+                ) : (
+                  <LayoutList className='px-10px' scrollType='label'>
+                    {likedLabels.map((item) => (
+                      <LabelItem key={item.id} {...item} />
+                    ))}
+                  </LayoutList>
+                )}
+              </div>
+            )}
+
+            <div className='relative m-b-5'>
+              <div className='w-full p-10px font-bold font-size-m color-deepgrey'>
+                <span>最近流行的插画标签</span>
+              </div>
+              {popularLabels.length === 0 ? (
+                <div className='relative mx-10px'>
+                  <Empty showImg={false} />
+                </div>
+              ) : (
+                <LayoutList className='px-10px' scrollType='label-img'>
+                  {popularLabels.map((item) => (
+                    <LabelImgItem key={item.id} {...item} />
                   ))}
                 </LayoutList>
               )}
             </div>
-          )}
-
-          <div className='relative m-b-5'>
-            <div className='w-full p-10px font-bold font-size-m color-deepgrey'>
-              <span>最近流行的插画标签</span>
-            </div>
-            {popularLabels.length === 0 ? (
-              <div className='relative mx-10px'>
-                <Empty showImg={false} />
-              </div>
-            ) : (
-              <LayoutList className='px-10px' scrollType='label-img'>
-                {popularLabels.map((item) => (
-                  <LabelImgItem key={item.id} {...item} />
-                ))}
-              </LayoutList>
-            )}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 

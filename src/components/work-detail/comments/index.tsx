@@ -12,8 +12,6 @@ import { useParams } from 'react-router'
 import Comment from './comment'
 import InputWindow from './input-window'
 
-const { confirm } = Modal
-
 type CommentsProps = {
   totalCount: number
   loading: boolean
@@ -28,7 +26,7 @@ interface Replying {
 
 const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
   const { workId } = useParams<{ workId: string }>()
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
 
   const { userInfo } = useSelector((state: AppState) => state.user)
   const [commentList, setCommentList] = useState<CommentItem[]>([])
@@ -144,8 +142,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
     }
   }
 
+  const [modal, modalContextHolder] = Modal.useModal()
   const handleDelete = async (id: string) => {
-    confirm({
+    modal.confirm({
       title: '删除评论',
       content: '你确定要删除这条评论吗？',
       okText: '删除',
@@ -226,7 +225,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
 
   return (
     <>
-      {contextHolder}
+      {msgContextHolder}
+      {modalContextHolder}
+
       <div>
         <div className='flex gap-10px items-center'>
           <span className='font-size-18px font-bold color-shallowblack'>评论</span>

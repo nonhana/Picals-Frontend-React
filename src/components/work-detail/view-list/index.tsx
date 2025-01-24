@@ -640,8 +640,8 @@ const ViewList: FC<ViewListProps> = ({
               <WorkSlideWindow
                 workId={workId}
                 workList={authorWorkList}
-                setWorkListEnd={setAuthorWorkListEnd}
                 isFinal={userWorkListFinal}
+                setWorkListEnd={setAuthorWorkListEnd}
                 initializing={userWorkListInitializing}
                 setInitializing={setUserWorkListInitializing}
               />

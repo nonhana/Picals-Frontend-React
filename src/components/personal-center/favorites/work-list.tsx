@@ -25,7 +25,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useSearchParams, useLocation, useNavigate } from 'react-router'
 
 const { Search } = Input
-const { confirm } = Modal
 
 type WorkListProps = {
   total: number
@@ -58,7 +57,7 @@ const WorkList: FC<WorkListProps> = ({
   const location = useLocation()
   const { isMe } = useContext(PersonalContext)
 
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
 
   const dispatch = useDispatch()
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
@@ -138,13 +137,14 @@ const WorkList: FC<WorkListProps> = ({
 
   /* ----------Modal相关---------- */
   //#region
+  const [modal, modalContextHolder] = Modal.useModal()
   const [moveModalStatus, setMoveModalStatus] = useState(false)
   const [moveFolderId, setMoveFolderId] = useState<string>('')
   const [copyModalStatus, setCopyModalStatus] = useState(false)
   const [copyFolderId, setCopyFolderId] = useState<string>('')
 
   const cancelConfirm = (idList: string[]) => {
-    confirm({
+    modal.confirm({
       title: `确定要取消收藏${idList.length === 1 ? '该' : '这些'}作品吗？`,
       icon: <ExclamationCircleFilled />,
       content: '该操作无法撤销',
@@ -230,7 +230,9 @@ const WorkList: FC<WorkListProps> = ({
 
   return (
     <>
-      {contextHolder}
+      {msgContextHolder}
+      {modalContextHolder}
+
       <div className='relative flex flex-col items-center min-h-150 pb-10'>
         {settingStatus && (
           <div className='w-full h-16 px-5 flex items-center b-1px b-b-solid color-deepgrey'>

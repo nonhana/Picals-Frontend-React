@@ -2,8 +2,6 @@ import { Modal, message } from 'antd'
 import { FC } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
-const { confirm } = Modal
-
 type HanaViewerProps = {
   children: React.ReactNode
   onDelete?: (index: number) => void
@@ -12,8 +10,10 @@ type HanaViewerProps = {
 }
 
 const HanaViewer: FC<HanaViewerProps> = ({ children, onDelete, onDownload, gettingBlob }) => {
+  const [modal, contextHolder] = Modal.useModal()
+
   const handleDelete = (index: number, onClose: any) => {
-    confirm({
+    modal.confirm({
       title: '删除图片',
       content: '确定要删除这张图片吗？',
       okText: '删除',
@@ -102,6 +102,7 @@ const HanaViewer: FC<HanaViewerProps> = ({ children, onDelete, onDownload, getti
           </>
         )
       }}>
+      {contextHolder}
       {children}
     </PhotoProvider>
   )

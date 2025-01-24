@@ -17,8 +17,6 @@ import { FC, useEffect, useState, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSearchParams, useNavigate } from 'react-router'
 
-const { confirm } = Modal
-
 // 获取拖动元素的索引
 const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
   const { active, over } = dragItem
@@ -50,7 +48,7 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
   const dispatch = useDispatch()
 
   const { isMe, userId } = useContext(PersonalContext)
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
 
   const [searchParams] = useSearchParams()
   const folderId = searchParams.get('folderId')
@@ -103,8 +101,9 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
     navigate(`/personal-center/${userId}/favorites?folderId=${id}`)
   }
 
+  const [modal, modalContextHolder] = Modal.useModal()
   const onDeleteFolder = (id: string) => {
-    confirm({
+    modal.confirm({
       title: '删除收藏集',
       content: '确定删除该收藏集吗？',
       okText: '删除',
@@ -161,7 +160,9 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
 
   return (
     <>
-      {contextHolder}
+      {msgContextHolder}
+      {modalContextHolder}
+
       <DndContext onDragEnd={dragEndEvent} modifiers={[restrictToParentElement]}>
         <SortableContext
           items={folderList.map((item) => item.id)}

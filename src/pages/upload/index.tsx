@@ -13,8 +13,6 @@ import { FC, useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router'
 
-const { confirm } = Modal
-
 const initialFormInfo: UploadWorkFormInfo = {
   basicInfo: {
     name: '',
@@ -174,8 +172,10 @@ const Upload: FC = () => {
     }
   }, [formInfo, imgList, editMode, workId, resetForm])
 
+  const [modal, contextHolder] = Modal.useModal()
+
   const handleResetForm = () => {
-    confirm({
+    modal.confirm({
       title: '确定要重置表单吗？',
       content: '重置后，当前表单内容将会被清空。',
       okText: '确定',
@@ -189,6 +189,8 @@ const Upload: FC = () => {
 
   return (
     <>
+      {contextHolder}
+
       <div className='relative w-full min-h-screen flex flex-col items-center gap-5 py-5 bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
         {uploadSuccess ? (
           <UploadSuccess workStatus={workStatus} />

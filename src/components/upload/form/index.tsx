@@ -17,8 +17,6 @@ import type { SelectProps } from 'antd'
 import { debounce } from 'lodash'
 import { FC, useEffect, useState, useMemo, useRef } from 'react'
 
-const { confirm } = Modal
-
 type SelectableItemInfo = {
   value: string
   label: string
@@ -41,7 +39,7 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
   const [current, setCurrent] = useState(1)
   const [isFinal, setIsFinal] = useState(false)
   const [searching, setSearching] = useState(false)
-  const dropdownList = useRef<any>()
+  const dropdownList = useRef<any>(null)
   const pageSize = 20
   const fetchRef = useRef(0)
 
@@ -155,7 +153,7 @@ const Label: FC<{ text: string }> = ({ text }) => {
 
 const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger, uploadWork }) => {
   /* ----------表单本身逻辑相关---------- */
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
   const [workForm] = Form.useForm()
 
   const submitWork: FormProps<UploadWorkFormInfo>['onFinish'] = () => uploadWork()
@@ -198,7 +196,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   const [current, setCurrent] = useState(1)
   const [isFinal, setIsFinal] = useState(false)
   const [searching, setSearching] = useState(false)
-  const dropdownList = useRef<any>()
+  const dropdownList = useRef<any>(null)
   const pageSize = 20
 
   const getLabels = async (reset?: boolean) => {
@@ -352,8 +350,9 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     }
   }
 
+  const [modal, modalContextHolder] = Modal.useModal()
   const cancelAction = () => {
-    confirm({
+    modal.confirm({
       title: '确定要关闭吗？',
       icon: <ExclamationCircleOutlined />,
       content: '关闭窗口后，填写的信息将不会保存！',
@@ -389,7 +388,8 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
   return (
     <>
-      {contextHolder}
+      {msgContextHolder}
+      {modalContextHolder}
 
       <Form
         name='workForm'

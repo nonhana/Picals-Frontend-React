@@ -39,6 +39,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
     <AnimatePresence>
       {maskTrigger && visible && (
         <AnimatedDiv
+          key='mask'
           type='opacity-gradient'
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-999'
           onClick={() => setVisible(false)}
@@ -47,6 +48,7 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
 
       {visible && (
         <AnimatedDiv
+          key='sidebar'
           type='left-to-right'
           className={`rounded-r-6 shadow-2xl select-none fixed top-0 bottom-0 w-60 bg-white z-1000 ${className}`}>
           <div className='px-10 h-16 flex items-center gap-2.5'>

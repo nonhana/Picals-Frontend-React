@@ -26,7 +26,6 @@ import { Link, useNavigate } from 'react-router'
 import Comments from '../comments'
 import AnimatedDiv from '@/components/motion/animated-div'
 
-const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
 
 type WorkInfoProps = {
@@ -94,7 +93,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
 
   const dispatch = useDispatch()
 
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, msgContextHolder] = message.useMessage()
 
   const { favoriteList } = useSelector((state: AppState) => state.favorite)
   const { isLogin } = useSelector((state: AppState) => state.user)
@@ -114,7 +113,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
   // 刷新收藏夹列表数据
   const refreshFavoriteList = async () => {
     const { data } = await getUserFavoriteListAPI({ id })
-    const list = data.sort((a, b) => a.order - b.order)
+    const list = data.sort(({ order: o1 }, { order: o2 }) => o1 - o2)
     dispatch(setFavoriteList(list))
   }
 
@@ -182,8 +181,9 @@ const WorkInfo: FC<WorkInfoProps> = ({
     setImgListVisible(true)
   }, [imgList])
 
+  const [modal, modalContextHolder] = Modal.useModal()
   const handleEdit = () => {
-    confirm({
+    modal.confirm({
       title: '是否要进入编辑页面？',
       content: '进入编辑页，可重新编辑该作品的全部信息',
       okText: '确认',
@@ -293,7 +293,9 @@ const WorkInfo: FC<WorkInfoProps> = ({
 
   return (
     <>
-      {contextHolder}
+      {msgContextHolder}
+      {modalContextHolder}
+
       <div className='relative bg-white rd-6 p-5 w-180 flex flex-col items-center overflow-hidden'>
         <div id='work-info' className='w-full'>
           {/* 图片列表 */}
@@ -446,22 +448,18 @@ const WorkInfo: FC<WorkInfoProps> = ({
                     setAtBottom={setAuthorWorkListEnd}
                     initializing={initializing}
                     setInitializing={setInitializing}>
-                    {authorWorkList.map(
-                      (everyPage, index) =>
-                        everyPage.list.length !== 0 && (
-                          <AnimatedDiv key={`${everyPage}-${index}`} type='opacity-gradient'>
-                            {everyPage.list.map((work) => (
-                              <WorkItem
-                                type='little'
-                                key={work.id}
-                                data-id={work.id}
-                                itemInfo={work}
-                                like={likeWork}
-                                onClick={addUserWorks}
-                              />
-                            ))}
-                          </AnimatedDiv>
-                        ),
+                    {authorWorkList.map((everyPage) =>
+                      everyPage.list.map((work) => (
+                        <WorkItem
+                          type='little'
+                          animation='opacity-gradient'
+                          key={work.id}
+                          data-id={work.id}
+                          itemInfo={work}
+                          like={likeWork}
+                          onClick={addUserWorks}
+                        />
+                      )),
                     )}
                     {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
                   </LayoutList>

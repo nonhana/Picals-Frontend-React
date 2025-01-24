@@ -1,5 +1,6 @@
 import AnimatedDiv from '@/components/motion/animated-div'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect, useRef, useState } from 'react'
 
 type LazyImgProps = {
@@ -62,11 +63,13 @@ const LazyImg: FC<LazyImgProps> = ({
           }}
         />
       )}
-      {imgLoading && (
-        <AnimatedDiv type='opacity-gradient' className='absolute top-0 left-0'>
-          <ImgLoadingSkeleton />
-        </AnimatedDiv>
-      )}
+      <AnimatePresence>
+        {imgLoading && (
+          <AnimatedDiv type='opacity-gradient' className='absolute top-0 left-0 size-full'>
+            <ImgLoadingSkeleton />
+          </AnimatedDiv>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -86,7 +86,7 @@ const BgSlide: FC = () => {
   }, [isPaused])
 
   return (
-    <div className='absolute left-0 top-0 w-100vw h-100vh overflow-hidden'>
+    <div className='absolute left-0 top-0 w-100vw h-100vh overflow-hidden bg-light'>
       {/* 阻止用户选中图片 */}
       <div className='absolute h-full w-full z-1' />
       <div ref={slideWindow} className='relative flex h-full transition-transform duration-500'>

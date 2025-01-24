@@ -1,4 +1,5 @@
 import { HistoryItem } from '@/apis/types'
+import { AnimationVariantKeys } from '@/components/motion/preset'
 import { WorkNormalItemInfo } from '@/utils/types'
 
 type PersonalCenterProps = {
@@ -51,7 +52,11 @@ type T =
   | LittleProps
   | NormalProps
 
-export type WorkItemProps = Partial<Pick<T, 'type'>> & Omit<T, 'type'> & { [key: string]: any }
+export type WorkItemProps = Partial<Pick<T, 'type'>> &
+  Omit<T, 'type'> & {
+    animation?: AnimationVariantKeys
+    [key: string]: any
+  }
 
 export type WorkItemType =
   | 'normal'

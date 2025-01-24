@@ -12,10 +12,10 @@ import {
 } from '@/store/modules/viewList'
 import { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router'
-import { CSSTransition } from 'react-transition-group'
 
 type MainListProps = {
   pageSize: number
@@ -76,15 +76,19 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
             />
           )}
 
-          {workList.size === 0 && !loading && (
-            <AnimatedDiv type='opacity-gradient'>
-              <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
-            </AnimatedDiv>
-          )}
+          <AnimatePresence>
+            {workList.size === 0 && !loading && (
+              <AnimatedDiv type='opacity-gradient'>
+                <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
+              </AnimatedDiv>
+            )}
 
-          <AnimatedDiv type='opacity-gradient' className='absolute top-14'>
-            <WorkListSkeleton />
-          </AnimatedDiv>
+            {workList.size === 0 && loading && (
+              <AnimatedDiv type='opacity-gradient' className='absolute top-14'>
+                <WorkListSkeleton />
+              </AnimatedDiv>
+            )}
+          </AnimatePresence>
         </>
       ) : (
         <Empty text='还没登录，这里自然是空的' />
