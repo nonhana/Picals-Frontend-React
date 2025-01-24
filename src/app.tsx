@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router'
 
 import Header from './components/common/header'
 import { useWinChange } from './hooks'

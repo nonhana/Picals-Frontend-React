@@ -7,6 +7,7 @@ import {
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
 import WorkItem from '@/components/common/work-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import FavoriteWorkListSkeleton from '@/components/skeleton/favorite-work-list'
 import { PersonalContext } from '@/pages/personal-center'
 import {
@@ -21,8 +22,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Button, Radio, RadioChangeEvent, message, Modal } from 'antd'
 import { FC, useEffect, useState, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useSearchParams, useLocation, useNavigate } from 'react-router'
 
 const { Search } = Input
 const { confirm } = Modal
@@ -294,12 +294,10 @@ const WorkList: FC<WorkListProps> = ({
           </div>
         )}
 
-        <CSSTransition
-          in={workList.length !== 0 && !loading}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <div className='w-199 relative flex flex-wrap gap-5 py-5 mx-5'>
+        {workList.length !== 0 && !loading && (
+          <AnimatedDiv
+            type='opacity-gradient'
+            className='w-199 relative flex flex-wrap gap-5 py-5 mx-5'>
             {workList.map((item) => (
               <WorkItem
                 key={item.id}
@@ -315,26 +313,20 @@ const WorkList: FC<WorkListProps> = ({
                 onClick={addFavoriteWorks}
               />
             ))}
-          </div>
-        </CSSTransition>
+          </AnimatedDiv>
+        )}
 
-        <CSSTransition
-          in={workList.length === 0 && !loading}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <div className='absolute w-full top-16'>
+        {workList.length === 0 && !loading && (
+          <AnimatedDiv type='opacity-gradient' className='absolute w-full top-16'>
             <Empty text={searchStatus ? '没有找到相关作品' : '暂无作品，快去收藏一些吧~'} />
-          </div>
-        </CSSTransition>
+          </AnimatedDiv>
+        )}
 
-        <CSSTransition
-          in={workList.length === 0 && loading}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <FavoriteWorkListSkeleton className='absolute w-full  top-20' />
-        </CSSTransition>
+        {workList.length === 0 && loading && (
+          <AnimatedDiv type='opacity-gradient' className='absolute w-full  top-20'>
+            <FavoriteWorkListSkeleton />
+          </AnimatedDiv>
+        )}
 
         <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
           <Pagination total={total} pageSize={12} current={current} onChange={onPageChange} />

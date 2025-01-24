@@ -6,7 +6,7 @@ import { Input, Button, message } from 'antd'
 import type { InputRef } from 'antd'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router'
 
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'

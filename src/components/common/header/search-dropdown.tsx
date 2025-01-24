@@ -7,8 +7,8 @@ import { Icon } from '@iconify/react'
 import { Modal, message } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { Link } from 'react-router'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import Empty from '../empty'
 import LabelImgItem from '../label-img-item'
@@ -62,19 +62,27 @@ const SearchDropdown: FC<{
   }, [])
 
   return (
-    <>
+    <AnimatePresence>
       {contextHolder}
 
-      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
+      {visible && (
+        <motion.div
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
           onClick={() => setVisible(false)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         />
-      </CSSTransition>
+      )}
 
-      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
-          className={`not-show-scrollbar absolute bg-white w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}>
+      {visible && (
+        <motion.div
+          className={`not-show-scrollbar absolute bg-white w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}>
           <div className='m-b-5'>
             <div className='w-full p-10px flex justify-between items-center'>
               <span className='font-bold font-size-m color-deepgrey'>历史记录</span>
@@ -154,9 +162,9 @@ const SearchDropdown: FC<{
               </LayoutList>
             )}
           </div>
-        </div>
-      </CSSTransition>
-    </>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

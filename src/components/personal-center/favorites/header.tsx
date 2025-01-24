@@ -2,7 +2,7 @@ import LazyImg from '@/components/common/lazy-img'
 import type { FavoriteDetailInfo } from '@/utils/types'
 import { Button } from 'antd'
 import { FC } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 type HeaderProps = FavoriteDetailInfo & {
   setStartAppreciate: (status: boolean) => void

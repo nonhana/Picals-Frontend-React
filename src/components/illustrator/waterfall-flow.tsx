@@ -9,7 +9,7 @@ import {
 } from '@/store/modules/viewList'
 import { FC, useEffect, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router'
 
 import WaterfallItem from '../common/waterfall-item'
 

@@ -4,12 +4,12 @@ import { FC, useEffect, useRef } from 'react'
 
 import WorkItem from '../work-item'
 
-type AnimeListProps = {
+type AnimatedListProps = {
   workList: (WorkNormalItemInfo | HistoryItem)[]
   [key: string]: any
 }
 
-const AnimeList: FC<AnimeListProps> = ({ workList, ...props }) => {
+const AnimatedList: FC<AnimatedListProps> = ({ workList, ...props }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<HTMLDivElement[]>([])
 
@@ -36,4 +36,4 @@ const AnimeList: FC<AnimeListProps> = ({ workList, ...props }) => {
   )
 }
 
-export default AnimeList
+export default AnimatedList

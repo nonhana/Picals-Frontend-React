@@ -12,7 +12,7 @@ import { Button, message } from 'antd'
 import { FC, useEffect, useState, useContext } from 'react'
 import { PhotoView } from 'react-photo-view'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router'
 
 import EditModal from './edit-modal'
 import InfoModal from './info-modal'

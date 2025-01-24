@@ -1,5 +1,5 @@
 import { FC, useLayoutEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 const WHITE_LIST = ['personal-center']
 

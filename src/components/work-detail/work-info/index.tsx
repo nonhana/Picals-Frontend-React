@@ -21,10 +21,10 @@ import type { GetProp } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { Link, useNavigate } from 'react-router'
 
 import Comments from '../comments'
+import AnimatedDiv from '@/components/motion/animated-div'
 
 const { confirm } = Modal
 const CheckboxGroup = Checkbox.Group
@@ -209,7 +209,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       const filename = `${workInfo.name}${workInfo.imgList.length > 1 ? `-${index}` : ''}.${suffix}`
       await download(downloadLink, filename)
       messageApi.success(`图片 ${filename} 下载成功`)
-    } catch (error) {
+    } catch {
       messageApi.error('下载失败，请重试')
       return
     } finally {
@@ -437,43 +437,36 @@ const WorkInfo: FC<WorkInfoProps> = ({
                 padding: currentList === 'userWorkList' ? '59px 0 ' : '0',
               }}
               className='w-full relative transition-duration-300'>
-              <CSSTransition
-                in={currentList === 'userWorkList'}
-                timeout={300}
-                classNames='opacity-gradient'
-                unmountOnExit>
-                <LayoutList
-                  className='mt--59px'
-                  workId={workId}
-                  type='work-detail'
-                  scrollType='work-detail'
-                  setAtBottom={setAuthorWorkListEnd}
-                  initializing={initializing}
-                  setInitializing={setInitializing}>
-                  {authorWorkList.map((everyPage, index) => (
-                    <CSSTransition
-                      key={`${everyPage}-${index}`}
-                      in={everyPage.list.length !== 0}
-                      timeout={300}
-                      classNames='opacity-gradient'
-                      unmountOnExit>
-                      <>
-                        {everyPage.list.map((work) => (
-                          <WorkItem
-                            type='little'
-                            key={work.id}
-                            data-id={work.id}
-                            itemInfo={work}
-                            like={likeWork}
-                            onClick={addUserWorks}
-                          />
-                        ))}
-                      </>
-                    </CSSTransition>
-                  ))}
-                  {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
-                </LayoutList>
-              </CSSTransition>
+              {currentList === 'userWorkList' && (
+                <AnimatedDiv type='opacity-gradient' className='mt--59px'>
+                  <LayoutList
+                    workId={workId}
+                    type='work-detail'
+                    scrollType='work-detail'
+                    setAtBottom={setAuthorWorkListEnd}
+                    initializing={initializing}
+                    setInitializing={setInitializing}>
+                    {authorWorkList.map(
+                      (everyPage, index) =>
+                        everyPage.list.length !== 0 && (
+                          <AnimatedDiv key={`${everyPage}-${index}`} type='opacity-gradient'>
+                            {everyPage.list.map((work) => (
+                              <WorkItem
+                                type='little'
+                                key={work.id}
+                                data-id={work.id}
+                                itemInfo={work}
+                                like={likeWork}
+                                onClick={addUserWorks}
+                              />
+                            ))}
+                          </AnimatedDiv>
+                        ),
+                    )}
+                    {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
+                  </LayoutList>
+                </AnimatedDiv>
+              )}
             </div>
           </div>
           {/* 原作信息 */}

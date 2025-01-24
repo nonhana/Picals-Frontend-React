@@ -22,10 +22,10 @@ import { Icon } from '@iconify/react'
 import { message, InputNumber, Button } from 'antd'
 import { FC, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { Link, useNavigate } from 'react-router'
 
 import WorkSlideWindow from '../work-slide-window'
+import AnimatedDiv from '@/components/motion/animated-div'
 
 const viewListClasses =
   'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-normal cursor-pointer flex justify-between items-center px-5 color-shallowblack'
@@ -541,21 +541,18 @@ const ViewList: FC<ViewListProps> = ({
             padding: showSlideWindows[0] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
-          <CSSTransition
-            in={showSlideWindows[0]}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <WorkSlideWindow
-              className='mt--45px'
-              workId={workId}
-              workList={currentWorkList}
-              isFinal={isFinal}
-              setWorkListEnd={setListEnd}
-              initializing={initializing}
-              setInitializing={setInitializing}
-            />
-          </CSSTransition>
+          {showSlideWindows[0] && (
+            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+              <WorkSlideWindow
+                workId={workId}
+                workList={currentWorkList}
+                isFinal={isFinal}
+                setWorkListEnd={setListEnd}
+                initializing={initializing}
+                setInitializing={setInitializing}
+              />
+            </AnimatedDiv>
+          )}
         </div>
         <div
           style={{
@@ -565,21 +562,18 @@ const ViewList: FC<ViewListProps> = ({
             padding: showSlideWindows[1] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
-          <CSSTransition
-            in={showSlideWindows[1]}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <WorkSlideWindow
-              className='mt--45px'
-              workId={workId}
-              workList={recommendWorkList}
-              isFinal={recommendIsFinal}
-              setWorkListEnd={setRecommendListEnd}
-              initializing={recommendInit}
-              setInitializing={setRecommendInit}
-            />
-          </CSSTransition>
+          {showSlideWindows[1] && (
+            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+              <WorkSlideWindow
+                workId={workId}
+                workList={recommendWorkList}
+                isFinal={recommendIsFinal}
+                setWorkListEnd={setRecommendListEnd}
+                initializing={recommendInit}
+                setInitializing={setRecommendInit}
+              />
+            </AnimatedDiv>
+          )}
         </div>
         <div
           style={{
@@ -589,21 +583,18 @@ const ViewList: FC<ViewListProps> = ({
             padding: showSlideWindows[2] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
-          <CSSTransition
-            in={showSlideWindows[2]}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <WorkSlideWindow
-              className='mt--45px'
-              workId={workId}
-              workList={latestWorkList}
-              isFinal={latestIsFinal}
-              setWorkListEnd={setLatestListEnd}
-              initializing={latestInit}
-              setInitializing={setLatestInit}
-            />
-          </CSSTransition>
+          {showSlideWindows[2] && (
+            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+              <WorkSlideWindow
+                workId={workId}
+                workList={latestWorkList}
+                isFinal={latestIsFinal}
+                setWorkListEnd={setLatestListEnd}
+                initializing={latestInit}
+                setInitializing={setLatestInit}
+              />
+            </AnimatedDiv>
+          )}
         </div>
         <div
           className={`${viewListClasses} ${showSlideWindows[3] ? 'bg-normal' : 'bg-white'}`}
@@ -644,21 +635,18 @@ const ViewList: FC<ViewListProps> = ({
             padding: showSlideWindows[3] ? '45px 0 ' : '0',
           }}
           className='w-full relative transition-duration-300'>
-          <CSSTransition
-            in={showSlideWindows[3]}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <WorkSlideWindow
-              className='mt--45px'
-              workId={workId}
-              workList={authorWorkList}
-              setWorkListEnd={setAuthorWorkListEnd}
-              isFinal={userWorkListFinal}
-              initializing={userWorkListInitializing}
-              setInitializing={setUserWorkListInitializing}
-            />
-          </CSSTransition>
+          {showSlideWindows[3] && (
+            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+              <WorkSlideWindow
+                workId={workId}
+                workList={authorWorkList}
+                setWorkListEnd={setAuthorWorkListEnd}
+                isFinal={userWorkListFinal}
+                initializing={userWorkListInitializing}
+                setInitializing={setUserWorkListInitializing}
+              />
+            </AnimatedDiv>
+          )}
         </div>
         <div className='w-full my-10px flex justify-center'>
           <PaginationComponent

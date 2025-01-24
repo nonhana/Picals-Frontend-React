@@ -42,7 +42,7 @@ export const download = async (url: string, filename: string): Promise<void> => 
   try {
     const blob = await getBlob(url)
     saveAs(blob, filename)
-  } catch (error: any) {
+  } catch (error) {
     return Promise.reject(error)
   }
 }

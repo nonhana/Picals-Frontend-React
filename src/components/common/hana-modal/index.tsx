@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import { Button } from 'antd'
 import { FC, useEffect } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type HanaModalProps = {
   loading?: boolean
@@ -43,24 +43,27 @@ const HanaModal: FC<HanaModalProps> = ({
   }
 
   return (
-    <>
-      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
-          style={{
-            zIndex: zIndex ? zIndex - 1 : 1999,
-          }}
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          style={{ zIndex: zIndex ? zIndex - 1 : 1999 }}
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32'
           onClick={templateClick}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         />
-      </CSSTransition>
+      )}
 
-      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
-          style={{
-            width: `${width}px`,
-            zIndex: zIndex || 2000,
-          }}
-          className='fixed top-1/2 left-1/2 transform -translate-1/2 bg-white rd-6 flex flex-col'>
+      {visible && (
+        <motion.div
+          style={{ width: `${width}px`, zIndex: zIndex || 2000 }}
+          className='fixed top-1/2 left-1/2 transform -translate-1/2 bg-white rd-6 flex flex-col'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}>
           <div className='relative w-full h-16 flex justify-center items-center color-shallowblack font-size-18px font-bold'>
             <span>{title}</span>
             {allowActivelyClose && (
@@ -90,9 +93,9 @@ const HanaModal: FC<HanaModalProps> = ({
               </Button>
             </div>
           )}
-        </div>
-      </CSSTransition>
-    </>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

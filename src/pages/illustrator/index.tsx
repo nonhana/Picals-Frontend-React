@@ -7,7 +7,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router'
 
 const Illustrator: FC = () => {
   const navigate = useNavigate()

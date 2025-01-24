@@ -1,6 +1,7 @@
 import { likeActionsAPI } from '@/apis'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
+import AnimatedDiv from '@/components/motion/animated-div'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -12,8 +13,7 @@ import {
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { FC, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useLocation } from 'react-router'
 
 type RecommendedWorksProps = {
   loading: boolean
@@ -48,28 +48,24 @@ const RecommendedWorks: FC<RecommendedWorksProps> = ({ loading, workList: source
       </div>
 
       {workList.size !== 0 && !loading && (
-        <AnimeList
+        <AnimatedList
           workList={Array.from(workList.values())}
           like={handleLike}
           onClick={addRecommendWorks}
         />
       )}
 
-      <CSSTransition
-        in={workList.size === 0 && !loading}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <Empty />
-      </CSSTransition>
+      {workList.size === 0 && !loading && (
+        <AnimatedDiv type='opacity-gradient'>
+          <Empty />
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={workList.size === 0 && loading}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <WorkListSkeleton className='absolute top-14' />
-      </CSSTransition>
+      {workList.size === 0 && loading && (
+        <AnimatedDiv type='opacity-gradient' className='absolute top-14'>
+          <WorkListSkeleton />
+        </AnimatedDiv>
+      )}
     </div>
   )
 }

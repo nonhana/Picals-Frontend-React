@@ -3,15 +3,16 @@ import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
 import LazyImg from '@/components/common/lazy-img'
+import AnimatedDiv from '@/components/motion/animated-div'
 import LabelListSkeleton from '@/components/skeleton/label-list'
 import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
 import type { AppState } from '@/store/types'
 import { isWarmHue } from '@/utils'
 import type { LabelDetailInfo, LabelInfo } from '@/utils/types'
 import { Button } from 'antd'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { CSSTransition } from 'react-transition-group'
 
 type LabelInfoProps = LabelDetailInfo & {
   like: () => void
@@ -90,33 +91,29 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
           ))}
       </div>
       <div className='relative w-full min-h-10'>
-        <CSSTransition
-          in={labelList.length !== 0 && !loading}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <LayoutList scrollType='label'>
-            {labelList.map((item) => (
-              <LabelItem key={item.id} {...item} />
-            ))}
-          </LayoutList>
-        </CSSTransition>
+        <AnimatePresence>
+          {labelList.length !== 0 && !loading && (
+            <AnimatedDiv type='opacity-gradient'>
+              <LayoutList scrollType='label'>
+                {labelList.map((item) => (
+                  <LabelItem key={item.id} {...item} />
+                ))}
+              </LayoutList>
+            </AnimatedDiv>
+          )}
 
-        <CSSTransition
-          in={labelList.length === 0 && !loading}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <Empty showImg={false} />
-        </CSSTransition>
+          {labelList.length === 0 && !loading && (
+            <AnimatedDiv type='opacity-gradient'>
+              <Empty showImg={false} />
+            </AnimatedDiv>
+          )}
 
-        <CSSTransition
-          in={labelList.length === 0 && loading}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <LabelListSkeleton className='absolute top-0' />
-        </CSSTransition>
+          {labelList.length === 0 && loading && (
+            <AnimatedDiv type='opacity-gradient'>
+              <LabelListSkeleton className='absolute top-0' />
+            </AnimatedDiv>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )

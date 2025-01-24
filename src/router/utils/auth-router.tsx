@@ -2,7 +2,7 @@ import type { AppState } from '@/store/types'
 import { message } from 'antd'
 import { FC, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 const AuthRouter: FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)

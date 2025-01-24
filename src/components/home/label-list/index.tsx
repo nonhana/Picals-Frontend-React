@@ -1,10 +1,10 @@
 import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
+import AnimatedDiv from '@/components/motion/animated-div'
 import LabelListSkeleton from '@/components/skeleton/label-list'
 import type { LabelInfo } from '@/utils/types'
 import { FC } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 type LabelListProps = {
   loading: boolean
@@ -14,33 +14,27 @@ type LabelListProps = {
 const LabelList: FC<LabelListProps> = ({ labelList, loading }) => {
   return (
     <div className='relative w-full min-h-10'>
-      <CSSTransition
-        in={labelList.length !== 0 && !loading}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <LayoutList scrollType='label'>
-          {labelList.map((item) => (
-            <LabelItem key={item.id} {...item} />
-          ))}
-        </LayoutList>
-      </CSSTransition>
+      {labelList.length !== 0 && !loading && (
+        <AnimatedDiv type='opacity-gradient'>
+          <LayoutList scrollType='label'>
+            {labelList.map((item) => (
+              <LabelItem key={item.id} {...item} />
+            ))}
+          </LayoutList>
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={labelList.length === 0 && !loading}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <Empty showImg={false} />
-      </CSSTransition>
+      {labelList.length === 0 && !loading && (
+        <AnimatedDiv type='opacity-gradient'>
+          <Empty showImg={false} />
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={labelList.length === 0 && loading}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <LabelListSkeleton className='absolute top-0' />
-      </CSSTransition>
+      {labelList.length === 0 && loading && (
+        <AnimatedDiv type='opacity-gradient' className='absolute top-0'>
+          <LabelListSkeleton />
+        </AnimatedDiv>
+      )}
     </div>
   )
 }

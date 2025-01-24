@@ -1,11 +1,11 @@
 import { getUserWorksLabelsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import LabelListSkeleton from '@/components/skeleton/label-list'
 import { PersonalContext } from '@/pages/personal-center'
 import type { LabelInfo } from '@/utils/types'
 import { FC, useEffect, useState, useContext } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 const LabelList: FC = () => {
   const { userId } = useContext(PersonalContext)
@@ -32,33 +32,25 @@ const LabelList: FC = () => {
 
   return (
     <div className='relative w-full min-h-10'>
-      <CSSTransition
-        in={labels.length !== 0 && !gettingLabels}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <div className='flex gap-10px flex-wrap mb-5'>
+      {labels.length !== 0 && !gettingLabels && (
+        <AnimatedDiv type='opacity-gradient' className='flex gap-10px flex-wrap mb-5'>
           {labels.map((label) => (
             <LabelItem key={label.id} {...label} />
           ))}
-        </div>
-      </CSSTransition>
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={labels.length === 0 && !gettingLabels}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <Empty showImg={false} />
-      </CSSTransition>
+      {labels.length === 0 && !gettingLabels && (
+        <AnimatedDiv type='opacity-gradient'>
+          <Empty showImg={false} />
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={labels.length === 0 && gettingLabels}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <LabelListSkeleton className='absolute top-0' />
-      </CSSTransition>
+      {labels.length === 0 && gettingLabels && (
+        <AnimatedDiv type='opacity-gradient'>
+          <LabelListSkeleton className='absolute top-0' />
+        </AnimatedDiv>
+      )}
     </div>
   )
 }

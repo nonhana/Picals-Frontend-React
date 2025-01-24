@@ -4,7 +4,7 @@ import type { UserItemInfo } from '@/utils/types'
 import { Button } from 'antd'
 import { FC } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 type UserInfoProps = {
   userInfo: UserItemInfo

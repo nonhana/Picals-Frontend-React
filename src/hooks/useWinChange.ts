@@ -7,7 +7,7 @@ import type { RefObject } from 'react'
  * @param target - 监听的目标元素
  * @returns - 当前窗口宽度
  */
-function useWinChange(target: RefObject<HTMLElement>): number {
+function useWinChange(target: RefObject<HTMLElement | null>): number {
   const [width, setWidth] = useState<number>(window.innerWidth)
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import type { INewIllustratorReq } from '@/apis/illustrator/types'
 import { Icon } from '@iconify/react'
 import { Flex, Input, Modal, Select, Upload, message, notification, type UploadProps } from 'antd'
 import { FC, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import LazyImg from '../lazy-img'
 
@@ -124,17 +124,19 @@ const CreateIllustratorModal: FC<CreateIllustratorModalProps> = ({
               className='relative w-100px h-100px cursor-pointer rd-1 overflow-hidden'
               onMouseEnter={() => setImgHovering(true)}
               onMouseLeave={() => setImgHovering(false)}>
-              <CSSTransition
-                in={imgHovering}
-                timeout={300}
-                classNames='opacity-gradient'
-                unmountOnExit>
-                <div
-                  className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-m z-1'
-                  onClick={removeImg}>
-                  <span>移除图片</span>
-                </div>
-              </CSSTransition>
+              <AnimatePresence>
+                {imgHovering && (
+                  <motion.div
+                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 text-white text-m z-1'
+                    onClick={removeImg}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}>
+                    <span>移除图片</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <LazyImg src={formInfo.avatar} alt={formInfo.avatar} />
             </div>
           ) : (

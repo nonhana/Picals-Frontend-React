@@ -32,11 +32,7 @@ export default defineConfig({
     presetRemToPx(),
     presetUno(),
     presetAttributify(),
-    presetIcons({
-      collections: {
-        carbon: () => import('@iconify-json/mdi').then((i) => i.icons),
-      },
-    }),
+    presetIcons(),
     presetTypography(),
     presetWebFonts(),
   ],

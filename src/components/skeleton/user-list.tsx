@@ -1,7 +1,7 @@
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
 import { FC, Fragment, useEffect, useState } from 'react'
 import ContentLoader from 'react-content-loader'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router'
 
 type UserListSkeletonProps = {
   row?: number

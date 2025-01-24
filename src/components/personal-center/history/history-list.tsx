@@ -1,17 +1,17 @@
 import { getViewHistoryAPI, getViewHistoryTotalAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
 import GreyButton from '@/components/common/grey-button'
 import Pagination from '@/components/common/pagination'
+import AnimatedDiv from '@/components/motion/animated-div'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { resetOtherList, setCurrentList, setPrevPosition } from '@/store/modules/viewList'
 import { Icon } from '@iconify/react'
 import dayjs from 'dayjs'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useLocation } from 'react-router'
 
 const HistoryList: FC = () => {
   const location = useLocation()
@@ -104,24 +104,20 @@ const HistoryList: FC = () => {
 
       <div className='relative w-full min-h-160 pb-15'>
         {workList.length !== 0 && !gettingWorkList && (
-          <AnimeList type='history' workList={workList} onClick={addWorks} />
+          <AnimatedList type='history' workList={workList} onClick={addWorks} />
         )}
 
-        <CSSTransition
-          in={workList.length === 0 && !gettingWorkList}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <Empty />
-        </CSSTransition>
+        {workList.length === 0 && !gettingWorkList && (
+          <AnimatedDiv type='opacity-gradient'>
+            <Empty />
+          </AnimatedDiv>
+        )}
 
-        <CSSTransition
-          in={workList.length === 0 && gettingWorkList}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <WorkListSkeleton className='absolute top-0' />
-        </CSSTransition>
+        {workList.length === 0 && gettingWorkList && (
+          <AnimatedDiv type='opacity-gradient'>
+            <WorkListSkeleton className='absolute top-0' />
+          </AnimatedDiv>
+        )}
 
         <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
           <Pagination total={workCount} pageSize={30} onChange={setCurrent} current={current} />

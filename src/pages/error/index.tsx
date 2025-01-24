@@ -2,11 +2,10 @@ import ErrorImg from '@/assets/imgs/500.png'
 import HanaCard from '@/components/common/hana-card'
 import LazyImg from '@/components/common/lazy-img'
 import { Button } from 'antd'
-import { FC } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
-const Error: FC<FallbackProps> = ({ error }) => {
+const Error = ({ error }: FallbackProps) => {
   const navigate = useNavigate()
   return (
     <div className='w-screen h-screen bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>

@@ -1,6 +1,7 @@
 import { getFollowNewWorksAPI, likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
+import AnimatedDiv from '@/components/motion/animated-div'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks/useMap'
 import {
@@ -13,7 +14,7 @@ import { AppState } from '@/store/types'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 type MainListProps = {
@@ -68,28 +69,22 @@ const MainList: FC<MainListProps> = ({ pageSize, current }) => {
       {isLogin ? (
         <>
           {workList.size !== 0 && !loading && (
-            <AnimeList
+            <AnimatedList
               workList={Array.from(workList.values())}
               like={handleLike}
               onClick={addFollowedNewWorkList}
             />
           )}
 
-          <CSSTransition
-            in={workList.size === 0 && !loading}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
-          </CSSTransition>
+          {workList.size === 0 && !loading && (
+            <AnimatedDiv type='opacity-gradient'>
+              <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
+            </AnimatedDiv>
+          )}
 
-          <CSSTransition
-            in={workList.size === 0 && loading}
-            timeout={300}
-            classNames='opacity-gradient'
-            unmountOnExit>
-            <WorkListSkeleton className='absolute top-14' />
-          </CSSTransition>
+          <AnimatedDiv type='opacity-gradient' className='absolute top-14'>
+            <WorkListSkeleton />
+          </AnimatedDiv>
         </>
       ) : (
         <Empty text='还没登录，这里自然是空的' />

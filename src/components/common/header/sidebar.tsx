@@ -10,8 +10,9 @@ import {
 import { Icon } from '@iconify/react'
 import { FC, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { Link, useLocation } from 'react-router'
+import { AnimatePresence } from 'framer-motion'
+import AnimatedDiv from '@/components/motion/animated-div'
 
 type SidebarProps = {
   width: number
@@ -35,18 +36,18 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
   }, [width, location.pathname])
 
   return (
-    <>
-      {maskTrigger && (
-        <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-          <div
-            className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-999'
-            onClick={() => setVisible(false)}
-          />
-        </CSSTransition>
+    <AnimatePresence>
+      {maskTrigger && visible && (
+        <AnimatedDiv
+          type='opacity-gradient'
+          className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-999'
+          onClick={() => setVisible(false)}
+        />
       )}
 
-      <CSSTransition in={visible} timeout={300} classNames='left-to-right' unmountOnExit>
-        <div
+      {visible && (
+        <AnimatedDiv
+          type='left-to-right'
           className={`rounded-r-6 shadow-2xl select-none fixed top-0 bottom-0 w-60 bg-white z-1000 ${className}`}>
           <div className='px-10 h-16 flex items-center gap-2.5'>
             <Icon
@@ -70,9 +71,9 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
               </Link>
             ))}
           </ul>
-        </div>
-      </CSSTransition>
-    </>
+        </AnimatedDiv>
+      )}
+    </AnimatePresence>
   )
 }
 

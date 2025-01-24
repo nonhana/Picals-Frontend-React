@@ -1,6 +1,6 @@
 import { getRecommendWorksAPI, likeActionsAPI } from '@/apis'
 import { Pagination } from '@/apis/types'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useAtBottom } from '@/hooks'
 import { setTempId } from '@/store/modules/user'
@@ -15,7 +15,7 @@ import { generateTempId } from '@/utils'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 const WorkList: FC = () => {
   const location = useLocation()
@@ -105,7 +105,7 @@ const WorkList: FC = () => {
       {recommendWorkList.map(
         (everyPage) =>
           everyPage.list.length !== 0 && (
-            <AnimeList
+            <AnimatedList
               key={everyPage.page}
               workList={everyPage.list}
               like={(id: string) => handleLike(everyPage.page, id)}

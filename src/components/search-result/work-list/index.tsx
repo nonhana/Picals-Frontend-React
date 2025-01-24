@@ -1,7 +1,8 @@
 import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
+import AnimatedDiv from '@/components/motion/animated-div'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useMap } from '@/hooks'
 import {
@@ -12,10 +13,10 @@ import {
 } from '@/store/modules/viewList'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { Radio, RadioChangeEvent } from 'antd'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useNavigate, useLocation } from 'react-router'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -122,28 +123,26 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
       </div>
 
       {workList.size !== 0 && !gettingWorkList && (
-        <AnimeList
+        <AnimatedList
           workList={Array.from(workList.values())}
           like={handleLike}
           onClick={addSearchResultWorks}
         />
       )}
 
-      <CSSTransition
-        in={workList.size === 0 && !gettingWorkList}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <Empty />
-      </CSSTransition>
+      <AnimatePresence>
+        {workList.size === 0 && !gettingWorkList && (
+          <AnimatedDiv type='opacity-gradient'>
+            <Empty />
+          </AnimatedDiv>
+        )}
 
-      <CSSTransition
-        in={workList.size === 0 && gettingWorkList}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <WorkListSkeleton className='absolute top-14' />
-      </CSSTransition>
+        {workList.size === 0 && gettingWorkList && (
+          <AnimatedDiv type='opacity-gradient'>
+            <WorkListSkeleton className='absolute top-14' />
+          </AnimatedDiv>
+        )}
+      </AnimatePresence>
 
       <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
         <Pagination total={workCount} pageSize={30} current={current} onChange={pageChange} />

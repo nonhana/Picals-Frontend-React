@@ -13,7 +13,7 @@ import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { FC, useState, createContext, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useOutletContext, Outlet, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useOutletContext, Outlet, useNavigate, useLocation, useParams } from 'react-router'
 
 const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '', width: 0 })
 

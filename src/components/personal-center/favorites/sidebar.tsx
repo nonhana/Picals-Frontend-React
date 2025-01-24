@@ -2,6 +2,7 @@ import { newFavoriteAPI, deleteFavoriteAPI, editFavoriteAPI, changeFavoriteOrder
 import CreateFolderModal from '@/components/common/create-folder-modal'
 import Empty from '@/components/common/empty'
 import FavoriteItem from '@/components/common/favorite-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import FavoriteListSkeleton from '@/components/skeleton/favorite-list'
 import { PersonalContext } from '@/pages/personal-center'
 import { setFavoriteList } from '@/store/modules/favorites'
@@ -14,8 +15,7 @@ import { Icon } from '@iconify/react'
 import { Modal, message } from 'antd'
 import { FC, useEffect, useState, useContext } from 'react'
 import { useDispatch } from 'react-redux'
-import { useSearchParams, useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useSearchParams, useNavigate } from 'react-router'
 
 const { confirm } = Modal
 
@@ -33,7 +33,7 @@ const getMoveIndex = (array: FavoriteItemInfo[], dragItem: DragMoveEvent) => {
         overIndex = index
       }
     })
-  } catch (error) {
+  } catch {
     overIndex = activeIndex // 如果有问题，则复位
   }
   return { activeIndex, overIndex }
@@ -58,7 +58,7 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
   const navigate = useNavigate()
 
   const [folderStatusList, setFolderStatusList] = useState<boolean[]>(
-    new Array(folderList.length).fill(false),
+    Array.from({ length: folderList.length }, () => false),
   )
   useEffect(() => {
     if (folderId) setFolderStatusList(folderList.map((item) => item.id === folderId))
@@ -178,12 +178,8 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
               </div>
             )}
 
-            <CSSTransition
-              in={folderList.length !== 0 && !loading}
-              timeout={300}
-              classNames='opacity-gradient'
-              unmountOnExit>
-              <>
+            {folderList.length !== 0 && !loading && (
+              <AnimatedDiv type='opacity-gradient'>
                 {folderList.map((item, index) => (
                   <FavoriteItem
                     key={item.id}
@@ -195,26 +191,20 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
                     onEditFolder={onEditFolder}
                   />
                 ))}
-              </>
-            </CSSTransition>
+              </AnimatedDiv>
+            )}
 
-            <CSSTransition
-              in={folderList.length === 0 && !loading}
-              timeout={300}
-              classNames='opacity-gradient'
-              unmountOnExit>
-              <div className='w-250px bg-white'>
+            {folderList.length === 0 && !loading && (
+              <AnimatedDiv type='opacity-gradient' className='w-250px bg-white'>
                 <Empty showImg={false} text='暂无收藏集' />
-              </div>
-            </CSSTransition>
+              </AnimatedDiv>
+            )}
 
-            <CSSTransition
-              in={folderList.length === 0 && loading}
-              timeout={300}
-              classNames='opacity-gradient'
-              unmountOnExit>
-              <FavoriteListSkeleton className='absolute' />
-            </CSSTransition>
+            {folderList.length === 0 && loading && (
+              <AnimatedDiv type='opacity-gradient' className='absolute'>
+                <FavoriteListSkeleton />
+              </AnimatedDiv>
+            )}
           </div>
         </SortableContext>
       </DndContext>

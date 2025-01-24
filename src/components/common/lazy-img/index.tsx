@@ -1,6 +1,6 @@
+import AnimatedDiv from '@/components/motion/animated-div'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { FC, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 type LazyImgProps = {
   width?: number | string
@@ -62,9 +62,11 @@ const LazyImg: FC<LazyImgProps> = ({
           }}
         />
       )}
-      <CSSTransition in={imgLoading} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <ImgLoadingSkeleton className='absolute top-0 left-0' />
-      </CSSTransition>
+      {imgLoading && (
+        <AnimatedDiv type='opacity-gradient' className='absolute top-0 left-0'>
+          <ImgLoadingSkeleton />
+        </AnimatedDiv>
+      )}
     </div>
   )
 }

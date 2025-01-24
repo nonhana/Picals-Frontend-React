@@ -2,14 +2,15 @@ import { likeActionsAPI, userActionsAPI, getFansListAPI, getFollowingListAPI } f
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
 import UserItem from '@/components/common/user-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import UserListSkeleton from '@/components/skeleton/user-list'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import type { UserItemInfo } from '@/utils/types'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect, useState, useContext } from 'react'
 import { useDispatch } from 'react-redux'
-import { CSSTransition } from 'react-transition-group'
 
 type UserListProps = {
   width: number
@@ -91,39 +92,35 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
 
   return (
     <div className='relative p-5 w-full min-h-160'>
-      <CSSTransition
-        in={userList.size !== 0 && !gettingUser}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <div className='relative w-full flex flex-col gap-20px pb-10'>
-          {Array.from(userList.values()).map((item) => (
-            <UserItem
-              key={item.id}
-              {...item}
-              width={width}
-              follow={handleFollow}
-              likeWork={handleLikeWork}
-            />
-          ))}
-        </div>
-      </CSSTransition>
+      <AnimatePresence>
+        {userList.size !== 0 && !gettingUser && (
+          <AnimatedDiv type='opacity-gradient'>
+            <div className='relative w-full flex flex-col gap-20px pb-10'>
+              {Array.from(userList.values()).map((item) => (
+                <UserItem
+                  key={item.id}
+                  {...item}
+                  width={width}
+                  follow={handleFollow}
+                  likeWork={handleLikeWork}
+                />
+              ))}
+            </div>
+          </AnimatedDiv>
+        )}
 
-      <CSSTransition
-        in={userList.size === 0 && !gettingUser}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <Empty />
-      </CSSTransition>
+        {userList.size === 0 && !gettingUser && (
+          <AnimatedDiv type='opacity-gradient'>
+            <Empty />
+          </AnimatedDiv>
+        )}
 
-      <CSSTransition
-        in={userList.size === 0 && gettingUser}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <UserListSkeleton className='absolute top-5' />
-      </CSSTransition>
+        {userList.size === 0 && gettingUser && (
+          <AnimatedDiv type='opacity-gradient'>
+            <UserListSkeleton className='absolute top-5' />
+          </AnimatedDiv>
+        )}
+      </AnimatePresence>
 
       <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
         <Pagination total={total} pageSize={pageSize} current={current} onChange={pageChange} />

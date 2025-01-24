@@ -1,6 +1,7 @@
 import { getRecommendUserListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
 import { Pagination } from '@/apis/types'
 import UserItem from '@/components/common/user-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import UserListSkeleton from '@/components/skeleton/user-list'
 import { useAtBottom } from '@/hooks'
 import { increaseFollowNum, decreaseFollowNum, setTempId } from '@/store/modules/user'
@@ -10,7 +11,6 @@ import type { UserItemInfo } from '@/utils/types'
 import { message } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { CSSTransition } from 'react-transition-group'
 
 type UserListProps = {
   width: number
@@ -131,26 +131,25 @@ const UserList: FC<UserListProps> = ({ width }) => {
 
   return (
     <div className='relative w-full p-5 min-h-125'>
-      {recommendUserList.map((everyPage) => (
-        <CSSTransition
-          key={everyPage.page}
-          in={everyPage.list.length !== 0}
-          timeout={300}
-          classNames='opacity-gradient'
-          unmountOnExit>
-          <div className='relative w-full flex flex-col gap-20px'>
-            {everyPage.list.map((user) => (
-              <UserItem
-                key={user.id}
-                {...user}
-                width={width}
-                follow={(id) => handleFollow(everyPage.page, id)}
-                likeWork={(userId, workId) => handleLikeWork(everyPage.page, userId, workId)}
-              />
-            ))}
-          </div>
-        </CSSTransition>
-      ))}
+      {recommendUserList.map(
+        (everyPage) =>
+          everyPage.list.length !== 0 && (
+            <AnimatedDiv
+              key={everyPage.page}
+              type='opacity-gradient'
+              className='relative w-full flex flex-col gap-20px'>
+              {everyPage.list.map((user) => (
+                <UserItem
+                  key={user.id}
+                  {...user}
+                  width={width}
+                  follow={(id) => handleFollow(everyPage.page, id)}
+                  likeWork={(userId, workId) => handleLikeWork(everyPage.page, userId, workId)}
+                />
+              ))}
+            </AnimatedDiv>
+          ),
+      )}
 
       {!isFinal && <UserListSkeleton row={1} />}
     </div>

@@ -5,11 +5,11 @@ import type { UserDetailInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Input, Button, message, Radio } from 'antd'
 import { FC, useEffect, useState, useRef } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import HanaCropper from '../common/hana-cropper'
 import HanaModal from '../common/hana-modal'
 import LazyImg from '../common/lazy-img'
+import AnimatedDiv from '../motion/animated-div'
 
 const { TextArea } = Input
 
@@ -156,17 +156,14 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                 className='w-full h-full cursor-pointer'
                 onMouseEnter={() => setBgHovering(true)}
                 onMouseLeave={() => setBgHovering(false)}>
-                <CSSTransition
-                  in={bgHovering}
-                  timeout={300}
-                  classNames='opacity-gradient'
-                  unmountOnExit>
-                  <div
+                {bgHovering && (
+                  <AnimatedDiv
+                    type='opacity-gradient'
                     className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-m z-1'
                     onClick={chooseBgImgFile}>
                     <span>重新更改背景图片</span>
-                  </div>
-                </CSSTransition>
+                  </AnimatedDiv>
+                )}
                 <LazyImg src={editUserInfo.backgroundImg} alt='background' />
               </div>
             ) : (
@@ -193,17 +190,14 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
                 className='relative w-24 h-24 rd-full overflow-hidden flex justify-center items-center cursor-pointer'
                 onMouseEnter={() => setAvatarHovering(true)}
                 onMouseLeave={() => setAvatarHovering(false)}>
-                <CSSTransition
-                  in={avatarHovering}
-                  timeout={300}
-                  classNames='opacity-gradient'
-                  unmountOnExit>
-                  <div
+                {avatarHovering && (
+                  <AnimatedDiv
+                    type='opacity-gradient'
                     className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white font-size-m z-1'
                     onClick={chooseAvatarFile}>
                     <span>选择文件</span>
-                  </div>
-                </CSSTransition>
+                  </AnimatedDiv>
+                )}
                 <LazyImg src={editUserInfo.avatar} alt='avatar' />
               </div>
             </div>

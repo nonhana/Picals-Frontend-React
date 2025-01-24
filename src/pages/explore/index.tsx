@@ -6,7 +6,7 @@ import { PictureOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { FC, useEffect, useRef, useState } from 'react'
-import { useOutletContext, useNavigate, useParams } from 'react-router-dom'
+import { useOutletContext, useNavigate, useParams } from 'react-router'
 
 const items: MenuProps['items'] = [
   {

@@ -1,12 +1,12 @@
 import { searchViewHistoryAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
+import AnimatedDiv from '@/components/motion/animated-div'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { Icon } from '@iconify/react'
 import dayjs from 'dayjs'
 import { FC, useState, useEffect } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 type SearchResultProps = {
   keyword: string
@@ -49,39 +49,31 @@ const SearchResult: FC<SearchResultProps> = ({ keyword, searchTrigger }) => {
 
   return (
     <div className='relative w-full min-h-160'>
-      <CSSTransition
-        in={Object.keys(resultMap).length > 0 && !gettingResult}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <>
+      {Object.keys(resultMap).length > 0 && !gettingResult && (
+        <AnimatedDiv type='opacity-gradient'>
           {Object.keys(resultMap).map((date) => (
             <div key={date} className='mb-5'>
               <div className='relative w-full flex gap-5 items-center pb-2.5 mb-5 b-b-solid b-2 b-deepgrey'>
                 <Icon width='32px' color='#858585' icon='ant-design:clock-circle-twotone' />
                 <span className='title color-deepgrey select-none'>{date}</span>
               </div>
-              <AnimeList type='history' workList={resultMap[date]} />
+              <AnimatedList type='history' workList={resultMap[date]} />
             </div>
           ))}
-        </>
-      </CSSTransition>
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={Object.keys(resultMap).length === 0 && !gettingResult}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <Empty />
-      </CSSTransition>
+      {Object.keys(resultMap).length === 0 && !gettingResult && (
+        <AnimatedDiv type='opacity-gradient'>
+          <Empty />
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition
-        in={Object.keys(resultMap).length === 0 && gettingResult}
-        timeout={300}
-        classNames='opacity-gradient'
-        unmountOnExit>
-        <WorkListSkeleton className='absolute top-29' />
-      </CSSTransition>
+      {Object.keys(resultMap).length === 0 && gettingResult && (
+        <AnimatedDiv type='opacity-gradient'>
+          <WorkListSkeleton className='absolute top-29' />
+        </AnimatedDiv>
+      )}
     </div>
   )
 }

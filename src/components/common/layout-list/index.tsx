@@ -1,8 +1,8 @@
 import GreyButton from '@/components/common/grey-button'
-import { Icon } from '@iconify/react/dist/iconify.js'
+import { Icon } from '@iconify/react'
 import { debounce } from 'lodash'
 import { FC, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import AnimatedDiv from '@/components/motion/animated-div'
 
 type ScrollType = 'label' | 'label-img' | 'work-normal' | 'work-detail' | 'work-little'
 
@@ -108,28 +108,30 @@ const LayoutList: FC<LayoutListProps> = ({
       className={`relative not-show-scrollbar w-full ${className}`}
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}>
-      <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='z-999 absolute top-1/2 -translate-y-1/2 left-0'>
+      {showButtons && (
+        <AnimatedDiv
+          type='opacity-gradient'
+          className='z-999 absolute top-1/2 -translate-y-1/2 left-0'>
           <GreyButton onClick={() => scrollX('right')}>
             <Icon color='#fff' icon='ant-design:caret-left-filled' />
           </GreyButton>
-        </div>
-      </CSSTransition>
+        </AnimatedDiv>
+      )}
       <div
         ref={layoutRef}
-        style={{
-          gap: `${gap}px`,
-        }}
+        style={{ gap: `${gap}px` }}
         className='relative w-full flex flex-nowrap overflow-x-auto overflow-y-hidden transition-duration-300'>
         {children}
       </div>
-      <CSSTransition in={showButtons} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='z-999 absolute top-1/2 -translate-y-1/2 right-0'>
+      {showButtons && (
+        <AnimatedDiv
+          type='opacity-gradient'
+          className='z-999 absolute top-1/2 -translate-y-1/2 right-0'>
           <GreyButton onClick={() => scrollX('left')}>
             <Icon color='#fff' icon='ant-design:caret-right-filled' />
           </GreyButton>
-        </div>
-      </CSSTransition>
+        </AnimatedDiv>
+      )}
     </div>
   )
 }

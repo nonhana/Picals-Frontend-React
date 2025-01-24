@@ -1,7 +1,7 @@
 import { PersonalContext } from '@/pages/personal-center'
 import { message } from 'antd'
 import { FC, useContext, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 const PersonalPage: FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isMe } = useContext(PersonalContext)

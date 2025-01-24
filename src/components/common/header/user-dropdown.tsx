@@ -6,10 +6,11 @@ import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
 import { Modal, message } from 'antd'
 import { FC, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { Link, useNavigate } from 'react-router'
+import { AnimatePresence } from 'framer-motion'
 
 import LazyImg from '../lazy-img'
+import AnimatedDiv from '@/components/motion/animated-div'
 
 const { confirm } = Modal
 
@@ -83,16 +84,18 @@ const UserDropdown: FC<{
   }, [])
 
   return (
-    <>
-      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
+    <AnimatePresence>
+      {visible && (
+        <AnimatedDiv
+          type='opacity-gradient'
           className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
           onClick={() => setVisible(false)}
         />
-      </CSSTransition>
+      )}
 
-      <CSSTransition in={visible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
+      {visible && (
+        <AnimatedDiv
+          type='opacity-gradient'
           className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-2000 ${className}`}>
           <div className='absolute top-0 left-0 w-full h-12.5 bg-normal' />
           <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
@@ -137,9 +140,9 @@ const UserDropdown: FC<{
               退出登录
             </li>
           </ul>
-        </div>
-      </CSSTransition>
-    </>
+        </AnimatedDiv>
+      )}
+    </AnimatePresence>
   )
 }
 

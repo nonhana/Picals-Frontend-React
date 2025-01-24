@@ -8,6 +8,7 @@ import {
   postViewHistoryAPI,
 } from '@/apis'
 import GreyButton from '@/components/common/grey-button'
+import AnimatedDiv from '@/components/motion/animated-div'
 import UserInfo from '@/components/work-detail/user-info'
 import ViewList from '@/components/work-detail/view-list'
 import WorkInfo from '@/components/work-detail/work-info'
@@ -18,11 +19,11 @@ import type { AppState } from '@/store/types'
 import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { notification } from 'antd'
+import { AnimatePresence } from 'framer-motion'
 import { debounce } from 'lodash'
 import { FC, useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useParams } from 'react-router'
 
 const ScrollButtons: FC = () => {
   const isBottom = useAtBottom()
@@ -37,28 +38,28 @@ const ScrollButtons: FC = () => {
   }
 
   return (
-    <>
-      <CSSTransition in={!isTop} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='fixed bottom-25 right-10'>
+    <AnimatePresence>
+      {!isTop && (
+        <AnimatedDiv type='opacity-gradient' className='fixed bottom-25 right-10'>
           <GreyButton
             onClick={() => {
               scrollTo('top')
             }}>
             <Icon color='#fff' icon='ant-design:arrow-up-outlined' />
           </GreyButton>
-        </div>
-      </CSSTransition>
-      <CSSTransition in={!isBottom} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='fixed bottom-10 right-10'>
+        </AnimatedDiv>
+      )}
+      {!isBottom && (
+        <AnimatedDiv type='opacity-gradient' className='fixed bottom-10 right-10'>
           <GreyButton
             onClick={() => {
               scrollTo('bottom')
             }}>
             <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
           </GreyButton>
-        </div>
-      </CSSTransition>
-    </>
+        </AnimatedDiv>
+      )}
+    </AnimatePresence>
   )
 }
 

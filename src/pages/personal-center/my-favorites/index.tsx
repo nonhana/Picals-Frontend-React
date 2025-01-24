@@ -14,7 +14,7 @@ import { setFavoriteList } from '@/store/modules/favorites'
 import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
 import { FC, useEffect, useState, useContext } from 'react'
 import { useDispatch } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import { PersonalContext } from '..'
 

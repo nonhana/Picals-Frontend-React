@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
 import 'react-photo-view/dist/react-photo-view.css'
 import { Provider } from 'react-redux'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider } from 'react-router'
 import { PersistGate } from 'redux-persist/integration/react'
 import '@unocss/reset/normalize.css'
 // eslint-disable-next-line import/no-unresolved
@@ -21,7 +21,7 @@ createRoot(document.getElementById('root')!).render(
           token: { colorPrimary: '#0090F0' },
         }}>
         <ErrorBoundary fallbackRender={ErrorPage}>
-          <RouterProvider fallbackElement={<p>初始化加载...</p>} router={router} />
+          <RouterProvider router={router} />
         </ErrorBoundary>
       </ConfigProvider>
     </PersistGate>

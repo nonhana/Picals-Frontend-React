@@ -5,7 +5,7 @@ import { saveUploadSuccess } from '@/store/modules/uploadForm'
 import { Button } from 'antd'
 import { FC } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 type UploadSuccessProps = {
   workStatus: string | null

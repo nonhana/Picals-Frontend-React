@@ -19,7 +19,7 @@ const BgSlide: FC = () => {
     if (isFetching) return
     setIsFetching(true)
     try {
-      const { data } = await getRandomBackgroundsAPI({ chosenIdList })
+      const { data } = await getRandomBackgroundsAPI({ chosenIdList, device: 'desktop' })
       setBgImgList((prev) => {
         const newBgImgList = prev.concat(data.result)
         bgImgListRef.current = newBgImgList

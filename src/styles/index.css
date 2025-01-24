@@ -17,8 +17,8 @@ body {
   padding: 0;
   margin: 0 auto;
   overflow: auto;
-  background: #fff;
   font-family: 'Noto Sans SC', 'Noto Sans', 'Microsoft YaHei', sans-serif !important;
+  background: #fff;
 }
 
 img {
@@ -91,8 +91,8 @@ a {
 }
 
 .down-to-up-enter-active {
-  transition: transform 300ms;
   transform: translateY(0);
+  transition: transform 300ms;
 }
 
 .down-to-up-exit {
@@ -100,8 +100,8 @@ a {
 }
 
 .down-to-up-exit-active {
-  transition: transform 300ms;
   transform: translateY(calc(100% + 20px));
+  transition: transform 300ms;
 }
 
 /* 从上到下变化 */
@@ -110,8 +110,8 @@ a {
 }
 
 .up-to-down-enter-active {
-  transition: transform 300ms;
   transform: translateY(0);
+  transition: transform 300ms;
 }
 
 .up-to-down-exit {
@@ -119,8 +119,8 @@ a {
 }
 
 .up-to-down-exit-active {
-  transition: transform 300ms;
   transform: translateY(calc(-100% - 20px));
+  transition: transform 300ms;
 }
 
 /* 从左到右变化 */
@@ -129,8 +129,8 @@ a {
 }
 
 .left-to-right-enter-active {
-  transition: transform 300ms;
   transform: translateX(0);
+  transition: transform 300ms;
 }
 
 .left-to-right-exit {
@@ -138,8 +138,8 @@ a {
 }
 
 .left-to-right-exit-active {
-  transition: transform 300ms;
   transform: translateX(calc(-100% - 20px));
+  transition: transform 300ms;
 }
 
 /* keyframes 动画 */
@@ -148,11 +148,13 @@ a {
     opacity: 0;
     transform: translateY(50%);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .float-up {
   animation: float-up 300ms forwards;
 }

@@ -8,7 +8,7 @@ import { Icon } from '@iconify/react'
 import { Dropdown, Modal, type MenuProps } from 'antd'
 import { type FC, useContext } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router'
 
 import { WorkItemProps, WorkItemType } from './types'
 import LazyImg from '../lazy-img'

@@ -66,6 +66,10 @@ export interface IGetRandomBackgroundsReq {
    * 选取过的背景图片的所属作品的index列表，以确保每一次请求的背景图片不会重复
    */
   chosenIdList: number[]
+  /**
+   * 设备类型
+   */
+  device: 'mobile' | 'desktop'
 }
 // #endregion
 

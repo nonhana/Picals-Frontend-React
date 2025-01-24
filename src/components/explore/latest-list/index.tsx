@@ -1,5 +1,5 @@
 import { getLatestWorksAPI, likeActionsAPI } from '@/apis'
-import AnimeList from '@/components/common/anime-list'
+import AnimatedList from '@/components/common/animated-list'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useAtBottom } from '@/hooks'
 import {
@@ -11,7 +11,7 @@ import {
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 const LatestList: FC = () => {
   const location = useLocation()
@@ -95,7 +95,7 @@ const LatestList: FC = () => {
       {latestWorkList.map(
         (everyPage) =>
           everyPage.list.length !== 0 && (
-            <AnimeList
+            <AnimatedList
               key={everyPage.page}
               workList={everyPage.list}
               like={(id: string) => handleLike(everyPage.page, id)}

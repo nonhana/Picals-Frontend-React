@@ -11,7 +11,7 @@ import { LabelInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { FC, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router'
 
 const Home: FC = () => {
   const dispatch = useDispatch()

@@ -1,6 +1,7 @@
 import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
 import logo from '@/assets/svgs/logo.svg'
 import GreyButton from '@/components/common/grey-button'
+import AnimatedDiv from '@/components/motion/animated-div'
 import { setFavoriteList } from '@/store/modules/favorites'
 import { setLikedLabels, setLoginStatus, setTempId, setUserInfo } from '@/store/modules/user'
 import { Icon } from '@iconify/react'
@@ -14,10 +15,10 @@ import {
   type FormProps,
   type FormInstance,
 } from 'antd'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { useNavigate } from 'react-router'
 
 // 登录表单
 type LoginForm = {
@@ -138,21 +139,24 @@ const LoginWindow: FC = () => {
   }
 
   return (
-    <>
+    <AnimatePresence>
       {contextHolder}
-      <CSSTransition in={!windowVisible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div className='absolute top-10px left-1/2 -translate-x-1/2 z-2'>
+      {!windowVisible && (
+        <AnimatedDiv
+          type='opacity-gradient'
+          className='absolute top-10px left-1/2 -translate-x-1/2 z-2'>
           <GreyButton
             onClick={() => {
               setWindowVisible(true)
             }}>
             <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
           </GreyButton>
-        </div>
-      </CSSTransition>
+        </AnimatedDiv>
+      )}
 
-      <CSSTransition in={windowVisible} timeout={300} classNames='opacity-gradient' unmountOnExit>
-        <div
+      {windowVisible && (
+        <AnimatedDiv
+          type='opacity-gradient'
           onMouseEnter={() => setMouseEnter(true)}
           onMouseLeave={() => setMouseEnter(false)}
           className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white z-2'>
@@ -173,16 +177,16 @@ const LoginWindow: FC = () => {
           )}
 
           {/* 关闭按钮 */}
-          <CSSTransition in={mouseEnter} timeout={300} classNames='opacity-gradient' unmountOnExit>
-            <div className='absolute top-10 right-10'>
+          {mouseEnter && (
+            <AnimatedDiv type='opacity-gradient' className='absolute top-10 right-10'>
               <GreyButton
                 onClick={() => {
                   setWindowVisible(false)
                 }}>
                 <Icon color='#fff' icon='ant-design:close-outlined' />
               </GreyButton>
-            </div>
-          </CSSTransition>
+            </AnimatedDiv>
+          )}
 
           {/* 默认状态，选择登录还是注册 */}
           {!isLogin && !isRegister && (
@@ -317,9 +321,9 @@ const LoginWindow: FC = () => {
               </Form.Item>
             </Form>
           )}
-        </div>
-      </CSSTransition>
-    </>
+        </AnimatedDiv>
+      )}
+    </AnimatePresence>
   )
 }
 

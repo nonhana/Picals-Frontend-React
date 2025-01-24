@@ -11,7 +11,7 @@ import { Icon } from '@iconify/react'
 import { Button, notification, Modal, message } from 'antd'
 import { FC, useEffect, useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router'
 
 const { confirm } = Modal
 

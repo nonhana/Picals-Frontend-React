@@ -7,7 +7,7 @@ import type { CommentItem } from '@/utils/types'
 import { Input, Button, message, Modal } from 'antd'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import Comment from './comment'
 import InputWindow from './input-window'
