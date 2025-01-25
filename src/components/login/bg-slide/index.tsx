@@ -21,6 +21,7 @@ const BgSlide: FC = () => {
     try {
       const { data } = await getRandomBackgroundsAPI({ chosenIdList, device: 'desktop' })
       setBgImgList((prev) => {
+        if (!data.result) return prev
         const newBgImgList = prev.concat(data.result)
         bgImgListRef.current = newBgImgList
         return newBgImgList

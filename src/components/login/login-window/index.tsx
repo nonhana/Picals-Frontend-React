@@ -138,6 +138,12 @@ const LoginWindow: FC = () => {
     }
   }
 
+  // 重置状态
+  const resetStatus = () => {
+    setIsLogin(false)
+    setIsRegister(false)
+  }
+
   return (
     <>
       {contextHolder}
@@ -146,7 +152,7 @@ const LoginWindow: FC = () => {
         {!windowVisible && (
           <AnimatedDiv
             type='opacity-gradient'
-            className='absolute top-10px left-1/2 -translate-x-1/2 z-2'>
+            className='absolute top-10px left-1/2 -translate-x-1/2 z-2 hidden md:block'>
             <GreyButton
               onClick={() => {
                 setWindowVisible(true)
@@ -161,7 +167,10 @@ const LoginWindow: FC = () => {
             type='opacity-gradient'
             onMouseEnter={() => setMouseEnter(true)}
             onMouseLeave={() => setMouseEnter(false)}
-            className='overflow-hidden select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 rounded-6 p-15 flex flex-col items-center justify-between gap-10 bg-white z-2'>
+            className='`overflow-hidden select-none absolute
+              inset-0 w-full p-15 m-auto
+              md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-130 md:rounded-6 md:bg-white
+              flex flex-col items-center justify-between gap-10 z-2`'>
             <div className='flex flex-col items-center justify-center'>
               <img className='w-50' src={logo} alt='picals-logo' />
               <span className='font-normal font-size-m color-deepgrey'>兴趣使然的插画收藏小站</span>
@@ -170,7 +179,7 @@ const LoginWindow: FC = () => {
             {/* 返回按钮 */}
             {(isLogin || isRegister) && (
               <GreyButton
-                className='absolute top-10 left-10'
+                className='absolute top-10 left-10 hidden md:block'
                 onClick={() => {
                   setIsLogin(false), setIsRegister(false)
                 }}>
@@ -180,7 +189,9 @@ const LoginWindow: FC = () => {
 
             {/* 关闭按钮 */}
             {mouseEnter && (
-              <AnimatedDiv type='opacity-gradient' className='absolute top-10 right-10'>
+              <AnimatedDiv
+                type='opacity-gradient'
+                className='absolute top-10 right-10 hidden md:block'>
                 <GreyButton
                   onClick={() => {
                     setWindowVisible(false)
@@ -192,13 +203,7 @@ const LoginWindow: FC = () => {
 
             {/* 默认状态，选择登录还是注册 */}
             {!isLogin && !isRegister && (
-              <div
-                className='
-            w-full
-            flex
-            flex-col
-            gap-10
-        '>
+              <div className='w-full flex flex-col gap-10'>
                 <Button
                   size='large'
                   shape='round'
@@ -241,16 +246,26 @@ const LoginWindow: FC = () => {
                   rules={[{ required: true, message: '登录需要输入密码！' }]}>
                   <Input.Password size='large' placeholder='请输入密码' />
                 </Form.Item>
-                <Form.Item className='w-full flex justify-center'>
-                  <Button
-                    className='w-50'
-                    type='default'
-                    shape='round'
-                    size='large'
-                    loading={loginLoading}
-                    htmlType='submit'>
-                    登录
-                  </Button>
+                <Form.Item>
+                  <div className='w-full flex gap-10'>
+                    <Button
+                      className='w-full'
+                      type='primary'
+                      shape='round'
+                      size='large'
+                      loading={loginLoading}
+                      htmlType='submit'>
+                      登录
+                    </Button>
+                    <Button
+                      className='w-full md:hidden'
+                      type='default'
+                      shape='round'
+                      size='large'
+                      onClick={resetStatus}>
+                      返回
+                    </Button>
+                  </div>
                 </Form.Item>
               </Form>
             )}
@@ -310,16 +325,26 @@ const LoginWindow: FC = () => {
                   ]}>
                   <Input.Password size='large' placeholder='请再输入一遍密码' />
                 </Form.Item>
-                <Form.Item className='w-full flex justify-center'>
-                  <Button
-                    className='w-50'
-                    type='default'
-                    shape='round'
-                    size='large'
-                    loading={registerLoading}
-                    htmlType='submit'>
-                    注册
-                  </Button>
+                <Form.Item>
+                  <div className='w-full flex gap-10'>
+                    <Button
+                      className='w-full'
+                      type='primary'
+                      shape='round'
+                      size='large'
+                      loading={registerLoading}
+                      htmlType='submit'>
+                      注册
+                    </Button>
+                    <Button
+                      className='w-full md:hidden'
+                      type='default'
+                      shape='round'
+                      size='large'
+                      onClick={resetStatus}>
+                      返回
+                    </Button>
+                  </div>
                 </Form.Item>
               </Form>
             )}

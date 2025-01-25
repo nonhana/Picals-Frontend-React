@@ -1,11 +1,14 @@
 import BgSlide from '@/components/login/bg-slide'
 import LoginWindow from '@/components/login/login-window'
-import { FC } from 'react'
+import type { FC } from 'react'
+import { BrowserView } from 'react-device-detect'
 
 const Login: FC = () => {
   return (
-    <div className='h-screen'>
-      <BgSlide />
+    <div className='size-screen bg-gradient-to-br from-#f5f5f5 to-#e6f9ff'>
+      <BrowserView>
+        <BgSlide />
+      </BrowserView>
       <LoginWindow />
     </div>
   )
