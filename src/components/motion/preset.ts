@@ -1,6 +1,12 @@
 import type { MotionProps } from 'framer-motion'
 
-const animationVariants = {
+export type AnimationVariantKeys =
+  | 'opacity-gradient'
+  | 'down-to-up'
+  | 'up-to-down'
+  | 'left-to-right'
+
+const animationVariants: Record<AnimationVariantKeys, MotionProps> = {
   'opacity-gradient': {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -27,8 +33,6 @@ const animationVariants = {
   },
 } as const
 
-export type AnimationVariantKeys = keyof typeof animationVariants
-
-export const getAnimationVariant = (key: AnimationVariantKeys): MotionProps => {
+export const getAnimationVariant = (key: AnimationVariantKeys) => {
   return animationVariants[key]
 }
