@@ -4,9 +4,11 @@ import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/util
 import { Icon } from '@iconify/react'
 import { Input, Button, message } from 'antd'
 import type { InputRef } from 'antd'
+import { SearchOutlined, UploadOutlined } from '@ant-design/icons'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router'
+import { isMobile } from 'react-device-detect'
 
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
@@ -90,9 +92,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
       />
 
       <div
-        style={{
-          zIndex: showSearchDropdown ? 2000 : 0,
-        }}
+        style={{ zIndex: showSearchDropdown ? 2000 : 0 }}
         className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10'>
         <img
           onClick={() => {
@@ -103,7 +103,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           alt='picals-logo'
         />
 
-        <div className='absolute w-30% top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+        <div className='absolute w-30% top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block'>
           <Search
             ref={searchRef}
             size='large'
@@ -120,9 +120,22 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           <Link to='https://github.com/nonhana/Picals-Frontend-React' target='_blank'>
             <Icon width={32} color='#858585' icon='ant-design:github-filled' />
           </Link>
+          <Button
+            shape='circle'
+            type='default'
+            size='middle'
+            icon={<SearchOutlined />}
+            className='block md:hidden'
+          />
+
           {isLogin && (
-            <Button shape='round' type='default' size='large' onClick={toUpload}>
-              <span className='color-deepgrey'>转载/投稿作品</span>
+            <Button
+              shape={isMobile ? 'circle' : 'round'}
+              type='default'
+              size='middle'
+              icon={<UploadOutlined />}
+              onClick={toUpload}>
+              <span className='color-deepgrey hidden md:block'>转载/投稿作品</span>
             </Button>
           )}
           {isLogin ? (

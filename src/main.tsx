@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import '@unocss/reset/normalize.css'
 // eslint-disable-next-line import/no-unresolved
 import 'uno.css'
+import '@ant-design/v5-patch-for-react-19'
 
 import ErrorPage from './pages/error'
 import router from './router'

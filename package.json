@@ -46,6 +46,7 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@types/lodash": "^4.17.15",
     "@types/react": "^19.0.9",
     "@types/react-dom": "^19.0.3",
@@ -75,5 +76,17 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-imagemin": "^0.6.1",
     "vite-plugin-webfont-dl": "^3.10.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "cwebp-bin",
+      "esbuild",
+      "gifsicle",
+      "jpegtran-bin",
+      "mozjpeg",
+      "optipng-bin",
+      "pngquant-bin"
+    ]
   }
 }
