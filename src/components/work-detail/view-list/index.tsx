@@ -486,7 +486,7 @@ const ViewList: FC<ViewListProps> = ({
         <div
           className={`mt-0 ${viewListClasses} ${currentList !== 'userWorkList' ? 'bg-normal' : 'bg-white'}`}
           onClick={() => {
-            if (allowListName) changeList(allowListName)
+            allowListName && changeList(allowListName)
           }}>
           {allowListName ? (
             <>

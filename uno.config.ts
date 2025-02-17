@@ -9,23 +9,7 @@ import {
   presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
-  Rule,
 } from 'unocss'
-
-const customRules: Rule[] = [
-  ['font-size-s', { 'font-size': '12px' }],
-  ['font-size-m', { 'font-size': '14px' }],
-  ['font-size-l', { 'font-size': '16px' }],
-  ['color-shallowblack', { color: '#3d3d3d' }],
-  ['color-deepgrey', { color: '#858585' }],
-  ['color-primary', { color: '#0090F0' }],
-  ['color-primary', { color: '#0090F0' }],
-  ['bg-normal', { background: '#f5f5f5' }],
-  ['bg-light', { background: '#f8f8f8' }],
-  ['bg-deepgrey', { background: '#858585' }],
-  ['bg-normalgrey', { background: '#c0c0c0' }],
-  ['b-deepgrey', { 'border-color': '#858585' }],
-]
 
 export default defineConfig({
   presets: [
@@ -37,7 +21,20 @@ export default defineConfig({
     presetWebFonts(),
   ],
   transformers: [transformerAttributifyJsx(), transformerDirectives(), transformerVariantGroup()],
-  rules: customRules,
+  rules: [
+    ['font-size-s', { 'font-size': '12px' }],
+    ['font-size-m', { 'font-size': '14px' }],
+    ['font-size-l', { 'font-size': '16px' }],
+    ['color-shallowblack', { color: '#3d3d3d' }],
+    ['color-deepgrey', { color: '#858585' }],
+    ['color-primary', { color: '#0090F0' }],
+    ['color-primary', { color: '#0090F0' }],
+    ['bg-normal', { background: '#f5f5f5' }],
+    ['bg-light', { background: '#f8f8f8' }],
+    ['bg-deepgrey', { background: '#858585' }],
+    ['bg-normalgrey', { background: '#c0c0c0' }],
+    ['b-deepgrey', { 'border-color': '#858585' }],
+  ],
   theme: {
     extend: {
       keyframes: {
