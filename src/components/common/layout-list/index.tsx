@@ -1,12 +1,14 @@
 import GreyButton from '@/components/common/grey-button'
 import { Icon } from '@iconify/react'
 import { debounce } from 'lodash'
-import { FC, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AnimatedDiv from '@/components/motion/animated-div'
+import type { VirtualListProps } from '@/components/common/virtual-list'
+import VirtualList from '@/components/common/virtual-list'
 
 type ScrollType = 'label' | 'label-img' | 'work-normal' | 'work-detail' | 'work-little'
 
-type LayoutListProps = {
+interface LayoutListProps extends Partial<VirtualListProps> {
   scrollType: ScrollType
   children: React.ReactNode
   initializing?: boolean
@@ -16,6 +18,7 @@ type LayoutListProps = {
   type?: string
   workId?: string
   setAtBottom?: (status: boolean) => void
+  virtualList?: boolean
 }
 
 const scrollMap: Map<ScrollType, number> = new Map([
@@ -26,7 +29,7 @@ const scrollMap: Map<ScrollType, number> = new Map([
   ['work-little', 300],
 ])
 
-const LayoutList: FC<LayoutListProps> = ({
+const LayoutList = ({
   initializing,
   setInitializing,
   className,
@@ -36,7 +39,13 @@ const LayoutList: FC<LayoutListProps> = ({
   children,
   gap = 10,
   setAtBottom,
-}) => {
+  virtualList,
+  direction,
+  length,
+  itemLength,
+  data,
+  renderItem,
+}: LayoutListProps) => {
   const [showButtons, setShowButtons] = useState(false)
   const layoutRef = useRef<HTMLDivElement>(null)
 
@@ -103,35 +112,49 @@ const LayoutList: FC<LayoutListProps> = ({
     }
   }, [workId, initializing])
 
-  return (
-    <div
-      className={`relative not-show-scrollbar w-full ${className}`}
+  const scrollBtnGroup = (
+    <>
+      <AnimatedDiv
+        type='opacity-gradient'
+        className='z-999 absolute top-1/2 -translate-y-1/2 left-0'>
+        <GreyButton onClick={() => scrollX('right')}>
+          <Icon color='#fff' icon='ant-design:caret-left-filled' />
+        </GreyButton>
+      </AnimatedDiv>
+      <AnimatedDiv
+        type='opacity-gradient'
+        className='z-999 absolute top-1/2 -translate-y-1/2 right-0'>
+        <GreyButton onClick={() => scrollX('left')}>
+          <Icon color='#fff' icon='ant-design:caret-right-filled' />
+        </GreyButton>
+      </AnimatedDiv>
+    </>
+  )
+
+  return virtualList ? (
+    <VirtualList
+      ref={layoutRef}
+      direction={direction!}
+      length={length!}
+      itemLength={itemLength!}
+      data={data!}
+      renderItem={renderItem!}
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}>
-      {showButtons && (
-        <AnimatedDiv
-          type='opacity-gradient'
-          className='z-999 absolute top-1/2 -translate-y-1/2 left-0'>
-          <GreyButton onClick={() => scrollX('right')}>
-            <Icon color='#fff' icon='ant-design:caret-left-filled' />
-          </GreyButton>
-        </AnimatedDiv>
-      )}
+      {showButtons && scrollBtnGroup}
+    </VirtualList>
+  ) : (
+    <div
+      className={`relative scrollbar-hidden w-full ${className}`}
+      onMouseEnter={() => setShowButtons(true)}
+      onMouseLeave={() => setShowButtons(false)}>
       <div
         ref={layoutRef}
         style={{ gap: `${gap}px` }}
         className='relative w-full flex flex-nowrap overflow-x-auto overflow-y-hidden transition-duration-300'>
         {children}
       </div>
-      {showButtons && (
-        <AnimatedDiv
-          type='opacity-gradient'
-          className='z-999 absolute top-1/2 -translate-y-1/2 right-0'>
-          <GreyButton onClick={() => scrollX('left')}>
-            <Icon color='#fff' icon='ant-design:caret-right-filled' />
-          </GreyButton>
-        </AnimatedDiv>
-      )}
+      {showButtons && scrollBtnGroup}
     </div>
   )
 }

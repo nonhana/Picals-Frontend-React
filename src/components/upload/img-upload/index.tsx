@@ -174,7 +174,7 @@ const ImgUpload: FC<ImgUploadProps> = ({
         visible={showModal}
         setVisible={setShowModal}
         allowActivelyClose={false}>
-        <div className='w-full not-show-scrollbar'>
+        <div className='w-full scrollbar-hidden'>
           <div className='m-10 mt-0 max-h-200 overflow-y-scroll'>
             {uploadList.map((item, index) => (
               <div key={index} className='flex items-center mb-2 h-8'>

@@ -6,7 +6,7 @@ import { FLOAT_DURATION, WORKITEM_DROPDOWN_LIST } from '@/utils'
 import type { WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Dropdown, Modal, type MenuProps } from 'antd'
-import { type FC, useContext } from 'react'
+import { useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router'
 import { motion, type MotionProps } from 'framer-motion'
@@ -25,7 +25,7 @@ const activeClasses = 'bg-white opacity-16'
 const beforeClasses =
   'before:content-[""] before:absolute before:block before:top-0 before:left-0 before:w-full before:h-full before:bg-black before:opacity-4 before:rd-2'
 
-const WorkItem: FC<WorkItemProps & { index?: number }> = (props) => {
+const WorkItem = (props: WorkItemProps & { index?: number }) => {
   const index = props.index ?? 0
 
   let curWrapper: string

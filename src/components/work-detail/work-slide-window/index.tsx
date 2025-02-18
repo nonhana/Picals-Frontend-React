@@ -2,9 +2,10 @@ import LayoutList from '@/components/common/layout-list'
 import WorkItem from '@/components/common/work-item'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { WorkNormalItemInfo } from '@/utils/types'
-import { FC } from 'react'
+import type { VirtualListProps } from '@/components/common/virtual-list'
+import { useEffect, useMemo } from 'react'
 
-type WorkSlideWindowProps = {
+interface WorkSlideWindowProps extends Partial<VirtualListProps> {
   workId: string
   workList: {
     page: number
@@ -14,38 +15,51 @@ type WorkSlideWindowProps = {
   isFinal?: boolean
   initializing?: boolean
   setInitializing?: (status: boolean) => void
-  [key: string]: any
+  virtualList?: boolean // 是否使用虚拟列表。若使用，需要传入 VirtualListProps
 }
 
-const WorkSlideWindow: FC<WorkSlideWindowProps> = ({
+const WorkSlideWindow = ({
   workId,
   workList,
   setWorkListEnd,
   isFinal = true,
   initializing,
   setInitializing,
-  ...props
-}) => {
+  virtualList,
+  ...rest
+}: WorkSlideWindowProps) => {
+  const virtualListItems = useMemo(
+    () => workList.map((everyPage) => everyPage.list).flat(),
+    [workList],
+  )
+
+  useEffect(() => {
+    console.log('virtualListItems:', virtualListItems)
+  }, [virtualListItems])
+
   return (
     <LayoutList
-      {...props}
+      {...rest}
+      virtualList={virtualList}
+      data={virtualListItems}
       workId={workId}
       type='work-detail'
       scrollType='work-little'
       setAtBottom={setWorkListEnd}
       initializing={initializing}
       setInitializing={setInitializing}>
-      {workList.map((everyPage) =>
-        everyPage.list.map((work) => (
-          <WorkItem
-            type='least'
-            animation='opacity-gradient'
-            key={work.id}
-            data-id={work.id}
-            itemInfo={work}
-          />
-        )),
-      )}
+      {!virtualList &&
+        workList.map((everyPage) =>
+          everyPage.list.map((work) => (
+            <WorkItem
+              type='least'
+              animation='opacity-gradient'
+              key={work.id}
+              data-id={work.id}
+              itemInfo={work}
+            />
+          )),
+        )}
       {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-90px h-90px rd-1' />}
     </LayoutList>
   )

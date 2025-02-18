@@ -533,7 +533,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       </div>
 
       <Modal
-        className='not-show-scrollbar '
+        className='scrollbar-hidden '
         title='选择想要收藏的收藏夹'
         width='420px'
         open={collecting}

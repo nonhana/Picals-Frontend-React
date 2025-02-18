@@ -26,6 +26,7 @@ import { Link, useNavigate } from 'react-router'
 
 import WorkSlideWindow from '../work-slide-window'
 import AnimatedDiv from '@/components/motion/animated-div'
+import WorkItem from '@/components/common/work-item'
 
 const viewListClasses =
   'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-normal cursor-pointer flex justify-between items-center px-5 color-shallowblack'
@@ -550,6 +551,19 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setListEnd}
                 initializing={initializing}
                 setInitializing={setInitializing}
+                virtualList
+                direction='horizontal'
+                length={290}
+                itemLength={90}
+                renderItem={(item) => (
+                  <WorkItem
+                    type='least'
+                    animation='opacity-gradient'
+                    key={item.id}
+                    data-id={item.id}
+                    itemInfo={item}
+                  />
+                )}
               />
             </AnimatedDiv>
           )}
@@ -571,6 +585,19 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setRecommendListEnd}
                 initializing={recommendInit}
                 setInitializing={setRecommendInit}
+                virtualList
+                direction='horizontal'
+                length={290}
+                itemLength={90}
+                renderItem={(item) => (
+                  <WorkItem
+                    type='least'
+                    animation='opacity-gradient'
+                    key={item.id}
+                    data-id={item.id}
+                    itemInfo={item}
+                  />
+                )}
               />
             </AnimatedDiv>
           )}
@@ -592,6 +619,19 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setLatestListEnd}
                 initializing={latestInit}
                 setInitializing={setLatestInit}
+                virtualList
+                direction='horizontal'
+                length={290}
+                itemLength={90}
+                renderItem={(item) => (
+                  <WorkItem
+                    type='least'
+                    animation='opacity-gradient'
+                    key={item.id}
+                    data-id={item.id}
+                    itemInfo={item}
+                  />
+                )}
               />
             </AnimatedDiv>
           )}
@@ -644,6 +684,19 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setAuthorWorkListEnd}
                 initializing={userWorkListInitializing}
                 setInitializing={setUserWorkListInitializing}
+                virtualList
+                direction='horizontal'
+                length={290}
+                itemLength={90}
+                renderItem={(item) => (
+                  <WorkItem
+                    type='least'
+                    animation='opacity-gradient'
+                    key={item.id}
+                    data-id={item.id}
+                    itemInfo={item}
+                  />
+                )}
               />
             </AnimatedDiv>
           )}

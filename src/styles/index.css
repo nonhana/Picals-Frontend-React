@@ -47,10 +47,8 @@ a {
 }
 
 /* Specific global classes for the project */
-.not-show-scrollbar {
-  ::-webkit-scrollbar {
-    display: none;
-  }
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
 }
 
 .title {
