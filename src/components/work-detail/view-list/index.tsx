@@ -128,7 +128,7 @@ const ViewList: FC<ViewListProps> = ({
       }
       setRecommendWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setRecommendInit(false)
@@ -171,7 +171,7 @@ const ViewList: FC<ViewListProps> = ({
       const result = data.map((work) => work.id)
       dispatch(pushToRecommendWorkList(result))
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setRecommendLoading(false)
@@ -245,7 +245,7 @@ const ViewList: FC<ViewListProps> = ({
       }
       setLatestWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setLatestInit(false)
@@ -283,7 +283,7 @@ const ViewList: FC<ViewListProps> = ({
       const result = data.map((work) => work.id)
       dispatch(pushToLatestWorkList(result))
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setLatestLoading(false)
@@ -365,7 +365,7 @@ const ViewList: FC<ViewListProps> = ({
       })
       if (targetList.length < pageSize) setIsFinal(true)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setInitializing(false)
@@ -417,7 +417,7 @@ const ViewList: FC<ViewListProps> = ({
       const { data } = await getUserWorksIdListAPI({ id: workDetailUserId })
       dispatch(pushToUserWorkList(data))
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

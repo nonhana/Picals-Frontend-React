@@ -62,6 +62,9 @@ const LayoutList = ({
   const handleScroll = () => {
     if (layoutRef.current && setAtBottom) {
       const { scrollLeft, scrollWidth, clientWidth } = layoutRef.current
+      console.log('scrollLeft:', scrollLeft)
+      console.log('scrollWidth:', scrollWidth)
+      console.log('clientWidth:', clientWidth)
       if (scrollLeft + clientWidth >= scrollWidth - 100) {
         setAtBottom(true)
       } else {

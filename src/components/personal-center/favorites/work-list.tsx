@@ -166,7 +166,7 @@ const WorkList: FC<WorkListProps> = ({
       await refresh()
       resetSettingStatus()
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -183,7 +183,7 @@ const WorkList: FC<WorkListProps> = ({
       resetSettingStatus()
       messageApi.success('移动成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
     }
   }
   useEffect(() => {
@@ -202,7 +202,7 @@ const WorkList: FC<WorkListProps> = ({
       resetSettingStatus()
       messageApi.success('复制成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

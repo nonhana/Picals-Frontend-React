@@ -52,7 +52,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
         return result
       })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -95,7 +95,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
         }),
       )
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -124,7 +124,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
         }),
       )
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

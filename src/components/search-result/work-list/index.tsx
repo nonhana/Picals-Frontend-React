@@ -64,7 +64,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
       })
       setWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingWorkList(false)
@@ -80,7 +80,7 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
       await likeActionsAPI({ id })
       updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

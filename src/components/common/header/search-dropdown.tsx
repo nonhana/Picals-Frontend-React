@@ -50,7 +50,7 @@ const SearchDropdown: FC<{
       const { data } = await getRecommendLabelListAPI()
       setPopularLabels(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

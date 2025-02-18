@@ -150,7 +150,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
         authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
       })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -231,7 +231,7 @@ const WorkInfo: FC<WorkInfoProps> = ({
       await refreshFavoriteList()
       messageApi.success('新建成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

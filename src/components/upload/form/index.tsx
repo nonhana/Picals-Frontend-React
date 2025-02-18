@@ -54,7 +54,7 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
         setOptions(options.concat(result as ValueType[]))
       }
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -210,7 +210,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
         setLabels(labels.concat(result))
       }
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -288,7 +288,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       const result = data.map((item) => ({ value: item.id, label: item.name }))
       return result
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return []
     }
   }
@@ -345,7 +345,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
         },
       })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -377,7 +377,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       const { data } = await getWorkCountAPI()
       setWorkCount(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

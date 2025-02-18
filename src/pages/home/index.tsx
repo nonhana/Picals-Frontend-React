@@ -40,7 +40,7 @@ const Home: FC = () => {
       const { data } = await getRecommendLabelListAPI()
       setLabelList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingLabelList(false)
@@ -57,7 +57,7 @@ const Home: FC = () => {
       const { data } = await getFollowNewWorksAPI({ pageSize: 30, current: 1 })
       setFollowWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingFollowWorkList(false)
@@ -80,7 +80,7 @@ const Home: FC = () => {
       const { data } = await getRecommendWorksAPI(params) // 只获取一页
       setRecommendWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingRecommendWorkList(false)

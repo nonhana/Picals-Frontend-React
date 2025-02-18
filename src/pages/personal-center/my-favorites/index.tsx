@@ -35,7 +35,7 @@ const MyFavorites: FC = () => {
       const { data } = await getFavoriteDetailAPI({ id: folderId! })
       setFavoriteDetailInfo(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -54,7 +54,7 @@ const MyFavorites: FC = () => {
       const { data } = await getFavoriteWorkListAPI({ id: folderId!, current, pageSize: 12 })
       setWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingWorkList(false)
@@ -73,7 +73,7 @@ const MyFavorites: FC = () => {
         workList.map((item) => (item.id === id ? { ...item, isLiked: !item.isLiked } : item)),
       )
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -118,7 +118,7 @@ const MyFavorites: FC = () => {
       })
       setWorkList(workList)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -135,7 +135,7 @@ const MyFavorites: FC = () => {
       if (isMe) dispatch(setFavoriteList(list))
       setFolderList(list)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingFolderList(false)

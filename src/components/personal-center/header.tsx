@@ -89,7 +89,7 @@ const Header: FC = () => {
           }),
         )
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -105,7 +105,7 @@ const Header: FC = () => {
       }
       setUserInfo((prev) => ({ ...prev, isFollowed: !prev.isFollowed }))
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

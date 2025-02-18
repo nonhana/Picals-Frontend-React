@@ -45,7 +45,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
       await likeActionsAPI({ id: workId })
       setWorkMap(workId, { ...workList.get(workId)!, isLiked: !workList.get(workId)!.isLiked })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -56,7 +56,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
       await refreshWorkList()
       message.success('删除成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -69,7 +69,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
       setWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingWorkList(false)
@@ -86,7 +86,7 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
       })
       setWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingWorkList(false)

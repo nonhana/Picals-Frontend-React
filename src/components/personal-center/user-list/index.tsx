@@ -35,7 +35,7 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
       }
       updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -79,7 +79,7 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
 
       setUserList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingUser(false)

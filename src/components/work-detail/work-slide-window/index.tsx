@@ -3,7 +3,7 @@ import WorkItem from '@/components/common/work-item'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { WorkNormalItemInfo } from '@/utils/types'
 import type { VirtualListProps } from '@/components/common/virtual-list'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
 interface WorkSlideWindowProps extends Partial<VirtualListProps> {
   workId: string
@@ -32,10 +32,6 @@ const WorkSlideWindow = ({
     () => workList.map((everyPage) => everyPage.list).flat(),
     [workList],
   )
-
-  useEffect(() => {
-    console.log('virtualListItems:', virtualListItems)
-  }, [virtualListItems])
 
   return (
     <LayoutList

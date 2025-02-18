@@ -32,7 +32,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
       }
       updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -60,7 +60,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
       const { data } = await searchUserTotalAPI({ keyword: labelName })
       setTotal(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -76,7 +76,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
       })
       setUserList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setSearchingUser(false)

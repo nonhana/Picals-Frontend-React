@@ -41,7 +41,7 @@ const HistoryList: FC = () => {
       const { data } = await getViewHistoryTotalAPI({ date: currentDate })
       setWorkCount(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -66,7 +66,7 @@ const HistoryList: FC = () => {
       })
       setWorkList(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setGettingWorkList(false)

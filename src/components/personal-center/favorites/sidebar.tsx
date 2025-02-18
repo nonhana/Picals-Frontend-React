@@ -88,7 +88,7 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
       dispatch(setFavoriteList(orderedList))
       messageApi.success('排序成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -116,7 +116,7 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
           await fetchFavoriteList()
           messageApi.success('删除成功')
         } catch (error) {
-          console.log('出现错误了喵！！', error)
+          console.error('出现错误了喵！！', error)
           return
         }
       },
@@ -144,7 +144,7 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
       await fetchFavoriteList()
       messageApi.success(editingFolderId !== '' ? '编辑成功' : '新建成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

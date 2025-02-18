@@ -83,7 +83,7 @@ const LoginWindow: FC = () => {
       })
       navigate('/home')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setLoginLoading(false)
@@ -105,7 +105,7 @@ const LoginWindow: FC = () => {
       })
       setIsRegister(false)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setRegisterLoading(false)
@@ -131,7 +131,7 @@ const LoginWindow: FC = () => {
         })
       }, 1000)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setSendingCode(false)

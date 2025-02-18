@@ -79,7 +79,7 @@ const WorkDetail: FC = () => {
       await postViewHistoryAPI({ id: workId! })
       await addWorkViewAPI({ id: workId! })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -100,7 +100,7 @@ const WorkDetail: FC = () => {
 
       setWorkInfo({ ...rest, authorInfo })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -117,7 +117,7 @@ const WorkDetail: FC = () => {
         isFollowing: data.isFollowing,
       })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -162,7 +162,7 @@ const WorkDetail: FC = () => {
         return result
       })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setInitializing(false)
@@ -223,7 +223,7 @@ const WorkDetail: FC = () => {
           }
         })
       } catch (error) {
-        console.log('出现错误了喵！！', error)
+        console.error('出现错误了喵！！', error)
         return
       }
     },
@@ -267,7 +267,7 @@ const WorkDetail: FC = () => {
     try {
       await likeActionsAPI({ id })
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

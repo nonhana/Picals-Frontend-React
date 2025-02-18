@@ -72,7 +72,7 @@ const SearchResult: FC = () => {
         setLabelDetail(undefined)
       }
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -96,7 +96,7 @@ const SearchResult: FC = () => {
       setShowAddLabelModal(false)
       message.success('添加标签成功')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

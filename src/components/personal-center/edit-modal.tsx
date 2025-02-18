@@ -65,7 +65,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       setEditUserInfo({ ...editUserInfo, backgroundImg: data })
       message.success('修改背景图片成功！')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setLoading(false)
@@ -108,7 +108,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       setEditUserInfo({ ...editUserInfo, avatar: data })
       message.success('修改头像成功！')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setLoading(false)
@@ -137,7 +137,7 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       onConfirm()
       message.success('修改个人资料成功！')
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     } finally {
       setLoading(false)

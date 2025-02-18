@@ -14,7 +14,7 @@ const MyFollow: FC = () => {
       const { data } = await getFollowingTotalAPI({ id: userId })
       setTotal(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

@@ -15,7 +15,7 @@ const MyWorks: FC = () => {
       const { data } = await getUserWorksTotalAPI({ id: userId })
       setWorkCount(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

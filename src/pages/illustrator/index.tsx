@@ -21,7 +21,7 @@ const Illustrator: FC = () => {
       const { data } = await getIllustratorDetailAPI({ id: illustratorId! })
       setIllustratorInfo(data)
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }

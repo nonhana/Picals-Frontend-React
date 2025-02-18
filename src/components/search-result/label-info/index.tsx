@@ -32,7 +32,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
       }
       like()
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
       return
     }
   }
@@ -46,7 +46,7 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
       const { data } = await getRecommendLabelListAPI()
       setLabelList(data.filter((item) => item.id !== id))
     } catch (error) {
-      console.log('出现错误了喵！！', error)
+      console.error('出现错误了喵！！', error)
     } finally {
       setLoading(false)
     }
