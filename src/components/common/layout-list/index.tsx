@@ -47,7 +47,7 @@ const LayoutList = ({
   renderItem,
 }: LayoutListProps) => {
   const [showButtons, setShowButtons] = useState(false)
-  const layoutRef = useRef<HTMLDivElement>(null)
+  const layoutRef = useRef<HTMLDivElement & { posData: { id: string; left: number }[] }>(null)
 
   const scrollX = (direction: 'left' | 'right') => {
     if (layoutRef.current) {
@@ -60,17 +60,13 @@ const LayoutList = ({
   }
 
   const handleScroll = () => {
-    if (layoutRef.current && setAtBottom) {
-      const { scrollLeft, scrollWidth, clientWidth } = layoutRef.current
-      console.log('scrollLeft:', scrollLeft)
-      console.log('scrollWidth:', scrollWidth)
-      console.log('clientWidth:', clientWidth)
-      if (scrollLeft + clientWidth >= scrollWidth - 100) {
-        setAtBottom(true)
-      } else {
-        setAtBottom(false)
-      }
-    }
+    if (!layoutRef.current || !setAtBottom) return
+
+    const { scrollLeft, clientWidth, scrollWidth, children } = layoutRef.current
+    const innerWidth = virtualList ? children[0]?.clientWidth : scrollWidth
+    const isAtBottom = scrollLeft + clientWidth >= innerWidth - 100
+
+    setAtBottom(isAtBottom)
   }
 
   useEffect(() => {
@@ -91,28 +87,44 @@ const LayoutList = ({
 
   useEffect(() => {
     if (setAtBottom) setAtBottom(false)
-    if (!layoutRef.current) return
-    if (type !== 'work-detail') return
-    if (initializing) return
+    if (!layoutRef.current || type !== 'work-detail' || initializing) return
 
-    const currentWorkItem = Array.from(layoutRef.current.children).find(
-      (item) => item.getAttribute('data-id') === workId,
-    )
-    if (currentWorkItem) {
-      const itemLeft = currentWorkItem.getBoundingClientRect().left
-      const layoutRefLeft = layoutRef.current.getBoundingClientRect().left
-      layoutRef.current.scrollBy({
-        top: 0,
-        left: itemLeft - layoutRefLeft,
-        behavior: 'smooth',
-      })
-      return
-    } else {
-      if (setAtBottom && setInitializing) {
-        setAtBottom(true)
-        setInitializing(true)
+    const scrollToWorkItem = (workItem: HTMLElement | { left: number } | null) => {
+      if (!workItem) {
+        if (setAtBottom && setInitializing) {
+          setAtBottom(true)
+          setInitializing(true)
+        }
+        return
+      }
+
+      if (virtualList) {
+        layoutRef.current!.scrollTo({
+          left: (workItem as { left: number }).left,
+          behavior: 'smooth',
+        })
+      } else {
+        const itemLeft = (workItem as HTMLElement).getBoundingClientRect().left
+        const layoutRefLeft = layoutRef.current!.getBoundingClientRect().left
+        layoutRef.current!.scrollBy({
+          top: 0,
+          left: itemLeft - layoutRefLeft,
+          behavior: 'smooth',
+        })
       }
     }
+
+    const findWorkItem = () => {
+      if (virtualList) {
+        return layoutRef.current!.posData.find((item) => item.id === workId) || null
+      } else {
+        return Array.from(layoutRef.current!.children).find(
+          (item) => item.getAttribute('data-id') === workId,
+        ) as HTMLElement | null
+      }
+    }
+
+    scrollToWorkItem(findWorkItem())
   }, [workId, initializing])
 
   const scrollBtnGroup = (

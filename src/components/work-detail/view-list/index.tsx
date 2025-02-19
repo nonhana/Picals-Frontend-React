@@ -551,7 +551,6 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setListEnd}
                 initializing={initializing}
                 setInitializing={setInitializing}
-                virtualList
                 direction='horizontal'
                 length={290}
                 itemLength={90}
@@ -585,7 +584,6 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setRecommendListEnd}
                 initializing={recommendInit}
                 setInitializing={setRecommendInit}
-                virtualList
                 direction='horizontal'
                 length={290}
                 itemLength={90}
@@ -619,7 +617,6 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setLatestListEnd}
                 initializing={latestInit}
                 setInitializing={setLatestInit}
-                virtualList
                 direction='horizontal'
                 length={290}
                 itemLength={90}
@@ -684,7 +681,6 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setAuthorWorkListEnd}
                 initializing={userWorkListInitializing}
                 setInitializing={setUserWorkListInitializing}
-                virtualList
                 direction='horizontal'
                 length={290}
                 itemLength={90}

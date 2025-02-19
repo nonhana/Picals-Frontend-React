@@ -1,5 +1,5 @@
 import { cn } from '@/utils'
-import React, { type CSSProperties, useCallback, useMemo, useState } from 'react'
+import React, { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 
 export interface VirtualListProps {
   direction: 'vertical' | 'horizontal'
@@ -7,7 +7,7 @@ export interface VirtualListProps {
   itemLength: number
   data: any[]
   renderItem: (item: any, index: number) => React.ReactNode
-  ref?: React.RefObject<HTMLDivElement | null>
+  ref?: React.RefObject<(HTMLDivElement & { posData: { id: string; left: number }[] }) | null>
   children?: React.ReactNode
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void
@@ -32,6 +32,15 @@ const VirtualList = ({
     const containableCount = Math.floor(length / itemLength)
     return (length - containableCount * itemLength) / (containableCount - 1)
   }, [length, itemLength])
+
+  useEffect(() => {
+    if (ref && ref.current) {
+      ref.current.posData = data.map((item, index) => ({
+        id: item.id,
+        left: index * (itemLength + gap),
+      }))
+    }
+  }, [data, itemLength, gap, ref])
 
   const visibleMap = useMemo(() => {
     const visibleCount = Math.ceil(length / itemLength) // 比可视区域多渲染一个

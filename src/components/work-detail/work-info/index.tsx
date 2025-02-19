@@ -18,7 +18,7 @@ import type { FavoriteFormInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/uti
 import { Icon } from '@iconify/react'
 import { Button, Divider, Modal, message, Checkbox } from 'antd'
 import type { GetProp } from 'antd'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
@@ -28,7 +28,7 @@ import AnimatedDiv from '@/components/motion/animated-div'
 
 const CheckboxGroup = Checkbox.Group
 
-type WorkInfoProps = {
+interface WorkInfoProps {
   workId: string
   workInfo: WorkDetailInfo
   setWorkInfo: (workInfo: WorkDetailInfo) => void
@@ -43,7 +43,7 @@ type WorkInfoProps = {
   isFinal: boolean
 }
 
-const WorkStatusMark: FC<{ status: number }> = ({ status }) => {
+const WorkStatusMark = ({ status }: { status: number }) => {
   switch (status) {
     case 0:
       return (
@@ -69,7 +69,7 @@ const WorkStatusMark: FC<{ status: number }> = ({ status }) => {
   }
 }
 
-const WorkInfo: FC<WorkInfoProps> = ({
+const WorkInfo = ({
   workId,
   workInfo,
   setWorkInfo,
@@ -79,7 +79,12 @@ const WorkInfo: FC<WorkInfoProps> = ({
   likeWork,
   setAuthorWorkListEnd,
   isFinal,
-}) => {
+}: WorkInfoProps) => {
+  const flattenWorkList = useMemo(
+    () => authorWorkList.map((everyPage) => everyPage.list).flat(),
+    [authorWorkList],
+  )
+
   const workIntro = workInfo.intro
     ? workInfo.intro.split('\n').map((item, index) => (
         <span key={index}>
@@ -447,20 +452,24 @@ const WorkInfo: FC<WorkInfoProps> = ({
                     scrollType='work-detail'
                     setAtBottom={setAuthorWorkListEnd}
                     initializing={initializing}
-                    setInitializing={setInitializing}>
-                    {authorWorkList.map((everyPage) =>
-                      everyPage.list.map((work) => (
-                        <WorkItem
-                          type='little'
-                          animation='opacity-gradient'
-                          key={work.id}
-                          data-id={work.id}
-                          itemInfo={work}
-                          like={likeWork}
-                          onClick={addUserWorks}
-                        />
-                      )),
-                    )}
+                    setInitializing={setInitializing}
+                    /* ↓ 虚拟列表配置 ↓ */
+                    virtualList
+                    data={flattenWorkList}
+                    direction='horizontal'
+                    length={680}
+                    itemLength={118}
+                    renderItem={(item) => (
+                      <WorkItem
+                        type='little'
+                        animation='opacity-gradient'
+                        key={item.id}
+                        data-id={item.id}
+                        itemInfo={item}
+                        like={likeWork}
+                        onClick={addUserWorks}
+                      />
+                    )}>
                     {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
                   </LayoutList>
                 </AnimatedDiv>
