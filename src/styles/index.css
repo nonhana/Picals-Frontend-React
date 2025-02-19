@@ -47,10 +47,6 @@ a {
 }
 
 /* Specific global classes for the project */
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
 .title {
   font-size: 18px;
   font-weight: bold;

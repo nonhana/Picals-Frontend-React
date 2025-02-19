@@ -160,7 +160,7 @@ const LayoutList = ({
     </VirtualList>
   ) : (
     <div
-      className={`relative scrollbar-hidden w-full ${className}`}
+      className={`scrollbar-none relative w-full ${className}`}
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}>
       <div

@@ -2,7 +2,7 @@ import { presetRemToPx } from '@unocss/preset-rem-to-px'
 import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
 import {
   defineConfig,
-  presetUno,
+  presetWind3,
   presetAttributify,
   presetIcons,
   presetTypography,
@@ -10,15 +10,17 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
+import { presetScrollbar } from 'unocss-preset-scrollbar'
 
 export default defineConfig({
   presets: [
     presetRemToPx(),
-    presetUno(),
+    presetWind3(),
     presetAttributify(),
     presetIcons(),
     presetTypography(),
     presetWebFonts(),
+    presetScrollbar(),
   ],
   transformers: [transformerAttributifyJsx(), transformerDirectives(), transformerVariantGroup()],
   rules: [
