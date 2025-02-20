@@ -1,7 +1,7 @@
+import type { RouteObject } from 'react-router'
 import App from '@/app'
 import PersonalCenter from '@/pages/personal-center'
 import { lazy } from 'react'
-import type { RouteObject } from 'react-router'
 import { createBrowserRouter, Navigate } from 'react-router'
 
 import AuthRouter from './utils/auth-router'
@@ -20,7 +20,7 @@ const routeList: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <Navigate to='/home' replace />,
+        element: <Navigate to="/home" replace />,
       },
       {
         path: 'login',
@@ -36,7 +36,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'explore',
-        element: <Navigate to='recommend' replace />,
+        element: <Navigate to="recommend" replace />,
       },
       {
         path: 'explore/:type',
@@ -60,7 +60,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: 'personal-center/:userId',
-        element: <Navigate to='works' replace />,
+        element: <Navigate to="works" replace />,
       },
       {
         path: 'personal-center/:userId',
@@ -102,7 +102,7 @@ const routeList: RouteObject[] = [
       },
       {
         path: '*',
-        element: <Navigate to='/not-found' replace />,
+        element: <Navigate to="/not-found" replace />,
       },
     ],
   },

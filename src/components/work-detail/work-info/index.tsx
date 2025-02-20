@@ -1,5 +1,8 @@
-import { favoriteActionsAPI, userActionsAPI, getUserFavoriteListAPI, newFavoriteAPI } from '@/apis'
 import type { ImageItem } from '@/apis/types'
+import type { AppState } from '@/store/types'
+import type { FavoriteFormInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
+import type { GetProp } from 'antd'
+import { favoriteActionsAPI, getUserFavoriteListAPI, newFavoriteAPI, userActionsAPI } from '@/apis'
 import pixiv from '@/assets/svgs/pixiv.svg'
 import CreateFolderModal from '@/components/common/create-folder-modal'
 import Empty from '@/components/common/empty'
@@ -8,23 +11,20 @@ import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
 import LazyImg from '@/components/common/lazy-img'
 import WorkItem from '@/components/common/work-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { setFavoriteList } from '@/store/modules/favorites'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import { setCurrentList } from '@/store/modules/viewList'
-import { AppState } from '@/store/types'
-import { verifyPixivUser, verifyPixivWork, download } from '@/utils'
-import type { FavoriteFormInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
+import { download, verifyPixivUser, verifyPixivWork } from '@/utils'
 import { Icon } from '@iconify/react'
-import { Button, Divider, Modal, message, Checkbox } from 'antd'
-import type { GetProp } from 'antd'
+import { Button, Checkbox, Divider, message, Modal } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { Link, useNavigate } from 'react-router'
 import Comments from '../comments'
-import AnimatedDiv from '@/components/motion/animated-div'
 
 const CheckboxGroup = Checkbox.Group
 
@@ -43,33 +43,33 @@ interface WorkInfoProps {
   isFinal: boolean
 }
 
-const WorkStatusMark = ({ status }: { status: number }) => {
+function WorkStatusMark({ status }: { status: number }) {
   switch (status) {
     case 0:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full text-sm color-azure'>
+        <span className="flex items-center gap-5px b-2px rd-full b-solid px-2 text-sm color-azure">
           原创作品
-          <Icon width={24} color='#0090F0' icon='material-symbols:edit-outline' />
+          <Icon width={24} color="#0090F0" icon="material-symbols:edit-outline" />
         </span>
       )
     case 1:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full text-sm color-azure'>
+        <span className="flex items-center gap-5px b-2px rd-full b-solid px-2 text-sm color-azure">
           转载作品
-          <Icon width={24} color='#0090F0' icon='material-symbols:school-outline' />
+          <Icon width={24} color="#0090F0" icon="material-symbols:school-outline" />
         </span>
       )
     case 2:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full text-sm color-azure'>
+        <span className="flex items-center gap-5px b-2px rd-full b-solid px-2 text-sm color-azure">
           合集作品
-          <Icon width={24} color='#0090F0' icon='material-symbols:book-outline' />
+          <Icon width={24} color="#0090F0" icon="material-symbols:book-outline" />
         </span>
       )
   }
 }
 
-const WorkInfo = ({
+function WorkInfo({
   workId,
   workInfo,
   setWorkInfo,
@@ -79,15 +79,15 @@ const WorkInfo = ({
   likeWork,
   setAuthorWorkListEnd,
   isFinal,
-}: WorkInfoProps) => {
+}: WorkInfoProps) {
   const flattenWorkList = useMemo(
-    () => authorWorkList.map((everyPage) => everyPage.list).flat(),
+    () => authorWorkList.map(everyPage => everyPage.list).flat(),
     [authorWorkList],
   )
 
   const workIntro = workInfo.intro
-    ? workInfo.intro.split('\n').map((item, index) => (
-        <span key={index}>
+    ? workInfo.intro.split('\n').map(item => (
+        <span key={item}>
           {item}
           <br />
         </span>
@@ -147,24 +147,26 @@ const WorkInfo = ({
       const prevFollowStatus = workInfo.authorInfo.isFollowing
       if (!prevFollowStatus) {
         dispatch(increaseFollowNum())
-      } else {
+      }
+      else {
         dispatch(decreaseFollowNum())
       }
       setWorkInfo({
         ...workInfo,
         authorInfo: { ...workInfo.authorInfo, isFollowing: !workInfo.authorInfo.isFollowing },
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
     setLoading(true)
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false)
     }, 1000)
+    return () => clearTimeout(timer)
   }, [])
 
   // 防止图片列表预览组件因图片列表获取不完全而出现显示错误（setXxx是异步的）
@@ -176,8 +178,9 @@ const WorkInfo = ({
     setImgListVisible(false)
     const result: ImageItem[] = []
     workInfo.imgList.forEach((imgUrl) => {
-      const img = workInfo.images.find((item) => item.originUrl === imgUrl)
-      if (img) result.push(img)
+      const img = workInfo.images.find(item => item.originUrl === imgUrl)
+      if (img)
+        result.push(img)
     })
     setImgList(result)
   }, [workInfo.images])
@@ -214,10 +217,12 @@ const WorkInfo = ({
       const filename = `${workInfo.name}${workInfo.imgList.length > 1 ? `-${index}` : ''}.${suffix}`
       await download(downloadLink, filename)
       messageApi.success(`图片 ${filename} 下载成功`)
-    } catch {
+    }
+    catch {
       messageApi.error('下载失败，请重试')
       return
-    } finally {
+    }
+    finally {
       setGettingBlob(false)
     }
   }
@@ -235,9 +240,9 @@ const WorkInfo = ({
       setCreateFolderModalStatus(false)
       await refreshFavoriteList()
       messageApi.success('新建成功')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
   const cancelAction = () => {
@@ -255,22 +260,25 @@ const WorkInfo = ({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
-        (event.key === 'ArrowUp' || event.key === 'ArrowDown') &&
-        ((imgIndex !== undefined && imgIndex > 0) ||
-          (imgIndex !== undefined && imgIndex < imgList.length - 1) ||
-          imgIndex === undefined)
-      )
+        (event.key === 'ArrowUp' || event.key === 'ArrowDown')
+        && ((imgIndex !== undefined && imgIndex > 0)
+          || (imgIndex !== undefined && imgIndex < imgList.length - 1)
+          || imgIndex === undefined)
+      ) {
         event.preventDefault()
+      }
 
       if (event.key === 'ArrowUp') {
         if (imgIndex !== undefined) {
-          setImgIndex((prev) => (prev! >= imgList.length ? imgList.length - 1 : prev! - 1))
+          setImgIndex(prev => (prev! >= imgList.length ? imgList.length - 1 : prev! - 1))
         }
-      } else if (event.key === 'ArrowDown') {
+      }
+      else if (event.key === 'ArrowDown') {
         if (imgIndex === undefined) {
           setImgIndex(0)
-        } else {
-          setImgIndex((prev) => (prev! < 0 ? 0 : prev! + 1))
+        }
+        else {
+          setImgIndex(prev => (prev! < 0 ? 0 : prev! + 1))
         }
       }
     }
@@ -301,8 +309,8 @@ const WorkInfo = ({
       {msgContextHolder}
       {modalContextHolder}
 
-      <div className='relative bg-white rd-6 p-5 w-180 flex flex-col items-center overflow-hidden'>
-        <div id='work-info' className='w-full'>
+      <div className="relative w-180 flex flex-col items-center overflow-hidden rd-6 bg-white p-5">
+        <div id="work-info" className="w-full">
           {/* 图片列表 */}
           {imgListVisible && (
             <HanaViewer onDownload={downloadImg} gettingBlob={gettingBlob}>
@@ -310,12 +318,13 @@ const WorkInfo = ({
                 style={{
                   width: 'calc(100% + 40px)',
                 }}
-                className='w-full flex m--5 mb-0 flex-col gap-10px items-center'>
-                {imgList.map((img) => (
+                className="m--5 mb-0 w-full flex flex-col items-center gap-10px"
+              >
+                {imgList.map(img => (
                   <PhotoView key={img.id} src={img.originUrl}>
                     <img
                       id={img.id}
-                      className='max-w-full max-h-200 object-contain cursor-pointer'
+                      className="max-h-200 max-w-full cursor-pointer object-contain"
                       style={{
                         width: img.thumbnailWidth || '100%',
                         height:
@@ -333,19 +342,19 @@ const WorkInfo = ({
           )}
           {/* 操作栏 */}
           {isLogin && (
-            <div className='w-full my-5 flex justify-between'>
+            <div className="my-5 w-full flex justify-between">
               <WorkStatusMark status={workInfo.reprintType} />
-              <div className='flex gap-40px'>
+              <div className="flex gap-40px">
                 <Icon
-                  className='cursor-pointer'
-                  width='32px'
+                  className="cursor-pointer"
+                  width="32px"
                   color={workInfo.isLiked ? 'red' : '#3d3d3d'}
                   icon={workInfo.isLiked ? 'ant-design:heart-filled' : 'ant-design:heart-outlined'}
                   onClick={() => likeWork(workInfo.id)}
                 />
                 <Icon
-                  className='cursor-pointer'
-                  width='32px'
+                  className="cursor-pointer"
+                  width="32px"
                   color={workInfo.isCollected ? 'yellow' : '#3d3d3d'}
                   icon={
                     workInfo.isCollected ? 'ant-design:star-filled' : 'ant-design:star-outlined'
@@ -353,17 +362,17 @@ const WorkInfo = ({
                   onClick={() => setCollecting(true)}
                 />
                 <Icon
-                  className='cursor-pointer hidden'
-                  width='32px'
-                  color='#3d3d3d'
-                  icon='ant-design:share-alt-outlined'
+                  className="cursor-pointer hidden"
+                  width="32px"
+                  color="#3d3d3d"
+                  icon="ant-design:share-alt-outlined"
                 />
                 {id === workInfo.authorInfo.id && (
                   <Icon
-                    className='cursor-pointer'
-                    width='32px'
-                    color='#3d3d3d'
-                    icon='ant-design:edit-outlined'
+                    className="cursor-pointer"
+                    width="32px"
+                    color="#3d3d3d"
+                    icon="ant-design:edit-outlined"
                     onClick={handleEdit}
                   />
                 )}
@@ -371,65 +380,77 @@ const WorkInfo = ({
             </div>
           )}
           {/* 作品信息 */}
-          <div className='mt-10px flex flex-col gap-10px'>
-            <div className='flex gap-10px items-center'>
-              <span className='font-bold text-lg color-neutral-900'>{workInfo.name || '无题'}</span>
+          <div className="mt-10px flex flex-col gap-10px">
+            <div className="flex items-center gap-10px">
+              <span className="text-lg color-neutral-900 font-bold">{workInfo.name || '无题'}</span>
             </div>
-            <div className='py-10px text-sm color-neutral line-height-normal'>
+            <div className="py-10px text-sm color-neutral line-height-normal">
               <span>{workIntro}</span>
             </div>
-            <LayoutList scrollType='label'>
-              {workInfo.labels.map((label) => (
+            <LayoutList scrollType="label">
+              {workInfo.labels.map(label => (
                 <LabelItem key={label.id} {...label} />
               ))}
             </LayoutList>
-            <div className='flex justify-between items-start my-3'>
-              <div className='flex gap-20px'>
-                <div className='flex items-center gap-10px font-bold text-sm color-neutral'>
-                  <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
+            <div className="my-3 flex items-start justify-between">
+              <div className="flex gap-20px">
+                <div className="flex items-center gap-10px text-sm color-neutral font-bold">
+                  <Icon width="16px" color="#858585" icon="ant-design:heart-filled" />
                   <span>{workInfo.likeNum}</span>
                 </div>
-                <div className='flex items-center gap-10px font-bold text-sm color-neutral'>
-                  <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
-                  <span> {workInfo.viewNum}</span>
+                <div className="flex items-center gap-10px text-sm color-neutral font-bold">
+                  <Icon width="16px" color="#858585" icon="ant-design:eye-filled" />
+                  <span>
+                    {' '}
+                    {workInfo.viewNum}
+                  </span>
                 </div>
-                <div className='flex items-center gap-10px font-bold text-sm color-neutral'>
-                  <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
+                <div className="flex items-center gap-10px text-sm color-neutral font-bold">
+                  <Icon width="16px" color="#858585" icon="ant-design:star-filled" />
                   <span>{workInfo.collectNum}</span>
                 </div>
               </div>
-              <div className='flex flex-col gap-10px font-italic text-sm color-neutral'>
-                <span>发布日期：{workInfo.createdDate}</span>
-                <span>更新日期：{workInfo.updatedDate}</span>
+              <div className="flex flex-col gap-10px text-sm color-neutral font-italic">
+                <span>
+                  发布日期：
+                  {workInfo.createdDate}
+                </span>
+                <span>
+                  更新日期：
+                  {workInfo.updatedDate}
+                </span>
               </div>
             </div>
           </div>
           {/* 用户信息 */}
-          <div className='w-full my-10px flex flex-col gap-10px items-center'>
-            <div className='w-150 flex justify-between'>
-              <div className='flex gap-20px items-center'>
+          <div className="my-10px w-full flex flex-col items-center gap-10px">
+            <div className="w-150 flex justify-between">
+              <div className="flex items-center gap-20px">
                 <Link
                   to={`/personal-center/${workInfo.authorInfo.id}`}
-                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold text-sm color-neutral-900'>
+                  className="h-10 w-10 cursor-pointer overflow-hidden rd-full text-sm color-neutral-900 font-bold"
+                >
                   <LazyImg src={workInfo.authorInfo.avatar} alt={workInfo.authorInfo.username} />
                 </Link>
                 <Link
-                  className='color-neutral-900'
-                  to={`/personal-center/${workInfo.authorInfo.id}`}>
+                  className="color-neutral-900"
+                  to={`/personal-center/${workInfo.authorInfo.id}`}
+                >
                   {workInfo.authorInfo.username}
                 </Link>
                 {workInfo.authorInfo.id !== id && isLogin && (
                   <Button
-                    shape='round'
-                    size='large'
+                    shape="round"
+                    size="large"
                     type={workInfo.authorInfo.isFollowing ? 'default' : 'primary'}
-                    onClick={handleFollow}>
+                    onClick={handleFollow}
+                  >
                     {workInfo.authorInfo.isFollowing ? '已关注' : '关注'}
                   </Button>
                 )}
               </div>
               <Link to={`/personal-center/${workInfo.authorInfo.id}`}>
-                <Button shape='round' size='large' type='default'>
+                <Button shape="round" size="large" type="default">
                   查看作品列表
                 </Button>
               </Link>
@@ -441,34 +462,36 @@ const WorkInfo = ({
                 height: 0,
                 padding: currentList === 'userWorkList' ? '59px 0 ' : '0',
               }}
-              className='w-full relative transition-duration-300'>
+              className="relative w-full transition-duration-300"
+            >
               {currentList === 'userWorkList' && (
-                <AnimatedDiv type='opacity-gradient' className='mt--59px'>
+                <AnimatedDiv type="opacity-gradient" className="mt--59px">
                   <LayoutList
                     workId={workId}
-                    type='work-detail'
-                    scrollType='work-detail'
+                    type="work-detail"
+                    scrollType="work-detail"
                     setAtBottom={setAuthorWorkListEnd}
                     initializing={initializing}
                     setInitializing={setInitializing}
                     /* ↓ 虚拟列表配置 ↓ */
                     virtualList
                     data={flattenWorkList}
-                    direction='horizontal'
+                    direction="horizontal"
                     length={680}
                     itemLength={118}
-                    renderItem={(item) => (
+                    renderItem={item => (
                       <WorkItem
-                        type='little'
-                        animation='opacity-gradient'
+                        type="little"
+                        animation="opacity-gradient"
                         key={item.id}
                         data-id={item.id}
                         itemInfo={item}
                         like={likeWork}
                         onClick={addUserWorks}
                       />
-                    )}>
-                    {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-118px h-118px rd-1' />}
+                    )}
+                  >
+                    {!isFinal && <ImgLoadingSkeleton className="h-118px w-118px shrink-0 rd-1" />}
                   </LayoutList>
                 </AnimatedDiv>
               )}
@@ -476,45 +499,50 @@ const WorkInfo = ({
           </div>
           {/* 原作信息 */}
           {workInfo.reprintType !== 0 && (
-            <div className='bg-neutral-100 relative p-5 w-full rd-1'>
+            <div className="relative w-full rd-1 bg-neutral-100 p-5">
               {workInfo.reprintType === 1 && (
                 <>
-                  <div className='flex justify-between items-center'>
-                    <span className='text-lg font-bold color-neutral-900'>原作品地址</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg color-neutral-900 font-bold">原作品地址</span>
                     {verifyPixivWork(workInfo.workUrl!) && (
-                      <img className='w-15' src={pixiv} alt='pixiv' />
+                      <img className="w-15" src={pixiv} alt="pixiv" />
                     )}
                   </div>
-                  <div className='my-10px flex gap-20px items-center'>
-                    <Link to={workInfo.workUrl!} target='_blank'>
+                  <div className="my-10px flex items-center gap-20px">
+                    <Link to={workInfo.workUrl!} target="_blank">
                       {workInfo.workUrl}
                     </Link>
                   </div>
                   <Divider />
                 </>
               )}
-              <div className='flex justify-between items-center'>
-                <div className='flex items-center gap-10px'>
-                  <span className='text-lg font-bold color-neutral-900'>原作者信息</span>
-                  <span className='text-sm color-neutral'>
-                    目前收录 {workInfo.illustrator!.workCount} 个作品
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-10px">
+                  <span className="text-lg color-neutral-900 font-bold">原作者信息</span>
+                  <span className="text-sm color-neutral">
+                    目前收录
+                    {' '}
+                    {workInfo.illustrator!.workCount}
+                    {' '}
+                    个作品
                   </span>
                 </div>
                 {verifyPixivUser(workInfo.illustrator!.homeUrl) && (
-                  <img className='w-15' src={pixiv} alt='pixiv' />
+                  <img className="w-15" src={pixiv} alt="pixiv" />
                 )}
               </div>
-              <div className='mt-10px flex items-center justify-between'>
-                <div className='flex gap-20px items-center'>
+              <div className="mt-10px flex items-center justify-between">
+                <div className="flex items-center gap-20px">
                   <Link
                     to={`/illustrator/${workInfo.illustrator!.id}`}
-                    target='_blank'
-                    className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold text-sm color-neutral-900'>
+                    target="_blank"
+                    className="relative h-10 w-10 cursor-pointer overflow-hidden rd-full text-sm color-neutral-900 font-bold"
+                  >
                     <img
-                      className='w-full h-full object-cover'
+                      className="h-full w-full object-cover"
                       src={
-                        workInfo.illustrator!.avatar ||
-                        `https://fakeimg.pl/400x400?font=noto&text=${workInfo.illustrator!.name}`
+                        workInfo.illustrator!.avatar
+                        || `https://fakeimg.pl/400x400?font=noto&text=${workInfo.illustrator!.name}`
                       }
                       alt={workInfo.illustrator!.name}
                     />
@@ -527,55 +555,64 @@ const WorkInfo = ({
             </div>
           )}
         </div>
-        {isLogin &&
-          (workInfo.openComment ? (
-            <>
-              <Divider />
-              {/* 评论 */}
-              <Comments loading={loading} totalCount={workInfo.commentNum} />
-            </>
-          ) : (
-            <Empty showImg={false} text='该用户已关闭评论' />
-          ))}
+        {isLogin
+          && (
+            workInfo.openComment
+              ? (
+                  <>
+                    <Divider />
+                    {/* 评论 */}
+                    <Comments loading={loading} totalCount={workInfo.commentNum} />
+                  </>
+                )
+              : <Empty showImg={false} text="该用户已关闭评论" />
+          )}
       </div>
 
       <Modal
-        className='scrollbar-none '
-        title='选择想要收藏的收藏夹'
-        width='420px'
+        className="scrollbar-none"
+        title="选择想要收藏的收藏夹"
+        width="420px"
         open={collecting}
-        okText='确认'
-        cancelText='取消'
+        okText="确认"
+        cancelText="取消"
         onOk={() => collectConfirm()}
         onCancel={cancelCollect}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
-            <Button type='primary' onClick={() => setCreateFolderModalStatus(true)}>
+            <Button type="primary" onClick={() => setCreateFolderModalStatus(true)}>
               新建收藏夹
             </Button>
             <CancelBtn />
             <OkBtn />
           </>
-        )}>
-        {favoriteList.length !== 0 ? (
-          <div className='h-110 overflow-y-scroll'>
-            <CheckboxGroup className='w-full' onChange={onChooseFolder} value={folderIds}>
-              {favoriteList.map((item) => (
-                <Checkbox
-                  key={item.id}
-                  value={item.id}
-                  className='w-full h-15 px-5 flex justify-between items-center'>
-                  <div className='w-70 flex justify-between'>
-                    <span>{item.name}</span>
-                    <span>作品数：{item.workNum}</span>
-                  </div>
-                </Checkbox>
-              ))}
-            </CheckboxGroup>
-          </div>
-        ) : (
-          <Empty text='暂无收藏夹' />
         )}
+      >
+        {favoriteList.length !== 0
+          ? (
+              <div className="h-110 overflow-y-scroll">
+                <CheckboxGroup className="w-full" onChange={onChooseFolder} value={folderIds}>
+                  {favoriteList.map(item => (
+                    <Checkbox
+                      key={item.id}
+                      value={item.id}
+                      className="h-15 w-full flex items-center justify-between px-5"
+                    >
+                      <div className="w-70 flex justify-between">
+                        <span>{item.name}</span>
+                        <span>
+                          作品数：
+                          {item.workNum}
+                        </span>
+                      </div>
+                    </Checkbox>
+                  ))}
+                </CheckboxGroup>
+              </div>
+            )
+          : (
+              <Empty text="暂无收藏夹" />
+            )}
       </Modal>
 
       <CreateFolderModal

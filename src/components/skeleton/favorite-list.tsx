@@ -1,7 +1,8 @@
-import { FC, Fragment } from 'react'
+import type { FC } from 'react'
+import { Fragment } from 'react'
 import ContentLoader from 'react-content-loader'
 
-type FavoriteListSkeletonProps = {
+interface FavoriteListSkeletonProps {
   row?: number
   borderRadius?: number
   [key: string]: any
@@ -33,7 +34,7 @@ const FavoriteListSkeleton: FC<FavoriteListSkeletonProps> = ({
 
     list.push(
       <Fragment key={i}>
-        <rect x={avatarX} y={avatarY} rx='50%' width={avatarSize} height={avatarSize} />
+        <rect x={avatarX} y={avatarY} rx="50%" width={avatarSize} height={avatarSize} />
         <rect
           x={usernameX}
           y={usernameY}

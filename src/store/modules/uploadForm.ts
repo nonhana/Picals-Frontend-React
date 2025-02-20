@@ -35,5 +35,5 @@ const { saveImgList, saveFormInfo, saveUploadSuccess } = uploadFormStore.actions
 const uploadFormReducer = uploadFormStore.reducer
 
 // 导出
-export { saveImgList, saveFormInfo, saveUploadSuccess }
+export { saveFormInfo, saveImgList, saveUploadSuccess }
 export default uploadFormReducer

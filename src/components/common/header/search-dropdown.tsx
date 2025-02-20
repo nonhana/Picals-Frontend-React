@@ -1,14 +1,15 @@
+import type { AppState } from '@/store/types'
+import type { LabelInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { getRecommendLabelListAPI } from '@/apis'
 import LayoutList from '@/components/common/layout-list'
 import { clear } from '@/store/modules/searchHistory'
-import type { AppState } from '@/store/types'
-import type { LabelInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
-import { Modal, message } from 'antd'
-import { FC, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router'
+import { message, Modal } from 'antd'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router'
 
 import Empty from '../empty'
 import LabelImgItem from '../label-img-item'
@@ -49,9 +50,9 @@ const SearchDropdown: FC<{
     try {
       const { data } = await getRecommendLabelListAPI()
       setPopularLabels(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -69,7 +70,7 @@ const SearchDropdown: FC<{
       <AnimatePresence>
         {visible && (
           <motion.div
-            className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
+            className="fixed left-0 top-0 z-1999 h-full w-full bg-black bg-opacity-32"
             onClick={() => setVisible(false)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -84,12 +85,13 @@ const SearchDropdown: FC<{
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}>
-            <div className='m-b-5'>
-              <div className='w-full p-10px flex justify-between items-center'>
-                <span className='font-bold text-sm color-neutral'>历史记录</span>
+            transition={{ duration: 0.3 }}
+          >
+            <div className="m-b-5">
+              <div className="w-full flex items-center justify-between p-10px">
+                <span className="text-sm color-neutral font-bold">历史记录</span>
                 <span
-                  className='text-sm color-neutral cursor-pointer'
+                  className="cursor-pointer text-sm color-neutral"
                   onClick={() => {
                     modal.confirm({
                       title: '确定要清空历史记录吗？',
@@ -104,65 +106,73 @@ const SearchDropdown: FC<{
                         </>
                       ),
                     })
-                  }}>
+                  }}
+                >
                   清除历史记录
                 </span>
               </div>
-              {historyList.length === 0 ? (
-                <div className='relative mx-10px'>
-                  <Empty showImg={false} />
-                </div>
-              ) : (
-                <ul className='list-none m-0 p-0 max-h-40 overflow-y-scroll'>
-                  {historyList.map((item) => (
-                    <li key={item}>
-                      <Link
-                        to={`/search-result?label=${item}&type=work&sortType=new`}
-                        onClick={() => setKeyword(item)}
-                        className='cursor-pointer p-10px flex justify-between items-center text-sm color-neutral hover:bg-neutral-100 transition-duration-300'>
-                        <span>{item}</span>
-                        <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {historyList.length === 0
+                ? (
+                    <div className="relative mx-10px">
+                      <Empty showImg={false} />
+                    </div>
+                  )
+                : (
+                    <ul className="m-0 max-h-40 list-none overflow-y-scroll p-0">
+                      {historyList.map(item => (
+                        <li key={item}>
+                          <Link
+                            to={`/search-result?label=${item}&type=work&sortType=new`}
+                            onClick={() => setKeyword(item)}
+                            className="flex cursor-pointer items-center justify-between p-10px text-sm color-neutral transition-duration-300 hover:bg-neutral-100"
+                          >
+                            <span>{item}</span>
+                            <Icon width="20px" color="#858585" icon="ant-design:export-outlined" />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
             </div>
 
             {isLogin && (
-              <div className='relative m-b-5'>
-                <div className='w-full p-10px font-bold text-sm color-neutral'>
+              <div className="relative m-b-5">
+                <div className="w-full p-10px text-sm color-neutral font-bold">
                   <span>喜欢的标签</span>
                 </div>
-                {likedLabels.length === 0 ? (
-                  <div className='relative mx-10px'>
-                    <Empty showImg={false} />
-                  </div>
-                ) : (
-                  <LayoutList className='px-10px' scrollType='label'>
-                    {likedLabels.map((item) => (
-                      <LabelItem key={item.id} {...item} />
-                    ))}
-                  </LayoutList>
-                )}
+                {likedLabels.length === 0
+                  ? (
+                      <div className="relative mx-10px">
+                        <Empty showImg={false} />
+                      </div>
+                    )
+                  : (
+                      <LayoutList className="px-10px" scrollType="label">
+                        {likedLabels.map(item => (
+                          <LabelItem key={item.id} {...item} />
+                        ))}
+                      </LayoutList>
+                    )}
               </div>
             )}
 
-            <div className='relative m-b-5'>
-              <div className='w-full p-10px font-bold text-sm color-neutral'>
+            <div className="relative m-b-5">
+              <div className="w-full p-10px text-sm color-neutral font-bold">
                 <span>最近流行的插画标签</span>
               </div>
-              {popularLabels.length === 0 ? (
-                <div className='relative mx-10px'>
-                  <Empty showImg={false} />
-                </div>
-              ) : (
-                <LayoutList className='px-10px' scrollType='label-img'>
-                  {popularLabels.map((item) => (
-                    <LabelImgItem key={item.id} {...item} />
-                  ))}
-                </LayoutList>
-              )}
+              {popularLabels.length === 0
+                ? (
+                    <div className="relative mx-10px">
+                      <Empty showImg={false} />
+                    </div>
+                  )
+                : (
+                    <LayoutList className="px-10px" scrollType="label-img">
+                      {popularLabels.map(item => (
+                        <LabelImgItem key={item.id} {...item} />
+                      ))}
+                    </LayoutList>
+                  )}
             </div>
           </motion.div>
         )}

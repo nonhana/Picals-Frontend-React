@@ -1,23 +1,24 @@
-import logo from '@/assets/svgs/logo.svg'
 import type { AppState } from '@/store/types'
-import { SIDEBAR_WHITE_LIST, TRIGGER_MIN_WIDTH, TRIGGER_MAX_WIDTH } from '@/utils/constants'
-import { Icon } from '@iconify/react'
-import { Input, Button, message } from 'antd'
 import type { InputRef } from 'antd'
+import type { FC } from 'react'
+import logo from '@/assets/svgs/logo.svg'
+import { SIDEBAR_WHITE_LIST, TRIGGER_MAX_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils/constants'
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons'
-import { FC, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Link, useNavigate, useLocation, useSearchParams } from 'react-router'
+import { Icon } from '@iconify/react'
+import { Button, Input, message } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import { useSelector } from 'react-redux'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router'
 
+import LazyImg from '../lazy-img'
 import SearchDropdown from './search-dropdown'
 import Sidebar from './sidebar'
 import UserDropdown from './user-dropdown'
-import LazyImg from '../lazy-img'
 
 const { Search } = Input
 
-type HeaderProps = {
+interface HeaderProps {
   width: number
   changeSideBarStatus: (status: boolean) => void
   setNaturalSideBarVisible: (status: boolean) => void
@@ -42,7 +43,8 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
   }, [location])
 
   useEffect(() => {
-    if (!SIDEBAR_WHITE_LIST.test(location.pathname)) return
+    if (!SIDEBAR_WHITE_LIST.test(location.pathname))
+      return
     if (width < TRIGGER_MIN_WIDTH) {
       setShowSidebar(false)
       setNaturalSideBarVisible(false)
@@ -77,92 +79,99 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
   }
 
   const toUpload = () => {
-    if (location.pathname === '/upload') return
+    if (location.pathname === '/upload')
+      return
     navigate('/upload')
   }
 
   return (
-    <div className='relative w-full'>
+    <div className="relative w-full">
       <Icon
-        className='fixed cursor-pointer z-1 left-10 h-16'
+        className="fixed left-10 z-1 h-16 cursor-pointer"
         width={24}
-        color='#858585'
-        icon='ant-design:menu-outlined'
+        color="#858585"
+        icon="ant-design:menu-outlined"
         onClick={() => setShowSidebar(true)}
       />
 
       <div
         style={{ zIndex: showSearchDropdown ? 2000 : 0 }}
-        className='select-none relative flex justify-between items-center w-full h-16 bg-white px-10'>
+        className="relative h-16 w-full flex select-none items-center justify-between bg-white px-10"
+      >
         <img
           onClick={() => {
             navigate('/home')
           }}
-          className='ml-34px h-10 cursor-pointer'
+          className="ml-34px h-10 cursor-pointer"
           src={logo}
-          alt='picals-logo'
+          alt="picals-logo"
         />
 
-        <div className='absolute w-30% top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block'>
+        <div className="absolute left-1/2 top-1/2 w-30% hidden md:block -translate-x-1/2 -translate-y-1/2">
           <Search
             ref={searchRef}
-            size='large'
-            placeholder='请输入你想搜索的内容呀~'
+            size="large"
+            placeholder="请输入你想搜索的内容呀~"
             allowClear
             value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            onChange={e => setKeyword(e.target.value)}
             onFocus={() => setShowSearchDropdown(true)}
-            onSearch={(value) => handleSearch(value)}
+            onSearch={value => handleSearch(value)}
           />
         </div>
 
-        <div className='flex items-center gap-5'>
-          <Link to='https://github.com/nonhana/Picals-Frontend-React' target='_blank'>
-            <Icon width={32} color='#858585' icon='ant-design:github-filled' />
+        <div className="flex items-center gap-5">
+          <Link to="https://github.com/nonhana/Picals-Frontend-React" target="_blank">
+            <Icon width={32} color="#858585" icon="ant-design:github-filled" />
           </Link>
           <Button
-            shape='circle'
-            type='default'
-            size='middle'
+            shape="circle"
+            type="default"
+            size="middle"
             icon={<SearchOutlined />}
-            className='block md:hidden'
+            className="block md:hidden"
           />
 
           {isLogin && (
             <Button
               shape={isMobile ? 'circle' : 'round'}
-              type='default'
-              size='middle'
+              type="default"
+              size="middle"
               icon={<UploadOutlined />}
-              onClick={toUpload}>
-              <span className='color-neutral hidden md:block'>转载/投稿作品</span>
+              onClick={toUpload}
+            >
+              <span className="color-neutral hidden md:block">转载/投稿作品</span>
             </Button>
           )}
-          {isLogin ? (
-            <div
-              className='w-10 h-10 rd-20 flex items-center justify-center overflow-hidden cursor-pointer'
-              onClick={() => setShowUserDropdown(!showUserDropdown)}>
-              <LazyImg src={userInfo.littleAvatar} alt='avatar' />
-            </div>
-          ) : (
-            <Link
-              to='/login'
-              className='w-10 h-10 rounded-full flex items-center justify-center cursor-pointer color-white text-sm bg-neutral-100grey'>
-              <span>登录</span>
-            </Link>
-          )}
+          {isLogin
+            ? (
+                <div
+                  className="h-10 w-10 flex cursor-pointer items-center justify-center overflow-hidden rd-20"
+                  onClick={() => setShowUserDropdown(!showUserDropdown)}
+                >
+                  <LazyImg src={userInfo.littleAvatar} alt="avatar" />
+                </div>
+              )
+            : (
+                <Link
+                  to="/login"
+                  className="bg-neutral-100grey h-10 w-10 flex cursor-pointer items-center justify-center rounded-full text-sm color-white"
+                >
+                  <span>登录</span>
+                </Link>
+              )}
         </div>
       </div>
 
       <Sidebar
-        className='top-0 left-0'
+        className="left-0 top-0"
         width={width}
         visible={showSidebar}
         setVisible={setShowSidebar}
       />
 
       <SearchDropdown
-        className='top-16 left-1/2 -translate-x-1/2'
+        className="left-1/2 top-16 -translate-x-1/2"
         visible={showSearchDropdown}
         setVisible={setShowSearchDropdown}
         setKeyword={setKeyword}
@@ -170,7 +179,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
 
       {isLogin && (
         <UserDropdown
-          className='top-16 right-10'
+          className="right-10 top-16"
           visible={showUserDropdown}
           setVisible={setShowUserDropdown}
         />

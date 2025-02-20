@@ -2,16 +2,19 @@ import { debounce } from 'lodash'
 import { useEffect, useState } from 'react'
 
 // 判断是否在顶部
-const useAtTop = (): boolean => {
+function useAtTop(): boolean {
   const [isTop, setIsTop] = useState(true)
   useEffect(() => {
     const handleScroll = debounce(() => {
       const scrollTop = document.body.scrollTop // 滚动高度
       if (scrollTop <= 0) {
-        if (isTop) return
+        if (isTop)
+          return
         setIsTop(true)
-      } else {
-        if (!isTop) return
+      }
+      else {
+        if (!isTop)
+          return
         setIsTop(false)
       }
     }, 50)
@@ -23,13 +26,14 @@ const useAtTop = (): boolean => {
   return isTop
 }
 
-const useAtTopNoRerender = (eventCallback: (isTop: boolean) => void) => {
+function useAtTopNoRerender(eventCallback: (isTop: boolean) => void) {
   useEffect(() => {
     const handleScroll = debounce(() => {
       const scrollTop = document.body.scrollTop
       if (scrollTop <= 0) {
         eventCallback(true)
-      } else {
+      }
+      else {
         eventCallback(false)
       }
     }, 50)

@@ -1,4 +1,7 @@
-import { labelActionsAPI, getRecommendLabelListAPI } from '@/apis'
+import type { AppState } from '@/store/types'
+import type { LabelDetailInfo, LabelInfo as LabelInfoType } from '@/utils/types'
+import type { FC } from 'react'
+import { getRecommendLabelListAPI, labelActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
@@ -6,12 +9,10 @@ import LazyImg from '@/components/common/lazy-img'
 import AnimatedDiv from '@/components/motion/animated-div'
 import LabelListSkeleton from '@/components/skeleton/label-list'
 import { addLikedLabel, removeLikedLabel } from '@/store/modules/user'
-import type { AppState } from '@/store/types'
 import { isWarmHue } from '@/utils'
-import type { LabelDetailInfo, LabelInfo } from '@/utils/types'
 import { Button } from 'antd'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 type LabelInfoProps = LabelDetailInfo & {
@@ -27,27 +28,30 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
       await labelActionsAPI({ id })
       if (isMyLike) {
         dispatch(removeLikedLabel(id))
-      } else {
+      }
+      else {
         dispatch(addLikedLabel({ id, name, color, cover }))
       }
       like()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
-  const [labelList, setLabelList] = useState<LabelInfo[]>([])
+  const [labelList, setLabelList] = useState<LabelInfoType[]>([])
   const [loading, setLoading] = useState(true)
 
   const getRecommendLabelList = async () => {
     setLoading(true)
     try {
       const { data } = await getRecommendLabelListAPI()
-      setLabelList(data.filter((item) => item.id !== id))
-    } catch (error) {
+      setLabelList(data.filter(item => item.id !== id))
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -57,45 +61,47 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
   }, [id])
 
   return (
-    <div className='relative w-full flex flex-col mb-30px'>
-      <div className='w-full flex justify-between mb-20px items-center'>
-        <div className='flex gap-5'>
-          <div className='w-30 h-30 rd-2 b-solid b-2px b-white overflow-hidden'>
+    <div className="relative mb-30px w-full flex flex-col">
+      <div className="mb-20px w-full flex items-center justify-between">
+        <div className="flex gap-5">
+          <div className="h-30 w-30 overflow-hidden b-2px b-white rd-2 b-solid">
             <LazyImg
               src={
-                cover ||
-                `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
+                cover
+                || `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
               }
               alt={name}
             />
           </div>
-          <div className='flex flex-col gap-5 color-neutral-900 text-2xl font-bold'>
+          <div className="flex flex-col gap-5 text-2xl color-neutral-900 font-bold">
             <div>
               <span>{name}</span>
             </div>
             <div>
               <span>{workCount}</span>
-              <span className='font-normal text-2xl'>作品</span>
+              <span className="text-2xl font-normal">作品</span>
             </div>
           </div>
         </div>
-        {isLogin &&
-          (isMyLike ? (
-            <Button type='default' size='large' shape='round' onClick={handleLike}>
-              移除喜欢的标签
-            </Button>
-          ) : (
-            <Button type='primary' size='large' shape='round' onClick={handleLike}>
-              添加喜欢的标签
-            </Button>
-          ))}
+        {isLogin
+          && (isMyLike
+            ? (
+                <Button type="default" size="large" shape="round" onClick={handleLike}>
+                  移除喜欢的标签
+                </Button>
+              )
+            : (
+                <Button type="primary" size="large" shape="round" onClick={handleLike}>
+                  添加喜欢的标签
+                </Button>
+              ))}
       </div>
-      <div className='relative w-full min-h-10'>
+      <div className="relative min-h-10 w-full">
         <AnimatePresence>
           {labelList.length !== 0 && !loading && (
-            <AnimatedDiv type='opacity-gradient'>
-              <LayoutList scrollType='label'>
-                {labelList.map((item) => (
+            <AnimatedDiv type="opacity-gradient">
+              <LayoutList scrollType="label">
+                {labelList.map(item => (
                   <LabelItem key={item.id} {...item} />
                 ))}
               </LayoutList>
@@ -103,14 +109,14 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
           )}
 
           {labelList.length === 0 && !loading && (
-            <AnimatedDiv type='opacity-gradient'>
+            <AnimatedDiv type="opacity-gradient">
               <Empty showImg={false} />
             </AnimatedDiv>
           )}
 
           {labelList.length === 0 && loading && (
-            <AnimatedDiv type='opacity-gradient'>
-              <LabelListSkeleton className='absolute top-0' />
+            <AnimatedDiv type="opacity-gradient">
+              <LabelListSkeleton className="absolute top-0" />
             </AnimatedDiv>
           )}
         </AnimatePresence>

@@ -1,6 +1,7 @@
+import type { FC } from 'react'
 import { PersonalContext } from '@/pages/personal-center'
 import { message } from 'antd'
-import { FC, useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 const PersonalPage: FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -14,7 +15,8 @@ const PersonalPage: FC<{ children: React.ReactNode }> = ({ children }) => {
     }
   }, [isMe, navigate])
 
-  if (isMe) return <>{children}</>
+  if (isMe)
+    return <>{children}</>
   return null
 }
 

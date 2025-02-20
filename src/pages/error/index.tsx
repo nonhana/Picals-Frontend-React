@@ -1,24 +1,24 @@
+import type { FallbackProps } from 'react-error-boundary'
 import ErrorImg from '@/assets/imgs/500.png'
 import HanaCard from '@/components/common/hana-card'
 import LazyImg from '@/components/common/lazy-img'
 import { Button } from 'antd'
-import type { FallbackProps } from 'react-error-boundary'
 import { useNavigate } from 'react-router'
 
-const Error = ({ error }: FallbackProps) => {
+function Error({ error }: FallbackProps) {
   const navigate = useNavigate()
   return (
-    <div className='w-screen h-screen bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
+    <div className="h-screen w-screen from-#e6f9ff to-#f5f5f5 bg-gradient-to-b">
       <HanaCard>
-        <div className='w-250px h-250px rd-6 overflow-hidden'>
-          <LazyImg src={ErrorImg} alt='ErrorImg' />
+        <div className="h-250px w-250px overflow-hidden rd-6">
+          <LazyImg src={ErrorImg} alt="ErrorImg" />
         </div>
         <span>页面发生错误：</span>
-        <div className='bg-neutral-100 relative p-5 rd-1 text-sm color-red'>
+        <div className="relative rd-1 bg-neutral-100 p-5 text-sm color-red">
           <span>{error.message}</span>
         </div>
         <span>请向管理员汇报~！</span>
-        <Button className='w-50' shape='round' size='large' onClick={() => navigate('/home')}>
+        <Button className="w-50" shape="round" size="large" onClick={() => navigate('/home')}>
           返回首页
         </Button>
       </HanaCard>

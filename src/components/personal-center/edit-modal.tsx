@@ -1,10 +1,11 @@
-import { updateUserInfoAPI, uploadSingleImageAPI } from '@/apis'
 import type { IUpdateUserInfoReq } from '@/apis/user/types'
-import { base64ToFile, MAX_INFO_SIZE } from '@/utils'
 import type { UserDetailInfo } from '@/utils/types'
+import type { FC } from 'react'
+import { updateUserInfoAPI, uploadSingleImageAPI } from '@/apis'
+import { base64ToFile, MAX_INFO_SIZE } from '@/utils'
 import { Icon } from '@iconify/react'
-import { Input, Button, message, Radio } from 'antd'
-import { FC, useEffect, useState, useRef } from 'react'
+import { Button, Input, message, Radio } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 
 import HanaCropper from '../common/hana-cropper'
 import HanaModal from '../common/hana-modal'
@@ -13,7 +14,7 @@ import AnimatedDiv from '../motion/animated-div'
 
 const { TextArea } = Input
 
-type EditModalProps = {
+interface EditModalProps {
   visible: boolean
   setVisible: (visible: boolean) => void
   onConfirm: () => void
@@ -29,7 +30,8 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       username: info.username,
       gender: info.gender,
     }
-    if (info.background_img) editInfo.backgroundImg = info.background_img
+    if (info.background_img)
+      editInfo.backgroundImg = info.background_img
     setEditUserInfo(editInfo)
   }, [info])
 
@@ -64,10 +66,12 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       const { data } = await uploadSingleImageAPI({ image: file })
       setEditUserInfo({ ...editUserInfo, backgroundImg: data })
       message.success('修改背景图片成功！')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setLoading(false)
       setBgCropperVisible(false)
     }
@@ -75,7 +79,8 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
 
   // 当裁剪框消失时，清空背景图片文件
   useEffect(() => {
-    if (!bgCropperVisible) setBgImgFile(null)
+    if (!bgCropperVisible)
+      setBgImgFile(null)
   }, [bgCropperVisible])
 
   const avatarInput = useRef<HTMLInputElement | null>(null)
@@ -107,17 +112,20 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       const { data } = await uploadSingleImageAPI({ image: file })
       setEditUserInfo({ ...editUserInfo, avatar: data })
       message.success('修改头像成功！')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setLoading(false)
       setAvatarCropperVisible(false)
     }
   }
   // 当裁剪框消失时，清空头像文件
   useEffect(() => {
-    if (!avatarCropperVisible) setAvatarFile(null)
+    if (!avatarCropperVisible)
+      setAvatarFile(null)
   }, [avatarCropperVisible])
 
   // 更新用户信息
@@ -126,20 +134,26 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       setLoading(true)
 
       const requestInfo: IUpdateUserInfoReq = {}
-      if (editUserInfo.avatar !== info.littleAvatar) requestInfo.avatar = editUserInfo.avatar
+      if (editUserInfo.avatar !== info.littleAvatar)
+        requestInfo.avatar = editUserInfo.avatar
       if (editUserInfo.backgroundImg !== info.background_img)
         requestInfo.backgroundImg = editUserInfo.backgroundImg
-      if (editUserInfo.username !== info.username) requestInfo.username = editUserInfo.username
-      if (editUserInfo.signature !== info.intro) requestInfo.signature = editUserInfo.signature
-      if (editUserInfo.gender !== info.gender) requestInfo.gender = editUserInfo.gender
+      if (editUserInfo.username !== info.username)
+        requestInfo.username = editUserInfo.username
+      if (editUserInfo.signature !== info.intro)
+        requestInfo.signature = editUserInfo.signature
+      if (editUserInfo.gender !== info.gender)
+        requestInfo.gender = editUserInfo.gender
 
       await updateUserInfoAPI(requestInfo)
       onConfirm()
       message.success('修改个人资料成功！')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setLoading(false)
       setVisible(false)
     }
@@ -147,108 +161,118 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
 
   return (
     <>
-      <HanaModal title='编辑个人资料' visible={visible} setVisible={setVisible}>
+      <HanaModal title="编辑个人资料" visible={visible} setVisible={setVisible}>
         <>
-          <div className='relative w-full h-63'>
-            <input type='file' className='hidden' ref={bgImgInput} onChange={bgImgFileChange} />
-            {editUserInfo.backgroundImg ? (
-              <div
-                className='w-full h-full cursor-pointer'
-                onMouseEnter={() => setBgHovering(true)}
-                onMouseLeave={() => setBgHovering(false)}>
-                {bgHovering && (
-                  <AnimatedDiv
-                    type='opacity-gradient'
-                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white text-sm z-1'
-                    onClick={chooseBgImgFile}>
-                    <span>重新更改背景图片</span>
-                  </AnimatedDiv>
+          <div className="relative h-63 w-full">
+            <input type="file" className="hidden" ref={bgImgInput} onChange={bgImgFileChange} />
+            {editUserInfo.backgroundImg
+              ? (
+                  <div
+                    className="h-full w-full cursor-pointer"
+                    onMouseEnter={() => setBgHovering(true)}
+                    onMouseLeave={() => setBgHovering(false)}
+                  >
+                    {bgHovering && (
+                      <AnimatedDiv
+                        type="opacity-gradient"
+                        className="absolute left-0 top-0 z-1 h-full w-full flex items-center justify-center bg-black bg-opacity-32 text-sm color-white"
+                        onClick={chooseBgImgFile}
+                      >
+                        <span>重新更改背景图片</span>
+                      </AnimatedDiv>
+                    )}
+                    <LazyImg src={editUserInfo.backgroundImg} alt="background" />
+                  </div>
+                )
+              : (
+                  <div
+                    className="h-full flex cursor-pointer items-center justify-center bg-neutral-50 transition-all duration-300 hover:bg-neutral-50"
+                    onClick={chooseBgImgFile}
+                  >
+                    <div className="flex flex-col items-center text-sm color-neutral font-bold">
+                      <Icon color="#858585" width="48px" icon="ant-design:edit-filled" />
+                      <span>上传背景图</span>
+                    </div>
+                  </div>
                 )}
-                <LazyImg src={editUserInfo.backgroundImg} alt='background' />
-              </div>
-            ) : (
-              <div
-                className='bg-neutral-50 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-50'
-                onClick={chooseBgImgFile}>
-                <div className='flex flex-col items-center color-neutral text-sm font-bold'>
-                  <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
-                  <span>上传背景图</span>
-                </div>
-              </div>
-            )}
           </div>
-          <div className='relative p-5 flex flex-col gap-5'>
-            <div className='flex items-center gap-5'>
+          <div className="relative flex flex-col gap-5 p-5">
+            <div className="flex items-center gap-5">
               <input
-                type='file'
-                className='hidden'
+                type="file"
+                className="hidden"
                 ref={avatarInput}
                 onChange={avatarImgFileChange}
               />
-              <span className='color-neutral-900 text-sm font-bold'>个人头像</span>
+              <span className="text-sm color-neutral-900 font-bold">个人头像</span>
               <div
-                className='relative w-24 h-24 rd-full overflow-hidden flex justify-center items-center cursor-pointer'
+                className="relative h-24 w-24 flex cursor-pointer items-center justify-center overflow-hidden rd-full"
                 onMouseEnter={() => setAvatarHovering(true)}
-                onMouseLeave={() => setAvatarHovering(false)}>
+                onMouseLeave={() => setAvatarHovering(false)}
+              >
                 {avatarHovering && (
                   <AnimatedDiv
-                    type='opacity-gradient'
-                    className='absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-32 color-white text-sm z-1'
-                    onClick={chooseAvatarFile}>
+                    type="opacity-gradient"
+                    className="absolute left-0 top-0 z-1 h-full w-full flex items-center justify-center bg-black bg-opacity-32 text-sm color-white"
+                    onClick={chooseAvatarFile}
+                  >
                     <span>选择文件</span>
                   </AnimatedDiv>
                 )}
-                <LazyImg src={editUserInfo.avatar} alt='avatar' />
+                <LazyImg src={editUserInfo.avatar} alt="avatar" />
               </div>
             </div>
-            <div className='flex items-center gap-5'>
-              <span className='color-neutral-900 text-sm font-bold'>个人名称</span>
+            <div className="flex items-center gap-5">
+              <span className="text-sm color-neutral-900 font-bold">个人名称</span>
               <Input
-                className='w-100'
-                placeholder='请输入个人名称'
+                className="w-100"
+                placeholder="请输入个人名称"
                 value={editUserInfo.username}
-                onChange={(e) => setEditUserInfo({ ...editUserInfo, username: e.target.value })}
+                onChange={e => setEditUserInfo({ ...editUserInfo, username: e.target.value })}
               />
             </div>
-            <div className='flex items-center gap-5'>
-              <span className='color-neutral-900 text-sm font-bold'>个人简介</span>
+            <div className="flex items-center gap-5">
+              <span className="text-sm color-neutral-900 font-bold">个人简介</span>
               <TextArea
-                className='w-100'
-                placeholder='请输入简介~不超过1024个字哦！'
+                className="w-100"
+                placeholder="请输入简介~不超过1024个字哦！"
                 maxLength={1024}
                 showCount
                 autoSize={{ minRows: 3, maxRows: 6 }}
                 value={editUserInfo.signature}
-                onChange={(e) => setEditUserInfo({ ...editUserInfo, signature: e.target.value })}
+                onChange={e => setEditUserInfo({ ...editUserInfo, signature: e.target.value })}
               />
             </div>
-            <div className='flex items-center gap-5'>
-              <span className='color-neutral-900 text-sm font-bold'>个人性别</span>
+            <div className="flex items-center gap-5">
+              <span className="text-sm color-neutral-900 font-bold">个人性别</span>
               <Radio.Group
                 value={editUserInfo.gender}
-                onChange={(e) => setEditUserInfo({ ...editUserInfo, gender: e.target.value })}>
+                onChange={e => setEditUserInfo({ ...editUserInfo, gender: e.target.value })}
+              >
                 <Radio value={0}>男孩子</Radio>
                 <Radio value={1}>女孩子</Radio>
                 <Radio value={2}>保密</Radio>
               </Radio.Group>
             </div>
           </div>
-          <div className='m-5 relative flex flex-col gap-5 justify-center items-center'>
+          <div className="relative m-5 flex flex-col items-center justify-center gap-5">
             <Button
-              className='w-75'
-              type='primary'
-              shape='round'
-              size='large'
+              className="w-75"
+              type="primary"
+              shape="round"
+              size="large"
               loading={loading}
-              onClick={updateUserInfo}>
+              onClick={updateUserInfo}
+            >
               确认修改
             </Button>
             <Button
-              className='w-75'
-              type='default'
-              shape='round'
-              size='large'
-              onClick={() => setVisible(false)}>
+              className="w-75"
+              type="default"
+              shape="round"
+              size="large"
+              onClick={() => setVisible(false)}
+            >
               取消修改
             </Button>
           </div>
@@ -258,21 +282,21 @@ const EditModal: FC<EditModalProps> = ({ visible, setVisible, onConfirm, info })
       {/* 裁剪背景图 */}
       <HanaCropper
         loading={loading}
-        type='background'
+        type="background"
         visible={bgCropperVisible}
         setVisible={setBgCropperVisible}
         imgURL={bgImgFile ? URL.createObjectURL(bgImgFile) : ''}
-        onSaveHandler={(imgURL) => confirmCropBgImg(imgURL)}
+        onSaveHandler={imgURL => confirmCropBgImg(imgURL)}
       />
 
       {/* 裁剪头像 */}
       <HanaCropper
         loading={loading}
-        type='avatar'
+        type="avatar"
         visible={avatarCropperVisible}
         setVisible={setAvatarCropperVisible}
         imgURL={avatarFile ? URL.createObjectURL(avatarFile) : ''}
-        onSaveHandler={(imgURL) => confirmCropAvatarImg(imgURL)}
+        onSaveHandler={imgURL => confirmCropAvatarImg(imgURL)}
       />
     </>
   )

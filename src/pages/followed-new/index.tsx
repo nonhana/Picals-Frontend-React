@@ -1,8 +1,9 @@
+import type { FC } from 'react'
 import { getFollowNewWorksTotalAPI } from '@/apis'
 import Pagination from '@/components/common/pagination'
 import MainList from '@/components/followed-new/main-list'
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
-import { FC, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useOutletContext } from 'react-router'
 
 const FollowedNew: FC = () => {
@@ -13,9 +14,9 @@ const FollowedNew: FC = () => {
     try {
       const { data } = await getFollowNewWorksTotalAPI()
       setTotal(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -36,14 +37,15 @@ const FollowedNew: FC = () => {
   useEffect(() => {
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
 
   return (
-    <div ref={newRef} className='relative w-full my-30px select-none'>
-      <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
+    <div ref={newRef} className="relative my-30px w-full select-none">
+      <div style={{ width: `${width}px` }} className="mx-auto flex flex-col items-center">
         <MainList pageSize={pageSize} current={current} />
         <Pagination total={total} pageSize={pageSize} current={current} onChange={onChange} />
       </div>

@@ -1,6 +1,6 @@
-import request from '@/service'
+import type { Id, Pagination, WorkNormalItem } from '../types'
 
-import {
+import type {
   FavoriteDetailInfo,
   IChangeFavoriteOrderReq,
   ICopyFavoriteWorksReq,
@@ -9,10 +9,10 @@ import {
   IMoveFavoriteWorksReq,
   INewFavoriteReq,
 } from './types'
-import { Id, Pagination, WorkNormalItem } from '../types'
+import request from '@/service'
 
 // 新建收藏夹
-export const newFavoriteAPI = (data: INewFavoriteReq) => {
+export function newFavoriteAPI(data: INewFavoriteReq) {
   return request<INewFavoriteReq, undefined>({
     url: '/api/favorite/new',
     method: 'POST',
@@ -21,7 +21,7 @@ export const newFavoriteAPI = (data: INewFavoriteReq) => {
 }
 
 // 编辑收藏夹
-export const editFavoriteAPI = (data: IEditFavoriteReq) => {
+export function editFavoriteAPI(data: IEditFavoriteReq) {
   return request<IEditFavoriteReq, undefined>({
     url: `/api/favorite/edit?id=${data.id}`,
     method: 'POST',
@@ -30,7 +30,7 @@ export const editFavoriteAPI = (data: IEditFavoriteReq) => {
 }
 
 // 删除收藏夹
-export const deleteFavoriteAPI = (data: Id) => {
+export function deleteFavoriteAPI(data: Id) {
   return request<Id, undefined>({
     url: '/api/favorite/delete',
     method: 'POST',
@@ -39,7 +39,7 @@ export const deleteFavoriteAPI = (data: Id) => {
 }
 
 // 修改收藏夹的排序
-export const changeFavoriteOrderAPI = (data: IChangeFavoriteOrderReq) => {
+export function changeFavoriteOrderAPI(data: IChangeFavoriteOrderReq) {
   return request<IChangeFavoriteOrderReq, undefined>({
     url: '/api/favorite/order',
     method: 'POST',
@@ -48,7 +48,7 @@ export const changeFavoriteOrderAPI = (data: IChangeFavoriteOrderReq) => {
 }
 
 // 获取收藏夹详细信息
-export const getFavoriteDetailAPI = (params: Id) => {
+export function getFavoriteDetailAPI(params: Id) {
   return request<Id, FavoriteDetailInfo>({
     url: '/api/favorite/detail',
     method: 'GET',
@@ -57,7 +57,7 @@ export const getFavoriteDetailAPI = (params: Id) => {
 }
 
 // 分页获取收藏夹作品列表
-export const getFavoriteWorkListAPI = (params: Pagination) => {
+export function getFavoriteWorkListAPI(params: Pagination) {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/favorite/works',
     method: 'GET',
@@ -66,7 +66,7 @@ export const getFavoriteWorkListAPI = (params: Pagination) => {
 }
 
 // 获取收藏夹作品id列表
-export const getFavoriteWorkIdListAPI = (params: Id) => {
+export function getFavoriteWorkIdListAPI(params: Id) {
   return request<Id, string[]>({
     url: '/api/favorite/works-id',
     method: 'GET',
@@ -75,7 +75,7 @@ export const getFavoriteWorkIdListAPI = (params: Id) => {
 }
 
 // 搜索收藏夹内部的作品
-export const searchFavoriteWorkAPI = (params: Pagination) => {
+export function searchFavoriteWorkAPI(params: Pagination) {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/favorite/search',
     method: 'GET',
@@ -84,7 +84,7 @@ export const searchFavoriteWorkAPI = (params: Pagination) => {
 }
 
 // 获取搜索结果数量
-export const getSearchResultNumAPI = (params: IGetSearchResultNumReq) => {
+export function getSearchResultNumAPI(params: IGetSearchResultNumReq) {
   return request<IGetSearchResultNumReq, number>({
     url: '/api/favorite/search-count',
     method: 'GET',
@@ -93,7 +93,7 @@ export const getSearchResultNumAPI = (params: IGetSearchResultNumReq) => {
 }
 
 // 移动作品到其他收藏夹
-export const moveFavoriteWorksAPI = (data: IMoveFavoriteWorksReq) => {
+export function moveFavoriteWorksAPI(data: IMoveFavoriteWorksReq) {
   return request<IMoveFavoriteWorksReq, undefined>({
     url: '/api/favorite/move',
     method: 'POST',
@@ -102,7 +102,7 @@ export const moveFavoriteWorksAPI = (data: IMoveFavoriteWorksReq) => {
 }
 
 // 复制作品到其他收藏夹
-export const copyFavoriteWorksAPI = (data: ICopyFavoriteWorksReq) => {
+export function copyFavoriteWorksAPI(data: ICopyFavoriteWorksReq) {
   return request<ICopyFavoriteWorksReq, undefined>({
     url: '/api/favorite/copy',
     method: 'POST',

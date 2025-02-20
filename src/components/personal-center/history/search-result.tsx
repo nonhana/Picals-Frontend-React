@@ -1,14 +1,15 @@
-import { searchViewHistoryAPI } from '@/apis'
 import type { HistoryItem } from '@/apis/types'
+import type { FC } from 'react'
+import { searchViewHistoryAPI } from '@/apis'
 import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
 import AnimatedDiv from '@/components/motion/animated-div'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { Icon } from '@iconify/react'
 import dayjs from 'dayjs'
-import { FC, useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-type SearchResultProps = {
+interface SearchResultProps {
   keyword: string
   searchTrigger: number
 }
@@ -23,10 +24,12 @@ const SearchResult: FC<SearchResultProps> = ({ keyword, searchTrigger }) => {
     try {
       const { data } = await searchViewHistoryAPI({ keyword })
       setResultList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingResult(false)
     }
   }
@@ -48,30 +51,30 @@ const SearchResult: FC<SearchResultProps> = ({ keyword, searchTrigger }) => {
   }, [resultList])
 
   return (
-    <div className='relative w-full min-h-160'>
+    <div className="relative min-h-160 w-full">
       {Object.keys(resultMap).length > 0 && !gettingResult && (
-        <AnimatedDiv type='opacity-gradient'>
-          {Object.keys(resultMap).map((date) => (
-            <div key={date} className='mb-5'>
-              <div className='relative w-full flex gap-5 items-center pb-2.5 mb-5 b-b-solid b-2 b-neutral'>
-                <Icon width='32px' color='#858585' icon='ant-design:clock-circle-twotone' />
-                <span className='title color-neutral select-none'>{date}</span>
+        <AnimatedDiv type="opacity-gradient">
+          {Object.keys(resultMap).map(date => (
+            <div key={date} className="mb-5">
+              <div className="relative mb-5 w-full flex items-center gap-5 b-2 b-neutral b-b-solid pb-2.5">
+                <Icon width="32px" color="#858585" icon="ant-design:clock-circle-twotone" />
+                <span className="select-none title color-neutral">{date}</span>
               </div>
-              <AnimatedList type='history' workList={resultMap[date]} />
+              <AnimatedList type="history" workList={resultMap[date]} />
             </div>
           ))}
         </AnimatedDiv>
       )}
 
       {Object.keys(resultMap).length === 0 && !gettingResult && (
-        <AnimatedDiv type='opacity-gradient'>
+        <AnimatedDiv type="opacity-gradient">
           <Empty />
         </AnimatedDiv>
       )}
 
       {Object.keys(resultMap).length === 0 && gettingResult && (
-        <AnimatedDiv type='opacity-gradient'>
-          <WorkListSkeleton className='absolute top-29' />
+        <AnimatedDiv type="opacity-gradient">
+          <WorkListSkeleton className="absolute top-29" />
         </AnimatedDiv>
       )}
     </div>

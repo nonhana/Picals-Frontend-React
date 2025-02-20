@@ -1,18 +1,19 @@
+import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import {
   getFavoriteDetailAPI,
   getFavoriteWorkListAPI,
-  searchFavoriteWorkAPI,
   getSearchResultNumAPI,
-  likeActionsAPI,
   getUserFavoriteListAPI,
+  likeActionsAPI,
+  searchFavoriteWorkAPI,
 } from '@/apis'
 import Empty from '@/components/common/empty'
 import Header from '@/components/personal-center/favorites/header'
 import Sidebar from '@/components/personal-center/favorites/sidebar'
 import WorkList from '@/components/personal-center/favorites/work-list'
 import { setFavoriteList } from '@/store/modules/favorites'
-import type { FavoriteDetailInfo, FavoriteItemInfo, WorkNormalItemInfo } from '@/utils/types'
-import { FC, useEffect, useState, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router'
 
@@ -34,14 +35,15 @@ const MyFavorites: FC = () => {
     try {
       const { data } = await getFavoriteDetailAPI({ id: folderId! })
       setFavoriteDetailInfo(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (folderId) getFavoriteDetail()
+    if (folderId)
+      getFavoriteDetail()
   }, [folderId])
 
   const [current, setCurrent] = useState(1)
@@ -53,16 +55,19 @@ const MyFavorites: FC = () => {
     try {
       const { data } = await getFavoriteWorkListAPI({ id: folderId!, current, pageSize: 12 })
       setWorkList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingWorkList(false)
     }
   }
 
   useEffect(() => {
-    if (folderId) getFavoriteWorkList()
+    if (folderId)
+      getFavoriteWorkList()
   }, [folderId, current])
 
   // 给收藏夹的作品点赞
@@ -70,23 +75,12 @@ const MyFavorites: FC = () => {
     try {
       await likeActionsAPI({ id })
       setWorkList(
-        workList.map((item) => (item.id === id ? { ...item, isLiked: !item.isLiked } : item)),
+        workList.map(item => (item.id === id ? { ...item, isLiked: !item.isLiked } : item)),
       )
-    } catch (error) {
-      console.error('出现错误了喵！！', error)
-      return
     }
-  }
-
-  // 刷新作品列表
-  const refresh = async () => {
-    setCurrent(1)
-    setSearchTotal(0)
-    setSearchCurrent(1)
-    setSearchStatus(false)
-    await getFavoriteWorkList()
-    await fetchFavoriteList()
-    await getFavoriteDetail()
+    catch (error) {
+      console.error('出现错误了喵！！', error)
+    }
   }
 
   /* ----------收藏夹内部搜索相关---------- */
@@ -96,7 +90,8 @@ const MyFavorites: FC = () => {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!mounted) setMounted(true)
+    if (!mounted)
+      setMounted(true)
     if (mounted && !searchStatus) {
       setSearchTotal(0)
       setCurrent(1)
@@ -117,9 +112,9 @@ const MyFavorites: FC = () => {
         pageSize: 12,
       })
       setWorkList(workList)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -132,12 +127,15 @@ const MyFavorites: FC = () => {
     try {
       const { data } = await getUserFavoriteListAPI({ id: userId! })
       const list = data.sort((a, b) => a.order - b.order)
-      if (isMe) dispatch(setFavoriteList(list))
+      if (isMe)
+        dispatch(setFavoriteList(list))
       setFolderList(list)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingFolderList(false)
     }
   }
@@ -146,41 +144,54 @@ const MyFavorites: FC = () => {
     fetchFavoriteList()
   }, [userId])
 
+  // 刷新作品列表
+  const refresh = async () => {
+    setCurrent(1)
+    setSearchTotal(0)
+    setSearchCurrent(1)
+    setSearchStatus(false)
+    await getFavoriteWorkList()
+    await fetchFavoriteList()
+    await getFavoriteDetail()
+  }
+
   const [startAppreciate, setStartAppreciate] = useState(false)
 
   return (
-    <div className='flex mt-5 b-solid b-1px color-neutral min-h-150 rd-6 overflow-hidden'>
+    <div className="mt-5 min-h-150 flex overflow-hidden b-1px rd-6 b-solid color-neutral">
       <Sidebar
         loading={gettingFolderList}
         folderList={folderList}
         setFolderList={setFolderList}
         fetchFavoriteList={fetchFavoriteList}
       />
-      <div className='w-209 h-full b-l-solid b-1px color-neutral'>
-        {folderId ? (
-          favoriteDetailInfo && (
-            <>
-              <Header {...favoriteDetailInfo} setStartAppreciate={setStartAppreciate} />
-              <WorkList
-                total={searchStatus ? searchTotal : favoriteDetailInfo.workNum}
-                current={searchStatus ? searchCurrent : current}
-                setCurrent={searchStatus ? setSearchCurrent : setCurrent}
-                loading={gettingWorkList}
-                workList={workList}
-                searchStatus={searchStatus}
-                setSearchStatus={setSearchStatus}
-                handleSearch={handleSearch}
-                refresh={refresh}
-                like={like}
-                startAppreciate={startAppreciate}
-              />
-            </>
-          )
-        ) : (
-          <div className='w-full h-full'>
-            <Empty text='请选择一个收藏夹' />
-          </div>
-        )}
+      <div className="h-full w-209 b-1px b-l-solid color-neutral">
+        {folderId
+          ? (
+              favoriteDetailInfo && (
+                <>
+                  <Header {...favoriteDetailInfo} setStartAppreciate={setStartAppreciate} />
+                  <WorkList
+                    total={searchStatus ? searchTotal : favoriteDetailInfo.workNum}
+                    current={searchStatus ? searchCurrent : current}
+                    setCurrent={searchStatus ? setSearchCurrent : setCurrent}
+                    loading={gettingWorkList}
+                    workList={workList}
+                    searchStatus={searchStatus}
+                    setSearchStatus={setSearchStatus}
+                    handleSearch={handleSearch}
+                    refresh={refresh}
+                    like={like}
+                    startAppreciate={startAppreciate}
+                  />
+                </>
+              )
+            )
+          : (
+              <div className="h-full w-full">
+                <Empty text="请选择一个收藏夹" />
+              </div>
+            )}
       </div>
     </div>
   )

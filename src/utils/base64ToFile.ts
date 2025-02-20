@@ -4,12 +4,12 @@
  * @param fileName - 文件名
  * @returns File 对象
  */
-export const base64ToFile = (base64: string, fileName: string): File => {
+export function base64ToFile(base64: string, fileName: string): File {
   const [mimeTypePart, base64Data] = base64.split(',')
   const mimeType = mimeTypePart.match(/:(.*?);/)![1]
 
   const byteCharacters = atob(base64Data)
-  const byteNumbers = new Array(byteCharacters.length)
+  const byteNumbers = Array.from({ length: byteCharacters.length })
   for (let i = 0; i < byteCharacters.length; i++) {
     byteNumbers[i] = byteCharacters.charCodeAt(i)
   }

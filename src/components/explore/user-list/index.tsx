@@ -1,18 +1,19 @@
+import type { Pagination } from '@/apis/types'
+import type { AppState } from '@/store/types'
+import type { UserItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { getRecommendUserListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
-import { Pagination } from '@/apis/types'
 import UserItem from '@/components/common/user-item'
 import AnimatedDiv from '@/components/motion/animated-div'
 import UserListSkeleton from '@/components/skeleton/user-list'
 import { useAtBottom } from '@/hooks'
-import { increaseFollowNum, decreaseFollowNum, setTempId } from '@/store/modules/user'
-import { AppState } from '@/store/types'
+import { decreaseFollowNum, increaseFollowNum, setTempId } from '@/store/modules/user'
 import { generateTempId } from '@/utils'
-import type { UserItemInfo } from '@/utils/types'
 import { message } from 'antd'
-import { FC, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-type UserListProps = {
+interface UserListProps {
   width: number
 }
 
@@ -36,11 +37,13 @@ const UserList: FC<UserListProps> = ({ width }) => {
     try {
       const params: Pagination = { current, pageSize: 6 }
       if (!isLogin) {
-        if (!tempId) dispatch(setTempId(generateTempId()))
+        if (!tempId)
+          dispatch(setTempId(generateTempId()))
         params.id = tempId
       }
       const { data } = await getRecommendUserListAPI(params)
-      if (data.length < 6) setIsFinal(true)
+      if (data.length < 6)
+        setIsFinal(true)
       setRecommendUserList((prev) => {
         const result = prev.map((item) => {
           if (item.page === current) {
@@ -48,17 +51,19 @@ const UserList: FC<UserListProps> = ({ width }) => {
           }
           return item
         })
-        if (!isFinal) result.push({ page: current + 1, list: [] })
+        if (!isFinal)
+          result.push({ page: current + 1, list: [] })
         return result
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
+    if (atBottom && !isFinal)
+      setCurrent(prev => prev + 1)
   }, [atBottom])
 
   useEffect(() => {
@@ -72,13 +77,15 @@ const UserList: FC<UserListProps> = ({ width }) => {
     }
     // 获取到对应的userItem
     const userItem = recommendUserList
-      .find((item) => item.page === page)!
-      .list.find((user) => user.id === id)
+      .find(item => item.page === page)!
+      .list
+      .find(user => user.id === id)
     try {
       await userActionsAPI({ id })
       if (!userItem!.isFollowing) {
         dispatch(increaseFollowNum())
-      } else {
+      }
+      else {
         dispatch(decreaseFollowNum())
       }
       setRecommendUserList(
@@ -86,7 +93,7 @@ const UserList: FC<UserListProps> = ({ width }) => {
           if (item.page === page) {
             return {
               page: item.page,
-              list: item.list.map((user) =>
+              list: item.list.map(user =>
                 user.id === id ? { ...user, isFollowing: !user.isFollowing } : user,
               ),
             }
@@ -94,9 +101,9 @@ const UserList: FC<UserListProps> = ({ width }) => {
           return item
         }),
       )
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -108,11 +115,11 @@ const UserList: FC<UserListProps> = ({ width }) => {
           if (item.page === page) {
             return {
               page: item.page,
-              list: item.list.map((user) =>
+              list: item.list.map(user =>
                 user.id === userId
                   ? {
                       ...user,
-                      works: user.works!.map((work) =>
+                      works: user.works!.map(work =>
                         work.id === workId ? { ...work, isLiked: !work.isLiked } : work,
                       ),
                     }
@@ -123,27 +130,28 @@ const UserList: FC<UserListProps> = ({ width }) => {
           return item
         }),
       )
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   return (
-    <div className='relative w-full p-5 min-h-125'>
+    <div className="relative min-h-125 w-full p-5">
       {recommendUserList.map(
-        (everyPage) =>
+        everyPage =>
           everyPage.list.length !== 0 && (
             <AnimatedDiv
               key={everyPage.page}
-              type='opacity-gradient'
-              className='relative w-full flex flex-col gap-20px'>
-              {everyPage.list.map((user) => (
+              type="opacity-gradient"
+              className="relative w-full flex flex-col gap-20px"
+            >
+              {everyPage.list.map(user => (
                 <UserItem
                   key={user.id}
                   {...user}
                   width={width}
-                  follow={(id) => handleFollow(everyPage.page, id)}
+                  follow={id => handleFollow(everyPage.page, id)}
                   likeWork={(userId, workId) => handleLikeWork(everyPage.page, userId, workId)}
                 />
               ))}

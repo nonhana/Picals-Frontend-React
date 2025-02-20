@@ -1,18 +1,19 @@
-import { deleteCommentAPI, getCommentListAPI, postCommentAPI } from '@/apis'
-import { IPostCommentReq } from '@/apis/comment/types'
-import Empty from '@/components/common/empty'
-import LazyImg from '@/components/common/lazy-img'
+import type { IPostCommentReq } from '@/apis/comment/types'
 import type { AppState } from '@/store/types'
 import type { CommentItem } from '@/utils/types'
-import { Input, Button, message, Modal } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
+import type { FC } from 'react'
+import { deleteCommentAPI, getCommentListAPI, postCommentAPI } from '@/apis'
+import Empty from '@/components/common/empty'
+import LazyImg from '@/components/common/lazy-img'
+import { Button, Input, message, Modal } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 
 import Comment from './comment'
 import InputWindow from './input-window'
 
-type CommentsProps = {
+interface CommentsProps {
   totalCount: number
   loading: boolean
 }
@@ -36,9 +37,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
     try {
       const { data } = await getCommentListAPI({ id: workId! })
       setCommentList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -66,13 +67,15 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
   let workInfoRefObserver: IntersectionObserver | null = null
 
   useEffect(() => {
-    if (!loading) workInfoRef.current = document.getElementById('work-info')
+    if (!loading)
+      workInfoRef.current = document.getElementById('work-info')
     if (workInfoRef.current) {
       workInfoRefObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setWorkInfoIsInWindow(true)
-          } else {
+          }
+          else {
             setWorkInfoIsInWindow(false)
           }
         })
@@ -90,7 +93,8 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setInputIsInWindow(true)
-          } else {
+          }
+          else {
             setInputIsInWindow(false)
           }
         })
@@ -115,9 +119,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       setReplyTo('')
       return
     }
-    setReplyData((prevReplyData) => ({ ...prevReplyData, id: data.id }))
+    setReplyData(prevReplyData => ({ ...prevReplyData, id: data.id }))
     if (data.isChild) {
-      setReplyData((prevReplyData) => ({
+      setReplyData(prevReplyData => ({
         ...prevReplyData,
         isChild: true,
         parentId: data.parentId,
@@ -132,8 +136,9 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
           })
         }
       })
-    } else {
-      setReplyData((prevReplyData) => ({ ...prevReplyData, isChild: false }))
+    }
+    else {
+      setReplyData(prevReplyData => ({ ...prevReplyData, isChild: false }))
       commentList.forEach((comment) => {
         if (comment.id === data.id) {
           setReplyTo(comment.authorInfo.username)
@@ -153,11 +158,12 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       onOk: async () => {
         try {
           await deleteCommentAPI({ id })
-          const commentCount = commentList.find((comment) => comment.id === id)?.childComments
-          setCount((prevCount) => prevCount - (commentCount ? commentCount.length + 1 : 1))
+          const commentCount = commentList.find(comment => comment.id === id)?.childComments
+          setCount(prevCount => prevCount - (commentCount ? commentCount.length + 1 : 1))
           fetchCommentList()
           message.success('删除评论成功')
-        } catch (error) {
+        }
+        catch (error) {
           console.error('出现错误了喵！！', error)
         }
       },
@@ -167,9 +173,10 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
   const postComment = async (data: IPostCommentReq) => {
     try {
       await postCommentAPI(data)
-      setCount((prevCount) => prevCount + 1)
+      setCount(prevCount => prevCount + 1)
       fetchCommentList()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
     }
   }
@@ -185,7 +192,8 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
           replyCommentId: replyData.parentId!,
           replyUserId: replyData.userId,
         }
-      } else {
+      }
+      else {
         reqData.replyInfo = {
           replyCommentId: replyData.id,
         }
@@ -196,7 +204,8 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
         if (upContent === '') {
           messageApi.error('评论内容不能为空')
           return
-        } else {
+        }
+        else {
           reqData.content = upContent
           messageApi.success('评论成功')
           setUpContent('')
@@ -206,7 +215,8 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
         if (downContent === '') {
           messageApi.error('评论内容不能为空')
           return
-        } else {
+        }
+        else {
           reqData.content = downContent
           messageApi.success('评论成功')
           setDownContent('')
@@ -229,44 +239,50 @@ const Comments: FC<CommentsProps> = ({ loading, totalCount }) => {
       {modalContextHolder}
 
       <div>
-        <div className='flex gap-10px items-center'>
-          <span className='text-lg font-bold color-neutral-900'>评论</span>
-          <span className='text-sm color-neutral'>目前共有{count}条评论</span>
+        <div className="flex items-center gap-10px">
+          <span className="text-lg color-neutral-900 font-bold">评论</span>
+          <span className="text-sm color-neutral">
+            目前共有
+            {count}
+            条评论
+          </span>
         </div>
-        <div ref={inputRef} className='my-5 flex justify-between items-center'>
-          <div className='flex gap-10px items-center'>
-            <div className='shrink-0 w-10 h-10 rd-full overflow-hidden cursor-pointer'>
+        <div ref={inputRef} className="my-5 flex items-center justify-between">
+          <div className="flex items-center gap-10px">
+            <div className="h-10 w-10 shrink-0 cursor-pointer overflow-hidden rd-full">
               <LazyImg src={userInfo.littleAvatar} alt={userInfo.username} />
             </div>
             <Input
-              className='w-90'
-              size='large'
-              placeholder='随便写点东东吧~'
+              className="w-90"
+              size="large"
+              placeholder="随便写点东东吧~"
               value={upContent}
-              onChange={(event) => setUpContent(event.target.value)}
+              onChange={event => setUpContent(event.target.value)}
             />
           </div>
 
-          <Button shape='round' size='large' type='primary' onClick={() => submitComment('up')}>
+          <Button shape="round" size="large" type="primary" onClick={() => submitComment('up')}>
             发布评论
           </Button>
         </div>
-        {commentList.length === 0 ? (
-          <div className='relative w-150'>
-            <Empty showImg={false} text='暂无评论，评个论吧好吗' />
-          </div>
-        ) : (
-          <>
-            {commentList.map((comment) => (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                reply={reply}
-                deleteComment={handleDelete}
-              />
-            ))}
-          </>
-        )}
+        {commentList.length === 0
+          ? (
+              <div className="relative w-150">
+                <Empty showImg={false} text="暂无评论，评个论吧好吗" />
+              </div>
+            )
+          : (
+              <>
+                {commentList.map(comment => (
+                  <Comment
+                    key={comment.id}
+                    comment={comment}
+                    reply={reply}
+                    deleteComment={handleDelete}
+                  />
+                ))}
+              </>
+            )}
         <InputWindow
           content={downContent}
           replyTo={replyTo}

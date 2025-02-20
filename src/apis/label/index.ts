@@ -1,10 +1,10 @@
+import type { Keyword, LabelItem, Name, Pagination } from '../types'
+
+import type { INewLabelReq, LabelDetailInfo } from './types'
 import request from '@/service'
 
-import { LabelDetailInfo, INewLabelReq } from './types'
-import { Keyword, LabelItem, Name, Pagination } from '../types'
-
 // 新建标签
-export const newLabelAPI = (data: INewLabelReq[]) => {
+export function newLabelAPI(data: INewLabelReq[]) {
   return request<INewLabelReq[], undefined>({
     url: '/api/label/new',
     method: 'POST',
@@ -13,7 +13,7 @@ export const newLabelAPI = (data: INewLabelReq[]) => {
 }
 
 // 搜索标签
-export const searchLabelsAPI = (params: Keyword) => {
+export function searchLabelsAPI(params: Keyword) {
   return request<Keyword, LabelItem[]>({
     url: '/api/label/search',
     method: 'GET',
@@ -22,7 +22,7 @@ export const searchLabelsAPI = (params: Keyword) => {
 }
 
 // 获取推荐标签列表
-export const getRecommendLabelListAPI = () => {
+export function getRecommendLabelListAPI() {
   return request<undefined, LabelItem[]>({
     url: '/api/label/recommend',
     method: 'GET',
@@ -30,7 +30,7 @@ export const getRecommendLabelListAPI = () => {
 }
 
 // 分页获取标签列表
-export const getLabelsInPagesAPI = (params: Pagination) => {
+export function getLabelsInPagesAPI(params: Pagination) {
   return request<Pagination, LabelItem[]>({
     url: '/api/label/list',
     method: 'GET',
@@ -39,7 +39,7 @@ export const getLabelsInPagesAPI = (params: Pagination) => {
 }
 
 // 获取某个标签的详细信息
-export const getLabelDetailAPI = (params: Name) => {
+export function getLabelDetailAPI(params: Name) {
   return request<Name, LabelDetailInfo | null>({
     url: '/api/label/detail',
     method: 'GET',

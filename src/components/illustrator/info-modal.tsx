@@ -1,12 +1,13 @@
 import type { IllustratorInfo } from '@/apis/illustrator/types'
-import { FC, useEffect, useState } from 'react'
+import type { FC } from 'react'
+import { useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 import { Link } from 'react-router'
 
 import HanaModal from '../common/hana-modal'
 import HanaViewer from '../common/hana-viewer'
 
-type InfoModalProps = {
+interface InfoModalProps {
   visible: boolean
   setVisible: (visible: boolean) => void
   info: IllustratorInfo
@@ -20,15 +21,15 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
   }, [info.avatar])
 
   return (
-    <HanaModal title='插画家信息' visible={visible} setVisible={setVisible}>
+    <HanaModal title="插画家信息" visible={visible} setVisible={setVisible}>
       <>
-        <div className='relative w-full h-63 bg-neutral-50 flex justify-center items-center text-lg font-bold color-neutral-900'>
-          <div className='flex flex-col items-center justify-center gap-3'>
+        <div className="relative h-63 w-full flex items-center justify-center bg-neutral-50 text-lg color-neutral-900 font-bold">
+          <div className="flex flex-col items-center justify-center gap-3">
             <HanaViewer>
-              <div className='w-24 h-24 rd-full cursor-pointer overflow-hidden'>
+              <div className="h-24 w-24 cursor-pointer overflow-hidden rd-full">
                 <PhotoView src={illustratorAvatar}>
                   <img
-                    className='object-cover w-full h-full'
+                    className="h-full w-full object-cover"
                     src={illustratorAvatar}
                     alt={info.name}
                   />
@@ -39,18 +40,18 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
           </div>
         </div>
 
-        <div className='p-5 flex flex-col gap-5 font-bold text-sm color-neutral-900'>
-          <div className='flex gap-5 line-height-normal text-wrap'>
-            <span className='shrink-0 w-25'>现收录作品数</span>
+        <div className="flex flex-col gap-5 p-5 text-sm color-neutral-900 font-bold">
+          <div className="flex gap-5 text-wrap line-height-normal">
+            <span className="w-25 shrink-0">现收录作品数</span>
             <span>{info.workNum}</span>
           </div>
-          <div className='flex gap-5 line-height-normal text-wrap'>
-            <span className='shrink-0 w-25'>个人简介</span>
+          <div className="flex gap-5 text-wrap line-height-normal">
+            <span className="w-25 shrink-0">个人简介</span>
             <span>{info.intro || '暂无关于该插画家的简介，待补充！'}</span>
           </div>
-          <div className='flex gap-5 line-height-normal text-wrap'>
-            <span className='shrink-0 w-25'>个人主页</span>
-            <Link to={info.homeUrl} target='_blank' className='color-azure'>
+          <div className="flex gap-5 text-wrap line-height-normal">
+            <span className="w-25 shrink-0">个人主页</span>
+            <Link to={info.homeUrl} target="_blank" className="color-azure">
               {info.homeUrl}
             </Link>
           </div>

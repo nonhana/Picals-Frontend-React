@@ -1,21 +1,21 @@
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
-import { FC, Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import ContentLoader from 'react-content-loader'
 import { useOutletContext } from 'react-router'
 
-type LabelListSkeletonProps = {
+interface LabelListSkeletonProps {
   row?: number
   padding?: number
   borderRadius?: number
   [key: string]: any
 }
 
-const LabelListSkeleton: FC<LabelListSkeletonProps> = ({
+function LabelListSkeleton({
   row = 1,
   padding = 10,
   borderRadius = 4,
   ...props
-}) => {
+}: LabelListSkeletonProps) {
   const [width, setWidth] = useState<number>(MAX_WIDTH)
   const [column, setColumn] = useState<number>(12)
   const currentWidth = useOutletContext<number>()
@@ -24,7 +24,8 @@ const LabelListSkeleton: FC<LabelListSkeletonProps> = ({
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
       setColumn(10)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
       setColumn(12)
     }
@@ -54,7 +55,8 @@ const LabelListSkeleton: FC<LabelListSkeletonProps> = ({
           />
         </Fragment>,
       )
-      if (i === row) height = y2
+      if (i === row)
+        height = y2
     }
   }
 

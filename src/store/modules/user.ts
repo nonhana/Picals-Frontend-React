@@ -1,6 +1,6 @@
-import { LabelItem } from '@/apis/types'
-import { generateTempId } from '@/utils'
+import type { LabelItem } from '@/apis/types'
 import type { UserInfo } from '@/utils/types'
+import { generateTempId } from '@/utils'
 import { createSlice } from '@reduxjs/toolkit'
 
 const userStore = createSlice({
@@ -35,7 +35,7 @@ const userStore = createSlice({
       state.likedLabels.push(action.payload)
     },
     removeLikedLabel(state, action) {
-      state.likedLabels = state.likedLabels.filter((item) => item.id !== action.payload)
+      state.likedLabels = state.likedLabels.filter(item => item.id !== action.payload)
     },
     increaseFollowNum(state) {
       state.userInfo.followNum++
@@ -79,14 +79,14 @@ const {
 const userReducer = userStore.reducer
 
 export {
-  setUserInfo,
-  setTempId,
-  setLikedLabels,
   addLikedLabel,
-  removeLikedLabel,
-  increaseFollowNum,
   decreaseFollowNum,
-  setLoginStatus,
+  increaseFollowNum,
   logout,
+  removeLikedLabel,
+  setLikedLabels,
+  setLoginStatus,
+  setTempId,
+  setUserInfo,
 }
 export default userReducer

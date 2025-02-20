@@ -1,5 +1,6 @@
+import type { CSSProperties } from 'react'
 import { cn } from '@/utils'
-import React, { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 export interface VirtualListProps {
   direction: 'vertical' | 'horizontal'
@@ -7,13 +8,13 @@ export interface VirtualListProps {
   itemLength: number
   data: any[]
   renderItem: (item: any, index: number) => React.ReactNode
-  ref?: React.RefObject<(HTMLDivElement & { posData: { id: string; left: number }[] }) | null>
+  ref?: React.RefObject<(HTMLDivElement & { posData: { id: string, left: number }[] }) | null>
   children?: React.ReactNode
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void
 }
 
-const VirtualList = ({
+function VirtualList({
   direction,
   length,
   itemLength,
@@ -23,7 +24,7 @@ const VirtualList = ({
   children,
   onMouseEnter,
   onMouseLeave,
-}: VirtualListProps) => {
+}: VirtualListProps) {
   const isVertical = direction === 'vertical'
 
   const [scrollPos, setScrollPos] = useState(0)
@@ -90,12 +91,13 @@ const VirtualList = ({
   }, [isVertical, startOffset, gap])
 
   return (
-    <div className='relative' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div
         ref={ref}
         className={cn('scrollbar-none', isVertical ? 'overflow-y-auto' : 'overflow-x-auto')}
         style={containerStyle}
-        onScroll={onScroll}>
+        onScroll={onScroll}
+      >
         <div style={contentStyle}>
           <div style={listStyle}>
             {data

@@ -1,4 +1,6 @@
-import { likeActionsAPI, userActionsAPI, getFansListAPI, getFollowingListAPI } from '@/apis'
+import type { UserItemInfo } from '@/utils/types'
+import type { FC } from 'react'
+import { getFansListAPI, getFollowingListAPI, likeActionsAPI, userActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
 import UserItem from '@/components/common/user-item'
@@ -7,12 +9,11 @@ import UserListSkeleton from '@/components/skeleton/user-list'
 import { useMap } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
-import type { UserItemInfo } from '@/utils/types'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect, useState, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-type UserListProps = {
+interface UserListProps {
   width: number
   total: number
 }
@@ -30,13 +31,14 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
       await userActionsAPI({ id })
       if (!userList.get(id)!.isFollowing) {
         dispatch(increaseFollowNum())
-      } else {
+      }
+      else {
         dispatch(decreaseFollowNum())
       }
       updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -47,7 +49,7 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
       ...userList.get(userId)!,
       works: userList
         .get(userId)!
-        .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
+        .works!.map(work => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
     })
   }
 
@@ -64,24 +66,26 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
   const getUserList = async () => {
     setGettingUser(true)
     try {
-      const { data } =
-        currentPath === 'follow'
+      const { data }
+        = currentPath === 'follow'
           ? await getFollowingListAPI({
-              id: userId,
-              current,
-              pageSize,
-            })
+            id: userId,
+            current,
+            pageSize,
+          })
           : await getFansListAPI({
-              id: userId,
-              current,
-              pageSize,
-            })
+            id: userId,
+            current,
+            pageSize,
+          })
 
       setUserList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingUser(false)
     }
   }
@@ -91,12 +95,12 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
   }, [currentPath, userId, current])
 
   return (
-    <div className='relative p-5 w-full min-h-160'>
+    <div className="relative min-h-160 w-full p-5">
       <AnimatePresence>
         {userList.size !== 0 && !gettingUser && (
-          <AnimatedDiv type='opacity-gradient'>
-            <div className='relative w-full flex flex-col gap-20px pb-10'>
-              {Array.from(userList.values()).map((item) => (
+          <AnimatedDiv type="opacity-gradient">
+            <div className="relative w-full flex flex-col gap-20px pb-10">
+              {Array.from(userList.values()).map(item => (
                 <UserItem
                   key={item.id}
                   {...item}
@@ -110,19 +114,19 @@ const UserList: FC<UserListProps> = ({ width, total }) => {
         )}
 
         {userList.size === 0 && !gettingUser && (
-          <AnimatedDiv type='opacity-gradient'>
+          <AnimatedDiv type="opacity-gradient">
             <Empty />
           </AnimatedDiv>
         )}
 
         {userList.size === 0 && gettingUser && (
-          <AnimatedDiv type='opacity-gradient'>
-            <UserListSkeleton className='absolute top-5' />
+          <AnimatedDiv type="opacity-gradient">
+            <UserListSkeleton className="absolute top-5" />
           </AnimatedDiv>
         )}
       </AnimatePresence>
 
-      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
         <Pagination total={total} pageSize={pageSize} current={current} onChange={pageChange} />
       </div>
     </div>

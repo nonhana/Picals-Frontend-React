@@ -1,23 +1,24 @@
+import type { INewIllustratorReq } from '@/apis/illustrator/types'
+import type { UploadWorkFormInfo } from '@/utils/types'
+import type { FormProps, SelectProps } from 'antd'
+import type { FC } from 'react'
 import {
-  searchIllustratorsAPI,
   getIllustratorDetailAPI,
   getIllustratorListInPagesAPI,
-  searchLabelsAPI,
   getLabelsInPagesAPI,
-  newIllustratorAPI,
   getWorkCountAPI,
+  newIllustratorAPI,
+  searchIllustratorsAPI,
+  searchLabelsAPI,
 } from '@/apis'
-import type { INewIllustratorReq } from '@/apis/illustrator/types'
 import CreateIllustratorModal from '@/components/common/create-illustrator-modal'
 import Empty from '@/components/common/empty'
-import type { UploadWorkFormInfo } from '@/utils/types'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { Form, FormProps, Input, Radio, Select, message, Spin, Button, Flex, Modal } from 'antd'
-import type { SelectProps } from 'antd'
+import { Button, Flex, Form, Input, message, Modal, Radio, Select, Spin } from 'antd'
 import { debounce } from 'lodash'
-import { FC, useEffect, useState, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-type SelectableItemInfo = {
+interface SelectableItemInfo {
   value: string
   label: string
 }
@@ -28,12 +29,12 @@ export interface DebounceSelectProps<ValueType>
   debounceTimeout?: number
 }
 
-const DebounceSelect = <ValueType extends SelectableItemInfo>({
+function DebounceSelect<ValueType extends SelectableItemInfo>({
   value,
   onChange,
   fetchOptions,
   debounceTimeout = 500,
-}: DebounceSelectProps<ValueType>) => {
+}: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false)
   const [options, setOptions] = useState<ValueType[]>([])
   const [current, setCurrent] = useState(1)
@@ -46,31 +47,35 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
   const getIllustratorList = async (reset?: boolean) => {
     try {
       const { data } = await getIllustratorListInPagesAPI({ current, pageSize })
-      if (data.length < pageSize) setIsFinal(true)
-      const result = data.map((item) => ({ value: item.id, label: item.name }))
+      if (data.length < pageSize)
+        setIsFinal(true)
+      const result = data.map(item => ({ value: item.id, label: item.name }))
       if (reset) {
         setOptions(result as ValueType[])
-      } else {
+      }
+      else {
         setOptions(options.concat(result as ValueType[]))
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (isFinal) return
+    if (isFinal)
+      return
     getIllustratorList()
   }, [current, isFinal])
 
   const onPopupScroll = (e: any) => {
     dropdownList.current = e.target
-    if (searching) return
+    if (searching)
+      return
     e.persist()
     const { scrollTop, offsetHeight, scrollHeight } = e.target
     if (scrollTop + offsetHeight === scrollHeight) {
-      setCurrent((prev) => prev + 1)
+      setCurrent(prev => prev + 1)
     }
   }
 
@@ -87,7 +92,8 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
       setFetching(true)
 
       fetchOptions(value).then((newOptions) => {
-        if (fetchId !== fetchRef.current) return
+        if (fetchId !== fetchRef.current)
+          return
         setOptions(newOptions)
         setFetching(false)
       })
@@ -100,7 +106,8 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
     setOptions([])
     if (current === 1) {
       getIllustratorList(true)
-    } else {
+    }
+    else {
       setCurrent(1)
       setIsFinal(false)
     }
@@ -117,20 +124,20 @@ const DebounceSelect = <ValueType extends SelectableItemInfo>({
   return (
     <Select
       showSearch
-      placeholder='输入插画家的名字进行搜索~'
+      placeholder="输入插画家的名字进行搜索~"
       value={value}
       onChange={onChange}
       filterOption={false}
       onSearch={debounceFetcher}
       onPopupScroll={onPopupScroll}
-      notFoundContent={fetching ? <Spin size='small' /> : <Empty showImg={false} />}
+      notFoundContent={fetching ? <Spin size="small" /> : <Empty showImg={false} />}
       onDropdownVisibleChange={onDropdownVisibleChange}
       options={options}
     />
   )
 }
 
-type UploadFormProps = {
+interface UploadFormProps {
   formInfo: UploadWorkFormInfo
   setFormInfo: React.Dispatch<React.SetStateAction<UploadWorkFormInfo>>
   submitTrigger: number
@@ -163,7 +170,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   }
 
   const changeReprinted = (value: number) => {
-    setFormInfo((prevFormInfo) => ({
+    setFormInfo(prevFormInfo => ({
       ...prevFormInfo,
       basicInfo: {
         ...prevFormInfo.basicInfo,
@@ -171,14 +178,15 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       },
     }))
     if (value) {
-      setFormInfo((prevFormInfo) => ({
+      setFormInfo(prevFormInfo => ({
         ...prevFormInfo,
         illustratorInfo: {
           name: '',
           homeUrl: '',
         },
       }))
-    } else {
+    }
+    else {
       setFormInfo((prevFormInfo) => {
         const { illustratorInfo: _, ...rest } = prevFormInfo
         return rest
@@ -187,7 +195,8 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   }
 
   useEffect(() => {
-    if (submitTrigger === 0) return
+    if (submitTrigger === 0)
+      return
     workForm.submit()
   }, [submitTrigger])
 
@@ -202,41 +211,40 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   const getLabels = async (reset?: boolean) => {
     try {
       const { data } = await getLabelsInPagesAPI({ current, pageSize })
-      if (data.length < pageSize) setIsFinal(true)
-      const result = data.map((item) => ({ value: item.name, label: item.name }))
+      if (data.length < pageSize)
+        setIsFinal(true)
+      const result = data.map(item => ({ value: item.name, label: item.name }))
       if (reset) {
         setLabels(result)
-      } else {
+      }
+      else {
         setLabels(labels.concat(result))
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (isFinal) return
+    if (isFinal)
+      return
     getLabels()
   }, [current, isFinal])
 
   const onPopupScroll = (e: any) => {
     dropdownList.current = e.target
-    if (searching) return
+    if (searching)
+      return
     e.persist()
     const { scrollTop, offsetHeight, scrollHeight } = e.target
     if (scrollTop + offsetHeight === scrollHeight) {
-      setCurrent((prev) => prev + 1)
+      setCurrent(prev => prev + 1)
     }
   }
 
   let timeout: ReturnType<typeof setTimeout> | null
   let currentValue: string
-
-  const searchLabels = async (value: string) => {
-    setSearching(true)
-    fetchLabels(value, setLabels)
-  }
 
   const fetchLabels = (value: string, callback: (data: SelectableItemInfo[]) => void) => {
     if (timeout) {
@@ -248,7 +256,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     const fake = () => {
       searchLabelsAPI({ keyword: value }).then((result) => {
         if (currentValue === value) {
-          const data = result.data.map((item) => ({
+          const data = result.data.map(item => ({
             value: item.name,
             label: item.name,
           }))
@@ -258,16 +266,23 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     }
     if (value) {
       timeout = setTimeout(fake, 300)
-    } else {
+    }
+    else {
       setCurrent(1)
     }
+  }
+
+  const searchLabels = async (value: string) => {
+    setSearching(true)
+    fetchLabels(value, setLabels)
   }
 
   const initialLabelList = () => {
     setLabels([])
     if (current === 1) {
       getLabels(true)
-    } else {
+    }
+    else {
       setCurrent(1)
       setIsFinal(false)
     }
@@ -285,9 +300,10 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
   const fetchIllustratorList = async (keyword: string): Promise<SelectableItemInfo[]> => {
     try {
       const { data } = await searchIllustratorsAPI({ keyword })
-      const result = data.map((item) => ({ value: item.id, label: item.name }))
+      const result = data.map(item => ({ value: item.id, label: item.name }))
       return result
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return []
     }
@@ -295,7 +311,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
 
   const selectIllustrator = async (value: any) => {
     const { data } = await getIllustratorDetailAPI({ id: value })
-    setFormInfo((prevFormInfo) => ({
+    setFormInfo(prevFormInfo => ({
       ...prevFormInfo,
       illustratorInfo: {
         name: data.name,
@@ -331,7 +347,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       setModalStatus(false)
       messageApi.success('新建插画家成功！')
       // 将新的插画家信息填写至表单
-      setFormInfo((prevFormInfo) => ({
+      setFormInfo(prevFormInfo => ({
         ...prevFormInfo,
         illustratorInfo: {
           name: newIllustratorInfo.name,
@@ -344,9 +360,9 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           homeUrl: newIllustratorInfo.homeUrl,
         },
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -376,9 +392,9 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
     try {
       const { data } = await getWorkCountAPI()
       setWorkCount(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -392,22 +408,24 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
       {modalContextHolder}
 
       <Form
-        name='workForm'
+        name="workForm"
         form={workForm}
-        size='large'
-        labelAlign='left'
+        size="large"
+        labelAlign="left"
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
         initialValues={formInfo}
         onFinish={submitWork}
         onFinishFailed={handleFailed}
-        autoComplete='off'>
+        autoComplete="off"
+      >
         <div className={`${wrapperStyle}`}>
           <div
             style={{ margin: 0 }}
-            className={`${titleStyle} font-normal flex items-center justify-between`}>
-            <span className='color-azure'>Total number of works currently saved:</span>
-            <span className=' color-neutral-900 text-3xl'>{workCount}</span>
+            className={`${titleStyle} font-normal flex items-center justify-between`}
+          >
+            <span className="color-azure">Total number of works currently saved:</span>
+            <span className="text-3xl color-neutral-900">{workCount}</span>
           </div>
         </div>
 
@@ -417,47 +435,49 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           </div>
 
           <Form.Item<UploadWorkFormInfo>
-            label={<Label text='作品名称' />}
-            name={['basicInfo', 'name']}>
+            label={<Label text="作品名称" />}
+            name={['basicInfo', 'name']}
+          >
             <Input
-              placeholder='请输入作品名称（可为空）'
+              placeholder="请输入作品名称（可为空）"
               showCount
               maxLength={64}
               value={formInfo.basicInfo.name}
-              onChange={(e) =>
+              onChange={e =>
                 setFormInfo({
                   ...formInfo,
                   basicInfo: { ...formInfo.basicInfo, name: e.target.value },
-                })
-              }
+                })}
             />
           </Form.Item>
 
           <Form.Item<UploadWorkFormInfo>
-            label={<Label text='作品简介' />}
-            name={['basicInfo', 'intro']}>
+            label={<Label text="作品简介" />}
+            name={['basicInfo', 'intro']}
+          >
             <TextArea
-              placeholder='请输入简介~不超过1024个字哦！（可为空）'
+              placeholder="请输入简介~不超过1024个字哦！（可为空）"
               showCount
               maxLength={1024}
               autoSize={{ minRows: 4, maxRows: 8 }}
               value={formInfo.basicInfo.intro}
-              onChange={(e) =>
+              onChange={e =>
                 setFormInfo({
                   ...formInfo,
                   basicInfo: { ...formInfo.basicInfo, intro: e.target.value },
-                })
-              }
+                })}
             />
           </Form.Item>
 
           <Form.Item<UploadWorkFormInfo>
-            label={<Label text='是否转载' />}
+            label={<Label text="是否转载" />}
             name={['basicInfo', 'reprintType']}
-            rules={[{ required: true, message: '请选择是否转载作品！' }]}>
+            rules={[{ required: true, message: '请选择是否转载作品！' }]}
+          >
             <Radio.Group
               value={formInfo.basicInfo.reprintType}
-              onChange={(event) => changeReprinted(event.target.value)}>
+              onChange={event => changeReprinted(event.target.value)}
+            >
               <Radio value={2}>合集作品</Radio>
               <Radio value={1}>转载作品</Radio>
               <Radio value={0}>原创作品</Radio>
@@ -468,58 +488,59 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
             <>
               {formInfo.basicInfo.reprintType === 1 && (
                 <Form.Item<UploadWorkFormInfo>
-                  label={<Label text='作品URL' />}
+                  label={<Label text="作品URL" />}
                   name={['basicInfo', 'workUrl']}
                   rules={[
                     { required: true, message: '请输入收藏作品的源地址！' },
                     { type: 'url', message: '请输入正确的URL地址！' },
-                  ]}>
+                  ]}
+                >
                   <Input
-                    placeholder='请输入收藏作品的源地址'
+                    placeholder="请输入收藏作品的源地址"
                     value={formInfo.basicInfo.workUrl}
-                    onChange={(e) =>
+                    onChange={e =>
                       setFormInfo({
                         ...formInfo,
                         basicInfo: { ...formInfo.basicInfo, workUrl: e.target.value },
-                      })
-                    }
+                      })}
                   />
                 </Form.Item>
               )}
 
               <Form.Item<UploadWorkFormInfo>
-                label={<Label text='原作者名' />}
+                label={<Label text="原作者名" />}
                 name={['illustratorInfo', 'name']}
-                rules={[{ required: true, message: '请输入原作者的名称！' }]}>
+                rules={[{ required: true, message: '请输入原作者的名称！' }]}
+              >
                 <Flex gap={20}>
                   <DebounceSelect
                     value={formInfo.illustratorInfo?.name}
                     fetchOptions={fetchIllustratorList}
                     onChange={selectIllustrator}
                   />
-                  <Button type='primary' onClick={() => setModalStatus(true)}>
+                  <Button type="primary" onClick={() => setModalStatus(true)}>
                     新增插画家
                   </Button>
                 </Flex>
               </Form.Item>
 
               <Form.Item<UploadWorkFormInfo>
-                label={<Label text='作者主页' />}
+                label={<Label text="作者主页" />}
                 name={['illustratorInfo', 'homeUrl']}
                 rules={[
                   { required: true, message: '请输入原作者的主页url地址！' },
                   { type: 'url', message: '请输入正确的URL地址！' },
-                ]}>
+                ]}
+              >
                 <Input
-                  placeholder='原作者主页，选中插画家后自动填充'
+                  placeholder="原作者主页，选中插画家后自动填充"
                   value={formInfo.illustratorInfo?.homeUrl}
                   disabled
-                  onChange={(e) =>
+                  onChange={e =>
                     setFormInfo({
                       ...formInfo,
                       illustratorInfo: { ...formInfo.illustratorInfo!, homeUrl: e.target.value },
-                    })
-                  }
+                    })}
                 />
               </Form.Item>
             </>
@@ -531,17 +552,18 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
             <span>作品标签添加</span>
           </div>
           <Form.Item<UploadWorkFormInfo>
-            label={<Label text='作品标签' />}
-            name='labels'
-            rules={[{ required: true, message: '作品标签是必须要选的！' }]}>
+            label={<Label text="作品标签" />}
+            name="labels"
+            rules={[{ required: true, message: '作品标签是必须要选的！' }]}
+          >
             <Select
-              mode='tags'
+              mode="tags"
               style={{ width: '100%' }}
-              placeholder='选择不超过50个标签，或者自己输入'
+              placeholder="选择不超过50个标签，或者自己输入"
               maxCount={50}
               onSearch={searchLabels}
               onChange={(value) => {
-                setFormInfo((prevFormInfo) => ({
+                setFormInfo(prevFormInfo => ({
                   ...prevFormInfo,
                   labels: value,
                 }))
@@ -559,34 +581,36 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
             <span>其他信息</span>
           </div>
           <Form.Item<UploadWorkFormInfo>
-            label={<Label text='开启评论' />}
+            label={<Label text="开启评论" />}
             name={['basicInfo', 'openComment']}
-            rules={[{ required: true, message: '请选择是否开启评论！' }]}>
+            rules={[{ required: true, message: '请选择是否开启评论！' }]}
+          >
             <Radio.Group
               value={formInfo.basicInfo.openComment}
-              onChange={(e) =>
+              onChange={e =>
                 setFormInfo({
                   ...formInfo,
                   basicInfo: { ...formInfo.basicInfo, openComment: e.target.value },
-                })
-              }>
-              <Radio value={true}>是</Radio>
+                })}
+            >
+              <Radio value>是</Radio>
               <Radio value={false}>否</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item<UploadWorkFormInfo>
-            label={<Label text='AI生成作品' />}
+            label={<Label text="AI生成作品" />}
             name={['basicInfo', 'isAIGenerated']}
-            rules={[{ required: true, message: '请选择是否为AI生成作品！' }]}>
+            rules={[{ required: true, message: '请选择是否为AI生成作品！' }]}
+          >
             <Radio.Group
               value={formInfo.basicInfo.isAIGenerated}
-              onChange={(e) =>
+              onChange={e =>
                 setFormInfo({
                   ...formInfo,
                   basicInfo: { ...formInfo.basicInfo, isAIGenerated: e.target.value },
-                })
-              }>
-              <Radio value={true}>是</Radio>
+                })}
+            >
+              <Radio value>是</Radio>
               <Radio value={false}>否</Radio>
             </Radio.Group>
           </Form.Item>
@@ -596,7 +620,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div className={titleStyle}>
             <span>其他须知</span>
           </div>
-          <div className='flex flex-col gap-10px text-sm font-bold color-neutral-900 line-height-normal'>
+          <div className="flex flex-col gap-10px text-sm color-neutral-900 font-bold line-height-normal">
             <span>
               这个小站只是因纯粹的热爱而搭建，大家所上传的图片全部都会在后台管理系统进行审核，通过后会在本站进行展示。
             </span>
@@ -604,7 +628,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
               尽可能不要转载相同的作品，如果发现有重复的作品，会在后台管理系统进行统一的处理。
             </span>
             <span>包含以下要素的作品将不予上传：</span>
-            <ul className='flex flex-col m-0 pl-5 gap-10px'>
+            <ul className="m-0 flex flex-col gap-10px pl-5">
               <li>
                 <span>现实世界的照片（这是二次元，二次元，二次元）；</span>
               </li>

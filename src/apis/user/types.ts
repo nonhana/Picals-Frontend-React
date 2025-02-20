@@ -1,6 +1,6 @@
 // src/apis/user/types.ts
 // 定义 user 模块的 API 类型
-import { LabelItem } from '../types'
+import type { LabelItem } from '../types'
 
 // #region 请求体类型
 export interface IRefreshTokenReq {

@@ -33,6 +33,6 @@ const animationVariants: Record<AnimationVariantKeys, MotionProps> = {
   },
 } as const
 
-export const getAnimationVariant = (key: AnimationVariantKeys) => {
+export function getAnimationVariant(key: AnimationVariantKeys) {
   return animationVariants[key]
 }

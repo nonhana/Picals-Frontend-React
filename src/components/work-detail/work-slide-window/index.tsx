@@ -1,7 +1,7 @@
+import type { VirtualListProps } from '@/components/common/virtual-list'
+import type { WorkNormalItemInfo } from '@/utils/types'
 import LayoutList from '@/components/common/layout-list'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
-import { WorkNormalItemInfo } from '@/utils/types'
-import type { VirtualListProps } from '@/components/common/virtual-list'
 import { useMemo } from 'react'
 
 interface WorkSlideWindowProps extends Partial<VirtualListProps> {
@@ -16,7 +16,7 @@ interface WorkSlideWindowProps extends Partial<VirtualListProps> {
   setInitializing?: (status: boolean) => void
 }
 
-const WorkSlideWindow = ({
+function WorkSlideWindow({
   workId,
   workList,
   setWorkListEnd,
@@ -24,9 +24,9 @@ const WorkSlideWindow = ({
   initializing,
   setInitializing,
   ...rest
-}: WorkSlideWindowProps) => {
+}: WorkSlideWindowProps) {
   const virtualListItems = useMemo(
-    () => workList.map((everyPage) => everyPage.list).flat(),
+    () => workList.map(everyPage => everyPage.list).flat(),
     [workList],
   )
 
@@ -36,12 +36,13 @@ const WorkSlideWindow = ({
       virtualList
       data={virtualListItems}
       workId={workId}
-      type='work-detail'
-      scrollType='work-little'
+      type="work-detail"
+      scrollType="work-little"
       setAtBottom={setWorkListEnd}
       initializing={initializing}
-      setInitializing={setInitializing}>
-      {!isFinal && <ImgLoadingSkeleton className='shrink-0 w-90px h-90px rd-1' />}
+      setInitializing={setInitializing}
+    >
+      {!isFinal && <ImgLoadingSkeleton className="h-90px w-90px shrink-0 rd-1" />}
     </LayoutList>
   )
 }

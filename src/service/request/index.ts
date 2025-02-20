@@ -1,8 +1,8 @@
-import { notification } from 'antd'
-import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { CreateRequestConfig, RequestConfig, RequestInterceptors } from './types'
+import { notification } from 'antd'
 
-import type { RequestConfig, RequestInterceptors, CreateRequestConfig } from './types'
+import axios from 'axios'
 
 interface PendingTask {
   config: AxiosRequestConfig
@@ -23,22 +23,24 @@ class Request {
     this.instance.interceptors.request.use(
       (config) => {
         const accessToken = localStorage.getItem('accessToken')
-        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
+        if (accessToken)
+          config.headers.Authorization = `Bearer ${accessToken}`
         return config
       },
-      (err) => Promise.reject(err),
+      err => Promise.reject(err),
     )
 
     // 全局响应拦截器
     this.instance.interceptors.response.use(
-      (response) => response.data,
+      response => response.data,
       async (err) => {
-        if (err.code === 'ECONNABORTED' && err.message.indexOf('timeout') !== -1) {
+        if (err.code === 'ECONNABORTED' && err.message.includes('timeout')) {
           notification.error({
             message: '请求超时',
             description: '请求超时，请检查网络',
           })
-        } else {
+        }
+        else {
           const { status, data, config } = err.response
 
           if (refreshing) {
@@ -71,14 +73,16 @@ class Request {
               })
               pendingTasks.length = 0 // 清空队列
               return this.instance.request(config)
-            } catch (error) {
+            }
+            catch (error) {
               pendingTasks.forEach((task) => {
                 task.reject(error)
               })
               pendingTasks.length = 0 // 清空队列
               localStorage.clear()
               // window.location.href = '/'
-            } finally {
+            }
+            finally {
               refreshing = false
             }
           }
@@ -88,17 +92,20 @@ class Request {
               message: '服务器错误',
               description: data.message || '未知错误',
             })
-          } else if (status === 413) {
+          }
+          else if (status === 413) {
             notification.error({
               message: '文件过大',
               description: '文件过大，选个小点的吧~',
             })
-          } else if (status === 404) {
+          }
+          else if (status === 404) {
             notification.error({
               message: '请求资源不存在',
               description: '请求的资源不存在，请检查接口地址',
             })
-          } else if (status === 400) {
+          }
+          else if (status === 400) {
             notification.error({
               message: '客户端错误',
               description: Array.isArray(data.message)

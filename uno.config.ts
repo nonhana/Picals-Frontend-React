@@ -1,16 +1,16 @@
 import { presetRemToPx } from '@unocss/preset-rem-to-px'
-import { presetScrollbar } from 'unocss-preset-scrollbar'
 import {
   defineConfig,
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetWind3,
   presetWebFonts,
+  presetWind3,
+  transformerAttributifyJsx,
   transformerDirectives,
   transformerVariantGroup,
-  transformerAttributifyJsx,
 } from 'unocss'
+import { presetScrollbar } from 'unocss-preset-scrollbar'
 
 export default defineConfig({
   presets: [
@@ -70,7 +70,7 @@ export default defineConfig({
     },
     extend: {
       keyframes: {
-        spin: {
+        'spin': {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
@@ -86,7 +86,7 @@ export default defineConfig({
         },
       },
       animation: {
-        spin: 'spin 1s linear infinite',
+        'spin': 'spin 1s linear infinite',
         'float-up': 'float-up 0.3s forwards',
       },
     },

@@ -1,33 +1,34 @@
-import { registerAPI, loginAPI, sendEmailCodeAPI, getUserFavoriteListAPI } from '@/apis'
+import type { FormInstance, FormProps } from 'antd'
+import type { FC } from 'react'
+import { getUserFavoriteListAPI, loginAPI, registerAPI, sendEmailCodeAPI } from '@/apis'
 import logo from '@/assets/svgs/logo.svg'
 import GreyButton from '@/components/common/grey-button'
 import AnimatedDiv from '@/components/motion/animated-div'
 import { setFavoriteList } from '@/store/modules/favorites'
 import { setLikedLabels, setLoginStatus, setTempId, setUserInfo } from '@/store/modules/user'
+import { cn } from '@/utils'
 import { Icon } from '@iconify/react'
 import {
-  notification,
   Button,
   Form,
+
   Input,
-  Row,
   message,
-  type FormProps,
-  type FormInstance,
+  notification,
+  Row,
 } from 'antd'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { cn } from '@/utils'
 
 // 登录表单
-type LoginForm = {
+interface LoginForm {
   email: string
   password: string
 }
 // 注册表单
-type RegisterForm = {
+interface RegisterForm {
   email: string
   validateCode: string
   password: string
@@ -43,7 +44,7 @@ const LoginWindow: FC = () => {
   const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(false)
   const [isRegister, setIsRegister] = useState(false)
-  const [codeStatus, setCodeStatus] = useState<{ isSent: boolean; countDown: number }>({
+  const [codeStatus, setCodeStatus] = useState<{ isSent: boolean, countDown: number }>({
     isSent: false,
     countDown: 0,
   })
@@ -83,10 +84,12 @@ const LoginWindow: FC = () => {
         description: `欢迎回来，${userInfo.username}！`,
       })
       navigate('/home')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setLoginLoading(false)
     }
   }
@@ -105,10 +108,12 @@ const LoginWindow: FC = () => {
         description: '请登录邮箱验证账号！',
       })
       setIsRegister(false)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setRegisterLoading(false)
     }
   }
@@ -116,8 +121,10 @@ const LoginWindow: FC = () => {
   const [sendingCode, setSendingCode] = useState(false)
   const handleSendCode = async () => {
     const email = registerFormRef.current?.getFieldValue('email')
-    if (!email) return messageApi.error('请填写邮箱！')
-    if (codeStatus.isSent) return
+    if (!email)
+      return messageApi.error('请填写邮箱！')
+    if (codeStatus.isSent)
+      return
     try {
       setSendingCode(true)
       await sendEmailCodeAPI({ email })
@@ -131,10 +138,12 @@ const LoginWindow: FC = () => {
           return { isSent: true, countDown: prev.countDown - 1 }
         })
       }, 1000)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setSendingCode(false)
     }
   }
@@ -152,20 +161,22 @@ const LoginWindow: FC = () => {
       <AnimatePresence>
         {!windowVisible && (
           <AnimatedDiv
-            type='opacity-gradient'
-            className='absolute top-10px left-1/2 -translate-x-1/2 z-2 hidden md:block'>
+            type="opacity-gradient"
+            className="absolute left-1/2 top-10px z-2 hidden md:block -translate-x-1/2"
+          >
             <GreyButton
               onClick={() => {
                 setWindowVisible(true)
-              }}>
-              <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
+              }}
+            >
+              <Icon color="#fff" icon="ant-design:arrow-down-outlined" />
             </GreyButton>
           </AnimatedDiv>
         )}
 
         {windowVisible && (
           <AnimatedDiv
-            type='opacity-gradient'
+            type="opacity-gradient"
             onMouseEnter={() => setMouseEnter(true)}
             onMouseLeave={() => setMouseEnter(false)}
             className={cn(
@@ -173,55 +184,59 @@ const LoginWindow: FC = () => {
               'inset-0 w-full p-15 m-auto',
               'md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-130 md:rounded-6 md:bg-white',
               'flex flex-col items-center justify-between gap-10 z-2',
-            )}>
-            <div className='flex flex-col items-center justify-center'>
-              <img className='w-50' src={logo} alt='picals-logo' />
-              <span className='font-normal text-sm color-neutral'>兴趣使然的插画收藏小站</span>
+            )}
+          >
+            <div className="flex flex-col items-center justify-center">
+              <img className="w-50" src={logo} alt="picals-logo" />
+              <span className="text-sm color-neutral font-normal">兴趣使然的插画收藏小站</span>
             </div>
 
             {/* 返回按钮 */}
             {(isLogin || isRegister) && (
               <GreyButton
-                className='absolute top-10 left-10 hidden md:block'
-                onClick={() => {
-                  setIsLogin(false), setIsRegister(false)
-                }}>
-                <Icon color='#fff' icon='ant-design:arrow-left-outlined' />
+                className="absolute left-10 top-10 hidden md:block"
+                onClick={resetStatus}
+              >
+                <Icon color="#fff" icon="ant-design:arrow-left-outlined" />
               </GreyButton>
             )}
 
             {/* 关闭按钮 */}
             {mouseEnter && (
               <AnimatedDiv
-                type='opacity-gradient'
-                className='absolute top-10 right-10 hidden md:block'>
+                type="opacity-gradient"
+                className="absolute right-10 top-10 hidden md:block"
+              >
                 <GreyButton
                   onClick={() => {
                     setWindowVisible(false)
-                  }}>
-                  <Icon color='#fff' icon='ant-design:close-outlined' />
+                  }}
+                >
+                  <Icon color="#fff" icon="ant-design:close-outlined" />
                 </GreyButton>
               </AnimatedDiv>
             )}
 
             {/* 默认状态，选择登录还是注册 */}
             {!isLogin && !isRegister && (
-              <div className='w-full flex flex-col gap-10'>
+              <div className="w-full flex flex-col gap-10">
                 <Button
-                  size='large'
-                  shape='round'
-                  className='w-full'
-                  type='primary'
-                  onClick={() => setIsRegister(true)}>
+                  size="large"
+                  shape="round"
+                  className="w-full"
+                  type="primary"
+                  onClick={() => setIsRegister(true)}
+                >
                   注册账号
                 </Button>
 
                 <Button
-                  size='large'
-                  shape='round'
-                  className='w-full'
-                  type='default'
-                  onClick={() => setIsLogin(true)}>
+                  size="large"
+                  shape="round"
+                  className="w-full"
+                  type="default"
+                  onClick={() => setIsLogin(true)}
+                >
                   登录
                 </Button>
               </div>
@@ -230,42 +245,47 @@ const LoginWindow: FC = () => {
             {/* 登录状态 */}
             {isLogin && (
               <Form
-                name='login'
+                name="login"
                 labelCol={{ span: 6 }}
-                labelAlign='left'
+                labelAlign="left"
                 wrapperCol={{ span: 18 }}
                 style={{ width: '100%' }}
                 onFinish={handleLogin}
-                autoComplete='off'>
+                autoComplete="off"
+              >
                 <Form.Item<LoginForm>
-                  label='邮箱'
-                  name='email'
-                  rules={[{ required: true, message: '登录需要输入邮箱！' }]}>
-                  <Input size='large' placeholder='请输入邮箱' />
+                  label="邮箱"
+                  name="email"
+                  rules={[{ required: true, message: '登录需要输入邮箱！' }]}
+                >
+                  <Input size="large" placeholder="请输入邮箱" />
                 </Form.Item>
                 <Form.Item<LoginForm>
-                  label='密码'
-                  name='password'
-                  rules={[{ required: true, message: '登录需要输入密码！' }]}>
-                  <Input.Password size='large' placeholder='请输入密码' />
+                  label="密码"
+                  name="password"
+                  rules={[{ required: true, message: '登录需要输入密码！' }]}
+                >
+                  <Input.Password size="large" placeholder="请输入密码" />
                 </Form.Item>
                 <Form.Item>
-                  <div className='w-full flex gap-10'>
+                  <div className="w-full flex gap-10">
                     <Button
-                      className='w-full'
-                      type='primary'
-                      shape='round'
-                      size='large'
+                      className="w-full"
+                      type="primary"
+                      shape="round"
+                      size="large"
                       loading={loginLoading}
-                      htmlType='submit'>
+                      htmlType="submit"
+                    >
                       登录
                     </Button>
                     <Button
-                      className='w-full md:hidden'
-                      type='default'
-                      shape='round'
-                      size='large'
-                      onClick={resetStatus}>
+                      className="w-full md:hidden"
+                      type="default"
+                      shape="round"
+                      size="large"
+                      onClick={resetStatus}
+                    >
                       返回
                     </Button>
                   </div>
@@ -276,45 +296,50 @@ const LoginWindow: FC = () => {
             {/* 注册状态 */}
             {isRegister && (
               <Form
-                name='register'
+                name="register"
                 ref={registerFormRef}
                 labelCol={{ span: 6 }}
-                labelAlign='left'
+                labelAlign="left"
                 wrapperCol={{ span: 18 }}
                 style={{ width: '100%' }}
                 onFinish={handleRegister}
-                autoComplete='off'>
+                autoComplete="off"
+              >
                 <Form.Item<RegisterForm>
-                  label='邮箱'
-                  name='email'
-                  rules={[{ required: true, message: '注册需要输入邮箱！' }]}>
-                  <Input size='large' placeholder='请输入邮箱' />
+                  label="邮箱"
+                  name="email"
+                  rules={[{ required: true, message: '注册需要输入邮箱！' }]}
+                >
+                  <Input size="large" placeholder="请输入邮箱" />
                 </Form.Item>
                 <Form.Item<RegisterForm>
-                  label='验证码'
-                  name='validateCode'
-                  rules={[{ required: true, message: '请填写发送的验证码！' }]}>
-                  <Row className='flex justify-between'>
-                    <Input className='w-40' size='large' placeholder='请输入验证码' />
+                  label="验证码"
+                  name="validateCode"
+                  rules={[{ required: true, message: '请填写发送的验证码！' }]}
+                >
+                  <Row className="flex justify-between">
+                    <Input className="w-40" size="large" placeholder="请输入验证码" />
                     <Button
                       disabled={codeStatus.isSent}
-                      size='large'
-                      type='primary'
+                      size="large"
+                      type="primary"
                       loading={sendingCode}
-                      onClick={handleSendCode}>
+                      onClick={handleSendCode}
+                    >
                       {codeStatus.isSent ? `${codeStatus.countDown}s` : '发送验证码'}
                     </Button>
                   </Row>
                 </Form.Item>
                 <Form.Item<RegisterForm>
-                  label='密码'
-                  name='password'
-                  rules={[{ required: true, message: '注册需要输入密码！' }]}>
-                  <Input.Password size='large' placeholder='请输入密码' />
+                  label="密码"
+                  name="password"
+                  rules={[{ required: true, message: '注册需要输入密码！' }]}
+                >
+                  <Input.Password size="large" placeholder="请输入密码" />
                 </Form.Item>
                 <Form.Item<RegisterForm>
-                  label='确认密码'
-                  name='confirmPassword'
+                  label="确认密码"
+                  name="confirmPassword"
                   rules={[
                     { required: true, message: '请再输入一遍密码！' },
                     ({ getFieldValue }) => ({
@@ -325,26 +350,29 @@ const LoginWindow: FC = () => {
                         return Promise.reject(new Error('两次密码输入不一致！'))
                       },
                     }),
-                  ]}>
-                  <Input.Password size='large' placeholder='请再输入一遍密码' />
+                  ]}
+                >
+                  <Input.Password size="large" placeholder="请再输入一遍密码" />
                 </Form.Item>
                 <Form.Item>
-                  <div className='w-full flex gap-10'>
+                  <div className="w-full flex gap-10">
                     <Button
-                      className='w-full'
-                      type='primary'
-                      shape='round'
-                      size='large'
+                      className="w-full"
+                      type="primary"
+                      shape="round"
+                      size="large"
                       loading={registerLoading}
-                      htmlType='submit'>
+                      htmlType="submit"
+                    >
                       注册
                     </Button>
                     <Button
-                      className='w-full md:hidden'
-                      type='default'
-                      shape='round'
-                      size='large'
-                      onClick={resetStatus}>
+                      className="w-full md:hidden"
+                      type="default"
+                      shape="round"
+                      size="large"
+                      onClick={resetStatus}
+                    >
                       返回
                     </Button>
                   </div>

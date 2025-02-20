@@ -1,7 +1,8 @@
+import type { FC } from 'react'
 import { getUserWorksTotalAPI } from '@/apis'
 import LabelList from '@/components/personal-center/label-list'
 import WorkList from '@/components/personal-center/work-list'
-import { FC, useEffect, useState, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { PersonalContext } from '..'
 
@@ -14,9 +15,9 @@ const MyWorks: FC = () => {
     try {
       const { data } = await getUserWorksTotalAPI({ id: userId })
       setWorkCount(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -25,14 +26,14 @@ const MyWorks: FC = () => {
   }, [userId])
 
   return (
-    <div className='relative w-full'>
-      <div className='flex gap-10px py-5 items-center'>
-        <span className='select-none title'>插画</span>
-        <div className='bg-neutral rd-full py-3px px-6px text-sm color-white font-bold'>
+    <div className="relative w-full">
+      <div className="flex items-center gap-10px py-5">
+        <span className="select-none title">插画</span>
+        <div className="rd-full bg-neutral px-6px py-3px text-sm color-white font-bold">
           <span>{workCount}</span>
         </div>
       </div>
-      <div className='mb-5'>
+      <div className="mb-5">
         <LabelList />
       </div>
       <WorkList workCount={workCount} getWorkCount={getWorkCount} />

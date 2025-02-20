@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const useLoading = () => {
+function useLoading() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
@@ -9,9 +9,11 @@ const useLoading = () => {
       setLoading(true)
       const result = await promise
       return result
-    } catch (error: any) {
+    }
+    catch (error: any) {
       setError(error)
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }

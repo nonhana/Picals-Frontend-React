@@ -1,6 +1,7 @@
 import type { AppState } from '@/store/types'
+import type { FC } from 'react'
 import { message } from 'antd'
-import { FC, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
@@ -15,7 +16,8 @@ const AuthRouter: FC<{ children: React.ReactNode }> = ({ children }) => {
     }
   }, [isLogin, navigate])
 
-  if (isLogin) return <>{children}</>
+  if (isLogin)
+    return <>{children}</>
   return null
 }
 

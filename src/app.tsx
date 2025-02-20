@@ -1,13 +1,13 @@
+import type { AppState } from './store/types'
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, useLocation } from 'react-router'
 
+import { Outlet, useLocation } from 'react-router'
 import Header from './components/common/header'
 import { useWinChange } from './hooks'
-import type { AppState } from './store/types'
 import { SIDEBAR_WHITE_LIST } from './utils/constants'
 
-const App = () => {
+function App() {
   const { uploadSuccess } = useSelector((state: AppState) => state.uploadForm)
 
   const location = useLocation()
@@ -19,9 +19,11 @@ const App = () => {
 
   useEffect(() => {
     if (SIDEBAR_WHITE_LIST.test(location.pathname)) {
-      if (naturalSideBarVisible) setMarginTrigger(showSideBar)
+      if (naturalSideBarVisible)
+        setMarginTrigger(showSideBar)
       else setMarginTrigger(false)
-    } else {
+    }
+    else {
       setMarginTrigger(
         showSideBar && location.pathname !== '/login' && SIDEBAR_WHITE_LIST.test(location.pathname),
       )
@@ -39,7 +41,8 @@ const App = () => {
       )}
       <div
         ref={appRef}
-        className={`flex transition-all duration-300 ${marginTrigger ? 'ml-240px' : ''}`}>
+        className={`flex transition-all duration-300 ${marginTrigger ? 'ml-240px' : ''}`}
+      >
         <Outlet context={currentWidth} />
       </div>
     </>

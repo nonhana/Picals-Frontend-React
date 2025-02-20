@@ -4,7 +4,7 @@
  * @param homeUrl - 插画家的主页地址
  * @returns 是否为 Pixiv 用户
  */
-export const verifyPixivUser = (homeUrl: string): boolean => {
+export function verifyPixivUser(homeUrl: string): boolean {
   return /^https:\/\/www.pixiv.net\/users\/\d+$/.test(homeUrl)
 }
 
@@ -14,6 +14,6 @@ export const verifyPixivUser = (homeUrl: string): boolean => {
  * @param workUrl - 作品地址
  * @returns 是否为 Pixiv 作品
  */
-export const verifyPixivWork = (workUrl: string): boolean => {
+export function verifyPixivWork(workUrl: string): boolean {
   return /^https:\/\/www.pixiv.net\/artworks\/\d+$/.test(workUrl)
 }

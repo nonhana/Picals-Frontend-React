@@ -1,10 +1,10 @@
+import type { FC } from 'react'
 import { isWarmHue } from '@/utils'
-import { FC } from 'react'
 import { Link } from 'react-router'
 
 import LazyImg from '../lazy-img'
 
-type LabelImgItemProps = {
+interface LabelImgItemProps {
   id: string
   name: string
   color: string
@@ -15,17 +15,21 @@ const LabelImgItem: FC<LabelImgItemProps> = ({ name, color, cover }) => {
   return (
     <Link
       to={`/search-result?label=${name}&type=work&sortType=new`}
-      className='relative flex-shrink-0 w-118px h-118px rd-6px overflow-hidden flex items-center justify-center cursor-pointer hover:opacity-80'>
+      className="relative h-118px w-118px flex flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rd-6px hover:opacity-80"
+    >
       <LazyImg
         src={
-          cover ||
-          `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
+          cover
+          || `https://fakeimg.pl/200x200/${color.slice(1)}/${isWarmHue(color) ? '3d3d3d' : 'ffffff'}?retina=1&font=noto&text=${name}`
         }
         alt={name}
       />
-      <div className='absolute w-118px h-118px top-0 left-0 bg-black opacity-32' />
-      <div className='absolute w-full px-1 bottom-20px flex justify-center color-white text-sm font-bold'>
-        <span className='break-all'>#{name}</span>
+      <div className="absolute left-0 top-0 h-118px w-118px bg-black opacity-32" />
+      <div className="absolute bottom-20px w-full flex justify-center px-1 text-sm color-white font-bold">
+        <span className="break-all">
+          #
+          {name}
+        </span>
       </div>
     </Link>
   )

@@ -1,5 +1,6 @@
-import { getIllustratorWorksInPagesAPI, getIllustratorWorksIdListAPI } from '@/apis'
 import type { WorkNormalItem } from '@/apis/types'
+import type { FC } from 'react'
+import { getIllustratorWorksIdListAPI, getIllustratorWorksInPagesAPI } from '@/apis'
 import { useAtBottom } from '@/hooks'
 import {
   pushToIllustratorWorkList,
@@ -7,7 +8,7 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { FC, useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router'
 
@@ -16,9 +17,9 @@ import WaterfallItem from '../common/waterfall-item'
 const pageSize = 10
 const listClass = 'absolute w-75 flex flex-col gap-5'
 
-type WaterfallItemInfo = WorkNormalItem & { index: number; height: number }
+type WaterfallItemInfo = WorkNormalItem & { index: number, height: number }
 
-type WaterfallFlowProps = {
+interface WaterfallFlowProps {
   startAppreciate: boolean
 }
 
@@ -43,7 +44,8 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
         current,
         pageSize,
       })
-      if (data.length < pageSize) setIsFinal(true)
+      if (data.length < pageSize)
+        setIsFinal(true)
       // 遍历作品数组，将每个作品插入到目前最短的列中
       data.forEach((item) => {
         const coverImage = new Image()
@@ -54,7 +56,7 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
             const newArr = [...prev]
             const resultHeight = (coverImage.height * 300) / coverImage.width
             newArr[minIndex] += resultHeight + 20
-            setWorkList((prev) => [
+            setWorkList(prev => [
               ...prev,
               {
                 ...item,
@@ -66,16 +68,17 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
           })
         }
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (!containerRef.current || heightArr.every((item) => !item)) return
+    if (!containerRef.current || heightArr.every(item => !item))
+      return
     const maxHeight = Math.max(...heightArr)
-    containerRef.current.style.height = maxHeight + 'px'
+    containerRef.current.style.height = `${maxHeight}px`
   }, [heightArr])
 
   useEffect(() => {
@@ -83,8 +86,9 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
   }, [illustratorId, current])
 
   useEffect(() => {
-    if (!atBottom || isFinal) return
-    setCurrent((prev) => prev + 1)
+    if (!atBottom || isFinal)
+      return
+    setCurrent(prev => prev + 1)
   }, [atBottom])
 
   const addIllustratorWorks = async () => {
@@ -96,17 +100,18 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
   }
 
   useEffect(() => {
-    if (!startAppreciate) return
+    if (!startAppreciate)
+      return
     navigate(`/work-detail/${workList[0].id}`)
     addIllustratorWorks()
   }, [startAppreciate])
 
   return (
-    <div ref={containerRef} className='relative w-245'>
+    <div ref={containerRef} className="relative w-245">
       <div className={listClass}>
         {workList
-          .filter((item) => item.index === 0)
-          .map((item) => (
+          .filter(item => item.index === 0)
+          .map(item => (
             <WaterfallItem
               key={item.id}
               item={item}
@@ -117,8 +122,8 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
       </div>
       <div className={`${listClass} left-340px`}>
         {workList
-          .filter((item) => item.index === 1)
-          .map((item) => (
+          .filter(item => item.index === 1)
+          .map(item => (
             <WaterfallItem
               key={item.id}
               item={item}
@@ -129,8 +134,8 @@ const WaterfallFlow: FC<WaterfallFlowProps> = ({ startAppreciate }) => {
       </div>
       <div className={`${listClass} left-680px`}>
         {workList
-          .filter((item) => item.index === 2)
-          .map((item) => (
+          .filter(item => item.index === 2)
+          .map(item => (
             <WaterfallItem
               key={item.id}
               item={item}

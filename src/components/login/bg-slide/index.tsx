@@ -1,7 +1,8 @@
+import type { FC } from 'react'
 import { getRandomBackgroundsAPI } from '@/apis'
 import LazyImg from '@/components/common/lazy-img'
 import { debounce } from 'lodash'
-import { FC, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const BgSlide: FC = () => {
   const slideWindow = useRef<HTMLDivElement>(null)
@@ -16,21 +17,25 @@ const BgSlide: FC = () => {
   const [index, setIndex] = useState(0)
 
   const getRandomBackgrounds = async () => {
-    if (isFetching) return
+    if (isFetching)
+      return
     setIsFetching(true)
     try {
       const { data } = await getRandomBackgroundsAPI({ chosenIdList, device: 'desktop' })
       setBgImgList((prev) => {
-        if (!data.result) return prev
+        if (!data.result)
+          return prev
         const newBgImgList = prev.concat(data.result)
         bgImgListRef.current = newBgImgList
         return newBgImgList
       })
       setChosenIdList(data.chosenIdList)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setIsFetching(false)
     }
   }
@@ -52,7 +57,8 @@ const BgSlide: FC = () => {
 
   const imgLoaded = (url: string) => {
     setLoadedImgs((prev) => {
-      if (prev.includes(url)) return prev
+      if (prev.includes(url))
+        return prev
       return [...prev, url]
     })
   }
@@ -60,7 +66,8 @@ const BgSlide: FC = () => {
   useEffect(() => {
     if (loadedImgs.length <= index) {
       setIsPaused(true)
-    } else {
+    }
+    else {
       setIsPaused(false)
     }
   }, [loadedImgs, index])
@@ -78,7 +85,8 @@ const BgSlide: FC = () => {
   useEffect(() => {
     if (isPaused && intervalRef.current) {
       clearInterval(intervalRef.current)
-    } else {
+    }
+    else {
       if (!isPaused) {
         intervalRef.current = setInterval(slideImg, 5000)
       }
@@ -87,12 +95,12 @@ const BgSlide: FC = () => {
   }, [isPaused])
 
   return (
-    <div className='absolute left-0 top-0 w-100vw h-100vh overflow-hidden bg-neutral-50'>
+    <div className="absolute left-0 top-0 h-100vh w-100vw overflow-hidden bg-neutral-50">
       {/* 阻止用户选中图片 */}
-      <div className='absolute h-full w-full z-1' />
-      <div ref={slideWindow} className='relative flex h-full transition-transform duration-500'>
-        {bgImgList.map((bgImg, idx) => (
-          <LazyImg imgLoaded={imgLoaded} className='shrink-0' key={idx} src={bgImg} alt={bgImg} />
+      <div className="absolute z-1 h-full w-full" />
+      <div ref={slideWindow} className="relative h-full flex transition-transform duration-500">
+        {bgImgList.map(bgImg => (
+          <LazyImg key={bgImg} imgLoaded={imgLoaded} className="shrink-0" src={bgImg} alt={bgImg} />
         ))}
       </div>
     </div>

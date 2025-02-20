@@ -1,6 +1,15 @@
-import request from '@/service'
+import type {
+  Email,
+  FavoriteItem,
+  Id,
+  Keyword,
+  LabelItem,
+  Pagination,
+  UserItem,
+  WorkNormalItem,
+} from '../types'
 
-import {
+import type {
   IChangeEmailReq,
   IChangePasswordReq,
   IFavoriteActionsReq,
@@ -12,19 +21,10 @@ import {
   IUpdateUserInfoReq,
   UserDetailInfo,
 } from './types'
-import {
-  FavoriteItem,
-  Id,
-  Keyword,
-  LabelItem,
-  Pagination,
-  UserItem,
-  WorkNormalItem,
-  Email,
-} from '../types'
+import request from '@/service'
 
 // 根据 refreshToken 获取新的 token
-export const refreshTokenAPI = (params: IRefreshTokenReq) => {
+export function refreshTokenAPI(params: IRefreshTokenReq) {
   return request<IRefreshTokenReq, IRefreshTokenRes>({
     url: '/api/user/refresh-token',
     method: 'GET',
@@ -33,7 +33,7 @@ export const refreshTokenAPI = (params: IRefreshTokenReq) => {
 }
 
 // 发送邮箱验证码
-export const sendEmailCodeAPI = (params: Email) => {
+export function sendEmailCodeAPI(params: Email) {
   return request<Email, undefined>({
     url: '/api/user/register-captcha',
     method: 'GET',
@@ -42,7 +42,7 @@ export const sendEmailCodeAPI = (params: Email) => {
 }
 
 // 用户注册
-export const registerAPI = (data: IRegisterReq) => {
+export function registerAPI(data: IRegisterReq) {
   return request<IRegisterReq, undefined>({
     url: '/api/user/register',
     method: 'POST',
@@ -51,7 +51,7 @@ export const registerAPI = (data: IRegisterReq) => {
 }
 
 // 用户登录
-export const loginAPI = (params: ILoginReq) => {
+export function loginAPI(params: ILoginReq) {
   return request<ILoginReq, ILoginRes>({
     url: '/api/user/login',
     method: 'GET',
@@ -60,7 +60,7 @@ export const loginAPI = (params: ILoginReq) => {
 }
 
 // 获取用户详细信息
-export const getUserDetailAPI = (params: Id) => {
+export function getUserDetailAPI(params: Id) {
   return request<Id, UserDetailInfo>({
     url: '/api/user/detail',
     method: 'GET',
@@ -69,7 +69,7 @@ export const getUserDetailAPI = (params: Id) => {
 }
 
 // 获取用户简要信息
-export const getUserSimpleAPI = (params: Id) => {
+export function getUserSimpleAPI(params: Id) {
   return request<Id, UserItem>({
     url: '/api/user/simple',
     method: 'GET',
@@ -78,7 +78,7 @@ export const getUserSimpleAPI = (params: Id) => {
 }
 
 // 更新用户信息
-export const updateUserInfoAPI = (data: IUpdateUserInfoReq) => {
+export function updateUserInfoAPI(data: IUpdateUserInfoReq) {
   return request<IUpdateUserInfoReq, undefined>({
     url: '/api/user/update',
     method: 'POST',
@@ -87,7 +87,7 @@ export const updateUserInfoAPI = (data: IUpdateUserInfoReq) => {
 }
 
 // 修改密码
-export const changePasswordAPI = (data: IChangePasswordReq) => {
+export function changePasswordAPI(data: IChangePasswordReq) {
   return request<IChangePasswordReq, undefined>({
     url: '/api/user/change-password',
     method: 'POST',
@@ -96,7 +96,7 @@ export const changePasswordAPI = (data: IChangePasswordReq) => {
 }
 
 // 修改邮箱
-export const changeEmailAPI = (data: IChangeEmailReq) => {
+export function changeEmailAPI(data: IChangeEmailReq) {
   return request<IChangeEmailReq, undefined>({
     url: '/api/user/change-email',
     method: 'POST',
@@ -105,7 +105,7 @@ export const changeEmailAPI = (data: IChangeEmailReq) => {
 }
 
 // 获取用户收藏夹列表
-export const getUserFavoriteListAPI = (params: Id) => {
+export function getUserFavoriteListAPI(params: Id) {
   return request<Id, FavoriteItem[]>({
     url: '/api/user/favorites',
     method: 'GET',
@@ -114,7 +114,7 @@ export const getUserFavoriteListAPI = (params: Id) => {
 }
 
 // 获取用户喜欢的标签列表
-export const getUserLikeTagListAPI = (params?: Id) => {
+export function getUserLikeTagListAPI(params?: Id) {
   return request<Id, LabelItem[]>({
     url: '/api/user/like-labels',
     method: 'GET',
@@ -123,7 +123,7 @@ export const getUserLikeTagListAPI = (params?: Id) => {
 }
 
 // 添加/移除用户喜欢的标签
-export const labelActionsAPI = (data: Id) => {
+export function labelActionsAPI(data: Id) {
   return request<Id, undefined>({
     url: '/api/user/like-label-actions',
     method: 'POST',
@@ -132,7 +132,7 @@ export const labelActionsAPI = (data: Id) => {
 }
 
 // 关注/取关用户
-export const userActionsAPI = (data: Id) => {
+export function userActionsAPI(data: Id) {
   return request<Id, undefined>({
     url: '/api/user/follow-action',
     method: 'POST',
@@ -141,7 +141,7 @@ export const userActionsAPI = (data: Id) => {
 }
 
 // 分页获取正在关注的用户列表
-export const getFollowingListAPI = (params: Pagination) => {
+export function getFollowingListAPI(params: Pagination) {
   return request<Pagination, UserItem[]>({
     url: '/api/user/following',
     method: 'GET',
@@ -150,7 +150,7 @@ export const getFollowingListAPI = (params: Pagination) => {
 }
 
 // 获取用户正在关注的用户总数
-export const getFollowingTotalAPI = (params?: Id) => {
+export function getFollowingTotalAPI(params?: Id) {
   return request<Id, number>({
     url: '/api/user/following-count',
     method: 'GET',
@@ -159,7 +159,7 @@ export const getFollowingTotalAPI = (params?: Id) => {
 }
 
 // 分页获取用户的粉丝列表
-export const getFansListAPI = (params: Pagination) => {
+export function getFansListAPI(params: Pagination) {
   return request<Pagination, UserItem[]>({
     url: '/api/user/followers',
     method: 'GET',
@@ -168,7 +168,7 @@ export const getFansListAPI = (params: Pagination) => {
 }
 
 // 获取用户的粉丝总数
-export const getFansTotalAPI = (params?: Id) => {
+export function getFansTotalAPI(params?: Id) {
   return request<Id, number>({
     url: '/api/user/followers-count',
     method: 'GET',
@@ -177,7 +177,7 @@ export const getFansTotalAPI = (params?: Id) => {
 }
 
 // 获取用户已发布作品中所有携带的标签
-export const getUserWorksLabelsAPI = (params?: Id) => {
+export function getUserWorksLabelsAPI(params?: Id) {
   return request<Id, LabelItem[]>({
     url: '/api/user/published-labels',
     method: 'GET',
@@ -186,7 +186,7 @@ export const getUserWorksLabelsAPI = (params?: Id) => {
 }
 
 // 分页获取用户发布的作品列表
-export const getUserWorksListAPI = (params: Pagination) => {
+export function getUserWorksListAPI(params: Pagination) {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/user/works',
     method: 'GET',
@@ -195,7 +195,7 @@ export const getUserWorksListAPI = (params: Pagination) => {
 }
 
 // 获取用户发布的作品id列表
-export const getUserWorksIdListAPI = (params: Id) => {
+export function getUserWorksIdListAPI(params: Id) {
   return request<Id, string[]>({
     url: '/api/user/works-id',
     method: 'GET',
@@ -204,7 +204,7 @@ export const getUserWorksIdListAPI = (params: Id) => {
 }
 
 // 获取用户发布的作品总数
-export const getUserWorksTotalAPI = (params?: Id) => {
+export function getUserWorksTotalAPI(params?: Id) {
   return request<Id, number>({
     url: '/api/user/works-count',
     method: 'GET',
@@ -213,7 +213,7 @@ export const getUserWorksTotalAPI = (params?: Id) => {
 }
 
 // 分页获取用户喜欢的作品
-export const getUserLikeWorksAPI = (params: Pagination) => {
+export function getUserLikeWorksAPI(params: Pagination) {
   return request<Pagination, WorkNormalItem[]>({
     url: '/api/user/like-works',
     method: 'GET',
@@ -222,7 +222,7 @@ export const getUserLikeWorksAPI = (params: Pagination) => {
 }
 
 // 获取用户喜欢的作品id列表
-export const getUserLikeWorksIdListAPI = (params: Id) => {
+export function getUserLikeWorksIdListAPI(params: Id) {
   return request<Id, string[]>({
     url: '/api/user/like-works-id',
     method: 'GET',
@@ -231,7 +231,7 @@ export const getUserLikeWorksIdListAPI = (params: Id) => {
 }
 
 // 获取用户喜欢的作品总数
-export const getUserLikeWorksTotalAPI = (params?: Id) => {
+export function getUserLikeWorksTotalAPI(params?: Id) {
   return request<Id, number>({
     url: '/api/user/like-works-count',
     method: 'GET',
@@ -240,7 +240,7 @@ export const getUserLikeWorksTotalAPI = (params?: Id) => {
 }
 
 // 分页搜索用户
-export const searchUserAPI = (params: Pagination) => {
+export function searchUserAPI(params: Pagination) {
   return request<Pagination, UserItem[]>({
     url: '/api/user/search',
     method: 'GET',
@@ -249,7 +249,7 @@ export const searchUserAPI = (params: Pagination) => {
 }
 
 // 获取搜索用户总数
-export const searchUserTotalAPI = (params: Keyword) => {
+export function searchUserTotalAPI(params: Keyword) {
   return request<Keyword, number>({
     url: '/api/user/search-count',
     method: 'GET',
@@ -258,7 +258,7 @@ export const searchUserTotalAPI = (params: Keyword) => {
 }
 
 // 收藏/取消收藏作品
-export const favoriteActionsAPI = (data: IFavoriteActionsReq) => {
+export function favoriteActionsAPI(data: IFavoriteActionsReq) {
   return request<IFavoriteActionsReq, undefined>({
     url: '/api/user/collect',
     method: 'POST',
@@ -267,7 +267,7 @@ export const favoriteActionsAPI = (data: IFavoriteActionsReq) => {
 }
 
 // 喜欢/取消喜欢作品
-export const likeActionsAPI = (data: Id) => {
+export function likeActionsAPI(data: Id) {
   return request<Id, undefined>({
     url: '/api/user/like',
     method: 'POST',
@@ -276,7 +276,7 @@ export const likeActionsAPI = (data: Id) => {
 }
 
 // 分页获取推荐用户列表
-export const getRecommendUserListAPI = (params: Pagination) => {
+export function getRecommendUserListAPI(params: Pagination) {
   return request<Pagination, UserItem[]>({
     url: '/api/user/recommend-user',
     method: 'GET',

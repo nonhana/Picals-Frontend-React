@@ -1,11 +1,12 @@
+import type { LabelInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { getUserWorksLabelsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
 import AnimatedDiv from '@/components/motion/animated-div'
 import LabelListSkeleton from '@/components/skeleton/label-list'
 import { PersonalContext } from '@/pages/personal-center'
-import type { LabelInfo } from '@/utils/types'
-import { FC, useEffect, useState, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 const LabelList: FC = () => {
   const { userId } = useContext(PersonalContext)
@@ -18,10 +19,12 @@ const LabelList: FC = () => {
     try {
       const { data } = await getUserWorksLabelsAPI({ id: userId! })
       setLabels(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingLabels(false)
     }
   }
@@ -31,24 +34,24 @@ const LabelList: FC = () => {
   }, [userId])
 
   return (
-    <div className='relative w-full min-h-10'>
+    <div className="relative min-h-10 w-full">
       {labels.length !== 0 && !gettingLabels && (
-        <AnimatedDiv type='opacity-gradient' className='flex gap-10px flex-wrap mb-5'>
-          {labels.map((label) => (
+        <AnimatedDiv type="opacity-gradient" className="mb-5 flex flex-wrap gap-10px">
+          {labels.map(label => (
             <LabelItem key={label.id} {...label} />
           ))}
         </AnimatedDiv>
       )}
 
       {labels.length === 0 && !gettingLabels && (
-        <AnimatedDiv type='opacity-gradient'>
+        <AnimatedDiv type="opacity-gradient">
           <Empty showImg={false} />
         </AnimatedDiv>
       )}
 
       {labels.length === 0 && gettingLabels && (
-        <AnimatedDiv type='opacity-gradient'>
-          <LabelListSkeleton className='absolute top-0' />
+        <AnimatedDiv type="opacity-gradient">
+          <LabelListSkeleton className="absolute top-0" />
         </AnimatedDiv>
       )}
     </div>

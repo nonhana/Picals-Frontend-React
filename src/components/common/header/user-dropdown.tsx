@@ -1,16 +1,17 @@
+import type { AppState } from '@/store/types'
+import type { FC } from 'react'
+import AnimatedDiv from '@/components/motion/animated-div'
 import { reset } from '@/store/modules/favorites'
 import { clear } from '@/store/modules/searchHistory'
 import { logout } from '@/store/modules/user'
-import type { AppState } from '@/store/types'
 import { HEADER_DROPDOWN_LIST } from '@/utils/constants'
-import { Modal, message } from 'antd'
-import { FC, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router'
+import { message, Modal } from 'antd'
 import { AnimatePresence } from 'framer-motion'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { Link, useNavigate } from 'react-router'
 import LazyImg from '../lazy-img'
-import AnimatedDiv from '@/components/motion/animated-div'
 
 const UserDropdown: FC<{
   visible: boolean
@@ -90,56 +91,61 @@ const UserDropdown: FC<{
       <AnimatePresence>
         {visible && (
           <AnimatedDiv
-            type='opacity-gradient'
-            className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-32 z-1999'
+            type="opacity-gradient"
+            className="fixed left-0 top-0 z-1999 h-full w-full bg-black bg-opacity-32"
             onClick={() => setVisible(false)}
           />
         )}
 
         {visible && (
           <AnimatedDiv
-            type='opacity-gradient'
-            className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-2000 ${className}`}>
-            <div className='absolute top-0 left-0 w-full h-12.5 bg-neutral-100' />
-            <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
+            type="opacity-gradient"
+            className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-2000 ${className}`}
+          >
+            <div className="absolute left-0 top-0 h-12.5 w-full bg-neutral-100" />
+            <div className="z-1 m-t-25px h-25 flex flex-col items-start justify-between p-l-2.5 p-r-2.5">
               <Link to={`/personal-center/${userInfo.id}/works`}>
-                <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
-                  <LazyImg src={userInfo.littleAvatar} alt='avatar' />
+                <div className="h-12.5 w-12.5 flex items-center justify-center overflow-hidden rd-full">
+                  <LazyImg src={userInfo.littleAvatar} alt="avatar" />
                 </div>
               </Link>
-              <div className='font-bold text-sm color-neutral-900'>
+              <div className="text-sm color-neutral-900 font-bold">
                 <span>{userInfo.username}</span>
               </div>
-              <div className='text-xs color-neutral'>
+              <div className="text-xs color-neutral">
                 <span>{userInfo.email}</span>
               </div>
             </div>
-            <div className='p-2.5 w-30 flex justify-between'>
+            <div className="w-30 flex justify-between p-2.5">
               <div
-                className='h-9 flex flex-col justify-between items-start cursor-pointer'
-                onClick={() => selectItem('follow')}>
-                <span className='text-sm color-neutral-900'>{userInfo.followNum}</span>
-                <span className='text-xs color-neutral'>已关注</span>
+                className="h-9 flex flex-col cursor-pointer items-start justify-between"
+                onClick={() => selectItem('follow')}
+              >
+                <span className="text-sm color-neutral-900">{userInfo.followNum}</span>
+                <span className="text-xs color-neutral">已关注</span>
               </div>
               <div
-                className='h-9 flex flex-col justify-between items-start cursor-pointer'
-                onClick={() => selectItem('fans')}>
-                <span className='text-sm color-neutral-900'>{userInfo.fanNum}</span>
-                <span className='text-xs color-neutral'>粉丝</span>
+                className="h-9 flex flex-col cursor-pointer items-start justify-between"
+                onClick={() => selectItem('fans')}
+              >
+                <span className="text-sm color-neutral-900">{userInfo.fanNum}</span>
+                <span className="text-xs color-neutral">粉丝</span>
               </div>
             </div>
-            <ul className='m-0 p-0 list-none text-sm color-neutral-900'>
-              {HEADER_DROPDOWN_LIST.map((item, index) => (
+            <ul className="m-0 list-none p-0 text-sm color-neutral-900">
+              {HEADER_DROPDOWN_LIST.map(item => (
                 <li
-                  className='px-2.5 py-3 cursor-pointer hover:bg-neutral-50 transition-duration-300'
-                  key={index}
-                  onClick={() => selectItem(item.value)}>
+                  className="cursor-pointer px-2.5 py-3 transition-duration-300 hover:bg-neutral-50"
+                  key={item.name}
+                  onClick={() => selectItem(item.value)}
+                >
                   {item.name}
                 </li>
               ))}
               <li
-                className='px-2.5 py-3 cursor-pointer hover:bg-neutral-50 transition-duration-300'
-                onClick={handleLogout}>
+                className="cursor-pointer px-2.5 py-3 transition-duration-300 hover:bg-neutral-50"
+                onClick={handleLogout}
+              >
                 退出登录
               </li>
             </ul>

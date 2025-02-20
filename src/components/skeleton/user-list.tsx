@@ -1,22 +1,23 @@
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
-import { FC, Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import ContentLoader from 'react-content-loader'
 import { useOutletContext } from 'react-router'
 
-type UserListSkeletonProps = {
+interface UserListSkeletonProps {
   row?: number
   borderRadius?: number
   [key: string]: any
 }
 
-const UserListSkeleton: FC<UserListSkeletonProps> = ({ row = 2, borderRadius = 4, ...props }) => {
+function UserListSkeleton({ row = 2, borderRadius = 4, ...props }: UserListSkeletonProps) {
   const [width, setWidth] = useState<number>(MAX_WIDTH)
   const currentWidth = useOutletContext<number>()
 
   useEffect(() => {
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
@@ -60,7 +61,7 @@ const UserListSkeleton: FC<UserListSkeletonProps> = ({ row = 2, borderRadius = 4
     list.push(
       <Fragment key={i}>
         {/* 头像 */}
-        <rect x={avatarX} y={avatarY} rx='50%' width={avatarSize} height={avatarSize} />
+        <rect x={avatarX} y={avatarY} rx="50%" width={avatarSize} height={avatarSize} />
 
         {/* 用户名 */}
         <rect
@@ -93,8 +94,9 @@ const UserListSkeleton: FC<UserListSkeletonProps> = ({ row = 2, borderRadius = 4
         />
 
         {/* 作品展示 */}
-        {new Array(4).fill(0).map((_, index) => (
+        {Array.from({ length: 4 }).fill(0).map((_, index) => (
           <rect
+            // eslint-disable-next-line react/no-array-index-key
             key={index}
             x={workX + index * (workWidth + 16)}
             y={avatarY}

@@ -1,9 +1,11 @@
+import type { MenuProps } from 'antd'
+import type { FC } from 'react'
 import { PersonalContext } from '@/pages/personal-center'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Icon } from '@iconify/react'
-import { Dropdown, type MenuProps } from 'antd'
-import { FC, useState, useContext } from 'react'
+import { Dropdown } from 'antd'
+import { useContext, useState } from 'react'
 
 const dropdownList: MenuProps['items'] = [
   {
@@ -16,7 +18,7 @@ const dropdownList: MenuProps['items'] = [
   },
 ]
 
-type FavoriteItemProps = {
+interface FavoriteItemProps {
   id: string
   name: string
   folderStatus: boolean
@@ -70,28 +72,30 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
       className={`relative flex justify-between items-center w-250px h-15 cursor-pointer hover:bg-neutral-100 ${folderStatus ? 'bg-neutral-100' : 'bg-white'}`}
       onClick={() => onChooseFolder(id)}
       onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}>
-      <div className='w-full flex gap-10px items-center text-lg font-bold color-neutral-900'>
+      onMouseLeave={() => setHovering(false)}
+    >
+      <div className="w-full flex items-center gap-10px text-lg color-neutral-900 font-bold">
         {isMe && (
           <div
             {...listeners}
             style={{ visibility: hovering ? 'visible' : 'hidden' }}
-            className='bg-neutral-100grey w-3 h-15 flex justify-center items-center cursor-all-scroll'>
-            <Icon width='8px' color='#fff' icon='heroicons-outline:bars-3' />
+            className="bg-neutral-100grey h-15 w-3 flex cursor-all-scroll items-center justify-center"
+          >
+            <Icon width="8px" color="#fff" icon="heroicons-outline:bars-3" />
           </div>
         )}
         <div className={`${isMe ? '' : 'pl-3'}`}>
           <Icon
-            width='24px'
-            color='#858585'
+            width="24px"
+            color="#858585"
             icon={folderStatus ? 'ant-design:folder-open-filled' : 'ant-design:folder-filled'}
           />
         </div>
-        <span className='w-39 whitespace-nowrap overflow-hidden text-ellipsis'>{name}</span>
+        <span className="w-39 overflow-hidden text-ellipsis whitespace-nowrap">{name}</span>
       </div>
       {isMe && (
-        <Dropdown menu={{ items: dropdownList, onClick: onChooseItem }} placement='bottom' arrow>
-          <Icon className='mr-5' width='24px' color='#858585' icon='ant-design:more-outlined' />
+        <Dropdown menu={{ items: dropdownList, onClick: onChooseItem }} placement="bottom" arrow>
+          <Icon className="mr-5" width="24px" color="#858585" icon="ant-design:more-outlined" />
         </Dropdown>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { FC, ButtonHTMLAttributes } from 'react'
+import type { ButtonHTMLAttributes, FC } from 'react'
 
 type GreyButtonProps = {
   children: React.ReactNode

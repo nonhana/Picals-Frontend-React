@@ -1,13 +1,14 @@
-import { getIllustratorDetailAPI } from '@/apis'
 import type { IllustratorInfo } from '@/apis/illustrator/types'
+import type { FC } from 'react'
+import { getIllustratorDetailAPI } from '@/apis'
 import HanaViewer from '@/components/common/hana-viewer'
 import InfoModal from '@/components/illustrator/info-modal'
 import WaterfallFlow from '@/components/illustrator/waterfall-flow'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
-import { useParams, useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 const Illustrator: FC = () => {
   const navigate = useNavigate()
@@ -20,9 +21,9 @@ const Illustrator: FC = () => {
     try {
       const { data } = await getIllustratorDetailAPI({ id: illustratorId! })
       setIllustratorInfo(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -33,30 +34,32 @@ const Illustrator: FC = () => {
   const [startAppreciate, setStartAppreciate] = useState(false)
 
   return (
-    <div className='relative w-full min-h-screen flex justify-center bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
-      <div className='relative mt-30 mb-10 w-300 bg-white rd-6 flex flex-col items-center'>
+    <div className="relative min-h-screen w-full flex justify-center from-#e6f9ff to-#f5f5f5 bg-gradient-to-b">
+      <div className="relative mb-10 mt-30 w-300 flex flex-col items-center rd-6 bg-white">
         {illustratorInfo && (
-          <div className='p-5 w-full flex justify-between items-center'>
+          <div className="w-full flex items-center justify-between p-5">
             <Button
               icon={<ArrowLeftOutlined />}
-              shape='round'
-              size='large'
-              onClick={() => navigate(-1)}>
+              shape="round"
+              size="large"
+              onClick={() => navigate(-1)}
+            >
               返回
             </Button>
-            <div className='absolute top--20 left-1/2 transform -translate-x-1/2 flex flex-col gap-2.5 items-center color-neutral-900 text-lg font-bold'>
-              <div className='w-40 h-40 rd-full color-white b-5px b-solid overflow-hidden cursor-pointer'>
+            <div className="absolute left-1/2 top--20 flex flex-col transform items-center gap-2.5 text-lg color-neutral-900 font-bold -translate-x-1/2">
+              <div className="h-40 w-40 cursor-pointer overflow-hidden b-5px rd-full b-solid color-white">
                 <HanaViewer>
                   <PhotoView
                     src={
-                      illustratorInfo.avatar ||
-                      `https://fakeimg.pl/400x400?font=noto&text=${illustratorInfo.name}`
-                    }>
+                      illustratorInfo.avatar
+                      || `https://fakeimg.pl/400x400?font=noto&text=${illustratorInfo.name}`
+                    }
+                  >
                     <img
-                      className='w-full h-full object-cover'
+                      className="h-full w-full object-cover"
                       src={
-                        illustratorInfo.avatar ||
-                        `https://fakeimg.pl/400x400?font=noto&text=${illustratorInfo.name}`
+                        illustratorInfo.avatar
+                        || `https://fakeimg.pl/400x400?font=noto&text=${illustratorInfo.name}`
                       }
                       alt={illustratorInfo.name}
                     />
@@ -65,21 +68,22 @@ const Illustrator: FC = () => {
               </div>
               <span>{illustratorInfo.name}</span>
             </div>
-            <div className='flex gap-5'>
-              <Button shape='round' size='large' onClick={() => setInfoModalVisible(true)}>
+            <div className="flex gap-5">
+              <Button shape="round" size="large" onClick={() => setInfoModalVisible(true)}>
                 查看画家信息
               </Button>
               <Button
-                type='primary'
-                shape='round'
-                size='large'
-                onClick={() => setStartAppreciate(true)}>
+                type="primary"
+                shape="round"
+                size="large"
+                onClick={() => setStartAppreciate(true)}
+              >
                 开始浏览作品
               </Button>
             </div>
           </div>
         )}
-        <div className='w-full mt-15 flex justify-center'>
+        <div className="mt-15 w-full flex justify-center">
           <WaterfallFlow startAppreciate={startAppreciate} />
         </div>
       </div>

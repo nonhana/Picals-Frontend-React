@@ -1,6 +1,6 @@
-import { ImageItem, LabelItem } from '@/apis/types'
+import type { ImageItem, LabelItem } from '@/apis/types'
 
-export type Option = { label: string; value: string }
+export interface Option { label: string, value: string }
 
 // 用户登录时获取的基本个人信息
 export interface UserInfo {

@@ -1,11 +1,13 @@
+import type { FC } from 'react'
+import type { ReactCropperElement } from 'react-cropper'
 import { debounce } from 'lodash'
-import { FC, useRef, useState } from 'react'
-import { ReactCropperElement, Cropper } from 'react-cropper'
+import { useRef, useState } from 'react'
+import { Cropper } from 'react-cropper'
 
-import 'cropperjs/dist/cropper.css'
 import HanaModal from '../hana-modal'
+import 'cropperjs/dist/cropper.css'
 
-type HanaCropperProps = {
+interface HanaCropperProps {
   loading: boolean
   visible: boolean
   setVisible: (visible: boolean) => void
@@ -26,9 +28,11 @@ const HanaCropper: FC<HanaCropperProps> = ({
   const [croppedImg, setCroppedImg] = useState('')
 
   const onCrop = debounce(() => {
-    if (!cropperRef.current) return
+    if (!cropperRef.current)
+      return
     const imageElement = cropperRef.current
-    if (!imageElement) return
+    if (!imageElement)
+      return
     const cropper = imageElement.cropper
     setCroppedImg(cropper.getCroppedCanvas().toDataURL())
   }, 100)
@@ -37,10 +41,11 @@ const HanaCropper: FC<HanaCropperProps> = ({
     <HanaModal
       zIndex={3000}
       loading={loading}
-      title='裁剪图片'
+      title="裁剪图片"
       visible={visible}
       setVisible={setVisible}
-      onOk={() => onSaveHandler(croppedImg)}>
+      onOk={() => onSaveHandler(croppedImg)}
+    >
       <Cropper
         src={imgURL}
         ref={cropperRef}
@@ -50,7 +55,7 @@ const HanaCropper: FC<HanaCropperProps> = ({
         viewMode={1}
         minCropBoxHeight={100}
         minCropBoxWidth={100}
-        responsive={true}
+        responsive
         autoCropArea={1}
         aspectRatio={type === 'background' ? 4 / 3 : 1 / 1}
         checkOrientation={false}

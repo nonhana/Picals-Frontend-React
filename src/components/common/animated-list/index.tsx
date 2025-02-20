@@ -1,10 +1,11 @@
-import { HistoryItem } from '@/apis/types'
-import { WorkNormalItemInfo } from '@/utils/types'
-import { FC, useEffect, useRef } from 'react'
+import type { HistoryItem } from '@/apis/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
+import { useEffect, useRef } from 'react'
 
 import WorkItem from '../work-item'
 
-type AnimatedListProps = {
+interface AnimatedListProps {
   workList: (WorkNormalItemInfo | HistoryItem)[]
   [key: string]: any
 }
@@ -28,7 +29,7 @@ const AnimatedList: FC<AnimatedListProps> = ({ workList, ...props }) => {
   }, [])
 
   return (
-    <div ref={containerRef} className='relative w-full flex flex-wrap gap-5'>
+    <div ref={containerRef} className="relative w-full flex flex-wrap gap-5">
       {workList.map((item, index) => (
         <WorkItem key={item.id} {...props} index={index} itemInfo={item} />
       ))}

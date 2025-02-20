@@ -1,9 +1,9 @@
+import type { FC } from 'react'
 import paginationLeft from '@/assets/svgs/pagination-left.svg'
 import paginationMore from '@/assets/svgs/pagination-more.svg'
 import paginationRight from '@/assets/svgs/pagination-right.svg'
-import { FC } from 'react'
 
-type PaginationProps = {
+interface PaginationProps {
   total: number
   pageSize: number
   current: number
@@ -18,14 +18,23 @@ const Pagination: FC<PaginationProps> = ({
   size = 'default',
   onChange,
 }) => {
+  const containerClass = size === 'small' ? 'gap-2.5' : 'gap-5'
+  const buttonClass = (isActive: boolean) =>
+    `w-${size === 'small' ? '6' : '10'} h-${size === 'small' ? '6' : '10'} ${isActive ? 'bg-black' : 'hover-bg-neutral-50'}`
+  const imgClass = () => `w-${size === 'small' ? '3.6' : '6'} h-${size === 'small' ? '3' : '6'}`
+  const textColorClass = (isActive: boolean) => (isActive ? 'color-white' : 'color-neutral')
+
   const totalPages = Math.ceil(total / pageSize) || 1
 
   const stepPage = (type: 'prev' | 'next') => {
     if (type === 'prev') {
-      if (current === 1) return
+      if (current === 1)
+        return
       onChange(current - 1)
-    } else {
-      if (current === totalPages) return
+    }
+    else {
+      if (current === totalPages)
+        return
       onChange(current + 1)
     }
   }
@@ -56,7 +65,8 @@ const Pagination: FC<PaginationProps> = ({
         <div
           key={1}
           className={`rd-full shrink-0 cursor-pointer flex items-center justify-center font-bold ${buttonClass(current === 1)}`}
-          onClick={() => onChange(1)}>
+          onClick={() => onChange(1)}
+        >
           <span className={`${textColorClass(current === 1)}`}>1</span>
         </div>,
       )
@@ -64,8 +74,8 @@ const Pagination: FC<PaginationProps> = ({
 
     if (start > 2) {
       buttons.push(
-        <div key='left-ellipsis' className='cursor-pointer flex items-center justify-center'>
-          <img className={imgClass()} src={paginationMore} alt='more' />
+        <div key="left-ellipsis" className="flex cursor-pointer items-center justify-center">
+          <img className={imgClass()} src={paginationMore} alt="more" />
         </div>,
       )
     }
@@ -75,7 +85,8 @@ const Pagination: FC<PaginationProps> = ({
         <div
           key={i}
           className={`rd-full shrink-0 cursor-pointer flex items-center justify-center font-bold ${buttonClass(i === current)}`}
-          onClick={() => onChange(i)}>
+          onClick={() => onChange(i)}
+        >
           <span className={`${textColorClass(i === current)}`}>{i}</span>
         </div>,
       )
@@ -83,8 +94,8 @@ const Pagination: FC<PaginationProps> = ({
 
     if (end < totalPages - 1) {
       buttons.push(
-        <div key='right-ellipsis' className='cursor-pointer flex items-center justify-center'>
-          <img className={imgClass()} src={paginationMore} alt='more' />
+        <div key="right-ellipsis" className="flex cursor-pointer items-center justify-center">
+          <img className={imgClass()} src={paginationMore} alt="more" />
         </div>,
       )
     }
@@ -94,7 +105,8 @@ const Pagination: FC<PaginationProps> = ({
         <div
           key={totalPages}
           className={`rd-full shrink-0 cursor-pointer flex items-center justify-center font-bold ${buttonClass(current === totalPages)}`}
-          onClick={() => onChange(totalPages)}>
+          onClick={() => onChange(totalPages)}
+        >
           <span className={`${textColorClass(current === totalPages)}`}>{totalPages}</span>
         </div>,
       )
@@ -103,26 +115,22 @@ const Pagination: FC<PaginationProps> = ({
     return buttons
   }
 
-  const containerClass = size === 'small' ? 'gap-2.5' : 'gap-5'
-  const buttonClass = (isActive: boolean) =>
-    `w-${size === 'small' ? '6' : '10'} h-${size === 'small' ? '6' : '10'} ${isActive ? 'bg-black' : 'hover-bg-neutral-50'}`
-  const imgClass = () => `w-${size === 'small' ? '3.6' : '6'} h-${size === 'small' ? '3' : '6'}`
-  const textColorClass = (isActive: boolean) => (isActive ? 'color-white' : 'color-neutral')
-
   return (
     <div className={`relative flex px-20px py-10px select-none ${containerClass}`}>
       <div
         className={`rd-full cursor-pointer flex items-center justify-center ${buttonClass(false)}`}
-        onClick={() => stepPage('prev')}>
-        <img className={imgClass()} src={paginationLeft} alt='left-button' />
+        onClick={() => stepPage('prev')}
+      >
+        <img className={imgClass()} src={paginationLeft} alt="left-button" />
       </div>
 
       {renderButtons()}
 
       <div
         className={`rd-full cursor-pointer flex items-center justify-center ${buttonClass(false)}`}
-        onClick={() => stepPage('next')}>
-        <img className={imgClass()} src={paginationRight} alt='right-button' />
+        onClick={() => stepPage('next')}
+      >
+        <img className={imgClass()} src={paginationRight} alt="right-button" />
       </div>
     </div>
   )

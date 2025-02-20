@@ -1,9 +1,11 @@
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import {
-  getUserWorksListAPI,
-  getUserLikeWorksAPI,
-  likeActionsAPI,
   deleteWorkAPI,
+  getUserLikeWorksAPI,
   getUserLikeWorksIdListAPI,
+  getUserWorksListAPI,
+  likeActionsAPI,
 } from '@/apis'
 import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
@@ -18,14 +20,13 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import type { WorkNormalItemInfo } from '@/utils/types'
 import { message } from 'antd'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect, useState, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router'
 
-type WorkListProps = {
+interface WorkListProps {
   workCount: number
   getWorkCount: () => Promise<void>
 }
@@ -44,20 +45,9 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     try {
       await likeActionsAPI({ id: workId })
       setWorkMap(workId, { ...workList.get(workId)!, isLiked: !workList.get(workId)!.isLiked })
-    } catch (error) {
-      console.error('出现错误了喵！！', error)
-      return
     }
-  }
-
-  const deleteWork = async (workId: string) => {
-    try {
-      await deleteWorkAPI({ id: workId })
-      await refreshWorkList()
-      message.success('删除成功')
-    } catch (error) {
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -68,10 +58,12 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
     try {
       const { data } = await getUserWorksListAPI({ id: userId!, current, pageSize: 30 })
       setWorkList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingWorkList(false)
     }
   }
@@ -85,33 +77,50 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
         pageSize: 30,
       })
       setWorkList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingWorkList(false)
     }
   }
 
   const refreshWorkList = async () => {
     await getWorkCount()
-    if (currentPath === 'works') await getUserWorks()
-    if (currentPath === 'likes') await getUserLikeWorks()
+    if (currentPath === 'works')
+      await getUserWorks()
+    if (currentPath === 'likes')
+      await getUserLikeWorks()
   }
 
   useEffect(() => {
     refreshWorkList()
   }, [current, currentPath])
 
+  const deleteWork = async (workId: string) => {
+    try {
+      await deleteWorkAPI({ id: workId })
+      await refreshWorkList()
+      message.success('删除成功')
+    }
+    catch (error) {
+      console.error('出现错误了喵！！', error)
+    }
+  }
+
   useEffect(() => {
-    if (userId) setCurrent(1)
+    if (userId)
+      setCurrent(1)
   }, [userId])
 
   const addWorks = async () => {
     if (currentPath === 'works') {
       dispatch(resetOtherList())
       dispatch(setCurrentList('userWorkList'))
-    } else {
+    }
+    else {
       const { data } = await getUserLikeWorksIdListAPI({ id: userId! })
       dispatch(resetOtherList())
       dispatch(pushToLikeWorkList(data))
@@ -121,10 +130,10 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
   }
 
   return (
-    <div className='relative w-full min-h-160 pb-15'>
+    <div className="relative min-h-160 w-full pb-15">
       {workList.size !== 0 && !gettingWorkList && (
         <AnimatedList
-          type='personal_center'
+          type="personal_center"
           workList={Array.from(workList.values())}
           like={likeWork}
           deleteWork={deleteWork}
@@ -134,19 +143,19 @@ const WorkList: FC<WorkListProps> = ({ workCount, getWorkCount }) => {
 
       <AnimatePresence>
         {workList.size === 0 && !gettingWorkList && (
-          <AnimatedDiv type='opacity-gradient'>
+          <AnimatedDiv type="opacity-gradient">
             <Empty />
           </AnimatedDiv>
         )}
 
         {workList.size === 0 && gettingWorkList && (
-          <AnimatedDiv type='opacity-gradient' className='absolute top-0'>
+          <AnimatedDiv type="opacity-gradient" className="absolute top-0">
             <WorkListSkeleton />
           </AnimatedDiv>
         )}
       </AnimatePresence>
 
-      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
         <Pagination total={workCount} pageSize={30} onChange={setCurrent} current={current} />
       </div>
     </div>

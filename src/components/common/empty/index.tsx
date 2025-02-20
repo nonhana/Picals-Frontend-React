@@ -1,5 +1,6 @@
+import type { FC } from 'react'
 import { random } from 'lodash'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import LazyImg from '../lazy-img'
 
@@ -12,7 +13,7 @@ Object.keys(images).forEach(async (key) => {
   emptyImgs.push(module.default)
 })
 
-type EmptyProps = {
+interface EmptyProps {
   width?: number | string
   height?: number | string
   text?: string
@@ -40,13 +41,12 @@ const Empty: FC<EmptyProps> = ({
     <div
       {...props}
       style={{ width, height }}
-      className={
-        'z-100 select-none py-5 relative flex flex-col gap-5 items-center justify-center bg-neutral-50 rd-1'
-      }>
+      className="relative z-100 flex flex-col select-none items-center justify-center gap-5 rd-1 bg-neutral-50 py-5"
+    >
       {showImg && randomImg && (
-        <LazyImg className='rd-1' width={200} height={200} src={randomImg} alt='empty' />
+        <LazyImg className="rd-1" width={200} height={200} src={randomImg} alt="empty" />
       )}
-      <span className='color-neutral text-sm font-bold'>{text}</span>
+      <span className="text-sm color-neutral font-bold">{text}</span>
       {children}
     </div>
   )

@@ -1,7 +1,7 @@
 import { debounce } from 'lodash'
 import { useEffect, useState } from 'react'
 
-const useAtBottom = (): boolean => {
+function useAtBottom(): boolean {
   const [isBottom, setIsBottom] = useState(false)
   useEffect(() => {
     const handleScroll = debounce(() => {
@@ -10,10 +10,13 @@ const useAtBottom = (): boolean => {
       const clientHeight = document.body.clientHeight // 可视区域高度
 
       if (scrollTop + clientHeight >= scrollHeight - 100) {
-        if (isBottom) return
+        if (isBottom)
+          return
         setIsBottom(true)
-      } else {
-        if (!isBottom) return
+      }
+      else {
+        if (!isBottom)
+          return
         setIsBottom(false)
       }
     }, 50)

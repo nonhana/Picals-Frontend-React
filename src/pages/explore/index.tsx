@@ -1,12 +1,13 @@
+import type { MenuProps } from 'antd'
+import type { FC } from 'react'
 import LatestList from '@/components/explore/latest-list'
 import UserList from '@/components/explore/user-list'
 import WorkList from '@/components/explore/work-list'
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
-import { PictureOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
+import { ClockCircleOutlined, PictureOutlined, UserOutlined } from '@ant-design/icons'
 import { Menu } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
-import { useOutletContext, useNavigate, useParams } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useOutletContext, useParams } from 'react-router'
 
 const items: MenuProps['items'] = [
   {
@@ -37,7 +38,8 @@ const Explore: FC = () => {
   useEffect(() => {
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
@@ -47,22 +49,28 @@ const Explore: FC = () => {
   }
 
   return (
-    <div ref={exploreRef} className='relative w-full my-30px select-none'>
-      <div style={{ width: `${width}px` }} className='flex flex-col items-center mx-auto'>
+    <div ref={exploreRef} className="relative my-30px w-full select-none">
+      <div style={{ width: `${width}px` }} className="mx-auto flex flex-col items-center">
         <Menu
-          className='w-full'
+          className="w-full"
           onClick={checkoutMenu}
           selectedKeys={[type!]}
-          mode='horizontal'
+          mode="horizontal"
           items={items}
         />
-        {type === 'recommend' ? (
-          <WorkList />
-        ) : type === 'latest' ? (
-          <LatestList />
-        ) : type === 'users' ? (
-          <UserList width={width} />
-        ) : null}
+        {type === 'recommend'
+          ? (
+              <WorkList />
+            )
+          : type === 'latest'
+            ? (
+                <LatestList />
+              )
+            : type === 'users'
+              ? (
+                  <UserList width={width} />
+                )
+              : null}
       </div>
     </div>
   )

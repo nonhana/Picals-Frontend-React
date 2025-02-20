@@ -1,7 +1,8 @@
+import type { FC } from 'react'
 import HistoryList from '@/components/personal-center/history/history-list'
 import SearchResult from '@/components/personal-center/history/search-result'
-import { Input, Button, message } from 'antd'
-import { FC, useEffect, useState } from 'react'
+import { Button, Input, message } from 'antd'
+import { useEffect, useState } from 'react'
 
 const { Search } = Input
 
@@ -18,40 +19,43 @@ const MyHistory: FC = () => {
       return
     }
     setSearching(true)
-    setSearchTrigger((prev) => prev + 1)
+    setSearchTrigger(prev => prev + 1)
   }
 
   useEffect(() => {
-    if (searching) return
+    if (searching)
+      return
     setKeyword('')
     setSearchTrigger(0)
   }, [searching])
 
   return (
-    <div className='relative w-full'>
-      <div className='py-5 w-full flex justify-between items-center'>
-        <span className='select-none title'>浏览记录</span>
-        <div className='flex items-center gap-5'>
+    <div className="relative w-full">
+      <div className="w-full flex items-center justify-between py-5">
+        <span className="select-none title">浏览记录</span>
+        <div className="flex items-center gap-5">
           {searching && (
-            <Button type='link' onClick={() => setSearching(false)}>
+            <Button type="link" onClick={() => setSearching(false)}>
               取消搜索
             </Button>
           )}
           <Search
-            className='w-60'
+            className="w-60"
             value={keyword}
-            placeholder='输入作品名称'
-            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="输入作品名称"
+            onChange={e => setKeyword(e.target.value)}
             onSearch={onSearch}
           />
         </div>
       </div>
 
-      {searching ? (
-        <SearchResult keyword={keyword} searchTrigger={searchTrigger} />
-      ) : (
-        <HistoryList />
-      )}
+      {searching
+        ? (
+            <SearchResult keyword={keyword} searchTrigger={searchTrigger} />
+          )
+        : (
+            <HistoryList />
+          )}
     </div>
   )
 }

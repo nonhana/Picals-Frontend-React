@@ -1,3 +1,5 @@
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { getLatestWorksAPI, likeActionsAPI } from '@/apis'
 import AnimatedList from '@/components/common/animated-list'
 import WorkListSkeleton from '@/components/skeleton/work-list'
@@ -8,8 +10,7 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router'
 
@@ -31,7 +32,8 @@ const LatestList: FC = () => {
   const getLatestWorks = async () => {
     try {
       const { data } = await getLatestWorksAPI({ pageSize: 30, current })
-      if (data.length < 30) setIsFinal(true)
+      if (data.length < 30)
+        setIsFinal(true)
       setLatestWorkList((prev) => {
         const result = prev.map((item) => {
           if (item.page === current) {
@@ -39,17 +41,19 @@ const LatestList: FC = () => {
           }
           return item
         })
-        if (!isFinal) result.push({ page: current + 1, list: [] })
+        if (!isFinal)
+          result.push({ page: current + 1, list: [] })
         return result
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
+    if (atBottom && !isFinal)
+      setCurrent(prev => prev + 1)
   }, [atBottom])
 
   useEffect(() => {
@@ -79,7 +83,7 @@ const LatestList: FC = () => {
   const addLatestWorks = () => {
     dispatch(resetOtherList())
     const result = latestWorkList.reduce((prev, current) => {
-      return prev.concat(current.list.map((item) => item.id))
+      return prev.concat(current.list.map(item => item.id))
     }, [] as string[])
     dispatch(pushToLatestWorkList(result))
     dispatch(setCurrentList('latestWorkList'))
@@ -87,13 +91,13 @@ const LatestList: FC = () => {
   }
 
   return (
-    <div className='relative w-full p-5 min-h-160'>
-      <div className='title m-b-10px'>
+    <div className="relative min-h-160 w-full p-5">
+      <div className="m-b-10px title">
         <span>最新发布</span>
       </div>
 
       {latestWorkList.map(
-        (everyPage) =>
+        everyPage =>
           everyPage.list.length !== 0 && (
             <AnimatedList
               key={everyPage.page}

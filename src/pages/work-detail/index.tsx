@@ -1,11 +1,14 @@
+import type { AppState } from '@/store/types'
+import type { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import {
-  getWorkDetailAPI,
-  getUserWorksListAPI,
-  userActionsAPI,
-  getUserSimpleAPI,
   addWorkViewAPI,
+  getUserSimpleAPI,
+  getUserWorksListAPI,
+  getWorkDetailAPI,
   likeActionsAPI,
   postViewHistoryAPI,
+  userActionsAPI,
 } from '@/apis'
 import GreyButton from '@/components/common/grey-button'
 import AnimatedDiv from '@/components/motion/animated-div'
@@ -15,13 +18,11 @@ import WorkInfo from '@/components/work-detail/work-info'
 import { useAtBottom, useAtTop } from '@/hooks'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
 import { resetUserList, setWorkDetailUserId } from '@/store/modules/viewList'
-import type { AppState } from '@/store/types'
-import { UserItemInfo, WorkDetailInfo, WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { notification } from 'antd'
 import { AnimatePresence } from 'framer-motion'
 import { debounce } from 'lodash'
-import { FC, useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 
@@ -32,7 +33,8 @@ const ScrollButtons: FC = () => {
   const scrollTo = (type: 'top' | 'bottom') => {
     if (type === 'top') {
       document.body.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
+    }
+    else {
       document.body.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     }
   }
@@ -40,22 +42,24 @@ const ScrollButtons: FC = () => {
   return (
     <AnimatePresence>
       {!isTop && (
-        <AnimatedDiv type='opacity-gradient' className='fixed bottom-25 right-10'>
+        <AnimatedDiv type="opacity-gradient" className="fixed bottom-25 right-10">
           <GreyButton
             onClick={() => {
               scrollTo('top')
-            }}>
-            <Icon color='#fff' icon='ant-design:arrow-up-outlined' />
+            }}
+          >
+            <Icon color="#fff" icon="ant-design:arrow-up-outlined" />
           </GreyButton>
         </AnimatedDiv>
       )}
       {!isBottom && (
-        <AnimatedDiv type='opacity-gradient' className='fixed bottom-10 right-10'>
+        <AnimatedDiv type="opacity-gradient" className="fixed bottom-10 right-10">
           <GreyButton
             onClick={() => {
               scrollTo('bottom')
-            }}>
-            <Icon color='#fff' icon='ant-design:arrow-down-outlined' />
+            }}
+          >
+            <Icon color="#fff" icon="ant-design:arrow-down-outlined" />
           </GreyButton>
         </AnimatedDiv>
       )}
@@ -74,13 +78,14 @@ const WorkDetail: FC = () => {
   const [userInfo, setUserInfo] = useState<UserItemInfo>()
 
   const addViewData = async () => {
-    if (!isLogin) return
+    if (!isLogin)
+      return
     try {
       await postViewHistoryAPI({ id: workId! })
       await addWorkViewAPI({ id: workId! })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -99,9 +104,9 @@ const WorkDetail: FC = () => {
       const authorInfo = (await getUserSimpleAPI({ id: authorId })).data
 
       setWorkInfo({ ...rest, authorInfo })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -116,9 +121,9 @@ const WorkDetail: FC = () => {
         intro: data.intro,
         isFollowing: data.isFollowing,
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -143,14 +148,16 @@ const WorkDetail: FC = () => {
   }
 
   const fetchUserWorks = async (authorId: string) => {
-    if (userWorksCurrent === 1) setInitializing(true)
+    if (userWorksCurrent === 1)
+      setInitializing(true)
     try {
       const { data } = await getUserWorksListAPI({
         id: authorId,
         pageSize: 30,
         current: userWorksCurrent,
       })
-      if (data.length < 30) setIsFinal(true)
+      if (data.length < 30)
+        setIsFinal(true)
       setAuthorWorkList((prev) => {
         const result = prev.map((item) => {
           if (item.page === userWorksCurrent) {
@@ -158,19 +165,23 @@ const WorkDetail: FC = () => {
           }
           return item
         })
-        if (!isFinal) result.push({ page: userWorksCurrent + 1, list: [] })
+        if (!isFinal)
+          result.push({ page: userWorksCurrent + 1, list: [] })
         return result
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setInitializing(false)
     }
   }
 
   useEffect(() => {
-    if (listEnd && !isFinal) setUserWorksCurrent((prev) => prev + 1)
+    if (listEnd && !isFinal)
+      setUserWorksCurrent(prev => prev + 1)
   }, [listEnd])
 
   useEffect(() => {
@@ -180,7 +191,8 @@ const WorkDetail: FC = () => {
   }, [userWorksCurrent])
 
   useEffect(() => {
-    if (workInfo?.authorInfo.id) setPrevAuthorId(workInfo.authorInfo.id)
+    if (workInfo?.authorInfo.id)
+      setPrevAuthorId(workInfo.authorInfo.id)
     const debouncedFetchWorkDetail = debounce(fetchWorkDetail, 500)
     const debouncedAddViewData = debounce(addViewData, 500)
 
@@ -195,7 +207,8 @@ const WorkDetail: FC = () => {
 
   useEffect(() => {
     if (workInfo) {
-      if (workInfo.authorInfo.id !== prevAuthorId) resetUserWorks()
+      if (workInfo.authorInfo.id !== prevAuthorId)
+        resetUserWorks()
       fetchUserInfo(workInfo.authorInfo.id)
       fetchUserWorks(workInfo.authorInfo.id)
       if (workDetailUserId !== workInfo.authorInfo.id) {
@@ -207,24 +220,27 @@ const WorkDetail: FC = () => {
 
   const follow = useCallback(
     async (id: string) => {
-      if (!userInfo) return
+      if (!userInfo)
+        return
       try {
         await userActionsAPI({ id })
         if (!userInfo.isFollowing) {
           dispatch(increaseFollowNum())
-        } else {
+        }
+        else {
           dispatch(decreaseFollowNum())
         }
         setWorkInfo((prev) => {
-          if (!prev) return prev
+          if (!prev)
+            return prev
           return {
             ...prev,
             authorInfo: { ...prev.authorInfo, isFollowing: !prev.authorInfo.isFollowing },
           }
         })
-      } catch (error) {
+      }
+      catch (error) {
         console.error('出现错误了喵！！', error)
-        return
       }
     },
     [userInfo],
@@ -232,15 +248,25 @@ const WorkDetail: FC = () => {
 
   useEffect(() => {
     if (workInfo?.authorInfo) {
-      setUserInfo((prev) => prev && { ...prev, isFollowing: workInfo.authorInfo.isFollowing })
+      setUserInfo(prev => prev && { ...prev, isFollowing: workInfo.authorInfo.isFollowing })
     }
   }, [workInfo?.authorInfo.isFollowing])
+
+  const likeActions = async (id: string) => {
+    try {
+      await likeActionsAPI({ id })
+    }
+    catch (error) {
+      console.error('出现错误了喵！！', error)
+    }
+  }
 
   const likeWork = async (id: string) => {
     await likeActions(id)
     if (workId === id) {
       setWorkInfo((prev) => {
-        if (!prev) return prev
+        if (!prev)
+          return prev
         return {
           ...prev,
           likeNum: prev.isLiked ? prev.likeNum - 1 : prev.likeNum + 1,
@@ -263,54 +289,49 @@ const WorkDetail: FC = () => {
     })
   }
 
-  const likeActions = async (id: string) => {
-    try {
-      await likeActionsAPI({ id })
-    } catch (error) {
-      console.error('出现错误了喵！！', error)
-      return
-    }
-  }
-
   return (
     <>
-      <div className='w-full flex justify-center min-h-100vh bg-gradient-to-b from-#e6f9ff to-#f5f5f5'>
-        <div className='flex gap-5 my-5'>
+      <div className="min-h-100vh w-full flex justify-center from-#e6f9ff to-#f5f5f5 bg-gradient-to-b">
+        <div className="my-5 flex gap-5">
           <div>
-            {workInfo ? (
-              <WorkInfo
-                setAuthorWorkListEnd={setListEnd}
-                isFinal={isFinal}
-                workId={workId!}
-                workInfo={workInfo}
-                setWorkInfo={setWorkInfo}
-                likeWork={likeWork}
-                initializing={initializing}
-                setInitializing={setInitializing}
-                authorWorkList={authorWorkList}
-              />
-            ) : (
-              <div>Loading...</div>
-            )}
-          </div>
-          <div className='flex flex-col gap-5'>
-            {userInfo ? (
-              <>
-                <UserInfo onFollow={follow} userInfo={userInfo} />
-                <div className='sticky top-5'>
-                  <ViewList
+            {workInfo
+              ? (
+                  <WorkInfo
                     setAuthorWorkListEnd={setListEnd}
                     isFinal={isFinal}
                     workId={workId!}
+                    workInfo={workInfo}
+                    setWorkInfo={setWorkInfo}
+                    likeWork={likeWork}
                     initializing={initializing}
                     setInitializing={setInitializing}
                     authorWorkList={authorWorkList}
                   />
-                </div>
-              </>
-            ) : (
-              <div>Loading...</div>
-            )}
+                )
+              : (
+                  <div>Loading...</div>
+                )}
+          </div>
+          <div className="flex flex-col gap-5">
+            {userInfo
+              ? (
+                  <>
+                    <UserInfo onFollow={follow} userInfo={userInfo} />
+                    <div className="sticky top-5">
+                      <ViewList
+                        setAuthorWorkListEnd={setListEnd}
+                        isFinal={isFinal}
+                        workId={workId!}
+                        initializing={initializing}
+                        setInitializing={setInitializing}
+                        authorWorkList={authorWorkList}
+                      />
+                    </div>
+                  </>
+                )
+              : (
+                  <div>Loading...</div>
+                )}
           </div>
         </div>
       </div>

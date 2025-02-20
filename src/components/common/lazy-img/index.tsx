@@ -1,7 +1,8 @@
+import type { FC } from 'react'
 import AnimatedDiv from '@/components/motion/animated-div'
 import ImgLoadingSkeleton from '@/components/skeleton/img-loading'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type LazyImgProps = {
   width?: number | string
@@ -35,10 +36,12 @@ const LazyImg: FC<LazyImgProps> = ({
       )
     })
 
-    if (imgContainerRef.current) observer.observe(imgContainerRef.current)
+    if (imgContainerRef.current)
+      observer.observe(imgContainerRef.current)
 
     return () => {
-      if (imgContainerRef.current) observer.unobserve(imgContainerRef.current)
+      if (imgContainerRef.current)
+        observer.unobserve(imgContainerRef.current)
     }
   }, [])
 
@@ -49,14 +52,15 @@ const LazyImg: FC<LazyImgProps> = ({
         width: typeof width === 'number' ? `${width}px` : width,
         height: typeof height === 'number' ? `${height}px` : height,
       }}
-      className={`relative overflow-hidden ${className}`}>
+      className={`relative overflow-hidden ${className}`}
+    >
       {isInView && (
         <img
           ref={imgRef}
-          className='object-cover w-full h-full'
+          className="h-full w-full object-cover"
           src={src}
           alt={alt}
-          loading='lazy'
+          loading="lazy"
           onLoad={() => {
             setImgLoading(false)
             imgLoaded && src && imgLoaded(src)
@@ -65,7 +69,7 @@ const LazyImg: FC<LazyImgProps> = ({
       )}
       <AnimatePresence>
         {imgLoading && (
-          <AnimatedDiv type='opacity-gradient' className='absolute top-0 left-0 size-full'>
+          <AnimatedDiv type="opacity-gradient" className="absolute left-0 top-0 size-full">
             <ImgLoadingSkeleton />
           </AnimatedDiv>
         )}

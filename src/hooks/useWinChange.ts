@@ -1,6 +1,6 @@
-import { debounce } from 'lodash'
-import { useState, useEffect } from 'react'
 import type { RefObject } from 'react'
+import { debounce } from 'lodash'
+import { useEffect, useState } from 'react'
 
 /**
  * @description 监听窗口变化，返回当前窗口宽度

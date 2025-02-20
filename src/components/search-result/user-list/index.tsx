@@ -1,4 +1,6 @@
-import { likeActionsAPI, userActionsAPI, searchUserAPI, searchUserTotalAPI } from '@/apis'
+import type { UserItemInfo } from '@/utils/types'
+import type { FC } from 'react'
+import { likeActionsAPI, searchUserAPI, searchUserTotalAPI, userActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import Pagination from '@/components/common/pagination'
 import UserItem from '@/components/common/user-item'
@@ -6,12 +8,11 @@ import AnimatedDiv from '@/components/motion/animated-div'
 import UserListSkeleton from '@/components/skeleton/user-list'
 import { useMap } from '@/hooks'
 import { decreaseFollowNum, increaseFollowNum } from '@/store/modules/user'
-import type { UserItemInfo } from '@/utils/types'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-type UserListProps = {
+interface UserListProps {
   width: number
   labelName: string
 }
@@ -27,13 +28,14 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
       await userActionsAPI({ id })
       if (!userList.get(id)!.isFollowing) {
         dispatch(increaseFollowNum())
-      } else {
+      }
+      else {
         dispatch(decreaseFollowNum())
       }
       updateUserList(id, { ...userList.get(id)!, isFollowing: !userList.get(id)!.isFollowing })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -43,7 +45,7 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
       ...userList.get(userId)!,
       works: userList
         .get(userId)!
-        .works!.map((work) => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
+        .works!.map(work => (work.id === workId ? { ...work, isLiked: !work.isLiked } : work)),
     })
   }
 
@@ -59,9 +61,9 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
     try {
       const { data } = await searchUserTotalAPI({ keyword: labelName })
       setTotal(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -75,10 +77,12 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
         pageSize,
       })
       setUserList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setSearchingUser(false)
     }
   }
@@ -92,13 +96,13 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
   }, [labelName, current])
 
   return (
-    <div className='relative p-5 w-full min-h-160 pb-15'>
-      <div className='w-full flex justify-between items-center mb-10px'>
-        <div className='flex gap-10px items-center'>
-          <div className='title text-2xl'>
+    <div className="relative min-h-160 w-full p-5 pb-15">
+      <div className="mb-10px w-full flex items-center justify-between">
+        <div className="flex items-center gap-10px">
+          <div className="text-2xl title">
             <span>用户</span>
           </div>
-          <div className='px-10px py-5px bg-neutral rd-full color-white text-sm font-bold'>
+          <div className="rd-full bg-neutral px-10px py-5px text-sm color-white font-bold">
             <span>{total}</span>
           </div>
         </div>
@@ -106,8 +110,8 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
 
       <AnimatePresence>
         {userList.size !== 0 && !searchingUser && (
-          <AnimatedDiv type='opacity-gradient' className='relative w-full flex flex-col gap-20px'>
-            {Array.from(userList.values()).map((item) => (
+          <AnimatedDiv type="opacity-gradient" className="relative w-full flex flex-col gap-20px">
+            {Array.from(userList.values()).map(item => (
               <UserItem
                 key={item.id}
                 {...item}
@@ -120,19 +124,19 @@ const UserList: FC<UserListProps> = ({ width, labelName }) => {
         )}
 
         {userList.size === 0 && !searchingUser && (
-          <AnimatedDiv type='opacity-gradient'>
+          <AnimatedDiv type="opacity-gradient">
             <Empty />
           </AnimatedDiv>
         )}
 
         {userList.size === 0 && searchingUser && (
-          <AnimatedDiv type='opacity-gradient'>
-            <UserListSkeleton className='absolute top-14' />
+          <AnimatedDiv type="opacity-gradient">
+            <UserListSkeleton className="absolute top-14" />
           </AnimatedDiv>
         )}
       </AnimatePresence>
 
-      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
         <Pagination total={total} pageSize={pageSize} current={current} onChange={pageChange} />
       </div>
     </div>

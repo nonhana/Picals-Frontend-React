@@ -1,9 +1,10 @@
+import type { FC } from 'react'
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
-import { FC, Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import ContentLoader from 'react-content-loader'
 import { useOutletContext } from 'react-router'
 
-type WorkListSkeletonProps = {
+interface WorkListSkeletonProps {
   heading?: {
     width: number
     height: number
@@ -29,7 +30,8 @@ const WorkListSkeleton: FC<WorkListSkeletonProps> = ({
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
       setColumn(5)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
       setColumn(6)
     }

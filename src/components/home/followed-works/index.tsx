@@ -1,4 +1,7 @@
-import { likeActionsAPI, getFollowNewWorksIdListAPI } from '@/apis'
+import type { AppState } from '@/store/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
+import { getFollowNewWorksIdListAPI, likeActionsAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import LayoutList from '@/components/common/layout-list'
 import WorkItem from '@/components/common/work-item'
@@ -11,13 +14,11 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { AppState } from '@/store/types'
-import type { WorkNormalItemInfo } from '@/utils/types'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-type FollowedWorksProps = {
+interface FollowedWorksProps {
   loading: boolean
   workList: WorkNormalItemInfo[]
 }
@@ -45,43 +46,45 @@ const FollowedWorks: FC<FollowedWorksProps> = ({ loading, workList: sourceData }
   }
 
   return (
-    <div className='relative p-5 min-h-85'>
-      <div className='title m-b-10px'>
+    <div className="relative min-h-85 p-5">
+      <div className="m-b-10px title">
         <span>已关注用户新作</span>
       </div>
 
-      {isLogin ? (
-        <AnimatePresence>
-          {sourceData.length !== 0 && !loading && (
-            <AnimatedDiv type='opacity-gradient'>
-              <LayoutList scrollType='work-normal' gap={20}>
-                {Array.from(workList.values()).map((item) => (
-                  <WorkItem
-                    key={item.id}
-                    itemInfo={item}
-                    like={handleLike}
-                    onClick={addFollowedNewWorkList}
-                  />
-                ))}
-              </LayoutList>
-            </AnimatedDiv>
-          )}
+      {isLogin
+        ? (
+            <AnimatePresence>
+              {sourceData.length !== 0 && !loading && (
+                <AnimatedDiv type="opacity-gradient">
+                  <LayoutList scrollType="work-normal" gap={20}>
+                    {Array.from(workList.values()).map(item => (
+                      <WorkItem
+                        key={item.id}
+                        itemInfo={item}
+                        like={handleLike}
+                        onClick={addFollowedNewWorkList}
+                      />
+                    ))}
+                  </LayoutList>
+                </AnimatedDiv>
+              )}
 
-          {sourceData.length === 0 && !loading && (
-            <AnimatedDiv type='opacity-gradient'>
-              <Empty text='emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品' />
-            </AnimatedDiv>
-          )}
+              {sourceData.length === 0 && !loading && (
+                <AnimatedDiv type="opacity-gradient">
+                  <Empty text="emmm，看起来你还没关注用户，或者是你关注的用户没发布过作品" />
+                </AnimatedDiv>
+              )}
 
-          {sourceData.length === 0 && loading && (
-            <AnimatedDiv type='opacity-gradient'>
-              <WorkListSkeleton row={1} className='absolute top-14' />
-            </AnimatedDiv>
+              {sourceData.length === 0 && loading && (
+                <AnimatedDiv type="opacity-gradient">
+                  <WorkListSkeleton row={1} className="absolute top-14" />
+                </AnimatedDiv>
+              )}
+            </AnimatePresence>
+          )
+        : (
+            <Empty text="还没登录，这里自然是空的" />
           )}
-        </AnimatePresence>
-      ) : (
-        <Empty text='还没登录，这里自然是空的' />
-      )}
     </div>
   )
 }

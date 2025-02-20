@@ -1,7 +1,8 @@
-import { FC, Fragment } from 'react'
+import type { FC } from 'react'
+import { Fragment } from 'react'
 import ContentLoader from 'react-content-loader'
 
-type FavoriteWorkListSkeletonProps = {
+interface FavoriteWorkListSkeletonProps {
   row?: number
   column?: number
   padding?: number

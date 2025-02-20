@@ -1,10 +1,10 @@
 // src/utils/constants.ts
 // 用以存放项目中的常量
 
-import { MenuProps } from 'antd'
+import type { MenuProps } from 'antd'
 
 // 下拉框中的选项列表
-type UserHeaderItem = {
+interface UserHeaderItem {
   value: string
   name: string
 }
@@ -32,7 +32,7 @@ export const HEADER_DROPDOWN_LIST: UserHeaderItem[] = [
 ]
 
 // Header的菜单路由跳转
-type HeaderMenuItem = {
+interface HeaderMenuItem {
   icon: string
   route: string
   name: string
@@ -113,8 +113,8 @@ export const MAX_WIDTH = 1245
 export const MIN_WIDTH = 1040
 
 // WorkItem 下拉框数据配置
-export const WORKITEM_DROPDOWN_LIST: Map<'personal_center' | 'favorite', MenuProps['items']> =
-  new Map([
+export const WORKITEM_DROPDOWN_LIST: Map<'personal_center' | 'favorite', MenuProps['items']>
+  = new Map([
     [
       'personal_center',
       [

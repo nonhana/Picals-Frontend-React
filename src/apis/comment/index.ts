@@ -1,10 +1,10 @@
+import type { Id } from '../types'
+
+import type { CommentItem, IPostCommentReq } from './types'
 import request from '@/service'
 
-import { CommentItem, IPostCommentReq } from './types'
-import { Id } from '../types'
-
 // 获取某个作品的评论列表
-export const getCommentListAPI = (params: Id) => {
+export function getCommentListAPI(params: Id) {
   return request<Id, CommentItem[]>({
     url: '/api/comment/list',
     method: 'GET',
@@ -13,7 +13,7 @@ export const getCommentListAPI = (params: Id) => {
 }
 
 // 发布某个作品的评论
-export const postCommentAPI = (data: IPostCommentReq) => {
+export function postCommentAPI(data: IPostCommentReq) {
   return request<IPostCommentReq, undefined>({
     url: '/api/comment/new',
     method: 'POST',
@@ -22,7 +22,7 @@ export const postCommentAPI = (data: IPostCommentReq) => {
 }
 
 // 删除某条评论
-export const deleteCommentAPI = (data: Id) => {
+export function deleteCommentAPI(data: Id) {
   return request<Id, undefined>({
     url: '/api/comment/delete',
     method: 'POST',

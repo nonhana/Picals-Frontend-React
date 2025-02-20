@@ -1,5 +1,8 @@
+import type { Pagination } from '@/apis/types'
+import type { AppState } from '@/store/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { getRecommendWorksAPI, likeActionsAPI } from '@/apis'
-import { Pagination } from '@/apis/types'
 import AnimatedList from '@/components/common/animated-list'
 import WorkListSkeleton from '@/components/skeleton/work-list'
 import { useAtBottom } from '@/hooks'
@@ -10,10 +13,8 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import { AppState } from '@/store/types'
 import { generateTempId } from '@/utils'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router'
 
@@ -37,11 +38,13 @@ const WorkList: FC = () => {
     try {
       const params: Pagination = { pageSize: 30, current }
       if (!isLogin) {
-        if (!tempId) dispatch(setTempId(generateTempId()))
+        if (!tempId)
+          dispatch(setTempId(generateTempId()))
         params.id = tempId
       }
       const { data } = await getRecommendWorksAPI(params)
-      if (data.length < 30) setIsFinal(true)
+      if (data.length < 30)
+        setIsFinal(true)
       setRecommendWorkList((prev) => {
         const result = prev.map((item) => {
           if (item.page === current) {
@@ -49,17 +52,19 @@ const WorkList: FC = () => {
           }
           return item
         })
-        if (!isFinal) result.push({ page: current + 1, list: [] })
+        if (!isFinal)
+          result.push({ page: current + 1, list: [] })
         return result
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   useEffect(() => {
-    if (atBottom && !isFinal) setCurrent((prev) => prev + 1)
+    if (atBottom && !isFinal)
+      setCurrent(prev => prev + 1)
   }, [atBottom])
 
   useEffect(() => {
@@ -89,7 +94,7 @@ const WorkList: FC = () => {
   const addRecommendWorks = () => {
     dispatch(resetOtherList())
     const result = recommendWorkList.reduce((prev, current) => {
-      return prev.concat(current.list.map((item) => item.id))
+      return prev.concat(current.list.map(item => item.id))
     }, [] as string[])
     dispatch(pushToRecommendWorkList(result))
     dispatch(setCurrentList('recommendWorkList'))
@@ -97,13 +102,13 @@ const WorkList: FC = () => {
   }
 
   return (
-    <div className='relative w-full p-5 min-h-160'>
-      <div className='title m-b-10px'>
+    <div className="relative min-h-160 w-full p-5">
+      <div className="m-b-10px title">
         <span>推荐作品</span>
       </div>
 
       {recommendWorkList.map(
-        (everyPage) =>
+        everyPage =>
           everyPage.list.length !== 0 && (
             <AnimatedList
               key={everyPage.page}

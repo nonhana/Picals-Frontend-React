@@ -1,9 +1,9 @@
+import type { FC } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { FC } from 'react'
 import { PhotoView } from 'react-photo-view'
 
-type FavoriteItemProps = {
+interface FavoriteItemProps {
   id: string
   src: string
 }
@@ -26,9 +26,10 @@ const DraggableImg: FC<FavoriteItemProps> = ({ id, src }) => {
       {...attributes}
       {...listeners}
       style={styles}
-      className='w-29.5 h-29.5 rd-1 overflow-hidden cursor-pointer'>
+      className="h-29.5 w-29.5 cursor-pointer overflow-hidden rd-1"
+    >
       <PhotoView key={id} src={src}>
-        <img className='w-full h-full object-cover' src={src} alt={src} />
+        <img className="h-full w-full object-cover" src={src} alt={src} />
       </PhotoView>
     </div>
   )

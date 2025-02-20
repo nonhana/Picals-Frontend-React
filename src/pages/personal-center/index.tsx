@@ -1,19 +1,20 @@
+import type { AppState } from '@/store/types'
+import type { MenuProps } from 'antd'
+import type { FC } from 'react'
 import Header from '@/components/personal-center/header'
-import { AppState } from '@/store/types'
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
 import {
-  PictureOutlined,
   HeartOutlined,
-  StarOutlined,
-  UserOutlined,
-  TeamOutlined,
   HistoryOutlined,
+  PictureOutlined,
+  StarOutlined,
+  TeamOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
-import { FC, useState, createContext, useEffect } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useOutletContext, Outlet, useNavigate, useLocation, useParams } from 'react-router'
+import { Outlet, useLocation, useNavigate, useOutletContext, useParams } from 'react-router'
 
 const PersonalContext = createContext({ isMe: false, currentPath: '', userId: '', width: 0 })
 
@@ -56,7 +57,7 @@ const PersonalCenter: FC = () => {
 
   useEffect(() => {
     if (isMe) {
-      setMenuItems((prev) => [
+      setMenuItems(prev => [
         ...prev,
         {
           label: '浏览记录',
@@ -64,8 +65,9 @@ const PersonalCenter: FC = () => {
           icon: <HistoryOutlined />,
         },
       ])
-    } else {
-      setMenuItems((prev) => prev.filter((item) => item.key !== 'history'))
+    }
+    else {
+      setMenuItems(prev => prev.filter(item => item.key !== 'history'))
     }
   }, [isMe])
 
@@ -84,29 +86,31 @@ const PersonalCenter: FC = () => {
   useEffect(() => {
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
 
   return (
-    <PersonalContext.Provider value={{ isMe, currentPath, userId: userId!, width }}>
-      <div className='relative w-full flex flex-col items-center'>
+    <PersonalContext value={{ isMe, currentPath, userId: userId!, width }}>
+      <div className="relative w-full flex flex-col items-center">
         <Header />
         <Menu
-          className='w-full max-w-350'
+          className="max-w-350 w-full"
           onClick={checkoutMenu}
           selectedKeys={[currentPath]}
-          mode='horizontal'
+          mode="horizontal"
           items={menuItems}
         />
         <div
           style={{ width: `${width}px` }}
-          className='relative max-w-350 mb-5 flex justify-center'>
+          className="relative mb-5 max-w-350 flex justify-center"
+        >
           <Outlet />
         </div>
       </div>
-    </PersonalContext.Provider>
+    </PersonalContext>
   )
 }
 

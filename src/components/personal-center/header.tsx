@@ -1,3 +1,6 @@
+import type { AppState } from '@/store/types'
+import type { UserDetailInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { getUserDetailAPI, userActionsAPI } from '@/apis'
 import { PersonalContext } from '@/pages/personal-center'
 import {
@@ -5,18 +8,16 @@ import {
   increaseFollowNum,
   setUserInfo as setLocalUserInfo,
 } from '@/store/modules/user'
-import type { AppState } from '@/store/types'
-import type { UserDetailInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
 import { Button, message } from 'antd'
-import { FC, useEffect, useState, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router'
 
+import HanaViewer from '../common/hana-viewer'
 import EditModal from './edit-modal'
 import InfoModal from './info-modal'
-import HanaViewer from '../common/hana-viewer'
 
 const Header: FC = () => {
   const navigate = useNavigate()
@@ -41,16 +42,18 @@ const Header: FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false)
 
   useEffect(() => {
-    if (type && type === 'profile') {
-      if (!isMe) {
-        message.error('不可以修改他人的资料哦~')
-        navigate(`/personal-center/${userId}/works`)
-        return
-      }
-      setTimeout(() => {
-        setEditModalVisible(true)
-      }, 300)
+    if (!type || type !== 'profile')
+      return
+    if (!isMe) {
+      message.error('不可以修改他人的资料哦~')
+      navigate(`/personal-center/${userId}/works`)
+      return
     }
+    const timer = setTimeout(() => {
+      setEditModalVisible(true)
+    }, 300)
+
+    return () => clearTimeout(timer)
   }, [type])
 
   const [infoModalVisible, setInfoModalVisible] = useState(false)
@@ -75,7 +78,7 @@ const Header: FC = () => {
         isFollowed: data.isFollowed,
       })
       // 如果当前页面为用户本身的主页，每次进入页面都要更新用户信息
-      if (isMe)
+      if (isMe) {
         dispatch(
           setLocalUserInfo({
             id: data.id,
@@ -88,9 +91,10 @@ const Header: FC = () => {
             followNum: data.followCount,
           }),
         )
-    } catch (error) {
+      }
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -100,13 +104,14 @@ const Header: FC = () => {
       await userActionsAPI({ id: userId! })
       if (!userInfo.isFollowed) {
         dispatch(increaseFollowNum())
-      } else {
+      }
+      else {
         dispatch(decreaseFollowNum())
       }
-      setUserInfo((prev) => ({ ...prev, isFollowed: !prev.isFollowed }))
-    } catch (error) {
+      setUserInfo(prev => ({ ...prev, isFollowed: !prev.isFollowed }))
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -116,92 +121,104 @@ const Header: FC = () => {
 
   return (
     <>
-      <div className='relative w-full'>
-        {userInfo.background_img ? (
-          <div className='relative w-full h-130 overflow-hidden'>
-            <img
-              className='w-full h-full object-cover'
-              src={userInfo.background_img}
-              alt={userInfo.background_img}
-            />
-          </div>
-        ) : (
-          <div className='relative w-full h-80'>
-            {isMe ? (
-              <div
-                className='bg-neutral-50 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-50'
-                onClick={() => setEditModalVisible(true)}>
-                <div className='flex flex-col items-center color-neutral text-sm font-bold'>
-                  <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
-                  <span>上传背景图</span>
-                </div>
+      <div className="relative w-full">
+        {userInfo.background_img
+          ? (
+              <div className="relative h-130 w-full overflow-hidden">
+                <img
+                  className="h-full w-full object-cover"
+                  src={userInfo.background_img}
+                  alt={userInfo.background_img}
+                />
               </div>
-            ) : (
-              <div className='bg-neutral-50 h-full' />
+            )
+          : (
+              <div className="relative h-80 w-full">
+                {isMe
+                  ? (
+                      <div
+                        className="h-full flex cursor-pointer items-center justify-center bg-neutral-50 transition-all duration-300 hover:bg-neutral-50"
+                        onClick={() => setEditModalVisible(true)}
+                      >
+                        <div className="flex flex-col items-center text-sm color-neutral font-bold">
+                          <Icon color="#858585" width="48px" icon="ant-design:edit-filled" />
+                          <span>上传背景图</span>
+                        </div>
+                      </div>
+                    )
+                  : (
+                      <div className="h-full bg-neutral-50" />
+                    )}
+              </div>
             )}
-          </div>
-        )}
 
-        <div className='relative mx-auto w-full max-w-350 p-5 flex justify-between'>
-          <div className='flex gap-5'>
-            <div className='b-solid b-2px b-white mt--17 w-24 h-24 rd-full overflow-hidden cursor-pointer z-1'>
+        <div className="relative mx-auto max-w-350 w-full flex justify-between p-5">
+          <div className="flex gap-5">
+            <div className="z-1 mt--17 h-24 w-24 cursor-pointer overflow-hidden b-2px b-white rd-full b-solid">
               <HanaViewer>
                 <PhotoView src={userInfo.avatar}>
                   <img
-                    className='w-full h-full object-cover'
+                    className="h-full w-full object-cover"
                     src={userInfo.littleAvatar}
                     alt={userInfo.littleAvatar}
                   />
                 </PhotoView>
               </HanaViewer>
             </div>
-            <div className='w-150 flex flex-col gap-10px text-sm color-neutral-900 text-wrap'>
-              <div className='flex items-center gap-10px'>
-                <span className='text-lg font-bold'>{userInfo.username}</span>
-                <span className='color-neutral'>{userInfo.email}</span>
+            <div className="w-150 flex flex-col gap-10px text-wrap text-sm color-neutral-900">
+              <div className="flex items-center gap-10px">
+                <span className="text-lg font-bold">{userInfo.username}</span>
+                <span className="color-neutral">{userInfo.email}</span>
               </div>
-              <div className='flex gap-10px'>
+              <div className="flex gap-10px">
                 <span
-                  className='cursor-pointer'
+                  className="cursor-pointer"
                   onClick={() => {
                     navigate(`/personal-center/${userId}/follow`)
-                  }}>
-                  关注数：{userInfo.followNum}
+                  }}
+                >
+                  关注数：
+                  {userInfo.followNum}
                 </span>
                 <span
-                  className='cursor-pointer'
+                  className="cursor-pointer"
                   onClick={() => {
                     navigate(`/personal-center/${userId}/fans`)
-                  }}>
-                  粉丝数：{userInfo.fanNum}
+                  }}
+                >
+                  粉丝数：
+                  {userInfo.fanNum}
                 </span>
               </div>
               <span>{userInfo.intro}</span>
             </div>
           </div>
-          <div className='flex gap-5'>
+          <div className="flex gap-5">
             {isMe && (
               <Button
-                shape='round'
-                size='large'
-                type='primary'
-                onClick={() => setEditModalVisible(true)}>
+                shape="round"
+                size="large"
+                type="primary"
+                onClick={() => setEditModalVisible(true)}
+              >
                 编辑个人资料
               </Button>
             )}
             <Button
-              shape='round'
-              size='large'
-              type='default'
-              onClick={() => setInfoModalVisible(true)}>
+              shape="round"
+              size="large"
+              type="default"
+              onClick={() => setInfoModalVisible(true)}
+            >
               查看个人资料
             </Button>
             {!isMe && isLogin && (
               <Button
-                shape='round'
-                size='large'
+                shape="round"
+                size="large"
                 type={userInfo.isFollowed ? 'default' : 'primary'}
-                onClick={handleFollow}>
+                onClick={handleFollow}
+              >
                 {userInfo.isFollowed ? '取消关注' : '加关注'}
               </Button>
             )}

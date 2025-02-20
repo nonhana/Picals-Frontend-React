@@ -1,14 +1,14 @@
-import { HistoryItem } from '@/apis/types'
-import { AnimationVariantKeys } from '@/components/motion/preset'
-import { WorkNormalItemInfo } from '@/utils/types'
+import type { HistoryItem } from '@/apis/types'
+import type { AnimationVariantKeys } from '@/components/motion/preset'
+import type { WorkNormalItemInfo } from '@/utils/types'
 
-type PersonalCenterProps = {
+interface PersonalCenterProps {
   type: 'personal_center'
   itemInfo: WorkNormalItemInfo
   like: (id: string) => void
   deleteWork: (id: string) => void
 }
-type FavoriteProps = {
+interface FavoriteProps {
   type: 'favorite'
   itemInfo: WorkNormalItemInfo
   settingStatus: boolean
@@ -19,25 +19,25 @@ type FavoriteProps = {
   move: (id: string) => void
   copy: (id: string) => void
 }
-type HistoryProps = {
+interface HistoryProps {
   type: 'history'
   itemInfo: HistoryItem
 }
-type UserWorkProps = {
+interface UserWorkProps {
   type: 'user_work'
   itemInfo: WorkNormalItemInfo
   like: (userId: string, workId: string) => void
 }
-type LeastProps = {
+interface LeastProps {
   type: 'least'
   itemInfo: WorkNormalItemInfo
 }
-type LittleProps = {
+interface LittleProps {
   type: 'little'
   itemInfo: WorkNormalItemInfo
   like: (id: string) => void
 }
-type NormalProps = {
+interface NormalProps {
   type: 'normal'
   itemInfo: WorkNormalItemInfo
   like: (id: string) => void

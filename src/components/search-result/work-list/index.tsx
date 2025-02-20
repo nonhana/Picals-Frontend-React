@@ -1,3 +1,6 @@
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { RadioChangeEvent } from 'antd'
+import type { FC } from 'react'
 import { likeActionsAPI, searchWorksByLabelAPI, searchWorksIdListAPI } from '@/apis'
 import AnimatedList from '@/components/common/animated-list'
 import Empty from '@/components/common/empty'
@@ -11,12 +14,11 @@ import {
   setCurrentList,
   setPrevPosition,
 } from '@/store/modules/viewList'
-import type { WorkNormalItemInfo } from '@/utils/types'
-import { Radio, RadioChangeEvent } from 'antd'
+import { Radio } from 'antd'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 const sortOptions = [
   { label: '按最新排序', value: 'new' },
@@ -25,7 +27,7 @@ const sortOptions = [
   { label: '按收藏数排序', value: 'collect' },
 ]
 
-type WorkListProps = {
+interface WorkListProps {
   sortType: string
   labelName: string
   workCount: number
@@ -63,10 +65,12 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
         pageSize: 30,
       })
       setWorkList(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setGettingWorkList(false)
     }
   }
@@ -79,9 +83,9 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     try {
       await likeActionsAPI({ id })
       updateWorkList(id, { ...workList.get(id)!, isLiked: !workList.get(id)!.isLiked })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -103,13 +107,13 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
   }
 
   return (
-    <div className='relative p-5 w-full min-h-180 pb-15'>
-      <div className='w-full flex justify-between items-center mb-10px'>
-        <div className='flex gap-10px items-center'>
-          <div className='title text-2xl'>
+    <div className="relative min-h-180 w-full p-5 pb-15">
+      <div className="mb-10px w-full flex items-center justify-between">
+        <div className="flex items-center gap-10px">
+          <div className="text-2xl title">
             <span>插画</span>
           </div>
-          <div className='px-10px py-5px bg-neutral rd-full color-white text-sm font-bold'>
+          <div className="rd-full bg-neutral px-10px py-5px text-sm color-white font-bold">
             <span>{workCount}</span>
           </div>
         </div>
@@ -117,8 +121,8 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
           options={sortOptions}
           onChange={changeType}
           value={sortType}
-          optionType='button'
-          buttonStyle='solid'
+          optionType="button"
+          buttonStyle="solid"
         />
       </div>
 
@@ -132,19 +136,19 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
 
       <AnimatePresence>
         {workList.size === 0 && !gettingWorkList && (
-          <AnimatedDiv type='opacity-gradient'>
+          <AnimatedDiv type="opacity-gradient">
             <Empty />
           </AnimatedDiv>
         )}
 
         {workList.size === 0 && gettingWorkList && (
-          <AnimatedDiv type='opacity-gradient'>
-            <WorkListSkeleton className='absolute top-14' />
+          <AnimatedDiv type="opacity-gradient">
+            <WorkListSkeleton className="absolute top-14" />
           </AnimatedDiv>
         )}
       </AnimatePresence>
 
-      <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
         <Pagination total={workCount} pageSize={30} current={current} onChange={pageChange} />
       </div>
     </div>

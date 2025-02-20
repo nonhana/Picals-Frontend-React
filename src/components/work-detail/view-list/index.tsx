@@ -1,11 +1,16 @@
+import type { Pagination } from '@/apis/types'
+import type { AppState } from '@/store/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { FC } from 'react'
 import {
-  getRecommendWorksAPI,
   getLatestWorksAPI,
+  getRecommendWorksAPI,
   getUserWorksIdListAPI,
   getWorkSimpleAPI,
 } from '@/apis'
-import { Pagination } from '@/apis/types'
 import PaginationComponent from '@/components/common/pagination'
+import WorkItem from '@/components/common/work-item'
+import AnimatedDiv from '@/components/motion/animated-div'
 import { setTempId } from '@/store/modules/user'
 import {
   pushToLatestWorkList,
@@ -15,23 +20,19 @@ import {
   setCurrentList,
   setPrevWorkId,
 } from '@/store/modules/viewList'
-import type { AppState } from '@/store/types'
-import { VIEW_LIST_MAP, VIEW_LIST_ICON_MAP, generateTempId } from '@/utils'
-import { WorkNormalItemInfo } from '@/utils/types'
+import { generateTempId, VIEW_LIST_ICON_MAP, VIEW_LIST_MAP } from '@/utils'
 import { Icon } from '@iconify/react'
-import { message, InputNumber, Button } from 'antd'
-import { FC, useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { Button, InputNumber, message } from 'antd'
+import { useEffect, useState } from 'react'
+
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
-
 import WorkSlideWindow from '../work-slide-window'
-import AnimatedDiv from '@/components/motion/animated-div'
-import WorkItem from '@/components/common/work-item'
 
-const viewListClasses =
-  'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-neutral-100 cursor-pointer flex justify-between items-center px-5 color-neutral-900'
+const viewListClasses
+  = 'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-neutral-100 cursor-pointer flex justify-between items-center px-5 color-neutral-900'
 
-type ViewListProps = {
+interface ViewListProps {
   workId: string
   authorWorkList: {
     page: number
@@ -70,7 +71,7 @@ const ViewList: FC<ViewListProps> = ({
   } = useSelector((state: AppState) => state.viewList)
   const { tempId, isLogin } = useSelector((state: AppState) => state.user)
 
-  //#region 更改作品列表相关信息
+  // #region 更改作品列表相关信息
   const [allowListName, setAllowListName] = useState<keyof typeof lists>()
   const [currentListLength, setCurrentListLength] = useState(0)
 
@@ -78,7 +79,8 @@ const ViewList: FC<ViewListProps> = ({
   useEffect(() => {
     if (currentList === 'userWorkList') {
       setCurrentListLength(userWorkList.length)
-    } else {
+    }
+    else {
       setCurrentListLength(lists[currentList as keyof typeof lists].length)
     }
   }, [currentList, userWorkList, lists])
@@ -86,7 +88,8 @@ const ViewList: FC<ViewListProps> = ({
   useEffect(() => {
     if (currentList !== 'userWorkList') {
       setAllowListName(currentList as keyof typeof lists)
-    } else {
+    }
+    else {
       Object.keys(lists).forEach((key) => {
         if (lists[key as keyof typeof lists].length > 0) {
           setAllowListName(key as keyof typeof lists)
@@ -95,7 +98,7 @@ const ViewList: FC<ViewListProps> = ({
     }
   }, [currentList, lists])
 
-  //#region 分页获取推荐作品列表
+  // #region 分页获取推荐作品列表
   const [recommendCurrent, setRecommendCurrent] = useState<number>()
   const recommendPageSize = 30
   const [recommendIsFinal, setRecommendIsFinal] = useState(false)
@@ -124,13 +127,15 @@ const ViewList: FC<ViewListProps> = ({
             return data
           }),
         )
-        setRecommendWorkList((prev) => [...prev, { page: i, list: resultList }])
+        setRecommendWorkList(prev => [...prev, { page: i, list: resultList }])
       }
-      setRecommendWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
-    } catch (error) {
+      setRecommendWorkList(prev => [...prev, { page: initPage + 1, list: [] }])
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setRecommendInit(false)
     }
   }
@@ -151,7 +156,8 @@ const ViewList: FC<ViewListProps> = ({
         pageSize: recommendPageSize,
       }
       if (!isLogin) {
-        if (!tempId) dispatch(setTempId(generateTempId()))
+        if (!tempId)
+          dispatch(setTempId(generateTempId()))
         params.id = tempId
       }
       const { data } = await getRecommendWorksAPI(params)
@@ -165,28 +171,32 @@ const ViewList: FC<ViewListProps> = ({
           }
           return item
         })
-        if (!recommendIsFinal) result.push({ page: recommendCurrent! + 1, list: [] })
+        if (!recommendIsFinal)
+          result.push({ page: recommendCurrent! + 1, list: [] })
         return result
       })
-      const result = data.map((work) => work.id)
+      const result = data.map(work => work.id)
       dispatch(pushToRecommendWorkList(result))
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setRecommendLoading(false)
     }
   }
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList' && recommendCurrent) {
-      setRecommendCurrentChanged((prev) => prev + 1)
+      setRecommendCurrentChanged(prev => prev + 1)
     }
   }, [recommendCurrent, allowListName])
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList') {
-      if (recommendLoading) messageApi.loading('正在获取推荐作品列表...', 0)
+      if (recommendLoading)
+        messageApi.loading('正在获取推荐作品列表...', 0)
       else messageApi.destroy()
     }
   }, [recommendLoading, allowListName])
@@ -199,23 +209,23 @@ const ViewList: FC<ViewListProps> = ({
 
   useEffect(() => {
     if (
-      allowListName === 'recommendWorkList' &&
-      currentIndex >= currentListLength &&
-      !recommendIsFinal &&
-      recommendCurrent
+      allowListName === 'recommendWorkList'
+      && currentIndex >= currentListLength
+      && !recommendIsFinal
+      && recommendCurrent
     ) {
-      setRecommendCurrent((prev) => prev! + 1)
+      setRecommendCurrent(prev => prev! + 1)
     }
   }, [currentIndex, allowListName])
 
   useEffect(() => {
     if (allowListName === 'recommendWorkList' && recommendListEnd && !recommendIsFinal) {
-      setRecommendCurrent((prev) => prev! + 1)
+      setRecommendCurrent(prev => prev! + 1)
     }
   }, [recommendListEnd, allowListName])
-  //#endregion
+  // #endregion
 
-  //#region 分页获取最新作品列表
+  // #region 分页获取最新作品列表
   const [latestCurrent, setLatestCurrent] = useState<number>()
   const latestPageSize = 30
   const [latestIsFinal, setLatestIsFinal] = useState(false)
@@ -241,13 +251,15 @@ const ViewList: FC<ViewListProps> = ({
             return data
           }),
         )
-        setLatestWorkList((prev) => [...prev, { page: i, list: resultList }])
+        setLatestWorkList(prev => [...prev, { page: i, list: resultList }])
       }
-      setLatestWorkList((prev) => [...prev, { page: initPage + 1, list: [] }])
-    } catch (error) {
+      setLatestWorkList(prev => [...prev, { page: initPage + 1, list: [] }])
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setLatestInit(false)
     }
   }
@@ -277,28 +289,32 @@ const ViewList: FC<ViewListProps> = ({
           }
           return item
         })
-        if (!latestIsFinal) result.push({ page: latestCurrent! + 1, list: [] })
+        if (!latestIsFinal)
+          result.push({ page: latestCurrent! + 1, list: [] })
         return result
       })
-      const result = data.map((work) => work.id)
+      const result = data.map(work => work.id)
       dispatch(pushToLatestWorkList(result))
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setLatestLoading(false)
     }
   }
 
   useEffect(() => {
     if (allowListName === 'latestWorkList' && latestCurrent) {
-      setLatestCurrentChanged((prev) => prev + 1)
+      setLatestCurrentChanged(prev => prev + 1)
     }
   }, [latestCurrent, allowListName])
 
   useEffect(() => {
     if (allowListName === 'latestWorkList') {
-      if (latestLoading) messageApi.loading('正在获取最新作品列表...', 0)
+      if (latestLoading)
+        messageApi.loading('正在获取最新作品列表...', 0)
       else messageApi.destroy()
     }
   }, [latestLoading, allowListName])
@@ -311,23 +327,23 @@ const ViewList: FC<ViewListProps> = ({
 
   useEffect(() => {
     if (
-      allowListName === 'latestWorkList' &&
-      currentIndex >= currentListLength &&
-      !latestIsFinal &&
-      latestCurrent
+      allowListName === 'latestWorkList'
+      && currentIndex >= currentListLength
+      && !latestIsFinal
+      && latestCurrent
     ) {
-      setLatestCurrent((prev) => prev! + 1)
+      setLatestCurrent(prev => prev! + 1)
     }
   }, [currentIndex, allowListName])
 
   useEffect(() => {
     if (allowListName === 'latestWorkList' && latestListEnd && !latestIsFinal) {
-      setLatestCurrent((prev) => prev! + 1)
+      setLatestCurrent(prev => prev! + 1)
     }
   }, [latestListEnd, allowListName])
-  //#endregion
+  // #endregion
 
-  //#region 分页获取当前浏览的作品列表信息（用户作品列表和推荐作品列表除外）
+  // #region 分页获取当前浏览的作品列表信息（用户作品列表和推荐作品列表除外）
   const [current, setCurrent] = useState(1)
   const [isFinal, setIsFinal] = useState(false)
   const [listEnd, setListEnd] = useState(false)
@@ -341,7 +357,8 @@ const ViewList: FC<ViewListProps> = ({
   const [initializing, setInitializing] = useState(true)
 
   const fetchCurrentWorkList = async () => {
-    if (current === 1) setInitializing(true)
+    if (current === 1)
+      setInitializing(true)
     try {
       const targetList = lists[currentList as keyof typeof lists].slice(
         (current - 1) * pageSize,
@@ -360,39 +377,46 @@ const ViewList: FC<ViewListProps> = ({
           }
           return item
         })
-        if (!isFinal) result.push({ page: current + 1, list: [] })
+        if (!isFinal)
+          result.push({ page: current + 1, list: [] })
         return result
       })
-      if (targetList.length < pageSize) setIsFinal(true)
-    } catch (error) {
+      if (targetList.length < pageSize)
+        setIsFinal(true)
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
       return
-    } finally {
+    }
+    finally {
       setInitializing(false)
     }
   }
 
   useEffect(() => {
     if (allowListName && allowListName !== 'recommendWorkList' && listEnd && !isFinal)
-      setCurrent((prev) => prev + 1)
+      setCurrent(prev => prev + 1)
   }, [listEnd, allowListName])
 
   useEffect(() => {
-    if (allowListName && allowListName !== 'recommendWorkList') fetchCurrentWorkList()
+    if (allowListName && allowListName !== 'recommendWorkList')
+      fetchCurrentWorkList()
   }, [current, allowListName])
-  //#endregion
+  // #endregion
 
   // 获取到目前正在浏览的作品id列表，并找到当前作品id对应的索引
   useEffect(() => {
-    if (!workId) return
+    if (!workId)
+      return
     if (currentList === 'userWorkList') {
-      const index = userWorkList.findIndex((id) => id === workId)
+      const index = userWorkList.findIndex(id => id === workId)
       if (index !== -1) {
         dispatch(setCurrentIndex(index + 1))
       }
-    } else {
+    }
+    else {
       const targetList = lists[currentList as keyof typeof lists]
-      const index = targetList.findIndex((id) => id === workId)
+      const index = targetList.findIndex(id => id === workId)
       if (index !== -1) {
         dispatch(setCurrentIndex(index + 1))
       }
@@ -402,7 +426,8 @@ const ViewList: FC<ViewListProps> = ({
   const changeList = (listName: string) => {
     if (currentList !== listName) {
       dispatch(setCurrentList(listName))
-      if (listName === 'userWorkList') dispatch(setPrevWorkId(workId))
+      if (listName === 'userWorkList')
+        dispatch(setPrevWorkId(workId))
       if (listName !== 'userWorkList' && prevWorkId !== '') {
         navigate(`/work-detail/${prevWorkId}`)
         dispatch(setPrevWorkId(workId))
@@ -416,9 +441,9 @@ const ViewList: FC<ViewListProps> = ({
     try {
       const { data } = await getUserWorksIdListAPI({ id: workDetailUserId })
       dispatch(pushToUserWorkList(data))
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
@@ -432,7 +457,8 @@ const ViewList: FC<ViewListProps> = ({
   const changeIndex = (targetIndex: number) => {
     if (currentList === 'userWorkList') {
       navigate(`/work-detail/${userWorkList[targetIndex - 1]}`)
-    } else {
+    }
+    else {
       navigate(`/work-detail/${lists[currentList as keyof typeof lists][targetIndex - 1]}`)
     }
   }
@@ -441,18 +467,21 @@ const ViewList: FC<ViewListProps> = ({
   const [inputIndex, setInputIndex] = useState(0)
 
   useEffect(() => {
-    if (showIndexInput) setInputIndex(currentIndex)
+    if (showIndexInput)
+      setInputIndex(currentIndex)
   }, [showIndexInput])
 
   // 监听键盘按下事件进行索引切换
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (showIndexInput) return
+      if (showIndexInput)
+        return
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         e.preventDefault()
         if (e.key === 'ArrowLeft' && currentIndex > 1) {
           changeIndex(currentIndex - 1)
-        } else if (e.key === 'ArrowRight' && currentIndex < currentListLength) {
+        }
+        else if (e.key === 'ArrowRight' && currentIndex < currentListLength) {
           changeIndex(currentIndex + 1)
         }
       }
@@ -471,9 +500,9 @@ const ViewList: FC<ViewListProps> = ({
   ])
   useEffect(() => {
     setShowSlideWindows([
-      currentList !== 'userWorkList' &&
-        currentList !== 'recommendWorkList' &&
-        currentList !== 'latestWorkList',
+      currentList !== 'userWorkList'
+      && currentList !== 'recommendWorkList'
+      && currentList !== 'latestWorkList',
       currentList === 'recommendWorkList',
       currentList === 'latestWorkList',
       currentList === 'userWorkList',
@@ -483,53 +512,61 @@ const ViewList: FC<ViewListProps> = ({
   return (
     <>
       {contextHolder}
-      <div className='relative flex flex-col p-5 rd-6 bg-white w-82.5 select-none'>
+      <div className="relative w-82.5 flex flex-col select-none rd-6 bg-white p-5">
         <div
           className={`mt-0 ${viewListClasses} ${currentList !== 'userWorkList' ? 'bg-neutral-100' : 'bg-white'}`}
           onClick={() => {
             allowListName && changeList(allowListName)
-          }}>
-          {allowListName ? (
-            <>
-              <span className='flex items-center gap-2.5'>
-                <Icon
-                  width={24}
-                  icon={VIEW_LIST_ICON_MAP[allowListName as keyof typeof VIEW_LIST_ICON_MAP]}
-                  color='#3d3d3d'
-                />
-                {VIEW_LIST_MAP[allowListName!]}
-              </span>
-              <span className='color-neutral font-bold'>
-                {currentList !== 'userWorkList' &&
-                  (!showIndexInput ? (
-                    <span onDoubleClick={() => setShowIndexInput(true)}>{currentIndex}/</span>
-                  ) : (
-                    <InputNumber
-                      autoFocus
-                      min={1}
-                      max={currentListLength}
-                      type='number'
-                      size='small'
-                      value={inputIndex}
-                      onChange={(value) => setInputIndex(value || 0)}
-                      onBlur={() => setShowIndexInput(false)}
-                      onPressEnter={() => {
-                        if (inputIndex > 0 && inputIndex <= userWorkList.length) {
-                          changeIndex(inputIndex)
-                          setShowIndexInput(false)
-                        }
-                      }}
+          }}
+        >
+          {allowListName
+            ? (
+                <>
+                  <span className="flex items-center gap-2.5">
+                    <Icon
+                      width={24}
+                      icon={VIEW_LIST_ICON_MAP[allowListName as keyof typeof VIEW_LIST_ICON_MAP]}
+                      color="#3d3d3d"
                     />
-                  ))}
-                {lists[allowListName!].length}
-              </span>
-            </>
-          ) : (
-            <span className='flex items-center gap-2.5'>
-              <Icon width={24} icon='material-symbols:hourglass-empty' color='#3d3d3d' />
-              暂无列表
-            </span>
-          )}
+                    {VIEW_LIST_MAP[allowListName!]}
+                  </span>
+                  <span className="color-neutral font-bold">
+                    {currentList !== 'userWorkList'
+                      && (!showIndexInput
+                        ? (
+                            <span onDoubleClick={() => setShowIndexInput(true)}>
+                              {currentIndex}
+                              /
+                            </span>
+                          )
+                        : (
+                            <InputNumber
+                              autoFocus
+                              min={1}
+                              max={currentListLength}
+                              type="number"
+                              size="small"
+                              value={inputIndex}
+                              onChange={value => setInputIndex(value || 0)}
+                              onBlur={() => setShowIndexInput(false)}
+                              onPressEnter={() => {
+                                if (inputIndex > 0 && inputIndex <= userWorkList.length) {
+                                  changeIndex(inputIndex)
+                                  setShowIndexInput(false)
+                                }
+                              }}
+                            />
+                          ))}
+                    {lists[allowListName!].length}
+                  </span>
+                </>
+              )
+            : (
+                <span className="flex items-center gap-2.5">
+                  <Icon width={24} icon="material-symbols:hourglass-empty" color="#3d3d3d" />
+                  暂无列表
+                </span>
+              )}
         </div>
         <div
           style={{
@@ -541,9 +578,10 @@ const ViewList: FC<ViewListProps> = ({
             height: 0,
             padding: showSlideWindows[0] ? '45px 0 ' : '0',
           }}
-          className='w-full relative transition-duration-300'>
+          className="relative w-full transition-duration-300"
+        >
           {showSlideWindows[0] && (
-            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+            <AnimatedDiv type="opacity-gradient" className="mt--45px">
               <WorkSlideWindow
                 workId={workId}
                 workList={currentWorkList}
@@ -551,13 +589,13 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setListEnd}
                 initializing={initializing}
                 setInitializing={setInitializing}
-                direction='horizontal'
+                direction="horizontal"
                 length={290}
                 itemLength={90}
-                renderItem={(item) => (
+                renderItem={item => (
                   <WorkItem
-                    type='least'
-                    animation='opacity-gradient'
+                    type="least"
+                    animation="opacity-gradient"
                     key={item.id}
                     data-id={item.id}
                     itemInfo={item}
@@ -574,9 +612,10 @@ const ViewList: FC<ViewListProps> = ({
             height: 0,
             padding: showSlideWindows[1] ? '45px 0 ' : '0',
           }}
-          className='w-full relative transition-duration-300'>
+          className="relative w-full transition-duration-300"
+        >
           {showSlideWindows[1] && (
-            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+            <AnimatedDiv type="opacity-gradient" className="mt--45px">
               <WorkSlideWindow
                 workId={workId}
                 workList={recommendWorkList}
@@ -584,13 +623,13 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setRecommendListEnd}
                 initializing={recommendInit}
                 setInitializing={setRecommendInit}
-                direction='horizontal'
+                direction="horizontal"
                 length={290}
                 itemLength={90}
-                renderItem={(item) => (
+                renderItem={item => (
                   <WorkItem
-                    type='least'
-                    animation='opacity-gradient'
+                    type="least"
+                    animation="opacity-gradient"
                     key={item.id}
                     data-id={item.id}
                     itemInfo={item}
@@ -607,9 +646,10 @@ const ViewList: FC<ViewListProps> = ({
             height: 0,
             padding: showSlideWindows[2] ? '45px 0 ' : '0',
           }}
-          className='w-full relative transition-duration-300'>
+          className="relative w-full transition-duration-300"
+        >
           {showSlideWindows[2] && (
-            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+            <AnimatedDiv type="opacity-gradient" className="mt--45px">
               <WorkSlideWindow
                 workId={workId}
                 workList={latestWorkList}
@@ -617,13 +657,13 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setLatestListEnd}
                 initializing={latestInit}
                 setInitializing={setLatestInit}
-                direction='horizontal'
+                direction="horizontal"
                 length={290}
                 itemLength={90}
-                renderItem={(item) => (
+                renderItem={item => (
                   <WorkItem
-                    type='least'
-                    animation='opacity-gradient'
+                    type="least"
+                    animation="opacity-gradient"
                     key={item.id}
                     data-id={item.id}
                     itemInfo={item}
@@ -635,33 +675,39 @@ const ViewList: FC<ViewListProps> = ({
         </div>
         <div
           className={`${viewListClasses} ${showSlideWindows[3] ? 'bg-neutral-100' : 'bg-white'}`}
-          onClick={() => changeList('userWorkList')}>
-          <span className='flex items-center gap-2.5'>
-            <Icon width={24} icon={VIEW_LIST_ICON_MAP.userWorkList} color='#3d3d3d' />
+          onClick={() => changeList('userWorkList')}
+        >
+          <span className="flex items-center gap-2.5">
+            <Icon width={24} icon={VIEW_LIST_ICON_MAP.userWorkList} color="#3d3d3d" />
             用户作品
           </span>
-          <span className='color-neutral font-bold'>
-            {showSlideWindows[3] &&
-              (!showIndexInput ? (
-                <span onDoubleClick={() => setShowIndexInput(true)}>{currentIndex}/</span>
-              ) : (
-                <InputNumber
-                  autoFocus
-                  min={1}
-                  max={currentListLength}
-                  type='number'
-                  size='small'
-                  value={inputIndex}
-                  onChange={(value) => setInputIndex(value || 0)}
-                  onBlur={() => setShowIndexInput(false)}
-                  onPressEnter={() => {
-                    if (inputIndex > 0 && inputIndex <= userWorkList.length) {
-                      changeIndex(inputIndex)
-                      setShowIndexInput(false)
-                    }
-                  }}
-                />
-              ))}
+          <span className="color-neutral font-bold">
+            {showSlideWindows[3]
+              && (!showIndexInput
+                ? (
+                    <span onDoubleClick={() => setShowIndexInput(true)}>
+                      {currentIndex}
+                      /
+                    </span>
+                  )
+                : (
+                    <InputNumber
+                      autoFocus
+                      min={1}
+                      max={currentListLength}
+                      type="number"
+                      size="small"
+                      value={inputIndex}
+                      onChange={value => setInputIndex(value || 0)}
+                      onBlur={() => setShowIndexInput(false)}
+                      onPressEnter={() => {
+                        if (inputIndex > 0 && inputIndex <= userWorkList.length) {
+                          changeIndex(inputIndex)
+                          setShowIndexInput(false)
+                        }
+                      }}
+                    />
+                  ))}
             {userWorkList.length}
           </span>
         </div>
@@ -671,9 +717,10 @@ const ViewList: FC<ViewListProps> = ({
             height: 0,
             padding: showSlideWindows[3] ? '45px 0 ' : '0',
           }}
-          className='w-full relative transition-duration-300'>
+          className="relative w-full transition-duration-300"
+        >
           {showSlideWindows[3] && (
-            <AnimatedDiv type='opacity-gradient' className='mt--45px'>
+            <AnimatedDiv type="opacity-gradient" className="mt--45px">
               <WorkSlideWindow
                 workId={workId}
                 workList={authorWorkList}
@@ -681,13 +728,13 @@ const ViewList: FC<ViewListProps> = ({
                 setWorkListEnd={setAuthorWorkListEnd}
                 initializing={userWorkListInitializing}
                 setInitializing={setUserWorkListInitializing}
-                direction='horizontal'
+                direction="horizontal"
                 length={290}
                 itemLength={90}
-                renderItem={(item) => (
+                renderItem={item => (
                   <WorkItem
-                    type='least'
-                    animation='opacity-gradient'
+                    type="least"
+                    animation="opacity-gradient"
                     key={item.id}
                     data-id={item.id}
                     itemInfo={item}
@@ -697,17 +744,17 @@ const ViewList: FC<ViewListProps> = ({
             </AnimatedDiv>
           )}
         </div>
-        <div className='w-full my-10px flex justify-center'>
+        <div className="my-10px w-full flex justify-center">
           <PaginationComponent
             total={currentListLength}
             pageSize={1}
             current={currentIndex}
-            size='small'
+            size="small"
             onChange={changeIndex}
           />
         </div>
-        <Link className='w-full' to={prevPosition === '' ? '/home' : prevPosition}>
-          <Button className='w-full' type='primary' shape='round' size='large'>
+        <Link className="w-full" to={prevPosition === '' ? '/home' : prevPosition}>
+          <Button className="w-full" type="primary" shape="round" size="large">
             回到上一个页面
           </Button>
         </Link>

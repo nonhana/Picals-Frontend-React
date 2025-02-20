@@ -20,5 +20,5 @@ const { setFavoriteList, reset } = favoriteStore.actions
 
 const favoriteReducer = favoriteStore.reducer
 
-export { setFavoriteList, reset }
+export { reset, setFavoriteList }
 export default favoriteReducer

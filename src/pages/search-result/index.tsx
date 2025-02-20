@@ -1,3 +1,6 @@
+import type { LabelDetailInfo, SearchFilter } from '@/utils/types'
+import type { MenuProps } from 'antd'
+import type { FC } from 'react'
 import { getLabelDetailAPI, newLabelAPI } from '@/apis'
 import Empty from '@/components/common/empty'
 import HanaModal from '@/components/common/hana-modal'
@@ -6,14 +9,11 @@ import UserList from '@/components/search-result/user-list'
 import WorkList from '@/components/search-result/work-list'
 import { addRecord } from '@/store/modules/searchHistory'
 import { MAX_WIDTH, MIN_WIDTH, TRIGGER_MIN_WIDTH } from '@/utils'
-import type { LabelDetailInfo } from '@/utils/types'
-import { SearchFilter } from '@/utils/types'
 import { PictureOutlined, UserOutlined } from '@ant-design/icons'
-import { Menu, Button, Input, message } from 'antd'
-import type { MenuProps } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
+import { Button, Input, Menu, message } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useSearchParams, useNavigate, useOutletContext } from 'react-router'
+import { useNavigate, useOutletContext, useSearchParams } from 'react-router'
 
 const items: MenuProps['items'] = [
   {
@@ -46,7 +46,8 @@ const SearchResult: FC = () => {
   useEffect(() => {
     if (currentWidth < TRIGGER_MIN_WIDTH) {
       setWidth(MIN_WIDTH)
-    } else {
+    }
+    else {
       setWidth(MAX_WIDTH)
     }
   }, [currentWidth])
@@ -68,16 +69,17 @@ const SearchResult: FC = () => {
       const { data } = await getLabelDetailAPI({ name: searchFilter.label })
       if (data) {
         setLabelDetail(data)
-      } else {
+      }
+      else {
         setLabelDetail(undefined)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
-  const likeLabel = () => setLabelDetail((prev) => ({ ...prev!, isMyLike: !prev!.isMyLike }))
+  const likeLabel = () => setLabelDetail(prev => ({ ...prev!, isMyLike: !prev!.isMyLike }))
 
   const [showAddLabelModal, setShowAddLabelModal] = useState(false)
   const [labelName, setLabelName] = useState('')
@@ -89,80 +91,90 @@ const SearchResult: FC = () => {
   }, [searchFilter.label])
 
   const confirmAddLabel = async () => {
-    if (!labelName) return
+    if (!labelName)
+      return
     try {
       await newLabelAPI([{ value: labelName }])
       getLabelDetail()
       setShowAddLabelModal(false)
       message.success('添加标签成功')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('出现错误了喵！！', error)
-      return
     }
   }
 
   return (
     <>
-      <div ref={exploreRef} className='relative overflow-hidden w-full my-30px'>
+      <div ref={exploreRef} className="relative my-30px w-full overflow-hidden">
         <div
           style={{
             width: `${width}px`,
             marginTop: current === 'work' ? '0' : '-210px',
           }}
-          className='flex flex-col items-center mx-auto transition-all duration-300 ease-in-out'>
-          {labelDetail ? (
-            <LabelInfo {...labelDetail} like={likeLabel} />
-          ) : (
-            <div className='relative w-full h-210px'>
-              <Empty showImg={false} text='目前暂未收录该标签哦~'>
-                <Button
-                  size='large'
-                  shape='round'
-                  type='primary'
-                  onClick={() => {
-                    setShowAddLabelModal(true)
-                  }}>
-                  添加标签
-                </Button>
-              </Empty>
-            </div>
-          )}
+          className="mx-auto flex flex-col items-center transition-all duration-300 ease-in-out"
+        >
+          {labelDetail
+            ? (
+                <LabelInfo {...labelDetail} like={likeLabel} />
+              )
+            : (
+                <div className="relative h-210px w-full">
+                  <Empty showImg={false} text="目前暂未收录该标签哦~">
+                    <Button
+                      size="large"
+                      shape="round"
+                      type="primary"
+                      onClick={() => {
+                        setShowAddLabelModal(true)
+                      }}
+                    >
+                      添加标签
+                    </Button>
+                  </Empty>
+                </div>
+              )}
           <Menu
-            className='w-full'
+            className="w-full"
             onClick={checkoutMenu}
             selectedKeys={[current]}
-            mode='horizontal'
+            mode="horizontal"
             items={items}
           />
-          {current === 'work' ? (
-            labelDetail ? (
-              <WorkList
-                labelName={labelDetail.name}
-                sortType={searchFilter.sortType}
-                workCount={labelDetail.workCount}
-              />
-            ) : (
-              <div className='relative w-full pt-5'>
-                <Empty />
-              </div>
-            )
-          ) : (
-            <UserList labelName={searchFilter.label} width={width} />
-          )}
+          {current === 'work'
+            ? (
+                labelDetail
+                  ? (
+                      <WorkList
+                        labelName={labelDetail.name}
+                        sortType={searchFilter.sortType}
+                        workCount={labelDetail.workCount}
+                      />
+                    )
+                  : (
+                      <div className="relative w-full pt-5">
+                        <Empty />
+                      </div>
+                    )
+              )
+            : (
+                <UserList labelName={searchFilter.label} width={width} />
+              )}
         </div>
       </div>
 
       <HanaModal
-        title='添加标签'
+        title="添加标签"
         visible={showAddLabelModal}
         setVisible={setShowAddLabelModal}
-        onOk={confirmAddLabel}>
+        onOk={confirmAddLabel}
+      >
         <Input
-          className='w-90% mx-auto my-10'
-          size='large'
+          className="mx-auto my-10 w-90%"
+          size="large"
           value={labelName}
-          onChange={(e) => setLabelName(e.target.value)}
-          placeholder='请输入新标签名称'
+          onChange={e => setLabelName(e.target.value)}
+          placeholder="请输入新标签名称"
         />
       </HanaModal>
     </>

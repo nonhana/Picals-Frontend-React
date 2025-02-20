@@ -1,19 +1,21 @@
-import { HistoryItem } from '@/apis/types'
+import type { HistoryItem } from '@/apis/types'
+import type { AppState } from '@/store/types'
+import type { WorkNormalItemInfo } from '@/utils/types'
+import type { MenuProps } from 'antd'
+import type { MotionProps } from 'framer-motion'
+import type { WorkItemProps, WorkItemType } from './types'
+import { getAnimationVariant } from '@/components/motion/preset'
 import { useFloat } from '@/hooks'
 import { PersonalContext } from '@/pages/personal-center'
-import type { AppState } from '@/store/types'
 import { FLOAT_DURATION, WORKITEM_DROPDOWN_LIST } from '@/utils'
-import type { WorkNormalItemInfo } from '@/utils/types'
 import { Icon } from '@iconify/react'
-import { Dropdown, Modal, type MenuProps } from 'antd'
+import { Dropdown, Modal } from 'antd'
+import { motion } from 'framer-motion'
 import { useContext } from 'react'
+
 import { useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router'
-import { motion, type MotionProps } from 'framer-motion'
-
-import { WorkItemProps, WorkItemType } from './types'
 import LazyImg from '../lazy-img'
-import { getAnimationVariant } from '@/components/motion/preset'
 
 const normalWrapper = 'w-184px'
 const normalSize = 'w-184px h-184px'
@@ -22,11 +24,13 @@ const littleSize = 'w-118px h-118px'
 
 const activeClasses = 'bg-white opacity-16'
 
-const beforeClasses =
-  'before:content-[""] before:absolute before:block before:top-0 before:left-0 before:w-full before:h-full before:bg-black before:opacity-4 before:rd-2'
+const beforeClasses
+  = 'before:content-[""] before:absolute before:block before:top-0 before:left-0 before:w-full before:h-full before:bg-black before:opacity-4 before:rd-2'
 
-const WorkItem = (props: WorkItemProps & { index?: number }) => {
-  const index = props.index ?? 0
+function WorkItem(props: WorkItemProps & { index?: number }) {
+  const { index: propsIndex, type: propsType, animation: propsAnimation } = props
+
+  const index = propsIndex ?? 0
 
   let curWrapper: string
   let curSize: string
@@ -42,15 +46,15 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
   let copy: (id: string) => void
   let args: { [key: string]: any }
 
-  switch (props.type) {
+  switch (propsType) {
     case 'personal_center':
       ;({ type, itemInfo, like, deleteWork, ...args } = props)
       curWrapper = normalWrapper
       curSize = normalSize
       break
     case 'favorite':
-      ;({ type, itemInfo, settingStatus, chooseStatus, like, choose, cancel, move, copy, ...args } =
-        props)
+      ;({ type, itemInfo, settingStatus, chooseStatus, like, choose, cancel, move, copy, ...args }
+        = props)
       curWrapper = normalWrapper
       curSize = normalSize
       break
@@ -94,17 +98,6 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
   const { isLogin } = useSelector((state: AppState) => state.user)
   const { id: localUserId } = useSelector((state: AppState) => state.user.userInfo)
 
-  const onChoosePersonalItem: MenuProps['onClick'] = ({ key }) => {
-    switch (key) {
-      case 'delete':
-        handlePersonalDelete(itemInfo.id)
-        break
-      case 'edit':
-        handlePersonalEdit(itemInfo.id)
-        break
-    }
-  }
-
   const [modal, contextHolder] = Modal.useModal()
   const handlePersonalDelete = (id: string) => {
     modal.confirm({
@@ -130,6 +123,17 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
     })
   }
 
+  const onChoosePersonalItem: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
+      case 'delete':
+        handlePersonalDelete(itemInfo.id)
+        break
+      case 'edit':
+        handlePersonalEdit(itemInfo.id)
+        break
+    }
+  }
+
   const onChooseFavoriteItem: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
       case 'cancel':
@@ -148,10 +152,10 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
 
   const [opacity, top] = useFloat()
 
-  let motionProps: MotionProps | undefined = undefined
+  let motionProps: MotionProps | undefined
 
-  if (props.animation) {
-    motionProps = getAnimationVariant(props.animation)
+  if (propsAnimation) {
+    motionProps = getAnimationVariant(propsAnimation)
   }
 
   return (
@@ -166,14 +170,16 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
           opacity,
           transform: `translateY(${top})`,
         }}
-        className={`shrink-0 relative rd-2 overflow-hidden ${settingStatus! && chooseStatus! ? 'bg-neutral-100' : 'bg-white'} ${settingStatus! ? 'hover:bg-neutral-100' : ''} ${curWrapper}`}>
+        className={`shrink-0 relative rd-2 overflow-hidden ${settingStatus! && chooseStatus! ? 'bg-neutral-100' : 'bg-white'} ${settingStatus! ? 'hover:bg-neutral-100' : ''} ${curWrapper}`}
+      >
         {settingStatus! && (
           <div
             className={`absolute top-0 left-0 h-full z-100 ${curWrapper}`}
-            onClick={() => choose(itemInfo.id)}>
-            <div className='absolute top-10px right-10px'>
+            onClick={() => choose(itemInfo.id)}
+          >
+            <div className="absolute right-10px top-10px">
               <Icon
-                width='32px'
+                width="32px"
                 color={chooseStatus! ? '#0090F0' : '#ffffff'}
                 icon={
                   chooseStatus!
@@ -190,18 +196,18 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
             className={`transition-all cursor-pointer opacity-16 hover:bg-white absolute top-0 left-0 ${curSize} ${(type! === 'least' || type! === 'little') && itemInfo!.id === workId ? activeClasses : ''}`}
           />
           {type! !== 'least' && type! !== 'little' && itemInfo!.imgList.length > 1 && (
-            <div className='absolute top-10px right-10px'>
-              <div className='rd-full absolute w-full h-full bg-black opacity-8 z--1' />
-              <div className='px-2 py-1 flex items-center gap-1'>
-                <Icon width='12px' color='#ffffff' icon='ant-design:file-filled' />
-                <span className='text-xs color-white'>{itemInfo!.imgList.length}</span>
+            <div className="absolute right-10px top-10px">
+              <div className="absolute z--1 h-full w-full rd-full bg-black opacity-8" />
+              <div className="flex items-center gap-1 px-2 py-1">
+                <Icon width="12px" color="#ffffff" icon="ant-design:file-filled" />
+                <span className="text-xs color-white">{itemInfo!.imgList.length}</span>
               </div>
             </div>
           )}
           {type! !== 'history' && type! !== 'least' && isLogin && (
             <Icon
-              className='p-10px absolute bottom-0 right-0 cursor-pointer'
-              width='44px'
+              className="absolute bottom-0 right-0 cursor-pointer p-10px"
+              width="44px"
               color={(itemInfo! as WorkNormalItemInfo).isLiked ? 'red' : '#3d3d3d'}
               icon={
                 (itemInfo! as WorkNormalItemInfo).isLiked
@@ -209,61 +215,66 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
                   : 'ant-design:heart-outlined'
               }
               onClick={() =>
-                type! === 'user_work' ? like(itemInfo.authorId, itemInfo.id) : like(itemInfo!.id)
-              }
+                type! === 'user_work' ? like(itemInfo.authorId, itemInfo.id) : like(itemInfo!.id)}
             />
           )}
         </div>
 
         <div
-          className={`relative rd-2 flex items-center justify-center overflow-hidden ${curSize}`}>
+          className={`relative rd-2 flex items-center justify-center overflow-hidden ${curSize}`}
+        >
           <LazyImg src={itemInfo!.cover} alt={itemInfo!.name} />
         </div>
 
         {type! !== 'least' && (
-          <div className='relative p-10px flex flex-col gap-5px'>
+          <div className="relative flex flex-col gap-5px p-10px">
             <Link
               to={`/work-detail/${itemInfo!.id}`}
-              className='w-full cursor-pointer text-sm color-neutral-900 font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
+              className="inline-block w-full cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap text-sm color-neutral-900 font-bold"
+            >
               <span>{itemInfo!.name ? itemInfo!.name : '无题'}</span>
             </Link>
             {type! !== 'user_work' && (
-              <div className='w-full flex justify-between '>
-                <div className='flex items-center gap-10px text-sm color-neutral'>
+              <div className="w-full flex justify-between">
+                <div className="flex items-center gap-10px text-sm color-neutral">
                   <Link
                     to={`/personal-center/${itemInfo!.authorId}/works`}
-                    className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
+                    className="h-6 w-6 flex cursor-pointer items-center justify-center overflow-hidden rd-full"
+                  >
                     <LazyImg src={itemInfo!.authorAvatar} alt={itemInfo!.authorName} />
                   </Link>
                   <Link
                     to={`/personal-center/${itemInfo!.authorId}/works`}
-                    className='cursor-pointer color-neutral-900'>
+                    className="cursor-pointer color-neutral-900"
+                  >
                     <span>{itemInfo!.authorName}</span>
                   </Link>
                 </div>
-                {type! === 'personal_center' &&
-                  isLogin &&
-                  userId === localUserId &&
-                  currentPath === 'works' && (
-                    <Dropdown
-                      menu={{
-                        items: WORKITEM_DROPDOWN_LIST.get('personal_center'),
-                        onClick: onChoosePersonalItem,
-                      }}
-                      placement='bottom'
-                      arrow>
-                      <Icon width='24px' color='#858585' icon='ant-design:more-outlined' />
-                    </Dropdown>
-                  )}
+                {type! === 'personal_center'
+                  && isLogin
+                  && userId === localUserId
+                  && currentPath === 'works' && (
+                  <Dropdown
+                    menu={{
+                      items: WORKITEM_DROPDOWN_LIST.get('personal_center'),
+                      onClick: onChoosePersonalItem,
+                    }}
+                    placement="bottom"
+                    arrow
+                  >
+                    <Icon width="24px" color="#858585" icon="ant-design:more-outlined" />
+                  </Dropdown>
+                )}
                 {type! === 'favorite' && isLogin && isMe && (
                   <Dropdown
                     menu={{
                       items: WORKITEM_DROPDOWN_LIST.get('favorite'),
                       onClick: onChooseFavoriteItem,
                     }}
-                    placement='bottom'
-                    arrow>
-                    <Icon width='24px' color='#858585' icon='ant-design:more-outlined' />
+                    placement="bottom"
+                    arrow
+                  >
+                    <Icon width="24px" color="#858585" icon="ant-design:more-outlined" />
                   </Dropdown>
                 )}
               </div>

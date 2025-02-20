@@ -1,5 +1,5 @@
 import { FLOAT_DURATION } from '@/utils'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Props {
   opacity?: number

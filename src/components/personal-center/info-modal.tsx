@@ -1,7 +1,7 @@
-import { AppState } from '@/store/types'
+import type { AppState } from '@/store/types'
 import type { UserDetailInfo } from '@/utils/types'
+import type { FC } from 'react'
 import { Button } from 'antd'
-import { FC } from 'react'
 import { PhotoView } from 'react-photo-view'
 import { useSelector } from 'react-redux'
 
@@ -14,7 +14,7 @@ const genderMap = {
   2: '保密',
 }
 
-type InfoModalProps = {
+interface InfoModalProps {
   visible: boolean
   setVisible: (visible: boolean) => void
   info: UserDetailInfo
@@ -26,15 +26,15 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
   const { id } = useSelector((state: AppState) => state.user.userInfo)
 
   return (
-    <HanaModal title='个人信息' visible={visible} setVisible={setVisible}>
+    <HanaModal title="个人信息" visible={visible} setVisible={setVisible}>
       <>
-        <div className='relative w-full h-63 bg-neutral-50 flex justify-center items-center text-lg font-bold color-neutral-900'>
-          <div className='flex flex-col items-center justify-center gap-3'>
+        <div className="relative h-63 w-full flex items-center justify-center bg-neutral-50 text-lg color-neutral-900 font-bold">
+          <div className="flex flex-col items-center justify-center gap-3">
             <HanaViewer>
-              <div className='w-24 h-24 rd-full cursor-pointer overflow-hidden'>
+              <div className="h-24 w-24 cursor-pointer overflow-hidden rd-full">
                 <PhotoView src={info.avatar}>
                   <img
-                    className='object-cover w-full h-full'
+                    className="h-full w-full object-cover"
                     src={info.littleAvatar}
                     alt={info.littleAvatar}
                   />
@@ -42,25 +42,26 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
               </div>
             </HanaViewer>
             <span>{info.username}</span>
-            <span className='font-normal text-sm color-neutral'>{info.email}</span>
+            <span className="text-sm color-neutral font-normal">{info.email}</span>
             {isLogin && id !== info.id && (
               <Button
                 type={info.isFollowed ? 'default' : 'primary'}
-                size='large'
-                shape='round'
-                onClick={follow}>
+                size="large"
+                shape="round"
+                onClick={follow}
+              >
                 {info.isFollowed ? '已关注' : '加关注'}
               </Button>
             )}
           </div>
         </div>
-        <div className='p-5 flex flex-col gap-5 font-bold text-sm color-neutral-900'>
-          <div className='flex gap-5 line-height-normal text-wrap'>
-            <span className='shrink-0'>个人简介</span>
+        <div className="flex flex-col gap-5 p-5 text-sm color-neutral-900 font-bold">
+          <div className="flex gap-5 text-wrap line-height-normal">
+            <span className="shrink-0">个人简介</span>
             <span>{info.intro}</span>
           </div>
-          <div className='flex gap-5 line-height-normal text-wrap'>
-            <span className='shrink-0'>个人性别</span>
+          <div className="flex gap-5 text-wrap line-height-normal">
+            <span className="shrink-0">个人性别</span>
             <span>{genderMap[info.gender]}</span>
           </div>
         </div>

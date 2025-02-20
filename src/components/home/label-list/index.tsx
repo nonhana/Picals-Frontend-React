@@ -1,23 +1,23 @@
+import type { LabelInfo } from '@/utils/types'
+import type { FC } from 'react'
 import Empty from '@/components/common/empty'
 import LabelItem from '@/components/common/label-item'
 import LayoutList from '@/components/common/layout-list'
 import AnimatedDiv from '@/components/motion/animated-div'
 import LabelListSkeleton from '@/components/skeleton/label-list'
-import type { LabelInfo } from '@/utils/types'
-import { FC } from 'react'
 
-type LabelListProps = {
+interface LabelListProps {
   loading: boolean
   labelList: LabelInfo[]
 }
 
 const LabelList: FC<LabelListProps> = ({ labelList, loading }) => {
   return (
-    <div className='relative w-full min-h-10'>
+    <div className="relative min-h-10 w-full">
       {labelList.length !== 0 && !loading && (
-        <AnimatedDiv type='opacity-gradient'>
-          <LayoutList scrollType='label'>
-            {labelList.map((item) => (
+        <AnimatedDiv type="opacity-gradient">
+          <LayoutList scrollType="label">
+            {labelList.map(item => (
               <LabelItem key={item.id} {...item} />
             ))}
           </LayoutList>
@@ -25,13 +25,13 @@ const LabelList: FC<LabelListProps> = ({ labelList, loading }) => {
       )}
 
       {labelList.length === 0 && !loading && (
-        <AnimatedDiv type='opacity-gradient'>
+        <AnimatedDiv type="opacity-gradient">
           <Empty showImg={false} />
         </AnimatedDiv>
       )}
 
       {labelList.length === 0 && loading && (
-        <AnimatedDiv type='opacity-gradient' className='absolute top-0'>
+        <AnimatedDiv type="opacity-gradient" className="absolute top-0">
           <LabelListSkeleton />
         </AnimatedDiv>
       )}
