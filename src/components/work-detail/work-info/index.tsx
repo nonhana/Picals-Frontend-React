@@ -47,21 +47,21 @@ const WorkStatusMark = ({ status }: { status: number }) => {
   switch (status) {
     case 0:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-m color-primary'>
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full text-sm color-azure'>
           原创作品
           <Icon width={24} color='#0090F0' icon='material-symbols:edit-outline' />
         </span>
       )
     case 1:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-m color-primary'>
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full text-sm color-azure'>
           转载作品
           <Icon width={24} color='#0090F0' icon='material-symbols:school-outline' />
         </span>
       )
     case 2:
       return (
-        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full font-size-m color-primary'>
+        <span className='flex items-center gap-5px px-2 b-solid b-2px rd-full text-sm color-azure'>
           合集作品
           <Icon width={24} color='#0090F0' icon='material-symbols:book-outline' />
         </span>
@@ -373,11 +373,9 @@ const WorkInfo = ({
           {/* 作品信息 */}
           <div className='mt-10px flex flex-col gap-10px'>
             <div className='flex gap-10px items-center'>
-              <span className='font-bold font-size-18px color-shallowblack'>
-                {workInfo.name || '无题'}
-              </span>
+              <span className='font-bold text-lg color-neutral-900'>{workInfo.name || '无题'}</span>
             </div>
-            <div className='py-10px font-size-m color-deepgrey line-height-normal'>
+            <div className='py-10px text-sm color-neutral line-height-normal'>
               <span>{workIntro}</span>
             </div>
             <LayoutList scrollType='label'>
@@ -387,20 +385,20 @@ const WorkInfo = ({
             </LayoutList>
             <div className='flex justify-between items-start my-3'>
               <div className='flex gap-20px'>
-                <div className='flex items-center gap-10px font-bold font-size-m color-deepgrey'>
+                <div className='flex items-center gap-10px font-bold text-sm color-neutral'>
                   <Icon width='16px' color='#858585' icon='ant-design:heart-filled' />
                   <span>{workInfo.likeNum}</span>
                 </div>
-                <div className='flex items-center gap-10px font-bold font-size-m color-deepgrey'>
+                <div className='flex items-center gap-10px font-bold text-sm color-neutral'>
                   <Icon width='16px' color='#858585' icon='ant-design:eye-filled' />
                   <span> {workInfo.viewNum}</span>
                 </div>
-                <div className='flex items-center gap-10px font-bold font-size-m color-deepgrey'>
+                <div className='flex items-center gap-10px font-bold text-sm color-neutral'>
                   <Icon width='16px' color='#858585' icon='ant-design:star-filled' />
                   <span>{workInfo.collectNum}</span>
                 </div>
               </div>
-              <div className='flex flex-col gap-10px font-italic font-size-m color-deepgrey'>
+              <div className='flex flex-col gap-10px font-italic text-sm color-neutral'>
                 <span>发布日期：{workInfo.createdDate}</span>
                 <span>更新日期：{workInfo.updatedDate}</span>
               </div>
@@ -412,11 +410,11 @@ const WorkInfo = ({
               <div className='flex gap-20px items-center'>
                 <Link
                   to={`/personal-center/${workInfo.authorInfo.id}`}
-                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-m color-shallowblack'>
+                  className='w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold text-sm color-neutral-900'>
                   <LazyImg src={workInfo.authorInfo.avatar} alt={workInfo.authorInfo.username} />
                 </Link>
                 <Link
-                  className='color-shallowblack'
+                  className='color-neutral-900'
                   to={`/personal-center/${workInfo.authorInfo.id}`}>
                   {workInfo.authorInfo.username}
                 </Link>
@@ -478,11 +476,11 @@ const WorkInfo = ({
           </div>
           {/* 原作信息 */}
           {workInfo.reprintType !== 0 && (
-            <div className='bg-normal relative p-5 w-full rd-1'>
+            <div className='bg-neutral-100 relative p-5 w-full rd-1'>
               {workInfo.reprintType === 1 && (
                 <>
                   <div className='flex justify-between items-center'>
-                    <span className='font-size-18px font-bold color-shallowblack'>原作品地址</span>
+                    <span className='text-lg font-bold color-neutral-900'>原作品地址</span>
                     {verifyPixivWork(workInfo.workUrl!) && (
                       <img className='w-15' src={pixiv} alt='pixiv' />
                     )}
@@ -497,8 +495,8 @@ const WorkInfo = ({
               )}
               <div className='flex justify-between items-center'>
                 <div className='flex items-center gap-10px'>
-                  <span className='font-size-18px font-bold color-shallowblack'>原作者信息</span>
-                  <span className='font-size-m color-deepgrey'>
+                  <span className='text-lg font-bold color-neutral-900'>原作者信息</span>
+                  <span className='text-sm color-neutral'>
                     目前收录 {workInfo.illustrator!.workCount} 个作品
                   </span>
                 </div>
@@ -511,7 +509,7 @@ const WorkInfo = ({
                   <Link
                     to={`/illustrator/${workInfo.illustrator!.id}`}
                     target='_blank'
-                    className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold font-size-m color-shallowblack'>
+                    className='relative w-10 h-10 rd-full overflow-hidden cursor-pointer font-bold text-sm color-neutral-900'>
                     <img
                       className='w-full h-full object-cover'
                       src={

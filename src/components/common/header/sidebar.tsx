@@ -66,9 +66,9 @@ const Sidebar: FC<SidebarProps> = ({ width, className, visible, setVisible }) =>
             {(isLogin ? HEADER_MENU_LIST : HEADER_MENU_LIST_VISITOR).map((item) => (
               <Link key={item.route} to={item.route}>
                 <li
-                  className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-normal transition-duration-300 ${location.pathname.includes(item.route) ? 'bg-normal' : ''}`}>
+                  className={`px-5 h-12 flex items-center gap-2.5 cursor-pointer hover:bg-neutral-100 transition-duration-300 ${location.pathname.includes(item.route) ? 'bg-neutral-100' : ''}`}>
                   <Icon color='#858585' width={20} icon={item.icon} />
-                  <span className='font-size-m color-shallowblack'>{item.name}</span>
+                  <span className='text-sm color-neutral-900'>{item.name}</span>
                 </li>
               </Link>
             ))}

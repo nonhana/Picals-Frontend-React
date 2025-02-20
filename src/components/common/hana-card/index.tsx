@@ -18,7 +18,7 @@ const HanaCard: FC<HanaCardProps> = ({
   return (
     <div
       style={{ width, height }}
-      className={`${className} ${pageCenter} min-h-100 rd-6 bg-white p-5 flex flex-col justify-center items-center gap-5 font-size-18px font-bold color-shallowblack`}>
+      className={`${className} ${pageCenter} min-h-100 rd-6 bg-white p-5 flex flex-col justify-center items-center gap-5 text-lg font-bold color-neutral-900`}>
       {children}
     </div>
   )

@@ -28,7 +28,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
   return (
     <HanaModal title='个人信息' visible={visible} setVisible={setVisible}>
       <>
-        <div className='relative w-full h-63 bg-light flex justify-center items-center font-size-18px font-bold color-shallowblack'>
+        <div className='relative w-full h-63 bg-neutral-50 flex justify-center items-center text-lg font-bold color-neutral-900'>
           <div className='flex flex-col items-center justify-center gap-3'>
             <HanaViewer>
               <div className='w-24 h-24 rd-full cursor-pointer overflow-hidden'>
@@ -42,7 +42,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
               </div>
             </HanaViewer>
             <span>{info.username}</span>
-            <span className='font-normal font-size-m color-deepgrey'>{info.email}</span>
+            <span className='font-normal text-sm color-neutral'>{info.email}</span>
             {isLogin && id !== info.id && (
               <Button
                 type={info.isFollowed ? 'default' : 'primary'}
@@ -54,7 +54,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info, follow }) =>
             )}
           </div>
         </div>
-        <div className='p-5 flex flex-col gap-5 font-bold font-size-m color-shallowblack'>
+        <div className='p-5 flex flex-col gap-5 font-bold text-sm color-neutral-900'>
           <div className='flex gap-5 line-height-normal text-wrap'>
             <span className='shrink-0'>个人简介</span>
             <span>{info.intro}</span>

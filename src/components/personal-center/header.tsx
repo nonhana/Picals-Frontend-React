@@ -129,15 +129,15 @@ const Header: FC = () => {
           <div className='relative w-full h-80'>
             {isMe ? (
               <div
-                className='bg-light h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-light'
+                className='bg-neutral-50 h-full flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-50'
                 onClick={() => setEditModalVisible(true)}>
-                <div className='flex flex-col items-center color-deepgrey font-size-m font-bold'>
+                <div className='flex flex-col items-center color-neutral text-sm font-bold'>
                   <Icon color='#858585' width='48px' icon='ant-design:edit-filled' />
                   <span>上传背景图</span>
                 </div>
               </div>
             ) : (
-              <div className='bg-light h-full' />
+              <div className='bg-neutral-50 h-full' />
             )}
           </div>
         )}
@@ -155,10 +155,10 @@ const Header: FC = () => {
                 </PhotoView>
               </HanaViewer>
             </div>
-            <div className='w-150 flex flex-col gap-10px font-size-m color-shallowblack text-wrap'>
+            <div className='w-150 flex flex-col gap-10px text-sm color-neutral-900 text-wrap'>
               <div className='flex items-center gap-10px'>
-                <span className='font-size-18px font-bold'>{userInfo.username}</span>
-                <span className='color-deepgrey'>{userInfo.email}</span>
+                <span className='text-lg font-bold'>{userInfo.username}</span>
+                <span className='color-neutral'>{userInfo.email}</span>
               </div>
               <div className='flex gap-10px'>
                 <span

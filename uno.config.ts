@@ -1,43 +1,73 @@
 import { presetRemToPx } from '@unocss/preset-rem-to-px'
-import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
+import { presetScrollbar } from 'unocss-preset-scrollbar'
 import {
   defineConfig,
-  presetWind3,
   presetAttributify,
   presetIcons,
   presetTypography,
+  presetWind3,
   presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
+  transformerAttributifyJsx,
 } from 'unocss'
-import { presetScrollbar } from 'unocss-preset-scrollbar'
 
 export default defineConfig({
   presets: [
-    presetRemToPx(),
+    /* Core Presets */
     presetWind3(),
     presetAttributify(),
     presetIcons(),
     presetTypography(),
-    presetWebFonts(),
+    presetWebFonts({
+      provider: 'google',
+      fonts: {
+        noto: [
+          'Noto Sans:300,400',
+          'Noto Sans SC:300,400',
+          'Noto Sans TC:300,400',
+          'Noto Sans JP:300,400',
+        ],
+      },
+    }),
+
+    /* Community Presets */
+    presetRemToPx(),
     presetScrollbar(),
   ],
   transformers: [transformerAttributifyJsx(), transformerDirectives(), transformerVariantGroup()],
-  rules: [
-    ['font-size-s', { 'font-size': '12px' }],
-    ['font-size-m', { 'font-size': '14px' }],
-    ['font-size-l', { 'font-size': '16px' }],
-    ['color-shallowblack', { color: '#3d3d3d' }],
-    ['color-deepgrey', { color: '#858585' }],
-    ['color-primary', { color: '#0090F0' }],
-    ['color-primary', { color: '#0090F0' }],
-    ['bg-normal', { background: '#f5f5f5' }],
-    ['bg-light', { background: '#f8f8f8' }],
-    ['bg-deepgrey', { background: '#858585' }],
-    ['bg-normalgrey', { background: '#c0c0c0' }],
-    ['b-deepgrey', { 'border-color': '#858585' }],
-  ],
+  shortcuts: [['title', 'text-lg font-bold text-[#858585]']],
   theme: {
+    colors: {
+      azure: {
+        DEFAULT: '#0090F0',
+        50: '#D1EDFF',
+        100: '#BDE5FF',
+        200: '#94D4FF',
+        300: '#6BC4FF',
+        400: '#43B4FF',
+        500: '#1AA3FF',
+        600: '#0090F0',
+        700: '#006EB8',
+        800: '#004D80',
+        900: '#002B48',
+        950: '#001A2C',
+      },
+      neutral: {
+        DEFAULT: '#858585',
+        50: '#F5F5F5',
+        100: '#EBEBEB',
+        200: '#D6D6D6',
+        300: '#C2C2C2',
+        400: '#ADADAD',
+        500: '#999999',
+        600: '#858585',
+        700: '#666666',
+        800: '#474747',
+        900: '#292929',
+        950: '#1A1A1A',
+      },
+    },
     extend: {
       keyframes: {
         spin: {

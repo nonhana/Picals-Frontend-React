@@ -166,7 +166,7 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
           opacity,
           transform: `translateY(${top})`,
         }}
-        className={`shrink-0 relative rd-2 overflow-hidden ${settingStatus! && chooseStatus! ? 'bg-normal' : 'bg-white'} ${settingStatus! ? 'hover:bg-normal' : ''} ${curWrapper}`}>
+        className={`shrink-0 relative rd-2 overflow-hidden ${settingStatus! && chooseStatus! ? 'bg-neutral-100' : 'bg-white'} ${settingStatus! ? 'hover:bg-neutral-100' : ''} ${curWrapper}`}>
         {settingStatus! && (
           <div
             className={`absolute top-0 left-0 h-full z-100 ${curWrapper}`}
@@ -194,7 +194,7 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
               <div className='rd-full absolute w-full h-full bg-black opacity-8 z--1' />
               <div className='px-2 py-1 flex items-center gap-1'>
                 <Icon width='12px' color='#ffffff' icon='ant-design:file-filled' />
-                <span className='font-size-10px color-white'>{itemInfo!.imgList.length}</span>
+                <span className='text-xs color-white'>{itemInfo!.imgList.length}</span>
               </div>
             </div>
           )}
@@ -224,12 +224,12 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
           <div className='relative p-10px flex flex-col gap-5px'>
             <Link
               to={`/work-detail/${itemInfo!.id}`}
-              className='w-full cursor-pointer font-size-m color-shallowblack font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
+              className='w-full cursor-pointer text-sm color-neutral-900 font-bold whitespace-nowrap overflow-hidden text-ellipsis inline-block'>
               <span>{itemInfo!.name ? itemInfo!.name : '无题'}</span>
             </Link>
             {type! !== 'user_work' && (
               <div className='w-full flex justify-between '>
-                <div className='flex items-center gap-10px font-size-m color-deepgrey'>
+                <div className='flex items-center gap-10px text-sm color-neutral'>
                   <Link
                     to={`/personal-center/${itemInfo!.authorId}/works`}
                     className='cursor-pointer w-6 h-6 rd-full overflow-hidden flex items-center justify-center'>
@@ -237,7 +237,7 @@ const WorkItem = (props: WorkItemProps & { index?: number }) => {
                   </Link>
                   <Link
                     to={`/personal-center/${itemInfo!.authorId}/works`}
-                    className='cursor-pointer color-shallowblack'>
+                    className='cursor-pointer color-neutral-900'>
                     <span>{itemInfo!.authorName}</span>
                   </Link>
                 </div>

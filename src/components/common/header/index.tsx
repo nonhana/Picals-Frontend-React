@@ -135,7 +135,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
               size='middle'
               icon={<UploadOutlined />}
               onClick={toUpload}>
-              <span className='color-deepgrey hidden md:block'>转载/投稿作品</span>
+              <span className='color-neutral hidden md:block'>转载/投稿作品</span>
             </Button>
           )}
           {isLogin ? (
@@ -147,7 +147,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
           ) : (
             <Link
               to='/login'
-              className='w-10 h-10 rounded-full flex items-center justify-center cursor-pointer color-white font-size-m bg-normalgrey'>
+              className='w-10 h-10 rounded-full flex items-center justify-center cursor-pointer color-white text-sm bg-neutral-100grey'>
               <span>登录</span>
             </Link>
           )}

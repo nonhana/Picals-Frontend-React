@@ -87,9 +87,9 @@ const SearchDropdown: FC<{
             transition={{ duration: 0.3 }}>
             <div className='m-b-5'>
               <div className='w-full p-10px flex justify-between items-center'>
-                <span className='font-bold font-size-m color-deepgrey'>历史记录</span>
+                <span className='font-bold text-sm color-neutral'>历史记录</span>
                 <span
-                  className='font-size-m color-deepgrey cursor-pointer'
+                  className='text-sm color-neutral cursor-pointer'
                   onClick={() => {
                     modal.confirm({
                       title: '确定要清空历史记录吗？',
@@ -119,7 +119,7 @@ const SearchDropdown: FC<{
                       <Link
                         to={`/search-result?label=${item}&type=work&sortType=new`}
                         onClick={() => setKeyword(item)}
-                        className='cursor-pointer p-10px flex justify-between items-center font-size-m color-deepgrey hover:bg-normal transition-duration-300'>
+                        className='cursor-pointer p-10px flex justify-between items-center text-sm color-neutral hover:bg-neutral-100 transition-duration-300'>
                         <span>{item}</span>
                         <Icon width={'20px'} color='#858585' icon='ant-design:export-outlined' />
                       </Link>
@@ -131,7 +131,7 @@ const SearchDropdown: FC<{
 
             {isLogin && (
               <div className='relative m-b-5'>
-                <div className='w-full p-10px font-bold font-size-m color-deepgrey'>
+                <div className='w-full p-10px font-bold text-sm color-neutral'>
                   <span>喜欢的标签</span>
                 </div>
                 {likedLabels.length === 0 ? (
@@ -149,7 +149,7 @@ const SearchDropdown: FC<{
             )}
 
             <div className='relative m-b-5'>
-              <div className='w-full p-10px font-bold font-size-m color-deepgrey'>
+              <div className='w-full p-10px font-bold text-sm color-neutral'>
                 <span>最近流行的插画标签</span>
               </div>
               {popularLabels.length === 0 ? (

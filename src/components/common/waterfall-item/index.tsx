@@ -27,7 +27,7 @@ const WaterfallItem: FC<WaterfallItemProps> = ({ item, height, ...props }) => {
         {hovering && (
           <AnimatedDiv type='opacity-gradient' className='absolute inset-0 bg-black/32 z-1 '>
             <Link
-              className='size-full flex flex-col items-center justify-center gap-10px color-white font-size-m'
+              className='size-full flex flex-col items-center justify-center gap-10px color-white text-sm'
               to={`/work-detail/${item.id}`}>
               <span>作品名称：{item.name}</span>
               <span>转载人：{item.authorName}</span>

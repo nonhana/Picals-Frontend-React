@@ -29,7 +29,7 @@ import AnimatedDiv from '@/components/motion/animated-div'
 import WorkItem from '@/components/common/work-item'
 
 const viewListClasses =
-  'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-normal cursor-pointer flex justify-between items-center px-5 color-shallowblack'
+  'my-5 w-full h-10 rd-1 transition-duration-300 hover:bg-neutral-100 cursor-pointer flex justify-between items-center px-5 color-neutral-900'
 
 type ViewListProps = {
   workId: string
@@ -485,7 +485,7 @@ const ViewList: FC<ViewListProps> = ({
       {contextHolder}
       <div className='relative flex flex-col p-5 rd-6 bg-white w-82.5 select-none'>
         <div
-          className={`mt-0 ${viewListClasses} ${currentList !== 'userWorkList' ? 'bg-normal' : 'bg-white'}`}
+          className={`mt-0 ${viewListClasses} ${currentList !== 'userWorkList' ? 'bg-neutral-100' : 'bg-white'}`}
           onClick={() => {
             allowListName && changeList(allowListName)
           }}>
@@ -499,7 +499,7 @@ const ViewList: FC<ViewListProps> = ({
                 />
                 {VIEW_LIST_MAP[allowListName!]}
               </span>
-              <span className='color-deepgrey font-bold'>
+              <span className='color-neutral font-bold'>
                 {currentList !== 'userWorkList' &&
                   (!showIndexInput ? (
                     <span onDoubleClick={() => setShowIndexInput(true)}>{currentIndex}/</span>
@@ -634,13 +634,13 @@ const ViewList: FC<ViewListProps> = ({
           )}
         </div>
         <div
-          className={`${viewListClasses} ${showSlideWindows[3] ? 'bg-normal' : 'bg-white'}`}
+          className={`${viewListClasses} ${showSlideWindows[3] ? 'bg-neutral-100' : 'bg-white'}`}
           onClick={() => changeList('userWorkList')}>
           <span className='flex items-center gap-2.5'>
             <Icon width={24} icon={VIEW_LIST_ICON_MAP.userWorkList} color='#3d3d3d' />
             用户作品
           </span>
-          <span className='color-deepgrey font-bold'>
+          <span className='color-neutral font-bold'>
             {showSlideWindows[3] &&
               (!showIndexInput ? (
                 <span onDoubleClick={() => setShowIndexInput(true)}>{currentIndex}/</span>

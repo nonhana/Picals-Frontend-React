@@ -100,17 +100,17 @@ const UserDropdown: FC<{
           <AnimatedDiv
             type='opacity-gradient'
             className={`absolute flex flex-col w-50 rd-6px bg-white overflow-hidden z-2000 ${className}`}>
-            <div className='absolute top-0 left-0 w-full h-12.5 bg-normal' />
+            <div className='absolute top-0 left-0 w-full h-12.5 bg-neutral-100' />
             <div className='m-t-25px flex flex-col items-start justify-between h-25 p-l-2.5 p-r-2.5 z-1'>
               <Link to={`/personal-center/${userInfo.id}/works`}>
                 <div className='w-12.5 h-12.5 rd-full flex justify-center items-center overflow-hidden '>
                   <LazyImg src={userInfo.littleAvatar} alt='avatar' />
                 </div>
               </Link>
-              <div className='font-bold font-size-m color-shallowblack'>
+              <div className='font-bold text-sm color-neutral-900'>
                 <span>{userInfo.username}</span>
               </div>
-              <div className='font-size-s color-deepgrey'>
+              <div className='text-xs color-neutral'>
                 <span>{userInfo.email}</span>
               </div>
             </div>
@@ -118,27 +118,27 @@ const UserDropdown: FC<{
               <div
                 className='h-9 flex flex-col justify-between items-start cursor-pointer'
                 onClick={() => selectItem('follow')}>
-                <span className='font-size-m color-shallowblack'>{userInfo.followNum}</span>
-                <span className='font-size-s color-deepgrey'>已关注</span>
+                <span className='text-sm color-neutral-900'>{userInfo.followNum}</span>
+                <span className='text-xs color-neutral'>已关注</span>
               </div>
               <div
                 className='h-9 flex flex-col justify-between items-start cursor-pointer'
                 onClick={() => selectItem('fans')}>
-                <span className='font-size-m color-shallowblack'>{userInfo.fanNum}</span>
-                <span className='font-size-s color-deepgrey'>粉丝</span>
+                <span className='text-sm color-neutral-900'>{userInfo.fanNum}</span>
+                <span className='text-xs color-neutral'>粉丝</span>
               </div>
             </div>
-            <ul className='m-0 p-0 list-none font-size-m color-shallowblack'>
+            <ul className='m-0 p-0 list-none text-sm color-neutral-900'>
               {HEADER_DROPDOWN_LIST.map((item, index) => (
                 <li
-                  className='px-2.5 py-3 cursor-pointer hover:bg-light transition-duration-300'
+                  className='px-2.5 py-3 cursor-pointer hover:bg-neutral-50 transition-duration-300'
                   key={index}
                   onClick={() => selectItem(item.value)}>
                   {item.name}
                 </li>
               ))}
               <li
-                className='px-2.5 py-3 cursor-pointer hover:bg-light transition-duration-300'
+                className='px-2.5 py-3 cursor-pointer hover:bg-neutral-50 transition-duration-300'
                 onClick={handleLogout}>
                 退出登录
               </li>

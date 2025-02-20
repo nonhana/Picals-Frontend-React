@@ -19,6 +19,7 @@ import { AnimatePresence } from 'framer-motion'
 import { FC, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
+import { cn } from '@/utils'
 
 // 登录表单
 type LoginForm = {
@@ -167,13 +168,15 @@ const LoginWindow: FC = () => {
             type='opacity-gradient'
             onMouseEnter={() => setMouseEnter(true)}
             onMouseLeave={() => setMouseEnter(false)}
-            className='`overflow-hidden select-none absolute
-              inset-0 w-full p-15 m-auto
-              md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-130 md:rounded-6 md:bg-white
-              flex flex-col items-center justify-between gap-10 z-2`'>
+            className={cn(
+              'overflow-hidden select-none absolute',
+              'inset-0 w-full p-15 m-auto',
+              'md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-130 md:rounded-6 md:bg-white',
+              'flex flex-col items-center justify-between gap-10 z-2',
+            )}>
             <div className='flex flex-col items-center justify-center'>
               <img className='w-50' src={logo} alt='picals-logo' />
-              <span className='font-normal font-size-m color-deepgrey'>兴趣使然的插画收藏小站</span>
+              <span className='font-normal text-sm color-neutral'>兴趣使然的插画收藏小站</span>
             </div>
 
             {/* 返回按钮 */}

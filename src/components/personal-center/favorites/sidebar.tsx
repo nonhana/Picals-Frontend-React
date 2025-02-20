@@ -170,9 +170,9 @@ const Sidebar: FC<SidebarProps> = ({ loading, folderList, setFolderList, fetchFa
           <div className='relative h-full'>
             {isMe && (
               <div
-                className='relative flex justify-between items-center w-250px h-15 bg-white cursor-pointer hover:bg-normal'
+                className='relative flex justify-between items-center w-250px h-15 bg-white cursor-pointer hover:bg-neutral-100'
                 onClick={onAddFolder}>
-                <div className='ml-5 flex gap-10px items-center font-size-18px font-bold color-shallowblack'>
+                <div className='ml-5 flex gap-10px items-center text-lg font-bold color-neutral-900'>
                   <Icon width='24px' color='#858585' icon='ant-design:plus-circle-outlined' />
                   <span>新建收藏集</span>
                 </div>

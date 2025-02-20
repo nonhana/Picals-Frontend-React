@@ -1,32 +1,9 @@
-import react from '@vitejs/plugin-react'
+import React from '@vitejs/plugin-react'
 import path from 'path'
-import { presetUno, presetAttributify, presetIcons } from 'unocss'
 import UnoCSS from 'unocss/vite'
 import { defineConfig, loadEnv } from 'vite'
 import viteCompression from 'vite-plugin-compression'
 import viteImagemin from 'vite-plugin-imagemin'
-import { webfontDownload } from 'vite-plugin-webfont-dl'
-
-const colors = [
-  'white',
-  'black',
-  'gray',
-  'red',
-  'yellow',
-  'green',
-  'blue',
-  'indigo',
-  'purple',
-  'pink',
-]
-
-const icon = ['search', 'edit', 'check', 'message', 'star-off', 'delete', 'add', 'share']
-
-const safelist = [
-  ...colors.map((v) => `bg-${v}-500`),
-  ...colors.map((v) => `hover:bg-${v}-700`),
-  ...icon.map((v) => `i-mdi-${v}`),
-]
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -34,11 +11,8 @@ export default defineConfig(({ mode }) => {
   return {
     base: env.VITE_BASE,
     plugins: [
-      UnoCSS({
-        safelist,
-        presets: [presetUno(), presetAttributify(), presetIcons()],
-      }),
-      react(),
+      UnoCSS(),
+      React(),
       viteImagemin({
         gifsicle: {
           optimizationLevel: 7,
@@ -73,7 +47,6 @@ export default defineConfig(({ mode }) => {
         algorithm: 'brotliCompress',
         deleteOriginFile: true,
       }),
-      webfontDownload(),
     ],
     build: {
       target: 'es2020',

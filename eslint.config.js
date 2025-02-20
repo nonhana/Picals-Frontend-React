@@ -1,10 +1,12 @@
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsparser from '@typescript-eslint/parser'
+import unocss from '@unocss/eslint-config/flat'
 import importPlugin from 'eslint-plugin-import'
 import prettier from 'eslint-plugin-prettier'
 import react from 'eslint-plugin-react'
 
 export default [
+  unocss,
   {
     languageOptions: {
       parser: tsparser,

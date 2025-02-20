@@ -106,10 +106,10 @@ const WorkList: FC<WorkListProps> = ({ labelName, sortType: URLSortType, workCou
     <div className='relative p-5 w-full min-h-180 pb-15'>
       <div className='w-full flex justify-between items-center mb-10px'>
         <div className='flex gap-10px items-center'>
-          <div className='title font-size-24px'>
+          <div className='title text-2xl'>
             <span>插画</span>
           </div>
-          <div className='px-10px py-5px bg-deepgrey rd-full color-white font-size-m font-bold'>
+          <div className='px-10px py-5px bg-neutral rd-full color-white text-sm font-bold'>
             <span>{workCount}</span>
           </div>
         </div>

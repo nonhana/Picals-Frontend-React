@@ -53,9 +53,9 @@ const SearchResult: FC<SearchResultProps> = ({ keyword, searchTrigger }) => {
         <AnimatedDiv type='opacity-gradient'>
           {Object.keys(resultMap).map((date) => (
             <div key={date} className='mb-5'>
-              <div className='relative w-full flex gap-5 items-center pb-2.5 mb-5 b-b-solid b-2 b-deepgrey'>
+              <div className='relative w-full flex gap-5 items-center pb-2.5 mb-5 b-b-solid b-2 b-neutral'>
                 <Icon width='32px' color='#858585' icon='ant-design:clock-circle-twotone' />
-                <span className='title color-deepgrey select-none'>{date}</span>
+                <span className='title color-neutral select-none'>{date}</span>
               </div>
               <AnimatedList type='history' workList={resultMap[date]} />
             </div>

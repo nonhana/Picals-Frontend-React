@@ -64,7 +64,7 @@ const HanaModal: FC<HanaModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}>
-          <div className='relative w-full h-16 flex justify-center items-center color-shallowblack font-size-18px font-bold'>
+          <div className='relative w-full h-16 flex justify-center items-center color-neutral-900 text-lg font-bold'>
             <span>{title}</span>
             {allowActivelyClose && (
               <Icon

@@ -22,7 +22,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
   return (
     <HanaModal title='插画家信息' visible={visible} setVisible={setVisible}>
       <>
-        <div className='relative w-full h-63 bg-light flex justify-center items-center font-size-18px font-bold color-shallowblack'>
+        <div className='relative w-full h-63 bg-neutral-50 flex justify-center items-center text-lg font-bold color-neutral-900'>
           <div className='flex flex-col items-center justify-center gap-3'>
             <HanaViewer>
               <div className='w-24 h-24 rd-full cursor-pointer overflow-hidden'>
@@ -39,7 +39,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
           </div>
         </div>
 
-        <div className='p-5 flex flex-col gap-5 font-bold font-size-m color-shallowblack'>
+        <div className='p-5 flex flex-col gap-5 font-bold text-sm color-neutral-900'>
           <div className='flex gap-5 line-height-normal text-wrap'>
             <span className='shrink-0 w-25'>现收录作品数</span>
             <span>{info.workNum}</span>
@@ -50,7 +50,7 @@ const InfoModal: FC<InfoModalProps> = ({ visible, setVisible, info }) => {
           </div>
           <div className='flex gap-5 line-height-normal text-wrap'>
             <span className='shrink-0 w-25'>个人主页</span>
-            <Link to={info.homeUrl} target='_blank' className='color-primary'>
+            <Link to={info.homeUrl} target='_blank' className='color-azure'>
               {info.homeUrl}
             </Link>
           </div>

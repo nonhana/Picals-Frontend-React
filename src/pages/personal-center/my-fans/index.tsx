@@ -27,7 +27,7 @@ const MyFans: FC = () => {
     <div className='relative w-full'>
       <div className='flex gap-10px py-5 items-center'>
         <span className='select-none title'>粉丝列表</span>
-        <div className='bg-deepgrey rd-full py-3px px-6px font-size-m color-white font-bold'>
+        <div className='bg-neutral rd-full py-3px px-6px text-sm color-white font-bold'>
           <span>{total}</span>
         </div>
       </div>

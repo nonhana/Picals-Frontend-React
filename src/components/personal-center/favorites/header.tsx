@@ -18,7 +18,7 @@ const Header: FC<HeaderProps> = ({
   setStartAppreciate,
 }) => {
   return (
-    <div className='relative p-5 flex justify-between b-b-solid b-1px color-deepgrey'>
+    <div className='relative p-5 flex justify-between b-b-solid b-1px color-neutral'>
       <div className='flex gap-5 items-center'>
         <div className='w-40 h-40 flex justify-center items-center'>
           <LazyImg
@@ -27,8 +27,8 @@ const Header: FC<HeaderProps> = ({
             alt={name}
           />
         </div>
-        <div className='w-100 flex flex-col gap-10px font-size-m color-shallowblack'>
-          <span className='font-size-18px font-bold'>{name}</span>
+        <div className='w-100 flex flex-col gap-10px text-sm color-neutral-900'>
+          <span className='text-lg font-bold'>{name}</span>
           <span>
             创建者：
             <Link to={`/personal-center/${creatorId}`}>{creatorName}</Link>

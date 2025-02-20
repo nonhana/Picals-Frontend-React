@@ -14,7 +14,7 @@ const Error = ({ error }: FallbackProps) => {
           <LazyImg src={ErrorImg} alt='ErrorImg' />
         </div>
         <span>页面发生错误：</span>
-        <div className='bg-normal relative p-5 rd-1 font-size-m color-red'>
+        <div className='bg-neutral-100 relative p-5 rd-1 text-sm color-red'>
           <span>{error.message}</span>
         </div>
         <span>请向管理员汇报~！</span>

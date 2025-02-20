@@ -40,11 +40,11 @@ const UserItem: FC<UserItemProps> = ({
 
       <div className='flex flex-col gap-5'>
         <Link className='flex items-center gap-2.5' to={`/personal-center/${id}/works`}>
-          <span className='font-size-m font-bold color-shallowblack'>{username}</span>
-          <span className='font-size-s color-deepgrey'>{email}</span>
+          <span className='text-sm font-bold color-neutral-900'>{username}</span>
+          <span className='text-xs color-neutral'>{email}</span>
         </Link>
 
-        <div className='font-size-s color-deepgrey w-70 break-words'>
+        <div className='text-xs color-neutral w-70 break-words'>
           <span>{intro}</span>
         </div>
 

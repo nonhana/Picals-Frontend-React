@@ -44,7 +44,7 @@ const Illustrator: FC = () => {
               onClick={() => navigate(-1)}>
               返回
             </Button>
-            <div className='absolute top--20 left-1/2 transform -translate-x-1/2 flex flex-col gap-2.5 items-center color-shallowblack font-size-18px font-bold'>
+            <div className='absolute top--20 left-1/2 transform -translate-x-1/2 flex flex-col gap-2.5 items-center color-neutral-900 text-lg font-bold'>
               <div className='w-40 h-40 rd-full color-white b-5px b-solid overflow-hidden cursor-pointer'>
                 <HanaViewer>
                   <PhotoView

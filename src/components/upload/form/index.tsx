@@ -138,8 +138,8 @@ type UploadFormProps = {
 }
 
 const wrapperStyle = 'relative bg-white w-155 p-5 rd-6 mb-5'
-const titleStyle = 'font-size-20px font-bold color-deepgrey mb-5'
-const labelStyle = 'font-size-l font-bold color-shallowblack'
+const titleStyle = 'text-xl font-bold color-neutral mb-5'
+const labelStyle = 'text-base font-bold color-neutral-900'
 
 const { TextArea } = Input
 
@@ -406,8 +406,8 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div
             style={{ margin: 0 }}
             className={`${titleStyle} font-normal flex items-center justify-between`}>
-            <span className='color-primary'>Total number of works currently saved:</span>
-            <span className=' color-shallowblack font-size-8'>{workCount}</span>
+            <span className='color-azure'>Total number of works currently saved:</span>
+            <span className=' color-neutral-900 text-3xl'>{workCount}</span>
           </div>
         </div>
 
@@ -596,7 +596,7 @@ const UploadForm: FC<UploadFormProps> = ({ formInfo, setFormInfo, submitTrigger,
           <div className={titleStyle}>
             <span>其他须知</span>
           </div>
-          <div className='flex flex-col gap-10px font-size-m font-bold color-shallowblack line-height-normal'>
+          <div className='flex flex-col gap-10px text-sm font-bold color-neutral-900 line-height-normal'>
             <span>
               这个小站只是因纯粹的热爱而搭建，大家所上传的图片全部都会在后台管理系统进行审核，通过后会在本站进行展示。
             </span>

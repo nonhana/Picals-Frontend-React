@@ -17,17 +17,17 @@ const UserInfo: FC<UserInfoProps> = ({ userInfo, onFollow }) => {
 
   return (
     <div className='relative flex flex-col gap-5 p-5 rd-6 bg-white w-82.5'>
-      <div className='flex gap-10px items-center font-bold font-size-m color-shallowblack'>
+      <div className='flex gap-10px items-center font-bold text-sm color-neutral-900'>
         <Link
           to={`/personal-center/${userInfo.id}`}
           className='shrink-0 w-10 h-10 rd-full cursor-pointer overflow-hidden'>
           <LazyImg src={userInfo.avatar} alt={userInfo.username} />
         </Link>
-        <Link className='color-shallowblack' to={`/personal-center/${userInfo.id}`}>
+        <Link className='color-neutral-900' to={`/personal-center/${userInfo.id}`}>
           {userInfo.username}
         </Link>
       </div>
-      <div className='bg-normal p-10px rd-1 font-size-m color-shallowblack text-wrap line-height-normal'>
+      <div className='bg-neutral-100 p-10px rd-1 text-sm color-neutral-900 text-wrap line-height-normal'>
         <span>{userInfo.intro}</span>
       </div>
       {userInfo.id !== id && isLogin && (

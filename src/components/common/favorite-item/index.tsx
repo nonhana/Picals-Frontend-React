@@ -67,16 +67,16 @@ const FavoriteItem: FC<FavoriteItemProps> = ({
       ref={setNodeRef}
       {...attributes}
       style={styles}
-      className={`relative flex justify-between items-center w-250px h-15 cursor-pointer hover:bg-normal ${folderStatus ? 'bg-normal' : 'bg-white'}`}
+      className={`relative flex justify-between items-center w-250px h-15 cursor-pointer hover:bg-neutral-100 ${folderStatus ? 'bg-neutral-100' : 'bg-white'}`}
       onClick={() => onChooseFolder(id)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>
-      <div className='w-full flex gap-10px items-center font-size-18px font-bold color-shallowblack'>
+      <div className='w-full flex gap-10px items-center text-lg font-bold color-neutral-900'>
         {isMe && (
           <div
             {...listeners}
             style={{ visibility: hovering ? 'visible' : 'hidden' }}
-            className='bg-normalgrey w-3 h-15 flex justify-center items-center cursor-all-scroll'>
+            className='bg-neutral-100grey w-3 h-15 flex justify-center items-center cursor-all-scroll'>
             <Icon width='8px' color='#fff' icon='heroicons-outline:bars-3' />
           </div>
         )}

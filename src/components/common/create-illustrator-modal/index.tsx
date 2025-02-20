@@ -141,7 +141,7 @@ const CreateIllustratorModal: FC<CreateIllustratorModalProps> = ({
             </div>
           ) : (
             <Upload {...uploadProps}>
-              <div className='w-100px h-100px flex justify-center items-center bg-normal cursor-pointer'>
+              <div className='w-100px h-100px flex justify-center items-center bg-neutral-100 cursor-pointer'>
                 <Icon width='24px' color='#858585' icon='ant-design:upload-outlined' />
               </div>
             </Upload>

@@ -69,13 +69,13 @@ const LabelInfo: FC<LabelInfoProps> = ({ id, name, color, cover, isMyLike, workC
               alt={name}
             />
           </div>
-          <div className='flex flex-col gap-5 color-shallowblack font-size-24px font-bold'>
+          <div className='flex flex-col gap-5 color-neutral-900 text-2xl font-bold'>
             <div>
               <span>{name}</span>
             </div>
             <div>
               <span>{workCount}</span>
-              <span className='font-normal font-size-24px'>作品</span>
+              <span className='font-normal text-2xl'>作品</span>
             </div>
           </div>
         </div>
