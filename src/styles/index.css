@@ -24,7 +24,7 @@ a {
 }
 
 ::-webkit-scrollbar {
-  @apply w-8 h-8 appearance-none;
+  @apply w-2 h-2 appearance-none;
 }
 
 ::-webkit-scrollbar-thumb {
