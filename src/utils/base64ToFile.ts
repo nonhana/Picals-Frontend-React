@@ -9,13 +9,15 @@ export function base64ToFile(base64: string, fileName: string): File {
   const mimeType = mimeTypePart.match(/:(.*?);/)![1]
 
   const byteCharacters = atob(base64Data)
-  const byteNumbers = Array.from({ length: byteCharacters.length })
+  const byteNumbers: number[] = Array.from({ length: byteCharacters.length })
   for (let i = 0; i < byteCharacters.length; i++) {
     byteNumbers[i] = byteCharacters.charCodeAt(i)
   }
   const byteArray = new Uint8Array(byteNumbers)
 
-  const file = new File([byteArray], `${fileName}.${mimeType.split('/')[1]}`, { type: mimeType })
+  const file = new File([byteArray], `${fileName}.${mimeType.split('/')[1]}`, {
+    type: mimeType,
+  })
 
   return file
 }
