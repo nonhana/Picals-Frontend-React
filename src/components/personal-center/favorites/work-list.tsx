@@ -336,7 +336,7 @@ const WorkList: FC<WorkListProps> = ({
       </div>
 
       <Modal
-        className='scrollbar-hidden '
+        className='scrollbar-none '
         title='移动作品'
         width='420px'
         open={moveModalStatus}
@@ -363,7 +363,7 @@ const WorkList: FC<WorkListProps> = ({
       </Modal>
 
       <Modal
-        className='scrollbar-hidden '
+        className='scrollbar-none '
         title='复制作品'
         width='420px'
         open={copyModalStatus}

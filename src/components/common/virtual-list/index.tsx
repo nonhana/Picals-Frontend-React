@@ -93,7 +93,7 @@ const VirtualList = ({
     <div className='relative' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div
         ref={ref}
-        className={cn('scrollbar-hidden', isVertical ? 'overflow-y-auto' : 'overflow-x-auto')}
+        className={cn('scrollbar-none', isVertical ? 'overflow-y-auto' : 'overflow-x-auto')}
         style={containerStyle}
         onScroll={onScroll}>
         <div style={contentStyle}>

@@ -160,13 +160,13 @@ const LayoutList = ({
     </VirtualList>
   ) : (
     <div
-      className={`scrollbar-none relative w-full ${className}`}
+      className={`relative w-full ${className}`}
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}>
       <div
         ref={layoutRef}
         style={{ gap: `${gap}px` }}
-        className='relative w-full flex flex-nowrap overflow-x-auto overflow-y-hidden transition-duration-300'>
+        className='relative scrollbar-none w-full flex flex-nowrap overflow-x-auto overflow-y-hidden transition-duration-300'>
         {children}
       </div>
       {showButtons && scrollBtnGroup}

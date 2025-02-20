@@ -542,7 +542,7 @@ const WorkInfo = ({
       </div>
 
       <Modal
-        className='scrollbar-hidden '
+        className='scrollbar-none '
         title='选择想要收藏的收藏夹'
         width='420px'
         open={collecting}

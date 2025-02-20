@@ -80,7 +80,7 @@ const SearchDropdown: FC<{
 
         {visible && (
           <motion.div
-            className={`scrollbar-hidden absolute bg-white w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}
+            className={`scrollbar-none absolute bg-white w-545px rd-6px overflow-hidden z-2000 ${className} select-none`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
