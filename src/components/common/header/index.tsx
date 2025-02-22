@@ -155,7 +155,7 @@ const Header: FC<HeaderProps> = ({ width, changeSideBarStatus, setNaturalSideBar
             : (
                 <Link
                   to="/login"
-                  className="bg-neutral-100grey h-10 w-10 flex cursor-pointer items-center justify-center rounded-full text-sm color-white"
+                  className="h-10 w-10 flex cursor-pointer items-center justify-center rounded-full bg-neutral-300 text-sm color-white"
                 >
                   <span>登录</span>
                 </Link>

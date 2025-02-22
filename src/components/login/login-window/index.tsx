@@ -11,7 +11,6 @@ import { Icon } from '@iconify/react'
 import {
   Button,
   Form,
-
   Input,
   message,
   notification,
@@ -159,226 +158,225 @@ const LoginWindow: FC = () => {
       {contextHolder}
 
       <AnimatePresence>
-        {!windowVisible && (
-          <AnimatedDiv
-            type="opacity-gradient"
-            className="absolute left-1/2 top-10px z-2 hidden md:block -translate-x-1/2"
-          >
-            <GreyButton
-              onClick={() => {
-                setWindowVisible(true)
-              }}
-            >
-              <Icon color="#fff" icon="ant-design:arrow-down-outlined" />
-            </GreyButton>
-          </AnimatedDiv>
-        )}
-
-        {windowVisible && (
-          <AnimatedDiv
-            type="opacity-gradient"
-            onMouseEnter={() => setMouseEnter(true)}
-            onMouseLeave={() => setMouseEnter(false)}
-            className={cn(
-              'overflow-hidden select-none absolute',
-              'size-full p-15 m-auto',
-              'md:(top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 rounded-6 bg-white h-auto)',
-              'flex flex-col items-center justify-between gap-10 z-2',
-            )}
-          >
-            <div className="flex flex-col items-center justify-center">
-              <img className="w-50" src={logo} alt="picals-logo" />
-              <span className="text-sm color-neutral font-normal">兴趣使然的插画收藏小站</span>
-            </div>
-
-            {/* 返回按钮 */}
-            {(isLogin || isRegister) && (
-              <GreyButton
-                className="absolute left-10 top-10 hidden md:block"
-                onClick={resetStatus}
-              >
-                <Icon color="#fff" icon="ant-design:arrow-left-outlined" />
-              </GreyButton>
-            )}
-
-            {/* 关闭按钮 */}
-            {mouseEnter && (
+        {windowVisible
+          ? (
               <AnimatedDiv
                 type="opacity-gradient"
-                className="absolute right-10 top-10 hidden md:block"
+                onMouseEnter={() => setMouseEnter(true)}
+                onMouseLeave={() => setMouseEnter(false)}
+                className={cn(
+                  'overflow-hidden select-none absolute',
+                  'size-full p-15 m-auto',
+                  'md:(top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 rounded-6 bg-white h-auto)',
+                  'flex flex-col items-center justify-between gap-10 z-2',
+                )}
+              >
+                <div className="flex flex-col items-center justify-center">
+                  <img className="w-50" src={logo} alt="picals-logo" />
+                  <span className="text-sm color-neutral font-normal">兴趣使然的插画收藏小站</span>
+                </div>
+
+                {/* 返回按钮 */}
+                {(isLogin || isRegister) && (
+                  <AnimatedDiv
+                    type="opacity-gradient"
+                    className="absolute left-10 top-10 hidden md:block"
+                  >
+                    <GreyButton onClick={resetStatus}>
+                      <Icon color="#fff" icon="ant-design:arrow-left-outlined" />
+                    </GreyButton>
+                  </AnimatedDiv>
+                )}
+
+                {/* 关闭按钮 */}
+                {mouseEnter && (
+                  <AnimatedDiv
+                    type="opacity-gradient"
+                    className="absolute right-10 top-10 hidden md:block"
+                  >
+                    <GreyButton onClick={() => setWindowVisible(false)}>
+                      <Icon color="#fff" icon="ant-design:close-outlined" />
+                    </GreyButton>
+                  </AnimatedDiv>
+                )}
+
+                {/* 默认状态，选择登录还是注册 */}
+                {!isLogin && !isRegister && (
+                  <div className="w-full flex flex-col gap-10">
+                    <Button
+                      size="large"
+                      shape="round"
+                      className="w-full"
+                      type="primary"
+                      onClick={() => setIsRegister(true)}
+                    >
+                      注册账号
+                    </Button>
+
+                    <Button
+                      size="large"
+                      shape="round"
+                      className="w-full"
+                      type="default"
+                      onClick={() => setIsLogin(true)}
+                    >
+                      登录
+                    </Button>
+                  </div>
+                )}
+
+                {/* 登录状态 */}
+                {isLogin && (
+                  <Form
+                    name="login"
+                    labelCol={{ span: 6 }}
+                    labelAlign="left"
+                    wrapperCol={{ span: 18 }}
+                    style={{ width: '100%' }}
+                    onFinish={handleLogin}
+                    autoComplete="off"
+                  >
+                    <Form.Item<LoginForm>
+                      label="邮箱"
+                      name="email"
+                      rules={[{ required: true, message: '登录需要输入邮箱！' }]}
+                    >
+                      <Input size="large" placeholder="请输入邮箱" />
+                    </Form.Item>
+                    <Form.Item<LoginForm>
+                      label="密码"
+                      name="password"
+                      rules={[{ required: true, message: '登录需要输入密码！' }]}
+                    >
+                      <Input.Password size="large" placeholder="请输入密码" />
+                    </Form.Item>
+                    <div className="mt-10 w-full flex gap-10">
+                      <Button
+                        className="w-full"
+                        type="primary"
+                        shape="round"
+                        size="large"
+                        loading={loginLoading}
+                        htmlType="submit"
+                      >
+                        登录
+                      </Button>
+                      <Button
+                        className="w-full md:hidden"
+                        type="default"
+                        shape="round"
+                        size="large"
+                        onClick={resetStatus}
+                      >
+                        返回
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+
+                {/* 注册状态 */}
+                {isRegister && (
+                  <Form
+                    name="register"
+                    ref={registerFormRef}
+                    labelCol={{ span: 6 }}
+                    labelAlign="left"
+                    wrapperCol={{ span: 18 }}
+                    style={{ width: '100%' }}
+                    onFinish={handleRegister}
+                    autoComplete="off"
+                  >
+                    <Form.Item<RegisterForm>
+                      label="邮箱"
+                      name="email"
+                      rules={[{ required: true, message: '注册需要输入邮箱！' }]}
+                    >
+                      <Input size="large" placeholder="请输入邮箱" />
+                    </Form.Item>
+                    <Form.Item<RegisterForm>
+                      label="验证码"
+                      name="validateCode"
+                      rules={[{ required: true, message: '请填写发送的验证码！' }]}
+                    >
+                      <Row className="flex justify-between">
+                        <Input className="w-40" size="large" placeholder="请输入验证码" />
+                        <Button
+                          disabled={codeStatus.isSent}
+                          size="large"
+                          type="primary"
+                          loading={sendingCode}
+                          onClick={handleSendCode}
+                        >
+                          {codeStatus.isSent ? `${codeStatus.countDown}s` : '发送验证码'}
+                        </Button>
+                      </Row>
+                    </Form.Item>
+                    <Form.Item<RegisterForm>
+                      label="密码"
+                      name="password"
+                      rules={[{ required: true, message: '注册需要输入密码！' }]}
+                    >
+                      <Input.Password size="large" placeholder="请输入密码" />
+                    </Form.Item>
+                    <Form.Item<RegisterForm>
+                      label="确认密码"
+                      name="confirmPassword"
+                      rules={[
+                        { required: true, message: '请再输入一遍密码！' },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value || getFieldValue('password') === value) {
+                              return Promise.resolve()
+                            }
+                            return Promise.reject(new Error('两次密码输入不一致！'))
+                          },
+                        }),
+                      ]}
+                    >
+                      <Input.Password size="large" placeholder="请再输入一遍密码" />
+                    </Form.Item>
+                    <div className="mt-10 w-full flex gap-10">
+                      <Button
+                        className="w-full"
+                        type="primary"
+                        shape="round"
+                        size="large"
+                        loading={registerLoading}
+                        htmlType="submit"
+                      >
+                        注册
+                      </Button>
+                      <Button
+                        className="w-full md:hidden"
+                        type="default"
+                        shape="round"
+                        size="large"
+                        onClick={resetStatus}
+                      >
+                        返回
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </AnimatedDiv>
+            )
+          : (
+              <AnimatedDiv
+                type="opacity-gradient"
+                className="absolute left-1/2 top-10px z-2 hidden md:block -translate-x-1/2"
               >
                 <GreyButton
                   onClick={() => {
-                    setWindowVisible(false)
+                    setWindowVisible(true)
                   }}
                 >
-                  <Icon color="#fff" icon="ant-design:close-outlined" />
+                  <Icon color="#fff" icon="ant-design:arrow-down-outlined" />
                 </GreyButton>
               </AnimatedDiv>
             )}
-
-            {/* 默认状态，选择登录还是注册 */}
-            {!isLogin && !isRegister && (
-              <div className="w-full flex flex-col gap-10">
-                <Button
-                  size="large"
-                  shape="round"
-                  className="w-full"
-                  type="primary"
-                  onClick={() => setIsRegister(true)}
-                >
-                  注册账号
-                </Button>
-
-                <Button
-                  size="large"
-                  shape="round"
-                  className="w-full"
-                  type="default"
-                  onClick={() => setIsLogin(true)}
-                >
-                  登录
-                </Button>
-              </div>
-            )}
-
-            {/* 登录状态 */}
-            {isLogin && (
-              <Form
-                name="login"
-                labelCol={{ span: 6 }}
-                labelAlign="left"
-                wrapperCol={{ span: 18 }}
-                style={{ width: '100%' }}
-                onFinish={handleLogin}
-                autoComplete="off"
-              >
-                <Form.Item<LoginForm>
-                  label="邮箱"
-                  name="email"
-                  rules={[{ required: true, message: '登录需要输入邮箱！' }]}
-                >
-                  <Input size="large" placeholder="请输入邮箱" />
-                </Form.Item>
-                <Form.Item<LoginForm>
-                  label="密码"
-                  name="password"
-                  rules={[{ required: true, message: '登录需要输入密码！' }]}
-                >
-                  <Input.Password size="large" placeholder="请输入密码" />
-                </Form.Item>
-                <div className="mt-10 w-full flex gap-10">
-                  <Button
-                    className="w-full"
-                    type="primary"
-                    shape="round"
-                    size="large"
-                    loading={loginLoading}
-                    htmlType="submit"
-                  >
-                    登录
-                  </Button>
-                  <Button
-                    className="w-full md:hidden"
-                    type="default"
-                    shape="round"
-                    size="large"
-                    onClick={resetStatus}
-                  >
-                    返回
-                  </Button>
-                </div>
-              </Form>
-            )}
-
-            {/* 注册状态 */}
-            {isRegister && (
-              <Form
-                name="register"
-                ref={registerFormRef}
-                labelCol={{ span: 6 }}
-                labelAlign="left"
-                wrapperCol={{ span: 18 }}
-                style={{ width: '100%' }}
-                onFinish={handleRegister}
-                autoComplete="off"
-              >
-                <Form.Item<RegisterForm>
-                  label="邮箱"
-                  name="email"
-                  rules={[{ required: true, message: '注册需要输入邮箱！' }]}
-                >
-                  <Input size="large" placeholder="请输入邮箱" />
-                </Form.Item>
-                <Form.Item<RegisterForm>
-                  label="验证码"
-                  name="validateCode"
-                  rules={[{ required: true, message: '请填写发送的验证码！' }]}
-                >
-                  <Row className="flex justify-between">
-                    <Input className="w-40" size="large" placeholder="请输入验证码" />
-                    <Button
-                      disabled={codeStatus.isSent}
-                      size="large"
-                      type="primary"
-                      loading={sendingCode}
-                      onClick={handleSendCode}
-                    >
-                      {codeStatus.isSent ? `${codeStatus.countDown}s` : '发送验证码'}
-                    </Button>
-                  </Row>
-                </Form.Item>
-                <Form.Item<RegisterForm>
-                  label="密码"
-                  name="password"
-                  rules={[{ required: true, message: '注册需要输入密码！' }]}
-                >
-                  <Input.Password size="large" placeholder="请输入密码" />
-                </Form.Item>
-                <Form.Item<RegisterForm>
-                  label="确认密码"
-                  name="confirmPassword"
-                  rules={[
-                    { required: true, message: '请再输入一遍密码！' },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve()
-                        }
-                        return Promise.reject(new Error('两次密码输入不一致！'))
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password size="large" placeholder="请再输入一遍密码" />
-                </Form.Item>
-                <div className="mt-10 w-full flex gap-10">
-                  <Button
-                    className="w-full"
-                    type="primary"
-                    shape="round"
-                    size="large"
-                    loading={registerLoading}
-                    htmlType="submit"
-                  >
-                    注册
-                  </Button>
-                  <Button
-                    className="w-full md:hidden"
-                    type="default"
-                    shape="round"
-                    size="large"
-                    onClick={resetStatus}
-                  >
-                    返回
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </AnimatedDiv>
-        )}
       </AnimatePresence>
     </>
+
   )
 }
 
