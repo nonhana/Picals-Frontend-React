@@ -181,8 +181,8 @@ const LoginWindow: FC = () => {
             onMouseLeave={() => setMouseEnter(false)}
             className={cn(
               'overflow-hidden select-none absolute',
-              'inset-0 w-full p-15 m-auto',
-              'md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-130 md:rounded-6 md:bg-white',
+              'size-full p-15 m-auto',
+              'md:(top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-130 rounded-6 bg-white h-auto)',
               'flex flex-col items-center justify-between gap-10 z-2',
             )}
           >
@@ -267,29 +267,27 @@ const LoginWindow: FC = () => {
                 >
                   <Input.Password size="large" placeholder="请输入密码" />
                 </Form.Item>
-                <Form.Item>
-                  <div className="w-full flex gap-10">
-                    <Button
-                      className="w-full"
-                      type="primary"
-                      shape="round"
-                      size="large"
-                      loading={loginLoading}
-                      htmlType="submit"
-                    >
-                      登录
-                    </Button>
-                    <Button
-                      className="w-full md:hidden"
-                      type="default"
-                      shape="round"
-                      size="large"
-                      onClick={resetStatus}
-                    >
-                      返回
-                    </Button>
-                  </div>
-                </Form.Item>
+                <div className="mt-10 w-full flex gap-10">
+                  <Button
+                    className="w-full"
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    loading={loginLoading}
+                    htmlType="submit"
+                  >
+                    登录
+                  </Button>
+                  <Button
+                    className="w-full md:hidden"
+                    type="default"
+                    shape="round"
+                    size="large"
+                    onClick={resetStatus}
+                  >
+                    返回
+                  </Button>
+                </div>
               </Form>
             )}
 
@@ -354,29 +352,27 @@ const LoginWindow: FC = () => {
                 >
                   <Input.Password size="large" placeholder="请再输入一遍密码" />
                 </Form.Item>
-                <Form.Item>
-                  <div className="w-full flex gap-10">
-                    <Button
-                      className="w-full"
-                      type="primary"
-                      shape="round"
-                      size="large"
-                      loading={registerLoading}
-                      htmlType="submit"
-                    >
-                      注册
-                    </Button>
-                    <Button
-                      className="w-full md:hidden"
-                      type="default"
-                      shape="round"
-                      size="large"
-                      onClick={resetStatus}
-                    >
-                      返回
-                    </Button>
-                  </div>
-                </Form.Item>
+                <div className="mt-10 w-full flex gap-10">
+                  <Button
+                    className="w-full"
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    loading={registerLoading}
+                    htmlType="submit"
+                  >
+                    注册
+                  </Button>
+                  <Button
+                    className="w-full md:hidden"
+                    type="default"
+                    shape="round"
+                    size="large"
+                    onClick={resetStatus}
+                  >
+                    返回
+                  </Button>
+                </div>
               </Form>
             )}
           </AnimatedDiv>
