@@ -6,5 +6,6 @@ export default antfu({
   rules: {
     'react-hooks/rules-of-hooks': 'off',
     'react-hooks/exhaustive-deps': 'off',
+    'react/no-array-index-key': 'off',
   },
 })

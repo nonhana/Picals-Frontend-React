@@ -96,7 +96,6 @@ function UserListSkeleton({ row = 2, borderRadius = 4, ...props }: UserListSkele
         {/* 作品展示 */}
         {Array.from({ length: 4 }).fill(0).map((_, index) => (
           <rect
-            // eslint-disable-next-line react/no-array-index-key
             key={index}
             x={workX + index * (workWidth + 16)}
             y={avatarY}
